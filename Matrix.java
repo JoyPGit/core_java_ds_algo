@@ -1229,6 +1229,113 @@ class Matrix {
         return gold;
     }
 
+    /**the -1s are inaccessible; reduce 99 to lowest dist from 0 */
+   
+    void wallsAndGates(int[][] grid){
+        int[][] dp  = new int[grid.length][grid[0].length];
+        int[][] visited  = new int[grid.length][grid[0].length];
+
+        int i, j;
+
+         
+        for( i=0; i<grid.length; i++){
+            for(j=0; j<grid[0].length; j++){
+                if(grid[i][j] == -1){
+                    dp[i][j] = grid[i][j];
+                }
+            }
+        }
+
+        for( i=0; i<grid.length; i++){
+            for(j=0; j<grid[0].length; j++){
+                if(grid[i][j]==99){
+                    dp[i][j] = wallsAndGatesHelper(grid, i , j, dp, visited);
+                    initializeToZero(visited);
+                }
+            }
+        }
+        
+        for( i=0; i<grid.length; i++){
+            for(j=0; j<grid[0].length; j++){
+                System.out.print(dp[i][j]+", ");
+            }
+            System.out.println();
+        }
+    }
+
+    /**this is like keeping a trck of the cells traversed  */
+     /** finally found a technique for dfs, use visited array
+     * and add a check for that visited!=1,
+     * and assign to dp outside the helper
+     */
+
+    int wallsAndGatesHelper(int[][] grid, int row, int col, int[][] dp, int[][] visited){
+        if(row>-1 && row<grid.length
+        && col>-1 && col<grid[0].length && grid[row][col]!=-1 && visited[row][col]!=1){
+            if (dp[row][col] != 0 ) return dp[row][col];
+            if(grid[row][col]==0) return 0;
+            System.out.println("row "+row+" ,col "+col);
+            visited[row][col] = 1;
+
+            // if(grid[row][col]==-1) return 99;
+            int left = wallsAndGatesHelper(grid, row, col-1, dp, visited);
+            int right = wallsAndGatesHelper(grid, row, col+1, dp, visited);
+            int up = wallsAndGatesHelper(grid, row-1, col, dp, visited);
+            int down = wallsAndGatesHelper(grid, row+1, col, dp, visited);
+
+            System.out.println("left "+ left +", right " +right+", up "+up +", down "+ down);
+            // dp[row][col] = Math.min(left, Math.min(right, Math.min(up, down)))+1;
+            // System.out.println("dp[" +row+"]["+col+"] "+ dp[row][col]);
+            System.out.println("visited[" +row+"]["+col+"] "+ visited[row][col]);
+            int val = Math.min(left, Math.min(right, Math.min(up, down)))+1;
+            System.out.println("val "+val);
+            return val;
+
+        } else return 90;
+    }
+
+    /**we are starting from each zero and keeping a counter, 
+     * if the grid[i][j] > counter, we update it */
+    void wallsAndGatesKevin(int[][] matrix){
+        int i,j;
+
+        int[][] dp  = new int[matrix.length][matrix[0].length];
+
+        for(i =0; i<matrix.length; i++){
+            for(j =0; j<matrix[0].length; j++){
+                if(matrix[i][j]==0){
+                    wallsAndGatesHelperKevin(matrix, i, j, dp, 0);
+                }
+            }
+        }
+
+        for( i=0; i<matrix.length; i++){
+            for(j=0; j<matrix[0].length; j++){
+                System.out.print(matrix[i][j]+", ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    /**here the tricky thing is to choose the initial value of count
+     * while making the first call to helper
+     * we assign value to matrix if the count is lesser than it's current value, but we use 
+     * grid[row][col]>=count, equal to is used to bypass the base condition
+     */
+
+     //try using BFS
+    void wallsAndGatesHelperKevin(int[][] grid, int row, int col, int[][] dp, int count){
+        if(row>-1 && row<grid.length
+        && col>-1 && col<grid[0].length && grid[row][col]!=-1 && count>=0 //&& count<99
+        && grid[row][col]>=count){
+            grid[row][col] = count;
+            wallsAndGatesHelperKevin(grid, row, col+1, dp, count+1);
+            wallsAndGatesHelperKevin(grid, row, col-1, dp, count+1);
+            wallsAndGatesHelperKevin(grid, row+1, col, dp, count+1);
+            wallsAndGatesHelperKevin(grid, row-1, col, dp, count+1);
+        } 
+    }
 
     public static void main(String[] args) {
         Matrix matrix = new Matrix();
@@ -1281,9 +1388,13 @@ class Matrix {
         // matrix.maxPathLength(arr1);
         
         int[][] goldArray = {{0,6,0},{5,8,7},{0,9,0}};
-        matrix.goldMine(goldArray);
+        // matrix.goldMine(goldArray);
 
         // System.out.println("max gold is "+matrix.GoldMine7Jun(goldArray, 3, 3));
+
+        int[][] wallsAndGates = {{99,-1,0,99},{99,99,99,-1},{99,-1,99,-1},{0,-1,99,99}};
+        // matrix.wallsAndGates(wallsAndGates);
+        matrix.wallsAndGatesKevin(wallsAndGates);
     }
 
 }
