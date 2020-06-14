@@ -253,8 +253,8 @@ class Linked1 {
                     }
                     Add_LinkedList list3 = new Add_LinkedList();
                     // Add g = new Add();
-                    Node rs = g.addTwoLists(list1.head, list2.head);
-                    list3.printList(rs);
+                    // Node rs = g.addTwoLists(list1.head, list2.head);
+                    // list3.printList(rs);
                     System.out.println();
                     T--;
                 }
@@ -279,11 +279,11 @@ class Linked1 {
         int sum3 = 0;
 
         while (first.next != null) {
-            sum1 = (sum1 + first.data) * 10;
+            sum1 = (sum1 + first.key) * 10;
             first = first.next;
         }
         while (second.next != null) {
-            sum2 = (sum2 + second.data) * 10;
+            sum2 = (sum2 + second.key) * 10;
             second = second.next;
         }
 
