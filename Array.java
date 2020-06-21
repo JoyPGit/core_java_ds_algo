@@ -359,6 +359,16 @@ class Array {
     void zeroSetter(int i){
         i=0;
     }
+
+    // boolean dead = false;
+    // int count = 0;
+    // void goDeeper(){
+    //     if(dead == true) return;
+    //     System.out.println(count++);//goes till 8612
+    //     goDeeper();
+    }
+
+
     public static void main(String[] args) {
         // code
 
@@ -397,7 +407,8 @@ class Array {
         // test.whileCheck(zeroArr);
 
         String s ="abcd";
-        System.out.println(s.toCharArray()[0]);
+        // System.out.println(s.toCharArray()[0]);
+
     }
 
 }
