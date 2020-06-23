@@ -2114,10 +2114,10 @@ public class Tree {
      * we create a new node and then allow the fiunction to find the
      * left and right children for us and return this node
      * 
-     * 2 things
+     * 3 things
      * 1 increment ondex for iteration
      * 2 for start and end ensure the indexes change as per the current index found
-     * 
+     * 3 return the current and also when start == end
     */
     TreeNode createTree(int[] pre, int[] in, int index, int start, int end){
         System.out.println("index "+index);
@@ -2126,6 +2126,7 @@ public class Tree {
         int currIndex = findInInOrder(pre, in, index);
         if(currIndex==-1) return null;
         TreeNode curr = new TreeNode(in[currIndex]);
+        System.out.println("curr "+curr.key);
         curr.left = createTree(pre, in, ++index, start, currIndex-1);
         curr.right = createTree(pre, in, ++index, currIndex+1, end);
         System.out.print(curr.key+", ");
@@ -2138,6 +2139,7 @@ public class Tree {
         }
         return -1;
     }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
