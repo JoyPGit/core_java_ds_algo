@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.lang.Class;
 
 class Node {
     int key;
@@ -112,7 +113,17 @@ public class SubsetsOfSetJava {
 		}
 	}
 
-
+	void allSubsets(int[] arr, int[] subset, int index){
+        if(index == arr.length) {
+            // print1DMatrix(subset);
+            System.out.println();
+            return;
+        }
+        subset[index] = 0;
+        allSubsets(arr, subset, index+1);
+        subset[index] = arr[index];
+        allSubsets(arr, subset, index+1);
+    }
 
 	public static void main(String[] args) {
 

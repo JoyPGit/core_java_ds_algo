@@ -405,12 +405,121 @@ public class DP {
         }
         return max;
     }
+
+    int rodCuttingDP(int[] arr){
+        int[] dp = new int[arr.length+1];
+
+        dp[0] = 0;
+
+        //the code is similar to LIS i=1, j=0, 
+        //after for lopp dp[i] value 
+        for(int i=1; i<=arr.length; i++ ){
+            int max = Integer.MIN_VALUE;
+            for(int j = 0; j<i; j++){
+                max = Math.max(dp[i-j-1]+arr[j], max);//same as recursive function, just change the arrays
+            }
+            
+            dp[i] = max;
+        }
+        return dp[dp.length-1];
+    }
+
+    //21 June
+    void allSubsets(int[] arr, int[] subset, int index){
+        if(index == arr.length) {
+            print1DMatrix(subset);
+            System.out.println();
+            return;
+        }
+        subset[index] = 0;
+        allSubsets(arr, subset, index+1);
+        subset[index] = arr[index];
+        allSubsets(arr, subset, index+1);
+    }
+
+
+    void matrixBlockSum(int[][] arr, int k){
+        int R = arr.length; int C = arr[0].length;
+        int[][] dp = new int[R][C];
+        // Arrays.fill(dp, 0);
+        for(int i =0; i<R; i++){
+            for(int j =0; j<C; j++){
+                // if(dp[i][j]!=0){
+                    matrixBlockSumHelper(arr, dp, i, j, k);
+                    System.out.println(dp[i][j]);
+                // }
+            }
+        }
+        printMatrix(dp);
+    }
+    
+    void matrixBlockSumHelper(int[][] arr, int[][] dp, int row, int col, int k){
+        int r1 = (row +k)>=arr.length?arr.length:(row+k);
+        int r2 = (row-k)<=0?0:(row-k);
+
+        int c1 = (col +k)>=arr[0].length?arr[0].length:(col+k);
+        int c2 = (col-k)<=0?0:(col-k);
+        int sum = 0;
+        for(int i =r2; i<r1; i++){
+            for(int j= c2; j<c1; j++){
+                sum+=arr[i][j];
+            }
+        }
+        System.out.println("sum "+sum);
+        dp[row][col] = sum;
+    }
+
+    //https://leetcode.com/problems/target-sum/
+
+    // int targetSum(int[] arr){
+
+    //     targetSumHelper
+    // }
+
+    /**this problem and the one below it are complementary
+     * one is to find if a subset exists with given sum
+     * second is to print all subsets with the sum
+     * 
+     * recursive approach, add or ignore
+     * 
+     * dp approach
+     * create 2d array
+     */
+    // https://www.geeksforgeeks.org/subset-sum-problem-dp-25/
+    void subsetSum(int[] arr, int sum, int index){
+        int[] dp = new int[arr.length];
+        subsetSumHelper(arr, dp, sum, index);
+    }
+
+    void subsetSumHelper(int[] arr, int[] dp, int sum, int index){
+        if(sum == 0) {
+            print1DMatrix(dp);
+            System.out.println("found");
+            return;
+        }
+        if(index>=arr.length) return;
+        dp[index] = arr[index];
+        subsetSumHelper(arr, dp, sum - arr[index], index+1);
+        dp[index] = 0;
+        subsetSumHelper(arr, dp, sum , index+1);
+    }
+
+
+    // https://www.geeksforgeeks.org/perfect-sum-problem-print-subsets-given-sum/
+
+
     /**
-     * POINTS 1 either include the elment or not LCS exc = f(Arr, i+1, prev) inc =
+     * POINTS 1 either include the elment or not LCS exc = f(arr, i+1, prev) inc =
      * f(arr, i+1, arr[i]) return max
      * 
      * 2 knapsack similar include or exclude 3 coin change diff is supply is
      * infinite so return f( S, m - 1, n ) + f( S, m, n-S[m-1] );
+     * 
+     * 3 similar subset sum 
+     * dp[index] = arr[index];
+     * subsetSumHelper(arr, dp, sum - arr[index], index+1); the element is added and sum is reduced
+     * dp[index] = 0;
+     * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
      */
 
     public static void main(String[] args) {
@@ -448,7 +557,18 @@ public class DP {
         // System.out.println("min no of jumps " + dp.minJumps(jumpArr));
 
         int rodArr[] = new int[] {1, 5, 8, 9, 10, 17, 17, 20}; 
-        System.out.println(dp.rodCutting(rodArr, rodArr.length));
+        // System.out.println(dp.rodCutting(rodArr, rodArr.length));
+
+        // System.out.println("the max value of rod cutting is "+dp.rodCuttingDP(rodArr));
+
+        int[] subsetArr = {1,2,3};
+        // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
+
+        int[][] blockSum = {{1,2,3},{4,5,6},{7,8,9}};
+        // dp.matrixBlockSum(blockSum, 1);
+
+        int set[] = {3, 34, 4, 12, 5, 2}; int sum = 9;
+        dp.subsetSum(set, sum, 0);
 
     }
 }

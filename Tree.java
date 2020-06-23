@@ -120,7 +120,7 @@ public class Tree {
             return;
         }
         Inorder(x.left);
-        System.out.println(x.key);
+        System.out.print(x.key+", ");
         Inorder(x.right);
     }
 
@@ -128,7 +128,7 @@ public class Tree {
         if (x == null) {
             return;
         }
-        System.out.println(x.key);
+        System.out.print(x.key+", ");
         Preorder(x.left);
         Preorder(x.right);
     }
@@ -2107,6 +2107,37 @@ public class Tree {
         if(root.left!=null) findRootToLeafPathsWithGivenSumListsHelper(root.left, sum - root.key, lists, new ArrayList<>(list));
         if(root.right!=null) findRootToLeafPathsWithGivenSumListsHelper(root.right, sum - root.key, lists, new ArrayList<>(list));
     }
+
+
+    /**  
+     * here we need to iterate over the preorder array and for each index
+     * we create a new node and then allow the fiunction to find the
+     * left and right children for us and return this node
+     * 
+     * 2 things
+     * 1 increment ondex for iteration
+     * 2 for start and end ensure the indexes change as per the current index found
+     * 
+    */
+    TreeNode createTree(int[] pre, int[] in, int index, int start, int end){
+        System.out.println("index "+index);
+        if(start==end) return new TreeNode(in[start]);
+        if(start>end) return null;
+        int currIndex = findInInOrder(pre, in, index);
+        if(currIndex==-1) return null;
+        TreeNode curr = new TreeNode(in[currIndex]);
+        curr.left = createTree(pre, in, ++index, start, currIndex-1);
+        curr.right = createTree(pre, in, ++index, currIndex+1, end);
+        System.out.print(curr.key+", ");
+        return curr;
+    }
+
+    int findInInOrder(int[] pre, int[] in, int index){
+        for(int i =0; i<pre.length; i++){
+            if(in[i] == pre[index]) return i;
+        }
+        return -1;
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
@@ -2121,6 +2152,15 @@ public class Tree {
         tree.root.right.right.left = new TreeNode(7);
 
 
+        int[] pre = {4,2,1,3,6};
+        int[] in = {1,2,3,4,6};
+        TreeNode tree25jun =  tree.createTree(pre, in, 0, 0, pre.length-1);
+        System.out.println(tree25jun.key);
+        System.out.println(tree25jun.left.key);
+        System.out.println(tree25jun.right.key);
+        tree.Inorder(tree25jun);
+        System.out.println("now pre");
+        tree.Preorder(tree25jun);
         // tree.findLargestLessThanOrEqualToN(tree.root, 9);
         // int in[] = {4, 5, 7}; int n = in.length;
         // ArrayList<TreeNode> trees = tree.getTrees(in, 0, n - 1); 
@@ -2166,7 +2206,7 @@ public class Tree {
         tree.root.right.right.right = new TreeNode(9);
         tree.root.right.right.left = new TreeNode(17);
 
-        tree.findRootToLeafPathsWithGivenSumLists6Jun(mirrorTree.root, 12);
+        // tree.findRootToLeafPathsWithGivenSumLists6Jun(mirrorTree.root, 12);
         // tree.checkLevelAnagram(tree.root, mirrorTree.root);
         // tree.addLeafToQueue(tree.root, tree.root, "any");
         // for(int i =0; i<9;i++){
