@@ -406,6 +406,15 @@ public class DP {
         return max;
     }
 
+    //trying a unifying pattern for rod cutting, coin change and knapsack
+    int rodCuttingIncludeExclude(int[] price, int[] length, int L, int index){ //size is for fixing the for loop iteration number
+        if(index<0) return 0;
+        if(L<=0) return Integer.MIN_VALUE;
+        int incl = price[index]+rodCuttingIncludeExclude(price, length, L-length[index], index); //either select or not
+        int excl = rodCuttingIncludeExclude(price, length, L, index-1);
+        return Math.max(incl,excl);
+    }
+
     int rodCuttingDP(int[] arr){
         int[] dp = new int[arr.length+1];
 
@@ -423,6 +432,111 @@ public class DP {
         }
         return dp[dp.length-1];
     }
+
+
+     /** similar to rod cutting, we have inifinite supply of coins and 
+     * we have to find no of ways we can make change
+     * in rod cutting too, we could take any piece as many times we wanted
+     */
+    int coinChange(int[] arr, int sum, int index){
+        System.out.println("sum "+sum);
+        if(sum==0) return 1;
+        if(sum<0) return 0;
+        if(index <0) return 0;
+        return coinChange(arr, sum-arr[index], index) + coinChange(arr, sum, index-1);
+    }
+
+    //https://www.techiedelight.com/coin-change-problem-find-total-number-ways-get-denomination-coins/
+    /** if we use for loop as in rod cutting
+     * public static int count(int[] S, int N)
+	{
+		// if total is 0, return 1
+		if (N == 0) {
+			return 1;
+		}
+
+		// return 0 if total becomes negative
+		if (N < 0) {
+			return 0;
+		}
+
+		// initialize total number of ways to 0
+		int res = 0;
+
+		// do for each coin
+		for (int i = 0; i < S.length; i++)
+		{
+			// recur to see if total can be reached by including
+			// current coin S[i]
+			res += count(S, N - S[i]);
+		}
+
+		// return total number of ways
+		return res;
+    }
+    
+    this counts permutations as well
+     */
+
+    int knapsack(int[] val, int[] wt, int weightLimit, int index){
+        if(weightLimit <0) return Integer.MIN_VALUE;
+        if(index<0) return 0; //removing equal to causes problems
+        int incl = val[index]+knapsack(val, wt, weightLimit-wt[index], index-1);
+        int excl = knapsack(val, wt, weightLimit, index-1);
+
+        return Math.max(incl, excl);
+    }
+    
+
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] holder = new int[nums.length-k+1]; int holderIndex = 0;
+        int left_index = 0;
+        int right_index = k-1;
+        
+        int max_index = 0; int second_index;
+        for(int i =1; i<k; i++){
+            if(nums[i]>nums[max_index]) {
+                second_index = max_index;
+                max_index =i;
+            }
+        }
+
+        if(max_index!=0) {
+            second_index = 0;
+        } else {
+            second_index = 1;
+        }    
+        
+        // for(int i =1; i<k; i++){
+        //     if(nums[i]>nums[second_index] && second_index!=max_index) {
+        //         second_index =i;
+        //     }
+        // }
+        
+        System.out.println("max "+max_index);
+        System.out.println("second "+ second_index);
+        
+        holder[holderIndex++] = nums[max_index];
+        for(int i = k; i<nums.length; i++){
+            right_index++; left_index++;
+            if(max_index<left_index){
+                if(nums[second_index]<nums[right_index]){
+                    max_index = right_index;
+                }
+                max_index= second_index;
+            }
+            if(nums[max_index]<nums[right_index]){
+                second_index  = max_index;
+                max_index = right_index;
+            }
+            
+            holder[holderIndex++] = nums[max_index];
+        }
+        
+        return holder;
+    }
+
+   
 
     //21 June
     void allSubsets(int[] arr, int[] subset, int index){
@@ -522,6 +636,7 @@ public class DP {
      * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
      */
 
+
     public static void main(String[] args) {
         DP dp = new DP();
         int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
@@ -556,10 +671,21 @@ public class DP {
         int[] jumpArr = { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 };
         // System.out.println("min no of jumps " + dp.minJumps(jumpArr));
 
-        int rodArr[] = new int[] {1, 5, 8, 9, 10, 17, 17, 20}; 
+        int[] rodValArr = {1, 5, 8, 9, 10, 17, 17, 20}; 
+        int[] rodLengthArr = {1,2, 3, 4, 5, 6, 7, 8};  
         // System.out.println(dp.rodCutting(rodArr, rodArr.length));
 
         // System.out.println("the max value of rod cutting is "+dp.rodCuttingDP(rodArr));
+        System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
+
+        int[] coins = {1,2,3};
+        // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length-1));
+
+        int val[] = new int[] { 60, 100, 120 }; 
+        int wt[] = new int[] { 10, 20, 30 }; 
+        int W = 50; 
+        int n = val.length; 
+        // System.out.println("max knapsack value "+dp.knapsack(val, wt, W, n-1)); 
 
         int[] subsetArr = {1,2,3};
         // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
@@ -568,7 +694,10 @@ public class DP {
         // dp.matrixBlockSum(blockSum, 1);
 
         int set[] = {3, 34, 4, 12, 5, 2}; int sum = 9;
-        dp.subsetSum(set, sum, 0);
+        // dp.subsetSum(set, sum, 0);
+
+        int[] nums = {1,3,-1,-3,5,3,6,7}; int k = 3;
+        // dp.print1DMatrix(dp.maxSlidingWindow(nums, k));
 
     }
 }

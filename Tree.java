@@ -2118,11 +2118,14 @@ public class Tree {
      * 1 increment ondex for iteration
      * 2 for start and end ensure the indexes change as per the current index found
      * 3 return the current and also when start == end
+     * 
+     * basically the idea is for preorder the index+1 is the left child 
+     * and the index+2 is right for leaf nodes
     */
     TreeNode createTree(int[] pre, int[] in, int index, int start, int end){
         System.out.println("index "+index);
-        if(start==end) return new TreeNode(in[start]);
         if(start>end) return null;
+        if(start==end) return new TreeNode(in[start]);
         int currIndex = findInInOrder(pre, in, index);
         if(currIndex==-1) return null;
         TreeNode curr = new TreeNode(in[currIndex]);
@@ -2139,6 +2142,8 @@ public class Tree {
         }
         return -1;
     }
+
+    //not the correct solution, some changes are needed
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
