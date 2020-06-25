@@ -409,7 +409,8 @@ public class DP {
     //trying a unifying pattern for rod cutting, coin change and knapsack
     int rodCuttingIncludeExclude(int[] price, int[] length, int L, int index){ //size is for fixing the for loop iteration number
         if(index<0) return 0;
-        if(L<=0) return Integer.MIN_VALUE;
+        if(L<0) return Integer.MIN_VALUE;
+        if(L==0) return 0;
         int incl = price[index]+rodCuttingIncludeExclude(price, length, L-length[index], index); //either select or not
         int excl = rodCuttingIncludeExclude(price, length, L, index-1);
         return Math.max(incl,excl);
@@ -433,19 +434,63 @@ public class DP {
         return dp[dp.length-1];
     }
 
+    int rodCutting2dDP(int[] value, int[] length, int limit){
+        int[][] dp = new int[value.length+1][limit+1];
+        
+        for(int i =1; i<=value.length; i++){
+            for(int j = 1; j<=limit; j++){
+                // if(i==0|| j==0) dp[i][j] = 0;
+                /**the base condition needs to be taken care of
+                 * the first row and the first column need to be correctly filled
+                 */
+                if(length[i-1]>j) dp[i][j] = dp[i-1][j];
+                else {
+                    // System.out.println("i "+i+", j "+j);
+                    dp[i][j] = Math.max(value[i-1]+dp[i][j-length[i-1]], dp[i-1][j]);
+                    /**
+                     * as we can select the same element multiple times, dp[i] is used
+                     * row doesn't denote indexes, it simply denotes if the element is selected or not
+                     * hence we have 0th row(1st el not selected)
+                     */
+                }
+            }
+        }
+        printMatrix(dp);
+        return dp[value.length][limit];
+    }
 
      /** similar to rod cutting, we have inifinite supply of coins and 
      * we have to find no of ways we can make change
-     * in rod cutting too, we could take any piece as many times we wanted
+     * in rod cutting too, we could take any piece as many times as we wanted
      */
     int coinChange(int[] arr, int sum, int index){
         System.out.println("sum "+sum);
         if(sum==0) return 1;
         if(sum<0) return 0;
-        if(index <0) return 0;
-        return coinChange(arr, sum-arr[index], index) + coinChange(arr, sum, index-1);
+        if(index <=0 && sum>=1) return 0;
+        // if(index==0) return 1;
+        return coinChange(arr, sum-arr[index-1], index) + coinChange(arr, sum, index-1);
     }
 
+    public int coinChangeDP(int coins[], int total){
+        int temp[][] = new int[coins.length+1][total+1];
+        for(int i=0; i <= coins.length; i++){
+            temp[i][0] = 1;
+        }
+        //coins[i-1] is used everywhere, i denotes indexes
+        for(int i=1; i <= coins.length; i++){
+            for(int j=1; j <= total ; j++){
+                if(coins[i-1] > j){
+                    temp[i][j] = temp[i-1][j];
+                }
+                else{
+                    temp[i][j] = temp[i][j-coins[i-1]] + temp[i-1][j];
+                }
+            }
+        }
+        printMatrix(temp);
+        return temp[coins.length][total];
+    }
     //https://www.techiedelight.com/coin-change-problem-find-total-number-ways-get-denomination-coins/
     /** if we use for loop as in rod cutting
      * public static int count(int[] S, int N)
@@ -487,6 +532,35 @@ public class DP {
         return Math.max(incl, excl);
     }
     
+    public int knapSackDP(int[] v, int[] w, int W)
+	{
+		// T[i][j] stores the maximum value of knapsack having weight less
+		// than equal to j with only first i items considered.
+		int[][] T = new int[v.length + 1][W + 1];
+
+		// do for ith item
+		for (int i = 1; i <= v.length; i++)
+		{
+			// consider all weights from 0 to maximum capacity W
+			for (int j = 0; j <= W; j++)
+			{
+				// don't include ith element if j-w[i-1] is negative
+				if (w[i-1] > j) {
+					T[i][j] = T[i-1][j];
+				} else {
+					// find maximum value we get by excluding or including the ith item
+					int excl = T[i-1][j];
+					int incl = T[i-1][j-w[i-1]] + v[i-1];
+					System.out.println("for i = "+i+", j = "+j +"; excl "+excl+ ", incl "+incl);
+					T[i][j] = Integer.max(excl, incl);
+				}
+			}
+		}
+
+		// return maximum value
+		printMatrix(T);	
+		return T[v.length][W];
+	}
 
     public int[] maxSlidingWindow(int[] nums, int k) {
         int[] holder = new int[nums.length-k+1]; int holderIndex = 0;
@@ -672,20 +746,24 @@ public class DP {
         // System.out.println("min no of jumps " + dp.minJumps(jumpArr));
 
         int[] rodValArr = {1, 5, 8, 9, 10, 17, 17, 20}; 
-        int[] rodLengthArr = {1,2, 3, 4, 5, 6, 7, 8};  
-        // System.out.println(dp.rodCutting(rodArr, rodArr.length));
+        int[] rodLengthArr = {1, 2, 3, 4, 5, 6, 7, 8};  
+        System.out.println("rod cutting 2d dp "+dp.rodCutting2dDP(rodValArr, rodLengthArr, 8));
+        // System.out.println(dp.rodCutting(rodValArr, rodValArr.length));
 
         // System.out.println("the max value of rod cutting is "+dp.rodCuttingDP(rodArr));
-        System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
+        // System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
 
-        int[] coins = {1,2,3};
-        // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length-1));
+        int[] coins = {1,2,3}; int coinSum =4;
+        // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length));
+        // dp.coinChangeDP(coins, coinSum);
 
         int val[] = new int[] { 60, 100, 120 }; 
-        int wt[] = new int[] { 10, 20, 30 }; 
-        int W = 50; 
+        int wt[] = new int[] { 1, 2, 3 }; 
+        int W = 5; 
         int n = val.length; 
         // System.out.println("max knapsack value "+dp.knapsack(val, wt, W, n-1)); 
+
+		// System.out.println("Knapsack value is " + dp.knapSackDP(val, wt, W));
 
         int[] subsetArr = {1,2,3};
         // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
