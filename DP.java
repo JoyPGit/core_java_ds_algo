@@ -10,6 +10,15 @@ public class DP {
         }
     }
 
+    void printMatrixBool(boolean[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                System.out.print(arr[i][j] + ", ");
+            }
+            System.out.println();
+        }
+    }
+
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i] + ", ");
@@ -477,7 +486,7 @@ public class DP {
         for(int i=0; i <= coins.length; i++){
             temp[i][0] = 1;
         }
-        //coins[i-1] is used everywhere, i denotes indexes
+        //coins[i-1] is used everywhere, i doesn't denote index
         for(int i=1; i <= coins.length; i++){
             for(int j=1; j <= total ; j++){
                 if(coins[i-1] > j){
@@ -560,7 +569,8 @@ public class DP {
 		// return maximum value
 		printMatrix(T);	
 		return T[v.length][W];
-	}
+    }
+
 
     public int[] maxSlidingWindow(int[] nums, int k) {
         int[] holder = new int[nums.length-k+1]; int holderIndex = 0;
@@ -710,6 +720,98 @@ public class DP {
      * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
      */
 
+    boolean subsetSumDP(int[] set, int sum){
+        boolean[][] dp = new boolean[set.length+1][sum+1];
+        dp[0][0] =true;
+        for(int i = 1; i<=set.length; i++){
+            for(int j =0; j<=sum; j++){
+                if(j==0) dp[i][j] = true;
+                else if(set[i-1]>j) dp[i][j] = dp[i-1][j];//tricky : false or from above
+                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i-1]];
+            }
+        }
+        printMatrixBool(dp);
+        System.out.println("the subset exists : "+dp[dp.length-1][dp[0].length-1]);
+        return dp[set.length][sum];
+    }
+
+    /** for every recusrsion invloving selecting or not, remember
+     * 1 the base condition will provide the output
+     * 2 the index needs to be incremented and if selected subtract from some target
+     * 3 add a unifying statement at the end
+     */
+    boolean canPartition(int[] set){
+        int sum = 0;
+        for(int i=0; i<set.length; i++){
+            sum+=set[i];
+        }
+        if(sum%2!=0) return false;
+        int target = sum/2;
+        return canPartitionHelper(set, target ,0);
+    }
+
+    boolean canPartitionHelper(int[] set, int target, int index){
+        if(target == 0) return true;
+        if(index>=set.length) return false;
+        System.out.println("target "+target+" current set el "+set[index]);
+        return canPartitionHelper(set, target-set[index], index+1) || canPartitionHelper(set, target, index+1);
+    }
+
+    boolean canPartitionDP(int[] set){
+        int sum = 0;
+        for(int i=0; i<set.length; i++){
+            sum+=set[i];
+        }
+        if(sum%2!=0) return false;
+        int target = sum/2;
+        boolean[][] dp = new boolean[set.length+1][target+1];
+
+        dp[0][0] = true;
+        for(int i=1; i<=set.length; i++){
+            for(int j =0; j<=target;j++){
+                if(set[i-1]>j) dp[i][j] = dp[i-1][j];
+                else dp[i][j] = dp[i-1][j]|| dp[i-1][j-set[i-1]]; //ALWAYS USE ELSE
+            }
+        }
+        printMatrixBool(dp);
+        return dp[set.length][target];
+    }
+
+
+    /** how to think about this?
+     * first use recursion. if i select start, then player 2 has to select either
+     * start+1 or end. 
+     * if he selects start+1, then
+     * i have the min from start+2 till end. 
+     * or if he goes for end, i have the min from start+1 till end.
+     * same goes if i select end.
+     * 
+     * so relation is arr[start] + min{(start+1, end-1), (start+2, end)}
+     *  arr[end] + min{(start, end-2), start+1,end-1)}
+     * 
+     * THE (START+1, END-1) DENOTES I SELECT START AND PLAYER 2 SELECTS END.
+     * 
+     * why not this relation arr[start] + min{(start+1, end-1) + arr[end], (start+2, end)}
+     * 
+     * ARR[END] IS NOT ADDED AS IT GOES TO PLAYER 2
+     */
+    int twoPlayerStoneGame(int[] arr, int start, int end){
+        // if(end<start) return 0;
+        if(end - start == 1) return Math.max(arr[start], arr[end]);
+
+        return Math.max(
+        arr[start] + 
+        Math.min( twoPlayerStoneGame(arr, start+2, end),
+        twoPlayerStoneGame(arr, start+1, end-1))
+        ,
+        arr[end] + 
+        Math.min( 
+            // arr[end-1] + 
+            twoPlayerStoneGame(arr, start, end-2),
+        // arr[start] + 
+        twoPlayerStoneGame(arr, start+1, end-1))
+        );
+    }
 
     public static void main(String[] args) {
         DP dp = new DP();
@@ -747,11 +849,12 @@ public class DP {
 
         int[] rodValArr = {1, 5, 8, 9, 10, 17, 17, 20}; 
         int[] rodLengthArr = {1, 2, 3, 4, 5, 6, 7, 8};  
-        System.out.println("rod cutting 2d dp "+dp.rodCutting2dDP(rodValArr, rodLengthArr, 8));
+        // System.out.println("rod cutting 2d dp "+dp.rodCutting2dDP(rodValArr, rodLengthArr, 8));
         // System.out.println(dp.rodCutting(rodValArr, rodValArr.length));
 
         // System.out.println("the max value of rod cutting is "+dp.rodCuttingDP(rodArr));
-        // System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
+        // System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, 
+        // rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
 
         int[] coins = {1,2,3}; int coinSum =4;
         // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length));
@@ -773,9 +876,22 @@ public class DP {
 
         int set[] = {3, 34, 4, 12, 5, 2}; int sum = 9;
         // dp.subsetSum(set, sum, 0);
+        // dp.subsetSumDP(set, sum);
+
+        int[] setPartition = //{1, 2, 3, 4};
+        {28,63,95,30,39,16,36,44,37,100,61,73,32,71,100,2,37,60,23,71,53,70,69,82,97,
+        43,16,33,29,5,97,32,29,78,93,59,37,88,89,79,75,9,74,32,81,12,34,13,16,15,16,40,
+        90,70,17,78,54,81,18,92,75,74,59,18,66,62,55,19,2,67,30,25,64,84,25,76,98,59,74,
+        87,5,93,97,68,20,58,55,73,74,97,49,71,42,26,8,87,99,1,16,79};
+        // System.out.println("can the set be partitioned : "+dp.canPartition(setPartition));
+        // System.out.println("can the set be partitioned : "+dp.canPartitionDP(setPartition));
 
         int[] nums = {1,3,-1,-3,5,3,6,7}; int k = 3;
         // dp.print1DMatrix(dp.maxSlidingWindow(nums, k));
+
+        // int[] stone= {1, 5, 3, 7, 10};
+        int[] stone= {8, 15, 3, 7};
+        System.out.println("max stone value by first player is "+dp.twoPlayerStoneGame(stone, 0, stone.length-1));
 
     }
 }
