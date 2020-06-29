@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner6;
+
 public class DP {
     void printMatrix(int[][] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -404,6 +406,33 @@ public class DP {
 
     }
 
+    /**points
+     * 1 assign infinity to dp index 1 till end 
+     * 2 for i =1 loop j from j=0 till i
+     * 3 if arr[j]+j
+     */
+    int jump(int[] arr) {
+        // int[] result = new int[arr.length];
+        int []dp = new int[arr.length];
+        dp[0] = 0;
+        for(int i=1; i < arr.length ; i++){
+            dp[i] = Integer.MAX_VALUE-1;
+        }
+        
+        for(int i=1; i < arr.length; i++){
+            for(int j=0; j < i; j++){
+                if(arr[j] + j >= i){
+                    if(dp[i] > dp[j] + 1){
+                        // result[i] = j;
+                        dp[i] = dp[j] + 1;
+                    }
+                }
+            }
+        }
+        
+        return dp[dp.length-1];
+    }
+
     int rodCutting(int[] price, int size){ //size is for fixing the for loop iteration number
         if(size <=0) return 0;
 
@@ -472,6 +501,9 @@ public class DP {
      * we have to find no of ways we can make change
      * in rod cutting too, we could take any piece as many times as we wanted
      */
+
+    /***the no of ways to make up a sum if infinite supply of coins of each denomination 
+     * is given*/
     int coinChange(int[] arr, int sum, int index){
         System.out.println("sum "+sum);
         if(sum==0) return 1;
@@ -500,6 +532,8 @@ public class DP {
         printMatrix(temp);
         return temp[coins.length][total];
     }
+
+
     //https://www.techiedelight.com/coin-change-problem-find-total-number-ways-get-denomination-coins/
     /** if we use for loop as in rod cutting
      * public static int count(int[] S, int N)
@@ -531,6 +565,27 @@ public class DP {
     
     this counts permutations as well
      */
+
+    /**coin change to achieve the sum with min no of coins */
+    int coinChangeMinNumberDP(int[] coins, int sum){
+        int n = coins.length;
+        int[][] dp = new int[n+1][sum+1];
+
+        dp[0][0] = 0;
+        for(int i = 0; i<=sum; i++){
+            dp[0][i] = 33;
+        }
+        for(int i = 1; i<=coins.length; i++){
+            for(int j= 1; j<=sum; j++){
+                if(coins[i-1]>j) dp[i][j] = dp[i-1][j];
+                else{
+                    dp[i][j] = Math.min(1+dp[i][j-coins[i-1]], dp[i-1][j]);
+                }
+            }
+        }
+        printMatrix(dp);
+        return dp[n][sum];
+     }
 
     int knapsack(int[] val, int[] wt, int weightLimit, int index){
         if(weightLimit <0) return Integer.MIN_VALUE;
@@ -571,6 +626,38 @@ public class DP {
 		return T[v.length][W];
     }
 
+
+    //https://leetcode.com/problems/minimum-cost-for-tickets/
+
+    int trainticketDP(int[] days, int[] costs){
+        int n2 = days.length;
+        int n1 = costs.length;
+        int[] day = {1,7,30};
+            
+        int[][] dp = new int[n1][n2+1];
+        
+        int i;
+        for(i = 0; i<n1;i++){
+            dp[i][0] = 0;
+        }
+        
+        for(i=1; i<=n2; i++){
+            dp[0][i] = 2*i;//Integer.MAX_VALUE;
+        }
+        
+        for(i = 1; i<n1;i++){
+            for(int j=1;j<=n2; j++){
+                if(day[i-1]>j) dp[i][j] = dp[i-1][j];
+                else {
+                    int excl = dp[i-1][j];
+                    int incl = costs[i-1] + dp[i][j-day[i-1]];
+                    dp[i][j] = Math.min(incl, excl); 
+                }
+            }
+        }
+        printMatrix(dp);
+        return dp[n1-1][n2];
+    }
 
     public int[] maxSlidingWindow(int[] nums, int k) {
         int[] holder = new int[nums.length-k+1]; int holderIndex = 0;
@@ -735,7 +822,24 @@ public class DP {
         return dp[set.length][sum];
     }
 
-    /** for every recusrsion invloving selecting or not, remember
+    int maxSizeSubset(int[] set, int sum){
+        int maxLength = 0;
+        maxSizeSubsethelper(set, sum, 0, 0, maxLength);
+        return maxLength;
+    }
+
+    int maxSizeSubsethelper(int[] set, int sum, int index, int length, int maxLength){
+        if(index >= set.length) return 0;
+        if(sum == 0){
+            maxLength = Math.max(maxLength, length);
+            System.out.println("max in here " +maxLength);
+            return 0;
+        }
+        return Math.max(maxSizeSubsethelper(set, sum-set[index], index+1, length+1, maxLength),
+        maxSizeSubsethelper(set, sum, index+1, length, maxLength));
+    }
+
+    /** for every recursion invloving selecting or not, remember
      * 1 the base condition will provide the output
      * 2 the index needs to be incremented and if selected subtract from some target
      * 3 add a unifying statement at the end
@@ -813,6 +917,144 @@ public class DP {
         );
     }
 
+    boolean twoPlayerStoneGameDP(int[] piles){
+        int n = piles.length; int i =0; int sum = 0; int half = 0;
+        
+        int[][] dp = new int[n][n];
+        
+        for(i=0; i<n; i++) {
+            dp[i][i] = piles[i];
+            sum+=piles[i];
+        }
+        
+        half = sum/2;
+        
+        for(int l=2; l<=n;l++){
+            for( i = 0; i+l-1<n;i++){
+                int j = i+l-1;
+                
+                int a = i+1<=j-1?dp[i+1][j-1]:0;
+                int b = i+2<=j?dp[i+2][j]:0;
+                int c = i<=j-2?dp[i][j-2]:0;
+                
+                dp[i][j] = Math.max(piles[i] + Math.min(a,b), 
+                               piles[j]+ Math.min(a,c));
+            }
+        }
+        
+        printMatrix(dp);
+        if(dp[0][n-1]>=half) return true;
+        return false;
+    }
+
+    /** IMPORTANT here the difference between the element shuld be 1,
+     * so pass arr[i][j] - 1 as prev, not infinity
+    */
+    int longestPathMatrix(int[][] matrix){
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int max = 0;
+
+        int[][] dp = new int[n][m];
+
+        for(int i =0; i<n ; i++){
+            for(int j=0; j<m ; j++){
+                max = Math.max(longestPathMatrixHelper(matrix, i, j, dp, matrix[i][j]-1), max);
+            }
+        }
+        return max;
+    }
+
+    int longestPathMatrixHelper(int[][] matrix, int row, int col, int[][] dp, int prev){
+        if(row>=0 && row<matrix.length
+        && col>=0 && col<matrix[0].length
+        && (matrix[row][col]-prev)==1){
+            if(dp[row][col]!=0) return dp[row][col];
+            else{
+                int left = longestPathMatrixHelper(matrix, row, col-1, dp, matrix[row][col]);
+                int right = longestPathMatrixHelper(matrix, row, col+1, dp, matrix[row][col]);
+                int up = longestPathMatrixHelper(matrix, row-1, col, dp, matrix[row][col]);
+                int down = longestPathMatrixHelper(matrix, row+1, col-1, dp, matrix[row][col]);
+
+                dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down)))+1;
+                System.out.println("in here "+dp[row][col]);
+                return dp[row][col];
+            }
+            
+        }
+        return 0;
+    }
+    //remember to replace all consectuive * with a single *
+    boolean wildcardMatch(String text, String pattern){
+      
+        char[] textArr = text.toCharArray();
+        int n1 = textArr.length;
+        char[] patternArr =  pattern.toCharArray();
+        int n2 = patternArr.length;
+        System.out.println("n2 "+n2);
+
+        boolean[][] dp = new boolean[n1+1][n2+1];
+
+        dp[0][0] =true;
+
+        for(int i = 1; i<=n1; i++){
+            for(int j=1; j<=n2; j++ ){
+                if(textArr[i-1] == patternArr[j-1] || patternArr[j-1] == '?'){
+                    dp[i][j] = dp[i-1][j-1];
+                }
+                else if(patternArr[j-1] == '*'){
+                    dp[i][j] = dp[i-1][j] || dp[i][j-1];
+                }
+                else dp[i][j] = false;
+            }
+        }
+        printMatrixBool(dp);
+        return dp[n1][n2];
+    }
+
+    int longestCommonSubsequence(String text1, String text2) {
+        char[] ch1 = text1.toCharArray();
+        char[] ch2 = text2.toCharArray();
+        
+        int n1 = ch1.length; int n2 = ch2.length;
+        
+        int[][] dp = new int [n1+1][n2+1];
+        
+        dp[0][0] =0;
+        
+        for(int i =1; i<=n1; i++){
+            for(int j =1; j<=n2; j++){
+                if(ch1[i-1] == ch2[j-1]){
+                    dp[i][j] = dp[i-1][j-1]+1;
+                } 
+                else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);    
+                }
+            }
+        }
+        return dp[n1][n2];
+    }
+
+    //https://www.geeksforgeeks.org/ways-to-arrange-balls-such-that-adjacent-balls-are-of-different-types/
+    // int arrangeBalls(int p , int q, int r){
+    //     int n  = p+q+r;
+    //     int[] arr = new int[n];
+    //     int count =0;
+
+    //     if(p!=0){
+    //         arr[]
+    //     }
+    //     return arr[n-1];
+    // }
+
+    // void arrangeBallsHelper(int p, int q, int r, int[] arr, int count, int index){
+    //     if(p!=0){
+    //         arr[index-1] !=  
+    //     }
+    // }
+
+    //https://www.geeksforgeeks.org/maximum-size-subset-given-sum/
+    
     public static void main(String[] args) {
         DP dp = new DP();
         int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
@@ -856,9 +1098,14 @@ public class DP {
         // System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, 
         // rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
 
-        int[] coins = {1,2,3}; int coinSum =4;
+        // int[] coins = {1,2,3}; int coinSum =4;
         // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length));
         // dp.coinChangeDP(coins, coinSum);
+        int[] coinsMin = {1,5,6,9};//
+        // {25, 10, 5}; 
+        int sum  = 11;
+        // 30;
+        // System.out.println("the min of of coins is "+dp.coinChangeMinNumberDP(coinsMin, sum));
 
         int val[] = new int[] { 60, 100, 120 }; 
         int wt[] = new int[] { 1, 2, 3 }; 
@@ -866,7 +1113,11 @@ public class DP {
         int n = val.length; 
         // System.out.println("max knapsack value "+dp.knapsack(val, wt, W, n-1)); 
 
-		// System.out.println("Knapsack value is " + dp.knapSackDP(val, wt, W));
+        // System.out.println("Knapsack value is " + dp.knapSackDP(val, wt, W));
+        // int[] days = {1,4,6,7,8,20};
+        int[] days = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+        int[] costs = {2, 7, 15};
+        // System.out.println(" min train ticket cost : "+dp.trainticketDP(days, costs));
 
         int[] subsetArr = {1,2,3};
         // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
@@ -874,7 +1125,7 @@ public class DP {
         int[][] blockSum = {{1,2,3},{4,5,6},{7,8,9}};
         // dp.matrixBlockSum(blockSum, 1);
 
-        int set[] = {3, 34, 4, 12, 5, 2}; int sum = 9;
+        // int set[] = {3, 34, 4, 12, 5, 2}; int sum = 9;
         // dp.subsetSum(set, sum, 0);
         // dp.subsetSumDP(set, sum);
 
@@ -891,7 +1142,16 @@ public class DP {
 
         // int[] stone= {1, 5, 3, 7, 10};
         int[] stone= {8, 15, 3, 7};
-        System.out.println("max stone value by first player is "+dp.twoPlayerStoneGame(stone, 0, stone.length-1));
+        // System.out.println("max stone value by first player is "+dp.twoPlayerStoneGame(stone, 0, stone.length-1));
+        // System.out.println("did the first player win : "+dp.twoPlayerStoneGameDP(stone));
 
+        // System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
+
+        int set[] = {2, 3, 5, 7, 10, 15};
+        int sumSet  = 20;
+        // System.out.println("max length subset is "+dp.maxSizeSubset(set, sumSet));
+
+        int mat[][] = {{1, 2, 9}, {5, 3, 8}, {4, 6, 7}};
+        System.out.println("longest path in matrix is "+dp.longestPathMatrix(mat));
     }
 }
