@@ -367,7 +367,49 @@ class Array {
     //     System.out.println(count++);//goes till 8612
     //     goDeeper();
     // }
+    public int[] asteroidCollision(int[] asteroids) {
+        if(asteroids.length == 0) return new int[0];
+        if(asteroids.length == 1) return asteroids;
+        
+        int leftptr = 0; int rightptr =-1;
+        
+        for(int i=0; i<asteroids.length-1;i++){
+            if((asteroids[i]*asteroids[i+1])<0){
+                System.out.println(asteroids[i]*asteroids[i+1]);
+                leftptr = i;
+                rightptr = i+1;
+                break;
+            }
+        }
 
+        System.out.println("left "+leftptr+ " right "+rightptr);
+        
+        while(leftptr >=0 && rightptr<asteroids.length){
+            if(Math.abs(asteroids[leftptr])>Math.abs(asteroids[rightptr])){
+                asteroids[rightptr++] =0;
+            }
+            else if(Math.abs(asteroids[leftptr])==Math.abs(asteroids[rightptr])){
+                asteroids[leftptr--] =0;
+                asteroids[rightptr++] =0;
+            }
+            else {
+                asteroids[leftptr--] = 0;
+            }
+        }
+
+        int count =0;
+        for(int i =0; i<asteroids.length; i++){
+            if(asteroids[i]!=0) count++;
+        }
+
+        int[] arr = new int[count];
+        int index = 0;
+        for(int i =0; i<asteroids.length; i++){
+            if(asteroids[i]!=0) arr[index++] = asteroids[i];
+        }
+        showArray(arr);
+        return arr;
+    }
 
     public static void main(String[] args) {
         // code
@@ -408,6 +450,9 @@ class Array {
 
         String s ="abcd";
         // System.out.println(s.toCharArray()[0]);
+
+        int[] asteroids = {-2,-1,1,2};
+        test.asteroidCollision(asteroids);
 
     }
 

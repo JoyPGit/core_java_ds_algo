@@ -1,7 +1,5 @@
 import java.util.*;
 
-import javax.lang.model.util.ElementScanner6;
-
 public class DP {
     void printMatrix(int[][] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -25,6 +23,17 @@ public class DP {
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i] + ", ");
         }
+    }
+
+
+    public int factorial(int n){
+        if(n==0 || n==1) return 1;
+        int[] dp = new int[n+1];
+        if(dp[n]==0){
+            dp[n] = n*factorial(n-1);
+            return dp[n];
+        }
+        else return dp[n];
     }
 
     /**
@@ -171,6 +180,7 @@ public class DP {
         }
         return max;
     }
+    
 
     int russianDoll(int[][] arr) {
         int n = arr.length;
@@ -320,6 +330,87 @@ public class DP {
         }
     }
 
+    //1 july
+    // public int deleteAndEarnDP(int[] nums) {
+    //     int n = nums.length;
+    //     if(n==0) return 0;
+    //     if(n == 1) return nums[0];
+    //     int[] dp = new int[n];
+    //     int[] sum = new int[n];
+        
+    //     dp[0] = 1; 
+        
+    //     for(int i =0; i<n ;i++){
+    //         sum[i] = nums[i];
+    //     }
+
+    //     int maxSum = 0;
+    //     for(int i=1; i<n ; i++){
+    //         for(int j = 0; j<i ; j++){
+    //             if((nums[j] == nums[i] || Math.abs(nums[i]-nums[j])>1) && dp[i]<dp[j]){
+    //               if(sum[i]<sum[j]+nums[i]){
+    //                 dp[i] =dp[j];
+    //                 sum[i]+=nums[j];
+    //                 maxSum = Math.max(maxSum, sum[j]);
+    //             }
+    //         }
+    //         dp[i]++;
+    //         sum[i]+=maxSum;
+    //         System.out.println("masxSum "+maxSum + " i "+i+" sum[i] "+sum[i]);
+    //         maxSum = 0;
+    //         }
+    //     }
+        
+    //     int max = 0;
+    //     for(int i =0; i<n ; i++){
+    //         max = Math.max(max, sum[i]);
+    //     }
+    //     System.out.print("dp ");
+    //     print1DMatrix(dp);
+    //     System.out.println();
+    //     System.out.print("sum ");
+    //     print1DMatrix(sum);
+    //     return max;
+    // }
+
+
+    int deleteAndEarn4jul(int[] arr){
+        if(arr.length == 0) return 0;
+        if(arr.length == 1) return arr[0];
+
+        Arrays.sort(arr);
+        ArrayList<Integer> dp = new ArrayList<Integer>();
+        int max = 0;
+        dp.add(arr[0]);
+        if(arr[1]-arr[0]==1) dp.add(Math.max(arr[0], arr[1]));
+        else dp.add(arr[0]+arr[1]);
+
+        if(arr.length == 2) return dp.get(dp.size()-1);
+
+        System.out.println("dp list size "+dp.size());
+        for(int i =2; i<arr.length; i++){
+            if(arr[i]-arr[i-1] ==1){
+                dp.add(Math.max(dp.get(dp.size()-2)+arr[i], dp.get(dp.size()-2)));
+            }else if(arr[i] == arr[i-1]){
+                int val = dp.get(dp.size()-1);
+                dp.remove(dp.size()-1);
+                dp.add(val+arr[i]);
+            }else{
+                dp.add(dp.get(dp.size()-1)+arr[i]);
+            }
+        }
+
+        System.out.println("dp size "+dp.size());
+        for(int i =0; i<dp.size() ; i++){
+            System.out.print(dp.get(i)+", ");
+            System.out.println();
+            max = Math.max(max, dp.get(i));
+        }
+
+        System.out.println("max from delete and earn is "+ max);
+        return max;
+    }
+
     /** also the masseuse problem */
     int highwayBillBoard(int[] board, int[] revenue, int dist) {
         int n = board.length;
@@ -409,7 +500,7 @@ public class DP {
     /**points
      * 1 assign infinity to dp index 1 till end 
      * 2 for i =1 loop j from j=0 till i
-     * 3 if arr[j]+j
+     * 3 if arr[j]+j >=i checking if we can reach index i from index j
      */
     int jump(int[] arr) {
         // int[] result = new int[arr.length];
@@ -432,6 +523,19 @@ public class DP {
         
         return dp[dp.length-1];
     }
+
+    //steps are only of 1,2
+    int staircase(int n){
+        int[] dp = new int[n+1];
+        
+        dp[0] = 1; dp[1] = 1;
+        for(int i=2; i<=n;i++){
+            dp[i] = dp[i-1] + dp[i-2];
+        }
+        
+        return dp[n];
+    }
+
 
     int rodCutting(int[] price, int size){ //size is for fixing the for loop iteration number
         if(size <=0) return 0;
@@ -630,6 +734,10 @@ public class DP {
     //https://leetcode.com/problems/minimum-cost-for-tickets/
 
     int trainticketDP(int[] days, int[] costs){
+
+        int[] newDays = new int[days[days.length-1]+1];
+
+
         int n2 = days.length;
         int n1 = costs.length;
         int[] day = {1,7,30};
@@ -788,6 +896,14 @@ public class DP {
         dp[index] = 0;
         subsetSumHelper(arr, dp, sum , index+1);
     }
+
+    //IMP
+    //2 subset problrms for practice
+    
+    // https://www.geeksforgeeks.org/partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum/
+    // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+
+
 
 
     // https://www.geeksforgeeks.org/perfect-sum-problem-print-subsets-given-sum/
@@ -1057,6 +1173,9 @@ public class DP {
     
     public static void main(String[] args) {
         DP dp = new DP();
+
+        // System.out.println(dp.factorial(4));
+
         int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
         // dp.countPaths(arr);
         // dp.countPaths(arr);
@@ -1079,6 +1198,12 @@ public class DP {
         // dp.sortList(list, list.size()-1, 0);
         // System.out.println(list);
 
+        int[] numsDeleteAndEarn = //{1,1,1,2,4,5,5,5,6} ;//{3,3,3,4,2,2};//
+        // {8,10,4,9,1,3,5,9,4,10};
+        {1,6,3,3,8,4,8,10,1,3};
+        // dp.deleteAndEarnDP(numsDeleteAndEarn);
+        dp.deleteAndEarn4jul(numsDeleteAndEarn);
+
         // int board[] = {6, 7, 12, 13, 14};
         // int revenue[] = {5, 6, 5, 3, 1};
         // System.out.println(dp.highwayBillBoard(board, revenue, 5));
@@ -1088,6 +1213,10 @@ public class DP {
 
         int[] jumpArr = { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 };
         // System.out.println("min no of jumps " + dp.minJumps(jumpArr));
+
+        int[] steps = {1,2};
+        int stairs = 3;
+        // System.out.println("no of ways to climb stairs : "+dp.staircase(stairs));
 
         int[] rodValArr = {1, 5, 8, 9, 10, 17, 17, 20}; 
         int[] rodLengthArr = {1, 2, 3, 4, 5, 6, 7, 8};  
@@ -1115,7 +1244,7 @@ public class DP {
 
         // System.out.println("Knapsack value is " + dp.knapSackDP(val, wt, W));
         // int[] days = {1,4,6,7,8,20};
-        int[] days = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+        int[] days = {1,2,3,4,5,6,7,8,20};
         int[] costs = {2, 7, 15};
         // System.out.println(" min train ticket cost : "+dp.trainticketDP(days, costs));
 
@@ -1152,6 +1281,6 @@ public class DP {
         // System.out.println("max length subset is "+dp.maxSizeSubset(set, sumSet));
 
         int mat[][] = {{1, 2, 9}, {5, 3, 8}, {4, 6, 7}};
-        System.out.println("longest path in matrix is "+dp.longestPathMatrix(mat));
+        // System.out.println("longest path in matrix is "+dp.longestPathMatrix(mat));
     }
 }

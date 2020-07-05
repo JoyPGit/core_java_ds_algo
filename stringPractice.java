@@ -235,6 +235,33 @@ class stringPractice {
         return res;
     }
 
+    public String removeKdigits(String num, int k) {
+        String str = num;
+        char[] ch = str.toCharArray();
+        
+        while(k!=0){
+            int maxIndex = ch[0]>ch[1]?0:1;
+            move(ch, maxIndex, ch.length-1);
+            k--;
+        }
+
+        String ans = String.valueOf(ch);
+        String ans1 = ans.substring(0,ans.indexOf(" "));
+        // System.out.println(ans1);
+        // System.out.println(String.valueOf(ch));
+
+        System.out.println(ans.indexOf(" "));
+        return ans1;
+        // return String.valueOf(ch);
+    }
+
+    void move(char[] ch, int start, int end){
+        for(int i = start; i<end; i++){
+            ch[i] = ch[i+1];
+        }
+        ch[end] = ' ';
+    }
+
     void keyPadPrint(String str){
         if(str == "1"){}
         if(str == "2"){}
@@ -248,6 +275,29 @@ class stringPractice {
         // keyPadPrintUtil(str);
     }
 
+    // https://www.youtube.com/watch?v=qBbZ3tS0McI
+    // void generateParentheses(int n){
+    //     int open = n/2;
+    //     char[] arr = new char[n];
+
+    //     generateParenthesesHelper(arr, 0, open);
+    // }
+
+    // void generateParenthesesHelper(char[] arr, int index, int count){
+    //     if(index == arr.length){
+    //         System.out.println(arr.toString());
+    //         return;
+    //     }
+    //     if(count == 0){
+    //         arr[index] = ')'; 
+    //         generateParenthesesHelper(arr, index+1, count );
+    //     }else {
+    //         arr[index] = '(';
+    //         generateParenthesesHelper(arr, index+1, count-1);
+    //         // arr[index] = 
+    //     }
+
+    // }
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));
@@ -274,13 +324,16 @@ class stringPractice {
         {'Q','A','T','I','T'}};//,'P','R','A','C','T','I','C','E'}}; 
 
         String word = "MICROSOFT";
-        string.findWordInGrid(grid, word);
+        // string.findWordInGrid(grid, word);
 
         // System.out.println(string.isAnagram("str1", "str1"));
 
         String s = "abc";  
         // System.out.println(string.lexicographicSubConcat(s)); 
+        // string.generateParentheses(3);
 
+        String num = "1432219"; int k = 3;
+        string.removeKdigits(num, k);
         
     }
 }

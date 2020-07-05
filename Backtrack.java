@@ -128,7 +128,7 @@ class Backtrack {
 
     void nQueenProblem(int[][] arr, int r){
     
-        if(r==arr.length-1){
+        if(r==arr.length){
             for(int i =0; i<arr.length; i++){
                 for(int j =0; j<arr[0].length; j++){
                     System.out.print(arr[i][j]+", ");
@@ -188,6 +188,94 @@ class Backtrack {
         return true;
     }
 
+
+    void nQueen4jul(int n) {
+        int[][] board = new int[n][n];
+        
+        helper(board, 0);
+        // ArrayList<ArrayList<String>> queenBoard = new ArrayList<>();
+        
+        // for(int i =0; i<n; i++){
+        //     // List[i] = new ArrayList<>();
+        //     for(int j =0; j<n; j++){
+        //         if(board[i][j] == 1) queenBoard.get(i).add("Q");
+        //         else queenBoard.get(i).add(".");
+        //     }
+        // }
+        // return queenBoard;
+    }
+    
+    void helper(int[][] board, int row){
+        if(row == board.length) {
+            System.out.println("found");
+            printMatrix(board);
+            return;
+        }else{
+            for(int i = 0; i<board.length ; i++){
+                board[row][i] = 1;
+                // System.out.println("in here");
+                // printMatrix(board);
+                if(isValid(board, row, i)){
+                    // printMatrix(board);
+                    helper(board, row+1);                
+                } 
+                board[row][i] = 0;
+            }
+        }
+        
+    }
+    
+    boolean isValid(int[][] board, int row, int col){
+        for(int i =0; i<board.length; i++){
+            if(i==col) continue;
+            if(board[row][i] == 1) return false;
+        }
+        for(int i =0; i<board.length; i++){
+            if(i == row) continue;
+            if(board[i][col] == 1) return false;
+        }
+        int i =0; int j =0;
+        // while(row<board.length && row>=0
+        //      && col<board.length && col>=0){
+        //     if(board[row+1][col-1]==1) return false;
+        //     row++; col--;
+        // }
+        
+        // while(row<board.length && row>=0
+        //      && col<board.length && col>=0){
+        //     if(board[row+1][col+1]==1) return false;
+        //     row++; col++;
+        // }
+        // while(row<board.length && row>=0
+        //      && col<board.length && col>=0){
+        //     if(board[row-1][col-1]==1) return false;
+        //     row--; col--;
+        // }
+        // while(row<board.length && row>=0
+        //      && col<board.length && col>=0){
+        //     if(board[row-1][col+1]==1) return false;
+        //     row--; col++;
+        // }
+        for (i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+            if(i == row && j == col) continue;
+            if (board[i][j] == 1) return false;     
+        }
+           
+  
+        /* Check lower diagonal on left side */
+        for (i = row, j = col; j >= 0 && i < board.length; i++, j--) {
+            if(i == row && j == col) continue;
+            if (board[i][j] == 1) return false; 
+        }
+
+        for (i = row, j = col; i >= 0 && j < board.length; i--, j++) {
+            if(i == row && j == col) continue;
+            if (board[i][j] == 1) return false; 
+        }
+        
+        return true;
+    }
+    
     //6 june
     boolean solveRatMaze(int[][] maze){
         int n = maze.length;
@@ -442,6 +530,7 @@ class Backtrack {
         // solbacktrack.printMatrix(problemArr);
 
         // solbacktrack.nQueenProblem(problemArr, 0);
+        solbacktrack.nQueen4jul(8);
         // int[] nums= {1,2,3};
         // ArrayList<ArrayList<Integer>> subSetsList = solbacktrack.subsets(nums);
         int maze[][] = { { 1, 1, 0, 0 }, { 0, 2, 0, 1 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 } }; 
@@ -463,6 +552,6 @@ class Backtrack {
         int[][] grid3x3 = { {3, 0, 6}, 
         {5, 2, 0}, 
         {0, 8, 0}};
-        solbacktrack.sudoku3x3(grid3x3);
+        // solbacktrack.sudoku3x3(grid3x3);
     }
 }
