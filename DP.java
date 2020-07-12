@@ -18,7 +18,7 @@ public class DP {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
                 if(i==arr.length-1 && j == arr[0].length-1) {
-                    System.out.println(arr[i]+";");
+                    System.out.println(arr[i][j]+";");
                     System.out.println();
                 } 
                 else System.out.print(arr[i][j] + ", ");
@@ -1268,7 +1268,12 @@ public class DP {
         }
         return 0;
     }
-    //remember to replace all consectuive * with a single *
+    /** remember to replace all consectuive * with a single *
+     * even though the resultant matrix is upper triangular,
+     * the whole matrix is filled.
+     * 
+     */
+
     boolean wildcardMatch(String text, String pattern){
       
         char[] textArr = text.toCharArray();
@@ -1406,7 +1411,7 @@ public class DP {
         {4,10,10,8,1,4,10,9,7,6};
         // dp.deleteAndEarnDP(numsDeleteAndEarn);
         // dp.deleteAndEarn4jul(numsDeleteAndEarn);
-        dp.deleteAndEarn9jul(numsDeleteAndEarn);
+        // dp.deleteAndEarn9jul(numsDeleteAndEarn);
 
         // int board[] = {6, 7, 12, 13, 14};
         // int revenue[] = {5, 6, 5, 3, 1};
@@ -1487,7 +1492,7 @@ public class DP {
         // System.out.println("max stone value by first player is "+dp.twoPlayerStoneGame(stone, 0, stone.length-1));
         // System.out.println("did the first player win : "+dp.twoPlayerStoneGameDP(stone));
 
-        // System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
+        System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
 
         int set[] = {2, 3, 5, 7, 10, 15};
         int sumSet  = 20;

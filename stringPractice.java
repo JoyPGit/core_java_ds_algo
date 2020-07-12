@@ -358,6 +358,68 @@ class stringPractice {
     //     }
 
     // }
+
+    void stringtoWords(String number){
+        int n = number.length(); int i=0;
+        String a, b, c, d;
+        if(n==4){
+            a = number.substring(0, 1);
+            b = number.substring(1, 2);
+            c = number.substring(2, 3);
+            d = number.substring(3, 4);
+            System.out.println("a "+a);
+            printDigit(a);
+            if(!a.equals("0")) System.out.print(printDigit(a) +" thousand ");
+            if(!b.equals("0")) System.out.print(printDigit(b) +" hundred ");
+            if(!c.equals("0")) System.out.print(printTensDigit(c));
+            if(!d.equals("0")) System.out.print(printDigit(d));
+        }
+        else if(n==3){
+            a = number.substring(0, 1);
+            b = number.substring(1, 2);
+            c = number.substring(2, 3);
+            if(!a.equals("0")) System.out.print(printDigit(a) +" hundred ");
+            if(!b.equals("0")) System.out.print(printTensDigit(b));
+            if(!c.equals("0")) System.out.print(printDigit(c));
+        }
+        else if(n==2){
+            a = number.substring(0, 1);
+            b = number.substring(1, 2);
+            if(!a.equals("0")) System.out.print(printTensDigit(a));
+            if(!b.equals("0")) System.out.print(printDigit(b));
+        }
+        else if(n==1){
+            a = number.substring(0, 1);
+            if(!a.equals("0")) System.out.print(printDigit(a));
+            else if(a.equals("0")) System.out.print("zero");
+        }
+        System.out.println();
+    }
+
+    String printDigit(String s){
+        if(s.equals("1")) return "one ";
+        else if(s.equals("2")) return "two ";
+        else if(s.equals("3")) return "three ";
+        else if(s.equals("4")) return "four";
+        else if(s.equals("5")) return "five";
+        else if(s.equals("6")) return "six";
+        else if(s.equals("7")) return "seven";
+        else if(s.equals("8")) return "eight";
+        else if(s.equals("9")) return "nine";
+        else return "";
+    }
+    String printTensDigit(String s){
+        if(s.equals("1")) return " ten ";
+        else if(s.equals("2")) return " twenty ";
+        else if(s.equals("3")) return " thirty ";
+        else if(s.equals("4")) return " forty ";
+        else if(s.equals("5")) return " fifty ";
+        else if(s.equals("6")) return " sixty ";
+        else if(s.equals("7")) return " seventy ";
+        else if(s.equals("8")) return " eighty ";
+        else if(s.equals("9")) return " ninety ";
+        else return "";
+    }
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));
@@ -395,7 +457,9 @@ class stringPractice {
         String num = "1432219"; int k = 3;
         // string.removeKdigits(num, k);
 
-        string.partitionLabels("ababcbacadefegdehijhklij");
+        // string.partitionLabels("ababcbacadefegdehijhklij");
+        String number = "004";
+        string.stringtoWords(number);
         
     }
 }

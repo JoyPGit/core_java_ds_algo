@@ -1337,6 +1337,44 @@ class Matrix {
         } 
     }
 
+
+    void antiDiaPrint(int[][] arr){
+        int sum =0;
+        while(sum<=(arr.length-1+arr[0].length-1)){
+            for(int i=0; i<arr.length; i++){
+                for(int j =0; j<arr[0].length; j++){
+                    if(i+j == sum) System.out.print(arr[i][j]+", ");
+                }
+            }
+            System.out.println();
+            sum++;
+        }
+    }
+
+    boolean searchRowColSortedMatrix(int[][] arr, int num){
+        int row = -1;
+        for(int i =0; i<arr.length-1; i++){
+            if(arr[i+1][0]>num && arr[i][0]<num) row = i; 
+        }
+        if(row ==-1){
+            if(arr[arr.length-1][0]<num) row = arr.length-1;
+            else if(row ==-1) return false;
+        }
+        System.out.println(row);
+        return binsearch(arr,row,num, 0, arr[0].length-1);
+    }
+
+    boolean binsearch(int[][] arr, int row, int num, int start, int end){
+        if(start>end) return false;
+        int mid = -1;
+        if(start<=end){
+            mid = (start+end)/2;
+        }
+        if(arr[row][mid]==num) return true;
+        else if(arr[row][mid]>num) return binsearch(arr, row, num, start, mid-1);
+        else return binsearch(arr, row, num, mid+1, end);
+    }
+
     public static void main(String[] args) {
         Matrix matrix = new Matrix();
         int[][] twoDimArr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };// new int[2][2];
@@ -1394,7 +1432,17 @@ class Matrix {
 
         int[][] wallsAndGates = {{99,-1,0,99},{99,99,99,-1},{99,-1,99,-1},{0,-1,99,99}};
         // matrix.wallsAndGates(wallsAndGates);
-        matrix.wallsAndGatesKevin(wallsAndGates);
+        // matrix.wallsAndGatesKevin(wallsAndGates);
+        // matrix.antiDiaPrint(twoDimArr);
+
+        int[][] matRowColSorted = { {10, 20, 30, 40},
+                      {15, 25, 35, 45},
+                      {27, 29, 37, 48},
+                      {32, 33, 39, 50}};
+            int  num = 100;
+        
+        System.out.println(matrix.searchRowColSortedMatrix(matRowColSorted, num));
+
     }
 
 }
