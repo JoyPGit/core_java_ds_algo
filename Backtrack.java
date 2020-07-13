@@ -12,6 +12,16 @@ class Backtrack {
         }
     }
 
+    void print1DMatrix(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if(i==arr.length-1) {
+                System.out.println(arr[i]+";");
+                System.out.println();
+            } 
+            else System.out.print(arr[i] + ", ");
+        }
+    }
+
     ArrayList<ArrayList<Integer>> subsets(int[] nums) {
         ArrayList<ArrayList<Integer>> lists = new ArrayList<>();
         // ArrayList
@@ -452,7 +462,58 @@ class Backtrack {
         // System.out.println("line 341");
         return true;
     }
+
+    /** basically same as backtracking.. a vertex is continually assigned colors
+     * from 1 till n, and we check if it's safe, then we recur, else 
+     * we go back to assigning it 0.
+     * 1 isSafe is tricky, run a for loop for all adjacent vertices
+     * check if the color is same as the color assigned to the vertex 
+     * if there exists an edge.
+     * 
+     * 2 a global var foundMinColor is used to break out of the recursive calls
+     * 
+     */
+    boolean foundMinColor =false; 
+    void mColoring(int[][] arr){
+        int[] color = new int[arr.length];
+        mcolorUtil(arr, 0, color);
+    }
     
+    void mcolorUtil(int[][] arr,int vertex, int[] color){
+        if(vertex == arr.length) {
+            print1DMatrix(color);
+            this.foundMinColor = true; 
+            int max =0;
+            for(int i =0; i<color.length; i++){
+                max = Math.max(max, color[i]);
+            }
+            System.out.println("no of colors required is "+(max-1));
+            return;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            if (!foundMinColor) {
+                color[vertex] = i;
+
+                if (isSafemColor(arr, vertex, color)) {
+                    mcolorUtil(arr, vertex + 1, color);
+                }
+
+                color[vertex] = 0;
+            }
+
+        }
+    }
+
+    boolean isSafemColor(int[][] arr, int vertex, int[] color){
+        for(int i =0; i<arr.length; i++){
+            if(arr[vertex][i] == 1 && color[vertex]==color[i]) return false;
+        }
+        return true;
+    }
+    
+
+
     public static void main(String[] args) {
         Backtrack solbacktrack = new Backtrack();
         int[][] problemArr = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
@@ -460,7 +521,7 @@ class Backtrack {
         // solbacktrack.printMatrix(problemArr);
 
         // solbacktrack.nQueenProblem(problemArr, 0);
-        solbacktrack.nQueen4jul(8);
+        // solbacktrack.nQueen4jul(8);
         // int[] nums= {1,2,3};
         // ArrayList<ArrayList<Integer>> subSetsList = solbacktrack.subsets(nums);
         int maze[][] = { { 1, 1, 0, 0 }, { 0, 2, 0, 1 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 } }; 
@@ -483,5 +544,14 @@ class Backtrack {
         {5, 2, 0}, 
         {0, 8, 0}};
         // solbacktrack.sudoku3x3(grid3x3);
+        int[][] graph = { 
+            { 0, 1, 1, 1 }, 
+            { 1, 0, 1, 0 }, 
+            { 1, 1, 0, 1 }, 
+            { 1, 0, 1, 0 }, 
+        }; 
+
+        solbacktrack.mColoring(graph);
     }
+    
 }
