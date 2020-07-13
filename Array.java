@@ -378,24 +378,24 @@ class Array {
     //     goDeeper();
     // }
 
-    public int pivotIndex(int[] nums) {
-        int left =0; int leftSum =nums[left];
-        int right =nums.length-1; int rightSum=nums[right];
+    // public int pivotIndex(int[] nums) {
+    //     int left =0; int leftSum =nums[left];
+    //     int right =nums.length-1; int rightSum=nums[right];
         
-        boolean found = false;
-        while(!found){
-            if(left>=right || right-left==1) return -1;
-            if(leftSum > rightSum) rightSum += nums[--right];
-            else if(leftSum<rightSum) leftSum += nums[++left];
-            else {
-                found = true;
-                System.out.println(rightSum);
-            }
-        }
-        System.out.println("left "+left);
-        System.out.println("right "+right);
-        return left+1;
-    }
+    //     boolean found = false;
+    //     while(!found){
+    //         if(left>=right || right-left==1) return -1;
+    //         if(leftSum > rightSum) rightSum += nums[--right];
+    //         else if(leftSum<rightSum) leftSum += nums[++left];
+    //         else {
+    //             found = true;
+    //             System.out.println(rightSum);
+    //         }
+    //     }
+    //     System.out.println("left "+left);
+    //     System.out.println("right "+right);
+    //     return left+1;
+    // }
 
     public int[] asteroidCollision(int[] asteroids) {
         if(asteroids.length == 0) return new int[0];
@@ -477,20 +477,6 @@ class Array {
             // System.out.println("max "+max+" sum "+sum);
         }
         System.out.println("max sum is "+ max);
-        return max;
-    }
-
-    int largestSumContigousSubarrayDP(int[] arr){
-        int sum =0; int max =0;
-        int[] dp = new int[arr.length];
-        dp[0] = arr[0];
-
-        for(int i=1; i<arr.length; i++ ){
-            dp[i] = Math.max(dp[i-1]+arr[i], dp[i-1]);
-            // System.out.println("max "+max+" sum "+sum);
-        }
-        print1DMatrix(dp);
-        System.out.println("max sum is "+ dp[dp.length-1]);
         return max;
     }
 

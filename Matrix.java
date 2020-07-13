@@ -8,15 +8,14 @@ class Matrix {
 
     // twoDimArr = {{1,2},{3,4}};
 
-    void showMatrix(int[][] arr){
-        for(int i=0; i<arr.length; i++){
-            for(int j=0; j<arr[0].length; j++){
-                System.out.print(arr[i][j]+", ");
+    void showMatrix(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                System.out.print(arr[i][j] + ", ");
             }
             System.out.println();
         }
     }
-
 
     void rotateMatrix(int m, int n, int[][] arr) {
 
@@ -593,7 +592,8 @@ class Matrix {
             // Get the middle index
             int mid = low + (high - low) / 2;
 
-            // Check if the element at middle index is first 1 or the mid index has reached 0
+            // Check if the element at middle index is first 1 or the mid index has reached
+            // 0
             if ((mid == 0 || (arr[mid - 1] == 0)) && arr[mid] == 1)
                 return mid;
 
@@ -619,7 +619,7 @@ class Matrix {
         int i, index;
         for (i = 0; i < R; i++) {
             index = first(mat[i], 0, C - 1);
-            System.out.println("mid "+index);
+            System.out.println("mid " + index);
             if (index != -1 && C - index > max) {
                 max = C - index;
                 max_row_index = i;
@@ -629,170 +629,166 @@ class Matrix {
         return max_row_index;
     }
 
-
     /** all 0s surrounded by 1s will be marked 1 */
-    void floodFill(int[][] arr){
+    void floodFill(int[][] arr) {
 
-        int[][] visited =  new int[arr.length][arr[0].length];
+        int[][] visited = new int[arr.length][arr[0].length];
 
         int i, j;
-        for(i =0; i<arr.length; i++){
-            for(j=0; j< (arr[0].length); j++){
+        for (i = 0; i < arr.length; i++) {
+            for (j = 0; j < (arr[0].length); j++) {
                 visited[i][j] = 0;
             }
         }
 
-        for(i =0; i<arr.length; i++){
-            for(j=0; j<arr[0].length; j++){
+        for (i = 0; i < arr.length; i++) {
+            for (j = 0; j < arr[0].length; j++) {
                 floodFillUtil(arr, visited, i, j);
             }
         }
     }
 
-    void floodFillUtil(int[][] arr, int[][] visited, int rowIndex, int colIndex){
-        if(isSafe29Apr(arr, rowIndex, colIndex)){
-            if(visited[rowIndex][colIndex]!=1){
+    void floodFillUtil(int[][] arr, int[][] visited, int rowIndex, int colIndex) {
+        if (isSafe29Apr(arr, rowIndex, colIndex)) {
+            if (visited[rowIndex][colIndex] != 1) {
                 arr[rowIndex][colIndex] = 1;
                 visited[rowIndex][colIndex] = 1;
-                floodFillUtil(arr, visited, rowIndex+1, colIndex);
-                floodFillUtil(arr, visited, rowIndex+1, colIndex);
-                floodFillUtil(arr, visited, rowIndex, colIndex+1);
-                floodFillUtil(arr, visited, rowIndex, colIndex-1);
+                floodFillUtil(arr, visited, rowIndex + 1, colIndex);
+                floodFillUtil(arr, visited, rowIndex + 1, colIndex);
+                floodFillUtil(arr, visited, rowIndex, colIndex + 1);
+                floodFillUtil(arr, visited, rowIndex, colIndex - 1);
             }
-        }    
+        }
     }
 
-    boolean isSafe29Apr(int[][] arr, int rowIndex, int colIndex){
-        if(rowIndex>=0 && rowIndex <arr.length
-        && colIndex>=0 && colIndex< arr[0].length
-        && arr[rowIndex][colIndex] == 0 ){
+    boolean isSafe29Apr(int[][] arr, int rowIndex, int colIndex) {
+        if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
+                && arr[rowIndex][colIndex] == 0) {
             return true;
-        }
-        else return false;
+        } else
+            return false;
     }
 
     public int orangesRotting(int[][] grid) {
-        
+
         int R = grid.length;
         int C = grid[0].length;
         int[][] tracker = new int[R][C];
-        int i,j;
-        
-        for(i=0; i<R; i++){
-            for(j=0; j<C; j++){
-                orangesRottingHelper(grid,tracker, i,j,0);
+        int i, j;
+
+        for (i = 0; i < R; i++) {
+            for (j = 0; j < C; j++) {
+                orangesRottingHelper(grid, tracker, i, j, 0);
             }
         }
-        
-        for(i=0; i<R; i++){
-            for(j=0; j<C; j++){
-                if(grid[i][j] == 1) return -1;
+
+        for (i = 0; i < R; i++) {
+            for (j = 0; j < C; j++) {
+                if (grid[i][j] == 1)
+                    return -1;
             }
         }
-        
+
         int max = 0;
-        for(i=0; i<R; i++){
-            for(j=0; j<C; j++){
-                System.out.print(tracker[i][j]+", ");
-                if(tracker[i][j]>max) max = tracker[i][j];
+        for (i = 0; i < R; i++) {
+            for (j = 0; j < C; j++) {
+                System.out.print(tracker[i][j] + ", ");
+                if (tracker[i][j] > max)
+                    max = tracker[i][j];
             }
             System.out.println();
         }
         // System.out.println(tracker[R-1][C-2]);
         // System.out.println(tracker[R-1][C-1]);
         return max;
-        
+
     }
-    
-    
-    void orangesRottingHelper(int[][] arr, int[][] tracker, int rowIndex, int colIndex, int time){
-        
-        if(isSafeOranges(arr, rowIndex, colIndex) == 1){
+
+    void orangesRottingHelper(int[][] arr, int[][] tracker, int rowIndex, int colIndex, int time) {
+
+        if (isSafeOranges(arr, rowIndex, colIndex) == 1) {
             arr[rowIndex][colIndex] = 2;
-             if(tracker[rowIndex][colIndex]==0){
+            if (tracker[rowIndex][colIndex] == 0) {
                 tracker[rowIndex][colIndex] = time;
             }
-            
-            if(tracker[rowIndex][colIndex]>time){
+
+            if (tracker[rowIndex][colIndex] > time) {
                 tracker[rowIndex][colIndex] = time;
             }
-           
-            time = tracker[rowIndex][colIndex]+1;
-            orangesRottingHelper(arr, tracker, rowIndex+1, colIndex, time);
-            orangesRottingHelper(arr, tracker, rowIndex-1, colIndex, time);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex+1, time);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex-1, time);
+
+            time = tracker[rowIndex][colIndex] + 1;
+            orangesRottingHelper(arr, tracker, rowIndex + 1, colIndex, time);
+            orangesRottingHelper(arr, tracker, rowIndex - 1, colIndex, time);
+            orangesRottingHelper(arr, tracker, rowIndex, colIndex + 1, time);
+            orangesRottingHelper(arr, tracker, rowIndex, colIndex - 1, time);
         }
-        
-        if(isSafeOranges(arr, rowIndex, colIndex) == 2){
+
+        if (isSafeOranges(arr, rowIndex, colIndex) == 2) {
             arr[rowIndex][colIndex] = 3;
             tracker[rowIndex][colIndex] = 0;
-            orangesRottingHelper(arr, tracker, rowIndex+1, colIndex, 1);
-            orangesRottingHelper(arr, tracker, rowIndex-1, colIndex, 1);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex+1, 1);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex-1, 1);
+            orangesRottingHelper(arr, tracker, rowIndex + 1, colIndex, 1);
+            orangesRottingHelper(arr, tracker, rowIndex - 1, colIndex, 1);
+            orangesRottingHelper(arr, tracker, rowIndex, colIndex + 1, 1);
+            orangesRottingHelper(arr, tracker, rowIndex, colIndex - 1, 1);
         }
     }
-    
-    int isSafeOranges(int[][] arr, int rowIndex, int colIndex){
-        if(rowIndex<arr.length && rowIndex>=0
-          && colIndex>=0 && colIndex<arr[0].length
-          && arr[rowIndex][colIndex]==2){
+
+    int isSafeOranges(int[][] arr, int rowIndex, int colIndex) {
+        if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
+                && arr[rowIndex][colIndex] == 2) {
             return 2;
         }
-        if(rowIndex<arr.length && rowIndex>=0
-          && colIndex>=0 && colIndex<arr[0].length
-          && arr[rowIndex][colIndex]==1){
+        if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
+                && arr[rowIndex][colIndex] == 1) {
             return 1;
         }
-        if(rowIndex<arr.length && rowIndex>=0
-          && colIndex>=0 && colIndex<arr[0].length
-          && arr[rowIndex][colIndex]==1){
+        if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
+                && arr[rowIndex][colIndex] == 1) {
             return 3;
-        }
-        else return -1;
+        } else
+            return -1;
     }
 
-
-    void diagonalPrintMatrix(int[][] matrix){
-        int R = matrix.length-1; //2
-        int C = matrix[0].length-1; //2
+    void diagonalPrintMatrix(int[][] matrix) {
+        int R = matrix.length - 1; // 2
+        int C = matrix[0].length - 1; // 2
         int sum = 0;
-        int i= 0, j=0;
-        while(sum<=R*C){
+        int i = 0, j = 0;
+        while (sum <= R * C) {
             findAndPrint(matrix, sum);
             sum++;
             System.out.println();
         }
         // while(i+j==sum && sum<=R*C){
-        //     System.out.println(matrix[i][j]+", ");
-        //     i++; j++;
+        // System.out.println(matrix[i][j]+", ");
+        // i++; j++;
         // }
         // for(i =0 ;i<=R; i++){
-        //     for (j =0; j<=C; j++){
-        //         if(sum==i+j && sum<=R*C){System.out.print(matrix[i][j]+", ");}
-        //         sum++;
-        //     }
-        //     System.out.println();
+        // for (j =0; j<=C; j++){
+        // if(sum==i+j && sum<=R*C){System.out.print(matrix[i][j]+", ");}
+        // sum++;
+        // }
+        // System.out.println();
         // }
     }
-    
-    void findAndPrint(int[][] matrix, int sum){
-        for(int i=0; i<matrix.length; i++){
-            for(int j =0; j<matrix[0].length; j++){
-                if(i+j==sum) System.out.print(matrix[i][j]+", ");
+
+    void findAndPrint(int[][] matrix, int sum) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (i + j == sum)
+                    System.out.print(matrix[i][j] + ", ");
             }
         }
     }
 
-    class holder{
+    class holder {
         int row;
         int col;
         int value;
         int time;
         boolean visited = false;
 
-        holder(int rowIndex, int colIndex, int value, int time, boolean visited){
+        holder(int rowIndex, int colIndex, int value, int time, boolean visited) {
             this.row = rowIndex;
             this.col = colIndex;
             this.value = value;
@@ -800,392 +796,384 @@ class Matrix {
             this.visited = visited;
         }
 
-        boolean getVisited(){
+        boolean getVisited() {
             return this.visited;
         }
 
-        void setVisited(){
+        void setVisited() {
             this.visited = true;
         }
     }
 
+    void orangesRotting1May(int[][] arr) {
 
-    void orangesRotting1May(int[][] arr){
-
-        Queue<holder> hold = new LinkedList<Matrix.holder>(); 
+        Queue<holder> hold = new LinkedList<Matrix.holder>();
 
         holder[][] finalTimeArray = new holder[arr.length][arr[0].length];
-        
-        for(int i =0; i<arr.length; i++){
-            for( int j =0; j<arr[0].length; j++){
-                if(arr[i][j]==0) (finalTimeArray[i][j]) = new holder(i, j, arr[i][j], -1, false);
-                else (finalTimeArray[i][j]) = new holder(i, j, arr[i][j], 0, false);
+
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (arr[i][j] == 0)
+                    (finalTimeArray[i][j]) = new holder(i, j, arr[i][j], -1, false);
+                else
+                    (finalTimeArray[i][j]) = new holder(i, j, arr[i][j], 0, false);
             }
         }
 
-        for(int i =0; i<arr.length; i++){
-            for( int j =0; j<arr[0].length; j++){
-                if((finalTimeArray[i][j]).value==2){
-                    hold.add(new holder((finalTimeArray[i][j]).row,
-                    (finalTimeArray[i][j]).col,
-                    (finalTimeArray[i][j]).value, (finalTimeArray[i][j]).time, true));
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if ((finalTimeArray[i][j]).value == 2) {
+                    hold.add(new holder((finalTimeArray[i][j]).row, (finalTimeArray[i][j]).col,
+                            (finalTimeArray[i][j]).value, (finalTimeArray[i][j]).time, true));
                 }
             }
         }
 
         // System.out.println(hold.size());
 
-        while(!hold.isEmpty()){
+        while (!hold.isEmpty()) {
             holder current = hold.poll();
             // holder current = hold.remove();
-            // System.out.print("index row:"+current.row+", index col"+current.col+", visited "+ current.visited+", ");
+            // System.out.print("index row:"+current.row+", index col"+current.col+",
+            // visited "+ current.visited+", ");
             orangesRotting1MayHelper(arr, hold, current, finalTimeArray);
         }
 
-        for(int i =0; i<arr.length; i++){
-            for( int j =0; j<arr[0].length; j++){
-                System.err.print((finalTimeArray[i][j]).time+", ");
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                System.err.print((finalTimeArray[i][j]).time + ", ");
             }
             System.out.println();
         }
     }
 
-    void orangesRotting1MayHelper(int[][] arr, Queue hold, holder current, holder[][] finalTimeArray){
-        if(isSafeOranges1May(finalTimeArray, current.row+1, current.col)){//into visited method
-            if(isVisitedOranges1May(finalTimeArray, current.row+1, current.col)){
-                if((finalTimeArray[current.row+1][current.col]).time > current.time+1) {
+    void orangesRotting1MayHelper(int[][] arr, Queue hold, holder current, holder[][] finalTimeArray) {
+        if (isSafeOranges1May(finalTimeArray, current.row + 1, current.col)) {// into visited method
+            if (isVisitedOranges1May(finalTimeArray, current.row + 1, current.col)) {
+                if ((finalTimeArray[current.row + 1][current.col]).time > current.time + 1) {
                     // (finalTimeArray[current.row+1][current.col]).time =current.time+1;
-                    finalTimeArray[current.row+1][current.col] = 
-                        new holder(current.row+1, current.col, 
-                        (finalTimeArray[current.row+1][current.col]).value,
-                        current.time+1, true);
+                    finalTimeArray[current.row + 1][current.col] = new holder(current.row + 1, current.col,
+                            (finalTimeArray[current.row + 1][current.col]).value, current.time + 1, true);
                     // hold.add(new holder(current.row+1, current.col, 2, current.time+1, true));
                 }
             } else {
-                (finalTimeArray[current.row+1][current.col]).setVisited();
-                finalTimeArray[current.row+1][current.col].time = current.time+1;
-                // System.out.println("visited " +(finalTimeArray[current.row+1][current.col]).visited);
-                hold.add(new holder(current.row+1, current.col, 2, current.time+1, true));
+                (finalTimeArray[current.row + 1][current.col]).setVisited();
+                finalTimeArray[current.row + 1][current.col].time = current.time + 1;
+                // System.out.println("visited "
+                // +(finalTimeArray[current.row+1][current.col]).visited);
+                hold.add(new holder(current.row + 1, current.col, 2, current.time + 1, true));
             }
-            
+
         }
 
-        if(isSafeOranges1May(finalTimeArray, current.row, current.col+1)){
-            if(isVisitedOranges1May(finalTimeArray, current.row, current.col+1)){
-                if((finalTimeArray[current.row][current.col+1]).time > current.time+1) {
-                    
-                    finalTimeArray[current.row][current.col+1] = 
-                        new holder(current.row, current.col+1, 
-                        (finalTimeArray[current.row+1][current.col]).value,
-                        current.time+1, true);
+        if (isSafeOranges1May(finalTimeArray, current.row, current.col + 1)) {
+            if (isVisitedOranges1May(finalTimeArray, current.row, current.col + 1)) {
+                if ((finalTimeArray[current.row][current.col + 1]).time > current.time + 1) {
+
+                    finalTimeArray[current.row][current.col + 1] = new holder(current.row, current.col + 1,
+                            (finalTimeArray[current.row + 1][current.col]).value, current.time + 1, true);
                     // hold.add(new holder(current.row, current.col+1, 2, current.time+1, true));
                 }
-            }else{
-                (finalTimeArray[current.row][current.col+1]).setVisited();
-                finalTimeArray[current.row][current.col+1].time = current.time+1;
-                hold.add(new holder(current.row, current.col+1, 2, current.time+1, true));
+            } else {
+                (finalTimeArray[current.row][current.col + 1]).setVisited();
+                finalTimeArray[current.row][current.col + 1].time = current.time + 1;
+                hold.add(new holder(current.row, current.col + 1, 2, current.time + 1, true));
             }
-            // finalTimeArray[current.row][current.col+1] = 
-            //             new holder(current.row, current.col+1, 
-            //             (finalTimeArray[current.row][current.col+1]).value,
-            //             current.time+1, true);
-            
+            // finalTimeArray[current.row][current.col+1] =
+            // new holder(current.row, current.col+1,
+            // (finalTimeArray[current.row][current.col+1]).value,
+            // current.time+1, true);
+
         }
 
-        if(isSafeOranges1May(finalTimeArray, current.row-1, current.col)){
-            if(isVisitedOranges1May(finalTimeArray, current.row-1, current.col)){
-                if(current.time > current.time+1) {
-                    current.time = current.time+1;
-                    finalTimeArray[current.row-1][current.col] = 
-                        new holder(current.row-1, current.col, 
-                        (finalTimeArray[current.row-1][current.col]).value,
-                        current.time+1, true);
+        if (isSafeOranges1May(finalTimeArray, current.row - 1, current.col)) {
+            if (isVisitedOranges1May(finalTimeArray, current.row - 1, current.col)) {
+                if (current.time > current.time + 1) {
+                    current.time = current.time + 1;
+                    finalTimeArray[current.row - 1][current.col] = new holder(current.row - 1, current.col,
+                            (finalTimeArray[current.row - 1][current.col]).value, current.time + 1, true);
                     // hold.add(new holder(current.row-1, current.col, 2, current.time+1, true));
                 }
-            }else {
-                (finalTimeArray[current.row-1][current.col]).setVisited();
-                hold.add(new holder(current.row-1, current.col, 2, current.time+1, true));
+            } else {
+                (finalTimeArray[current.row - 1][current.col]).setVisited();
+                hold.add(new holder(current.row - 1, current.col, 2, current.time + 1, true));
             }
-            // finalTimeArray[current.row-1][current.col] = 
-            //             new holder(current.row-1, current.col, 
-            //             (finalTimeArray[current.row-1][current.col]).value,
-            //             current.time+1, true);
-            
+            // finalTimeArray[current.row-1][current.col] =
+            // new holder(current.row-1, current.col,
+            // (finalTimeArray[current.row-1][current.col]).value,
+            // current.time+1, true);
+
         }
 
-        if(isSafeOranges1May(finalTimeArray, current.row, current.col-1)){
-            if(isVisitedOranges1May(finalTimeArray, current.row, current.col-1)){
-                if(current.time > current.time+1) {
-                    current.time = current.time+1;
-                    finalTimeArray[current.row][current.col-1] = 
-                        new holder(current.row, current.col-1, 
-                        (finalTimeArray[current.row][current.col-1]).value, 
-                        current.time+1, true);
+        if (isSafeOranges1May(finalTimeArray, current.row, current.col - 1)) {
+            if (isVisitedOranges1May(finalTimeArray, current.row, current.col - 1)) {
+                if (current.time > current.time + 1) {
+                    current.time = current.time + 1;
+                    finalTimeArray[current.row][current.col - 1] = new holder(current.row, current.col - 1,
+                            (finalTimeArray[current.row][current.col - 1]).value, current.time + 1, true);
                     // hold.add(new holder(current.row, current.col-1, 2, current.time+1, true));
-            }else{
-                (finalTimeArray[current.row][current.col-1]).setVisited();
-                hold.add(new holder(current.row, current.col-1, 2, current.time+1, true));
-            }
-            // finalTimeArray[current.row][current.col-1] = 
-            //             new holder(current.row, current.col-1, 
-            //             (finalTimeArray[current.row][current.col-1]).value,
-            //             current.time+1, true);
-            
+                } else {
+                    (finalTimeArray[current.row][current.col - 1]).setVisited();
+                    hold.add(new holder(current.row, current.col - 1, 2, current.time + 1, true));
+                }
+                // finalTimeArray[current.row][current.col-1] =
+                // new holder(current.row, current.col-1,
+                // (finalTimeArray[current.row][current.col-1]).value,
+                // current.time+1, true);
 
             }
         }
 
     }
 
-
-    boolean isSafeOranges1May(holder[][] arr, int rowIndex, int colIndex){
-        if(rowIndex >=0 && rowIndex<arr.length
-        && colIndex>=0 && colIndex<arr[0].length
-        && (arr[rowIndex][colIndex]).value!=-1){
+    boolean isSafeOranges1May(holder[][] arr, int rowIndex, int colIndex) {
+        if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
+                && (arr[rowIndex][colIndex]).value != -1) {
             return true;
         }
         return false;
     }
 
-    boolean isVisitedOranges1May(holder[][] arr, int rowIndex, int colIndex){
-        if((arr[rowIndex][colIndex]).visited == true) return true;
+    boolean isVisitedOranges1May(holder[][] arr, int rowIndex, int colIndex) {
+        if ((arr[rowIndex][colIndex]).visited == true)
+            return true;
         return false;
     }
 
-    class BFSNode{
+    class BFSNode {
         int rowIndex;
         int colIndex;
         int value;
 
-        BFSNode(int rowIndex, int colIndex, int value){
+        BFSNode(int rowIndex, int colIndex, int value) {
             this.rowIndex = rowIndex;
-            this.colIndex= colIndex; 
+            this.colIndex = colIndex;
             this.value = value;
         }
-        
+
     }
 
-    void BFSMatrix(int[][] arr){
-        
-        int i,j;
+    void BFSMatrix(int[][] arr) {
+
+        int i, j;
         int[][] visited = new int[arr.length][arr[0].length];
 
-        BFSNode node = new BFSNode(0,0,arr[0][0]);
+        BFSNode node = new BFSNode(0, 0, arr[0][0]);
 
         Queue<BFSNode> bfsQueue = new LinkedList<>();
-        bfsQueue.add(node); 
-        visited[0][0]=1;
+        bfsQueue.add(node);
+        visited[0][0] = 1;
 
-        while(!bfsQueue.isEmpty()){
+        while (!bfsQueue.isEmpty()) {
             BFSNode x = bfsQueue.remove();
-            System.out.print(x.value+", ");
+            System.out.print(x.value + ", ");
             // visited[x.rowIndex][x.colIndex] = 1;
             BFSMatrixHelper(arr, visited, x, bfsQueue);
         }
     }
 
-    void BFSMatrixHelper(int[][] arr, int[][] visited, BFSNode node, Queue bfsQueue){
-        int row  = node.rowIndex; int col = node.colIndex;
+    void BFSMatrixHelper(int[][] arr, int[][] visited, BFSNode node, Queue bfsQueue) {
+        int row = node.rowIndex;
+        int col = node.colIndex;
 
-        if(isSafeBFS(row+1, col, arr)){
-            if(visited[row+1][col]!=1){
-                visited[row+1][col]=1;
+        if (isSafeBFS(row + 1, col, arr)) {
+            if (visited[row + 1][col] != 1) {
+                visited[row + 1][col] = 1;
                 // System.out.println("el "+arr[row+1][col]);
-                bfsQueue.add(new BFSNode(row+1, col, arr[row+1][col]));
+                bfsQueue.add(new BFSNode(row + 1, col, arr[row + 1][col]));
             }
         }
 
-        if(isSafeBFS(row-1, col, arr)){
-            if(visited[row-1][col]!=1){
-                visited[row-1][col]=1;
+        if (isSafeBFS(row - 1, col, arr)) {
+            if (visited[row - 1][col] != 1) {
+                visited[row - 1][col] = 1;
                 // System.out.println("el "+arr[row-1][col]);
-                bfsQueue.add(new BFSNode(row-1, col, arr[row-1][col]));
+                bfsQueue.add(new BFSNode(row - 1, col, arr[row - 1][col]));
             }
         }
 
-        if(isSafeBFS(row, col+1, arr)){
-            if(visited[row][col+1]!=1){
-                visited[row][col+1]=1;
+        if (isSafeBFS(row, col + 1, arr)) {
+            if (visited[row][col + 1] != 1) {
+                visited[row][col + 1] = 1;
                 // System.out.println("el "+arr[row][col+1]);
-                bfsQueue.add(new BFSNode(row, col+1, arr[row][col+1]));
+                bfsQueue.add(new BFSNode(row, col + 1, arr[row][col + 1]));
             }
         }
 
-        if(isSafeBFS(row, col-1, arr)){
-            if(visited[row][col-1]!=1){
-                visited[row][col-1]=1;
+        if (isSafeBFS(row, col - 1, arr)) {
+            if (visited[row][col - 1] != 1) {
+                visited[row][col - 1] = 1;
                 // System.out.println("el "+arr[row][col-1]);
-                bfsQueue.add(new BFSNode(row, col-1, arr[row][col-1]));
+                bfsQueue.add(new BFSNode(row, col - 1, arr[row][col - 1]));
             }
         }
     }
 
-    boolean isSafeBFS(int row, int col, int[][] arr){
-        if(row>=0 && row<arr.length
-        && col>=0 && col<arr[0].length){
+    boolean isSafeBFS(int row, int col, int[][] arr) {
+        if (row >= 0 && row < arr.length && col >= 0 && col < arr[0].length) {
             return true;
         }
         return false;
     }
 
-    /**need to take one of two approaches 
-     * either a global var and update it after every dfs
-     * or make function return value
-    */
-    int countPathLength =0;
-    void maxPathLength(int[][] arr){
+    /**
+     * need to take one of two approaches either a global var and update it after
+     * every dfs or make function return value
+     */
+    int countPathLength = 0;
+
+    void maxPathLength(int[][] arr) {
         int[][] holder = new int[arr.length][arr[0].length];
         int max7jun = -1;
-        for(int i=0; i<arr.length; i++){
-            for(int j=0; j<arr[0].length; j++){
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
                 // holder[i][j] = maxPathLengthHelper(arr, i, j, holder);
                 // System.out.print(holder[i][j]+", ");
                 max7jun = Math.max(max7jun, maxPathLengthHelper(arr, i, j, holder, -9999));
-                //3 technique for max no extra for loop
-                
+                // 3 technique for max no extra for loop
+
                 // this.countPathLength = 0;
             }
         }
 
-        System.out.println("max length path is "+max7jun);
+        System.out.println("max length path is " + max7jun);
     }
 
-    /** this can't be solved without dp if we dont use a visited matrix 
-     * else we eill be recurring for adjacent psns indefinitely
-     * dp is used to check if value exists or not.
+    /**
+     * this can't be solved without dp if we dont use a visited matrix else we eill
+     * be recurring for adjacent psns indefinitely dp is used to check if value
+     * exists or not.
      */
-    int maxPathLengthHelper(int[][] arr, int i, int j, int[][] holder, int curr){
-        /**should i put the check now or wait for the next func call with (i+1,j)? */
-        
-        //1 check is put first
-        //2 pass -999... as the first arg when calling helper, hten pass the arr value for
-        //left , right, up and down
+    int maxPathLengthHelper(int[][] arr, int i, int j, int[][] holder, int curr) {
+        /** should i put the check now or wait for the next func call with (i+1,j)? */
+
+        // 1 check is put first
+        // 2 pass -999... as the first arg when calling helper, hten pass the arr value
+        // for
+        // left , right, up and down
         if (isSafePathLength(i, j, arr, curr)) {
             int value = arr[i][j];
             // this line caused all problems
             if (holder[i][j] != 0) {
                 return holder[i][j];
             }
-            int down = maxPathLengthHelper(arr, i+1, j, holder, value);
-            int up = maxPathLengthHelper(arr, i-1, j, holder, value);
-            int left = maxPathLengthHelper(arr, i, j-1, holder, value);
-            int right = maxPathLengthHelper(arr, i, j+1, holder, value);
-        // }
-        // if(isSafePathLength(i+1, j, arr, value)){
-        //     // this.countPathLength++;
-        //     // down =1;
-            
-        // }
-        // if(isSafePathLength(i-1, j, arr, value)){
-        //     // up=1;
-        // }
-        // if(isSafePathLength(i, j+1, arr, value)){
-        //     // right =1;
-        // }
-        // if(isSafePathLength(i, j-1, arr, value)){
-        //     // left =1;
-        // }
-            // System.out.println("left "+left+" right "+right+" up "+up+" down "+down);
-            holder[i][j] = Math.max(down, Math.max(up, Math.max(left, right)))+1;
-            System.out.println("holder[" +i+"]["+j+"] "+ holder[i][j]);
-            return holder[i][j];
-        }
-        else return 0;
-    } 
+            int down = maxPathLengthHelper(arr, i + 1, j, holder, value);
+            int up = maxPathLengthHelper(arr, i - 1, j, holder, value);
+            int left = maxPathLengthHelper(arr, i, j - 1, holder, value);
+            int right = maxPathLengthHelper(arr, i, j + 1, holder, value);
+            // }
+            // if(isSafePathLength(i+1, j, arr, value)){
+            // // this.countPathLength++;
+            // // down =1;
 
-    boolean isSafePathLength(int row, int col, int[][] arr, int curr){
-        if(row>=0 && row<arr.length
-        && col>=0 && col<arr[0].length
-        && arr[row][col]-curr>=1){
+            // }
+            // if(isSafePathLength(i-1, j, arr, value)){
+            // // up=1;
+            // }
+            // if(isSafePathLength(i, j+1, arr, value)){
+            // // right =1;
+            // }
+            // if(isSafePathLength(i, j-1, arr, value)){
+            // // left =1;
+            // }
+            // System.out.println("left "+left+" right "+right+" up "+up+" down "+down);
+            holder[i][j] = Math.max(down, Math.max(up, Math.max(left, right))) + 1;
+            System.out.println("holder[" + i + "][" + j + "] " + holder[i][j]);
+            return holder[i][j];
+        } else
+            return 0;
+    }
+
+    boolean isSafePathLength(int row, int col, int[][] arr, int curr) {
+        if (row >= 0 && row < arr.length && col >= 0 && col < arr[0].length && arr[row][col] - curr >= 1) {
             return true;
         }
         return false;
     }
 
+    public int sumGold = 0;
+    public int currSumGold = 0;
 
-
-    public int sumGold =0; public int currSumGold =0;
-    
     public int getMaximumGold(int[][] grid) {
-        
+
         int[][] visited = new int[grid.length][grid[0].length];
         int i, j;
-        for(i =0; i<grid.length; i++){
-            for(j=0; j<grid[0].length; j++){
+        for (i = 0; i < grid.length; i++) {
+            for (j = 0; j < grid[0].length; j++) {
                 getMaxHelper(grid, i, j, 0, visited);
-                if(currSumGold>sumGold) sumGold = currSumGold;
+                if (currSumGold > sumGold)
+                    sumGold = currSumGold;
                 currSumGold = 0;
                 initializeToZero(visited);
             }
         }
         return sumGold;
     }
-    
-    void getMaxHelper(int[][] grid, int rowIndex, int colIndex, int sum, int[][] visited){
-        if(rowIndex>=0 && colIndex>=0 && rowIndex<grid.length 
-           && colIndex<grid[0].length && grid[rowIndex][colIndex]!=0
-           && visited[rowIndex][colIndex] == 0){
-            
-            System.out.println("sum "+sum);
-            System.out.println("currSumGold "+currSumGold);
-            System.out.println("value "+grid[rowIndex][colIndex]);
+
+    void getMaxHelper(int[][] grid, int rowIndex, int colIndex, int sum, int[][] visited) {
+        if (rowIndex >= 0 && colIndex >= 0 && rowIndex < grid.length && colIndex < grid[0].length
+                && grid[rowIndex][colIndex] != 0 && visited[rowIndex][colIndex] == 0) {
+
+            System.out.println("sum " + sum);
+            System.out.println("currSumGold " + currSumGold);
+            System.out.println("value " + grid[rowIndex][colIndex]);
             visited[rowIndex][colIndex] = 1;
-            int[] row = {-1,0,0,1};
-            int[] col = {0,-1,1,0};
-            
+            int[] row = { -1, 0, 0, 1 };
+            int[] col = { 0, -1, 1, 0 };
+
             currSumGold = sum;
-            for(int k =0; k<row.length; k++){
+            for (int k = 0; k < row.length; k++) {
                 getMaxHelper(grid, rowIndex + row[k], colIndex + col[k], sum + grid[rowIndex][colIndex], visited);
             }
         }
     }
 
-    void initializeToZero(int[][] arr){
-        for(int i =0; i<arr.length; i++){
-            for(int j=0; j<arr[0].length; j++){
+    void initializeToZero(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
                 arr[i][j] = 0;
             }
         }
     }
 
     //////////////////////////// 7 jun dp applied
-    /**1 pass -9999
-     * 2 pass current value for subsequent
-     * 3 math.max for max
+    /**
+     * 1 pass -9999 2 pass current value for subsequent 3 math.max for max
      */
-    void goldMine(int[][] grid){
+    void goldMine(int[][] grid) {
         int max = -1;
-        int[][] dp  = new int[grid.length][grid[0].length];
-        int j,i;
-        for(i =0; i<grid.length; i++){
-            for(j=0; j<grid[0].length; j++){
+        int[][] dp = new int[grid.length][grid[0].length];
+        int j, i;
+        for (i = 0; i < grid.length; i++) {
+            for (j = 0; j < grid[0].length; j++) {
                 max = Math.max(goldMineHelper(grid, i, j, dp, -9999), max);
             }
         }
-        System.out.println("max gold is "+max);
+        System.out.println("max gold is " + max);
     }
 
-    int goldMineHelper(int[][] grid, int rowIndex, int colIndex, int[][] dp, int prev){
+    int goldMineHelper(int[][] grid, int rowIndex, int colIndex, int[][] dp, int prev) {
 
-        if(rowIndex>=0 && rowIndex<grid.length && colIndex>=0 && colIndex<grid[0].length 
-        && prev<grid[rowIndex][colIndex] && grid[rowIndex][colIndex]!=0){
-            if(dp[rowIndex][colIndex]!=0) return dp[rowIndex][colIndex];
-            
+        if (rowIndex >= 0 && rowIndex < grid.length && colIndex >= 0 && colIndex < grid[0].length
+                && prev < grid[rowIndex][colIndex] && grid[rowIndex][colIndex] != 0) {
+            if (dp[rowIndex][colIndex] != 0)
+                return dp[rowIndex][colIndex];
+
             int curr = grid[rowIndex][colIndex];
 
-            int left = goldMineHelper(grid, rowIndex, colIndex-1, dp, curr);
-            int right = goldMineHelper(grid, rowIndex, colIndex+1, dp, curr);
-            int up = goldMineHelper(grid, rowIndex-1, colIndex, dp, curr);
-            int down = goldMineHelper(grid, rowIndex+1, colIndex, dp, curr);
+            int left = goldMineHelper(grid, rowIndex, colIndex - 1, dp, curr);
+            int right = goldMineHelper(grid, rowIndex, colIndex + 1, dp, curr);
+            int up = goldMineHelper(grid, rowIndex - 1, colIndex, dp, curr);
+            int down = goldMineHelper(grid, rowIndex + 1, colIndex, dp, curr);
 
             dp[rowIndex][colIndex] = Math.max(left, Math.max(right, Math.max(up, down))) + curr;
-            System.out.println("dp[" +rowIndex+"]["+colIndex+"] "+ dp[rowIndex][colIndex]);
+            System.out.println("dp[" + rowIndex + "][" + colIndex + "] " + dp[rowIndex][colIndex]);
             return dp[rowIndex][colIndex];
-        } else return 0;            
+        } else
+            return 0;
     }
 
-
-    //https://www.includehelp.com/icp/gold-mine-problem.aspx
+    // https://www.includehelp.com/icp/gold-mine-problem.aspx
     int GoldMine7Jun(int[][] arr, int n, int m) {
         // DP table
         int[][] DP = new int[n][m];
@@ -1200,13 +1188,13 @@ class Matrix {
                 // choosing max of possible moves
                 DP[i][j] = arr[i][j];
                 int val = DP[i][j - 1];
-                if(isSafe(i, j-1, DP)){
+                if (isSafe(i, j - 1, DP)) {
                     if (val < DP[i - 1][j - 1])
                         val = DP[i - 1][j - 1];
                 }
-                if(isSafe(i, j+1, DP)){
+                if (isSafe(i, j + 1, DP)) {
                     if (val < DP[i - 1][j - 1])
-                    val = DP[i - 1][j - 1];
+                        val = DP[i - 1][j - 1];
                 }
                 if (i - 1 >= 0) {
                     if (val < DP[i - 1][j - 1])
@@ -1229,121 +1217,126 @@ class Matrix {
         return gold;
     }
 
-    /**the -1s are inaccessible; reduce 99 to lowest dist from 0 */
-   
-    void wallsAndGates(int[][] grid){
-        int[][] dp  = new int[grid.length][grid[0].length];
-        int[][] visited  = new int[grid.length][grid[0].length];
+    /** the -1s are inaccessible; reduce 99 to lowest dist from 0 */
+
+    void wallsAndGates(int[][] grid) {
+        int[][] dp = new int[grid.length][grid[0].length];
+        int[][] visited = new int[grid.length][grid[0].length];
 
         int i, j;
 
-         
-        for( i=0; i<grid.length; i++){
-            for(j=0; j<grid[0].length; j++){
-                if(grid[i][j] == -1){
+        for (i = 0; i < grid.length; i++) {
+            for (j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == -1) {
                     dp[i][j] = grid[i][j];
                 }
             }
         }
 
-        for( i=0; i<grid.length; i++){
-            for(j=0; j<grid[0].length; j++){
-                if(grid[i][j]==99){
-                    dp[i][j] = wallsAndGatesHelper(grid, i , j, dp, visited);
+        for (i = 0; i < grid.length; i++) {
+            for (j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 99) {
+                    dp[i][j] = wallsAndGatesHelper(grid, i, j, dp, visited);
                     initializeToZero(visited);
                 }
             }
         }
-        
-        for( i=0; i<grid.length; i++){
-            for(j=0; j<grid[0].length; j++){
-                System.out.print(dp[i][j]+", ");
+
+        for (i = 0; i < grid.length; i++) {
+            for (j = 0; j < grid[0].length; j++) {
+                System.out.print(dp[i][j] + ", ");
             }
             System.out.println();
         }
     }
 
-    /**this is like keeping a trck of the cells traversed  */
-     /** finally found a technique for dfs, use visited array
-     * and add a check for that visited!=1,
-     * and assign to dp outside the helper
+    /** this is like keeping a trck of the cells traversed */
+    /**
+     * finally found a technique for dfs, use visited array and add a check for that
+     * visited!=1, and assign to dp outside the helper
      */
 
-    int wallsAndGatesHelper(int[][] grid, int row, int col, int[][] dp, int[][] visited){
-        if(row>-1 && row<grid.length
-        && col>-1 && col<grid[0].length && grid[row][col]!=-1 && visited[row][col]!=1){
-            if (dp[row][col] != 0 ) return dp[row][col];
-            if(grid[row][col]==0) return 0;
-            System.out.println("row "+row+" ,col "+col);
+    int wallsAndGatesHelper(int[][] grid, int row, int col, int[][] dp, int[][] visited) {
+        if (row > -1 && row < grid.length && col > -1 && col < grid[0].length && grid[row][col] != -1
+                && visited[row][col] != 1) {
+            if (dp[row][col] != 0)
+                return dp[row][col];
+            if (grid[row][col] == 0)
+                return 0;
+            System.out.println("row " + row + " ,col " + col);
             visited[row][col] = 1;
 
             // if(grid[row][col]==-1) return 99;
-            int left = wallsAndGatesHelper(grid, row, col-1, dp, visited);
-            int right = wallsAndGatesHelper(grid, row, col+1, dp, visited);
-            int up = wallsAndGatesHelper(grid, row-1, col, dp, visited);
-            int down = wallsAndGatesHelper(grid, row+1, col, dp, visited);
+            int left = wallsAndGatesHelper(grid, row, col - 1, dp, visited);
+            int right = wallsAndGatesHelper(grid, row, col + 1, dp, visited);
+            int up = wallsAndGatesHelper(grid, row - 1, col, dp, visited);
+            int down = wallsAndGatesHelper(grid, row + 1, col, dp, visited);
 
-            System.out.println("left "+ left +", right " +right+", up "+up +", down "+ down);
+            System.out.println("left " + left + ", right " + right + ", up " + up + ", down " + down);
             // dp[row][col] = Math.min(left, Math.min(right, Math.min(up, down)))+1;
             // System.out.println("dp[" +row+"]["+col+"] "+ dp[row][col]);
-            System.out.println("visited[" +row+"]["+col+"] "+ visited[row][col]);
-            int val = Math.min(left, Math.min(right, Math.min(up, down)))+1;
-            System.out.println("val "+val);
+            System.out.println("visited[" + row + "][" + col + "] " + visited[row][col]);
+            int val = Math.min(left, Math.min(right, Math.min(up, down))) + 1;
+            System.out.println("val " + val);
             return val;
 
-        } else return 90;
+        } else
+            return 90;
     }
 
-    /**we are starting from each zero and keeping a counter, 
-     * if the grid[i][j] > counter, we update it */
-    void wallsAndGatesKevin(int[][] matrix){
-        int i,j;
+    /**
+     * we are starting from each zero and keeping a counter, if the grid[i][j] >
+     * counter, we update it
+     */
+    void wallsAndGatesKevin(int[][] matrix) {
+        int i, j;
 
-        int[][] dp  = new int[matrix.length][matrix[0].length];
+        int[][] dp = new int[matrix.length][matrix[0].length];
 
-        for(i =0; i<matrix.length; i++){
-            for(j =0; j<matrix[0].length; j++){
-                if(matrix[i][j]==0){
+        for (i = 0; i < matrix.length; i++) {
+            for (j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
                     wallsAndGatesHelperKevin(matrix, i, j, dp, 0);
                 }
             }
         }
 
-        for( i=0; i<matrix.length; i++){
-            for(j=0; j<matrix[0].length; j++){
-                System.out.print(matrix[i][j]+", ");
+        for (i = 0; i < matrix.length; i++) {
+            for (j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + ", ");
             }
             System.out.println();
         }
 
     }
 
-    /**here the tricky thing is to choose the initial value of count
-     * while making the first call to helper
-     * we assign value to matrix if the count is lesser than it's current value, but we use 
-     * grid[row][col]>=count, equal to is used to bypass the base condition
+    /**
+     * here the tricky thing is to choose the initial value of count while making
+     * the first call to helper we assign value to matrix if the count is lesser
+     * than it's current value, but we use grid[row][col]>=count, equal to is used
+     * to bypass the base condition
      */
 
-     //try using BFS
-    void wallsAndGatesHelperKevin(int[][] grid, int row, int col, int[][] dp, int count){
-        if(row>-1 && row<grid.length
-        && col>-1 && col<grid[0].length && grid[row][col]!=-1 && count>=0 //&& count<99
-        && grid[row][col]>=count){
+    // try using BFS
+    void wallsAndGatesHelperKevin(int[][] grid, int row, int col, int[][] dp, int count) {
+        if (row > -1 && row < grid.length && col > -1 && col < grid[0].length && grid[row][col] != -1 && count >= 0 // &&
+                                                                                                                    // count<99
+                && grid[row][col] >= count) {
             grid[row][col] = count;
-            wallsAndGatesHelperKevin(grid, row, col+1, dp, count+1);
-            wallsAndGatesHelperKevin(grid, row, col-1, dp, count+1);
-            wallsAndGatesHelperKevin(grid, row+1, col, dp, count+1);
-            wallsAndGatesHelperKevin(grid, row-1, col, dp, count+1);
-        } 
+            wallsAndGatesHelperKevin(grid, row, col + 1, dp, count + 1);
+            wallsAndGatesHelperKevin(grid, row, col - 1, dp, count + 1);
+            wallsAndGatesHelperKevin(grid, row + 1, col, dp, count + 1);
+            wallsAndGatesHelperKevin(grid, row - 1, col, dp, count + 1);
+        }
     }
 
-
-    void antiDiaPrint(int[][] arr){
-        int sum =0;
-        while(sum<=(arr.length-1+arr[0].length-1)){
-            for(int i=0; i<arr.length; i++){
-                for(int j =0; j<arr[0].length; j++){
-                    if(i+j == sum) System.out.print(arr[i][j]+", ");
+    void antiDiaPrint(int[][] arr) {
+        int sum = 0;
+        while (sum <= (arr.length - 1 + arr[0].length - 1)) {
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < arr[0].length; j++) {
+                    if (i + j == sum)
+                        System.out.print(arr[i][j] + ", ");
                 }
             }
             System.out.println();
@@ -1351,28 +1344,65 @@ class Matrix {
         }
     }
 
-    boolean searchRowColSortedMatrix(int[][] arr, int num){
+    boolean searchRowColSortedMatrix(int[][] arr, int num) {
         int row = -1;
-        for(int i =0; i<arr.length-1; i++){
-            if(arr[i+1][0]>num && arr[i][0]<num) row = i; 
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i + 1][0] > num && arr[i][0] < num)
+                row = i;
         }
-        if(row ==-1){
-            if(arr[arr.length-1][0]<num) row = arr.length-1;
-            else if(row ==-1) return false;
+        if (row == -1) {
+            if (arr[arr.length - 1][0] < num)
+                row = arr.length - 1;
+            else if (row == -1)
+                return false;
         }
         System.out.println(row);
-        return binsearch(arr,row,num, 0, arr[0].length-1);
+        return binsearch(arr, row, num, 0, arr[0].length - 1);
     }
 
-    boolean binsearch(int[][] arr, int row, int num, int start, int end){
-        if(start>end) return false;
+    boolean binsearch(int[][] arr, int row, int num, int start, int end) {
+        if (start > end)
+            return false;
         int mid = -1;
-        if(start<=end){
-            mid = (start+end)/2;
+        if (start <= end) {
+            mid = (start + end) / 2;
         }
-        if(arr[row][mid]==num) return true;
-        else if(arr[row][mid]>num) return binsearch(arr, row, num, start, mid-1);
-        else return binsearch(arr, row, num, mid+1, end);
+        if (arr[row][mid] == num)
+            return true;
+        else if (arr[row][mid] > num)
+            return binsearch(arr, row, num, start, mid - 1);
+        else
+            return binsearch(arr, row, num, mid + 1, end);
+    }
+
+    void dfs(int[][] arr){
+        int n = arr.length; int m = arr[0].length;
+        int[][] visited = new int[n][m];
+
+        for(int i =0; i<n; i++){
+            for(int j = 0; j<m; j++){
+                dfsUtil(arr, i, j, visited);
+            }
+        }
+    }
+
+    void dfsUtil(int[][] arr, int row, int col, int[][] visited){
+        if(isSafedfs(arr, row, col)) {
+            if(visited[row][col]==0){
+                visited[row][col] = 1;
+                System.out.println(arr[row][col]);
+                dfsUtil(arr, row+1, col, visited);
+                dfsUtil(arr, row, col+1, visited);
+                dfsUtil(arr, row-1, col, visited);
+                dfsUtil(arr, row, col-1, visited);
+            }
+        }
+    }
+
+    boolean isSafedfs(int[][] arr,int row, int col){
+        if(row>=0 && row<arr.length
+        && col>=0 && col<arr[0].length) return true;
+        return false;
     }
 
     public static void main(String[] args) {
@@ -1403,20 +1433,19 @@ class Matrix {
         int[][] arr28Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
         int[][] arr29Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
         // matrix.printSpiral29Apr(arr29Apr);
-        // int[][] onesArray  = {{0,0,0,1,1},{0,1,1,1,1},{0,0,1,1,1},{1,1,1,1,1},{0,0,0,0,0}};
+        // int[][] onesArray =
+        // {{0,0,0,1,1},{0,1,1,1,1},{0,0,1,1,1},{1,1,1,1,1},{0,0,0,0,0}};
         // System.out.println("row index of max1s " + matrix.rowWithMax1s(onesArray));
 
         // int[][] floodFillArray = {{1,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
         // matrix.floodFill(floodFillArray);
         // matrix.showMatrix(floodFillArray);
 
-        int[][] orangesArray = {{2,1,1},{0,1,1},{1,0,1}};
-        int v[][] = { { 2, 1, 0, 2, 1 }, 
-                    { 1, 0, 1, 2, 1 }, 
-                    { 1, 0, 0, 2, 1 } }; 
-        
+        int[][] orangesArray = { { 2, 1, 1 }, { 0, 1, 1 }, { 1, 0, 1 } };
+        int v[][] = { { 2, 1, 0, 2, 1 }, { 1, 0, 1, 2, 1 }, { 1, 0, 0, 2, 1 } };
+
         // int[][] pathArray = {{9,9,4},{6,6,8},{2,1,1}};
-        int[][] pathArray = {{7,7,5},{2,4,6},{8,2,0}};
+        int[][] pathArray = { { 7, 7, 5 }, { 2, 4, 6 }, { 8, 2, 0 } };
         // matrix.orangesRotting(orangesArray);
 
         // matrix.diagonalPrintMatrix(orangesArray);
@@ -1424,24 +1453,23 @@ class Matrix {
         // matrix.orangesRotting1May(orangesArray);
         // matrix.BFSMatrix(arr28Apr);
         // matrix.maxPathLength(arr1);
-        
-        int[][] goldArray = {{0,6,0},{5,8,7},{0,9,0}};
+
+        int[][] goldArray = { { 0, 6, 0 }, { 5, 8, 7 }, { 0, 9, 0 } };
         // matrix.goldMine(goldArray);
 
         // System.out.println("max gold is "+matrix.GoldMine7Jun(goldArray, 3, 3));
 
-        int[][] wallsAndGates = {{99,-1,0,99},{99,99,99,-1},{99,-1,99,-1},{0,-1,99,99}};
+        int[][] wallsAndGates = { { 99, -1, 0, 99 }, { 99, 99, 99, -1 }, { 99, -1, 99, -1 }, { 0, -1, 99, 99 } };
         // matrix.wallsAndGates(wallsAndGates);
         // matrix.wallsAndGatesKevin(wallsAndGates);
         // matrix.antiDiaPrint(twoDimArr);
 
-        int[][] matRowColSorted = { {10, 20, 30, 40},
-                      {15, 25, 35, 45},
-                      {27, 29, 37, 48},
-                      {32, 33, 39, 50}};
-            int  num = 100;
-        
-        System.out.println(matrix.searchRowColSortedMatrix(matRowColSorted, num));
+        int[][] matRowColSorted = { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 }, { 32, 33, 39, 50 } };
+        int num = 100;
+
+        // System.out.println(matrix.searchRowColSortedMatrix(matRowColSorted, num));
+
+        matrix.dfs(twoDimArr);
 
     }
 

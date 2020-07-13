@@ -50,12 +50,12 @@ class Greedy{
             this.time = time;
         }
     }
-    void trainPlatform(double[] arrival, double[] departure){
+    void trainPlatform(int[] arrival, int[] departure){
         Arrays.sort(arrival);
         Arrays.sort(departure);
 
-        Holder newArray = new Holder[(arrival.length*2)];
-        double arrivalStart = 0; double departureStart = 0; 
+        ArrayList<Holder> newArray = new ArrayList<Holder>();
+        int arrivalStart = 0; int departureStart = 0; 
 
         Holder newholder;
         /**
@@ -69,28 +69,31 @@ class Greedy{
         while(arrivalStart<arrival.length){
             if(arrival[arrivalStart]<departure[departureStart]){
                 newholder = new Holder("arrival",arrival[arrivalStart]);
-                newArray.push(new Holder("arrival",arrival[arrivalStart]));
+                newArray.add(new Holder("arrival",arrival[arrivalStart]));
                 arrivalStart++;
             } else {
-                newArray.push(new Holder("departure",departure[departureStart]));
+                newArray.add(new Holder("departure",departure[departureStart]));
                 departureStart++;
             }
         }
 
         while(departureStart<departure.length){
-            newArray.push(new Holder("departure",departure[departureStart]));
+            newArray.add(new Holder("departure",departure[departureStart]));
             departureStart++;
         }
 
         // Arrays.sort(newArray);
 
-        int platformCount = 0;
-        for(int i =0; i<newArray.length; i++){
-            if((newArray[i]).arrOrDep == "arrival") platformCount++;
+        int platformCount = 0; int max = 0;
+        for(int i =0; i<newArray.size(); i++){
+            if((newArray.get(i)).arrOrDep.equals("arrival")) {
+                platformCount++;
+                max = Math.max(max, platformCount);
+            }   
             else platformCount--;
         }
 
-        System.out.println("the platforms required are "+ platformCount);
+        System.out.println("the min no platforms required are "+ max);
     }
 
     public static void main(String[] args) {
@@ -100,8 +103,8 @@ class Greedy{
 
         // solGreedy.MiceHole(mice, holes);
 
-        double arrivalTimes = new double[]{9,9.40,9.50,11,15,18};
-        double departureTimes = new double[]{9.10,12,11.20,11.30,19,20};
+        int[] arrivalTimes = {900, 940, 950, 1100, 1500, 1800};
+        int[] departureTimes = {910, 1200, 1120, 1130, 1900, 2000};
 
         solGreedy.trainPlatform(arrivalTimes, departureTimes);
     }
