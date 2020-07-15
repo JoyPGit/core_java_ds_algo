@@ -24,19 +24,20 @@ class Graph {
 		adj.get(v).add(w);
 	}
 
-	void topologicalSortUtil(int v, int visited[], Deque<Integer> stack) {
-		visited[v] = 1;
 
-		Iterator<Integer> it = adj.get(v).iterator();
-		while (it.hasNext()) {
-			int i = it.next();
-			if (visited[i] != 1)
-				topologicalSortUtil(i, visited, stack);
+    void print1DMatrix(int[] arr) {
+		for(int i=0; i<arr.length; i++){
+			if(i == arr.length-1) System.out.print(arr[i]);
+			System.out.print(arr[i]+", ");
 		}
-
-		stack.push(v);
+		System.out.println();
 	}
 
+	/** Steps
+	 * 1 call util for each vertex if not visited
+	 * 2 iterator->hasNext-> mark visited
+	 * 3 push to stack
+	 */
 	void topologicalSort() {
 		Deque<Integer> stack = new LinkedList<Integer>();
 
@@ -57,6 +58,19 @@ class Graph {
 			System.out.print(stack.pop() + " ");
 		
 		System.out.println();
+	}
+
+	void topologicalSortUtil(int v, int visited[], Deque<Integer> stack) {
+		visited[v] = 1;
+
+		Iterator<Integer> it = adj.get(v).iterator();
+		while (it.hasNext()) {
+			int i = it.next();
+			if (visited[i] != 1)
+				topologicalSortUtil(i, visited, stack);
+		}
+
+		stack.push(v);
 	}
 
 	/** a global variable is used to break as soon as lop os found
@@ -148,14 +162,22 @@ class Graph {
         }
     }
 
-    boolean isSafemColor(int[][] arr, int vertex, int[] color){
+	boolean isSafemColor(int[][] arr, int vertex, int[] color) {
         for(int i =0; i<arr.length; i++){
             if(arr[vertex][i] == 1 && color[vertex]==color[i]) return false;
         }
         return true;
     }
-    
-
+	
+	class BFSHolder{
+		int val; int row; int col;
+		BFSHolder(int v, int r, int c){
+			this.val = v;
+			this.row = r;
+			this.col = c;
+		}
+	}
+	
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
 		Graph g = new Graph(6);
@@ -171,6 +193,13 @@ class Graph {
 		g.topologicalSort();
 
 		g.detectLoopInGraph();
+
+		int[][] graph = {
+			{0,1,1,1},
+			{0,0,0,1},
+			{1,1,0,0},
+			{0,0,0,0}
+		};
 	}
 }
 

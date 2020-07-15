@@ -2,8 +2,29 @@ import java.util.*;
 
 public class Recursion {
     Recursion(){
-
     }
+
+    void printListOflists(ArrayList<ArrayList<Integer>> list){
+        // System.out.println(list.size());//k
+        for(int i =0; i<list.size(); i++){
+            Object j;
+            Iterator it = list.get(i).listIterator();
+            while(it.hasNext()){
+                j = it.next(); 
+                System.out.println(j);
+            }
+            System.out.println();
+        }
+        
+    }
+
+    void print1DMatrix(int[] arr) {
+		for(int i=0; i<arr.length; i++){
+			if(i == arr.length-1) System.out.print(arr[i]);
+			else System.out.print(arr[i]+", ");
+		}
+		System.out.println();
+	}
     
     boolean ans = false;
     public boolean canCross(int[] stones) {
@@ -41,7 +62,6 @@ public class Recursion {
                 canCrossHelper(k, value+k, h, arr);
             } 
 
-            h.containsKey(5);
             if(h.containsKey(value+k+1)){
                 System.out.println(k+1+" jumps "+ (value+k+1));
                 canCrossHelper(k+1, value+k+1, h, arr);
@@ -68,7 +88,104 @@ public class Recursion {
         return subsetSum(arr, sum- arr[index], index+1)|| subsetSum(arr, sum, index+1);
     }
 
-    public static void main(String[] args) {
+
+    // void divideInKSubsets(int[] arr , int k){
+    //     int sum =0;
+    //     for(int i =0; i<arr.length; i++){
+    //         sum+=arr[i];
+    //     } 
+
+    //     if(sum%k!=0) return;
+    //     ArrayList<ArrayList<Integer>> listHolder = new ArrayList<ArrayList<Integer>>();
+
+    //     for(int i=0; i<k; i++){
+    //         listHolder.add(new ArrayList<Integer>());
+    //     }
+
+    //     divideInKSubsetsHelper(arr, k, listHolder, sum/k, 0);
+    // }
+
+    // boolean proceed = true;
+    // void divideInKSubsetsHelper(int[] arr, int k, ArrayList<ArrayList<Integer>> holder, 
+    // int sum, int index){
+    //     if(sum == 0) {
+    //         System.out.println("found"); this.proceed = false;
+    //         printListOflists(holder);
+    //         return;
+    //     }
+
+    //     if(index==arr.length) return;
+    //     for(int i =0; i<k; i++){
+    //         if(this.proceed){
+    //             divideInKSubsetsHelper(arr, k, holder, sum, index+1);
+    //             holder.get(i).add(arr[index]);
+    //             divideInKSubsetsHelper(arr, k, holder, sum-arr[index], index+1);
+    //         }
+    //     }
+    // }
+
+    void divideInKSubsetsArray(int[] arr , int k){
+        int sum =0;
+        for(int i =0; i<arr.length; i++){
+            sum+=arr[i];
+        } 
+
+        if(sum%k!=0) return;
+        int[] arr1 = new int[arr.length];
+        int[] arr2 = new int[arr.length];
+        int[] arr3 = new int[arr.length];
+
+        divideInKSubsetsHelperArray(arr, k, arr1, arr2, arr3, sum/k, 0, 0, 0, 0);
+    }
+
+    boolean proceedArray = true;
+    void divideInKSubsetsHelperArray(int[] arr, int k, int[] arr1, int[] arr2, int[] arr3, 
+    int sum, int index, int index1, int index2, int index3){
+        if(sum == 0) {
+            System.out.println("found"); this.proceedArray = false;
+            print1DMatrix(arr1); print1DMatrix(arr2); print1DMatrix(arr3);
+            return;
+        }
+
+        if(index==arr.length) return;
+        divideInKSubsetsHelperArray(arr, k, arr1, arr2, arr3, sum, index+1, 
+        index1+1, index2+1, index3+1);
+        arr1[index1] = arr[index];
+        divideInKSubsetsHelperArray(arr, k, arr1, arr2, arr3, sum-arr[index], 
+        index+1, index1+1, index2, index3);
+        arr2[index2] = arr[index];
+        divideInKSubsetsHelperArray(arr, k, arr1, arr2, arr3, sum-arr[index], 
+        index+1, index1, index2+1, index3);
+        arr3[index3] = arr[index];
+        divideInKSubsetsHelperArray(arr, k, arr1, arr2, arr3, sum-arr[index],
+        index+1, index1, index2, index3+1);
+    }
+
+    /**https://stackoverflow.com/questions/37424284/unreported-exception-
+     * java-lang-exception-must-be-caught-or-declared-to-be-throw */
+    boolean found = false;
+    void startToDestination(int start, int end) throws Exception {
+        try {
+            if(start > end || start <=0) return;
+            if(start == end ) {
+                System.out.println("done");
+                found = true; 
+                return;
+            }
+            if(!found){
+                System.out.println("current "+start);
+                startToDestination(start*2, end);
+                startToDestination(start+2, end);
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+            System.out.println(e);
+            e.printStackTrace();
+            throw new Exception(e);
+        }
+        
+    }
+    public static void main (String[] args) throws Exception{
         Recursion recur = new Recursion();
         int[] stones =
         // {0,1,2,3}; 
@@ -132,6 +249,13 @@ public class Recursion {
 
             int set[] = {3, 34, 4, 12, 5, 2}, sum = 30;
             // {3, 34, 4, 12, 5, 2}, sum = 9;
-            System.out.println(recur.subsetSum(set, sum, 0));
+            // System.out.println(recur.subsetSum(set, sum, 0));
+
+            int[] kSubsetArr = {3,3,4,1,5,2,6}; int k =3;
+            // recur.divideInKSubsets(kSubsetArr, k);
+            // recur.divideInKSubsetsArray(kSubsetArr, k);
+
+            int start = 2; int end = 92;
+            recur.startToDestination(start, end);
     }
 }

@@ -249,6 +249,7 @@ public class Tree {
         int height = this.height(node);
         for (int i = 0; i < height; i++) {
             printGivenLevel(node, i);
+            System.out.println("---");
         }
     }
 
@@ -1240,14 +1241,14 @@ public class Tree {
          */
     }
 
-    void printHashMap() {
-        Iterator hmIterator = this.leftHashMap.entrySet().iterator();
+    // void printHashMap() {
+    //     Iterator hmIterator = this.leftHashMap.entrySet().iterator();
 
-        while (hmIterator.hasNext()) {
-            HashMap.Entry mapElement = (HashMap.Entry) hmIterator.next();
-            System.out.println(mapElement.getKey() + " : " + mapElement.getValue());
-        }
-    }
+    //     while (hmIterator.hasNext()) {
+    //         HashMap.Entry mapElement = (HashMap.Entry) hmIterator.next();
+    //         System.out.println(mapElement.getKey() + " : " + mapElement.getValue());
+    //     }
+    // }
 
     ///////////////////////////// 5th feb
     /**
@@ -1810,11 +1811,11 @@ public class Tree {
     }
 
     void printPath(TreeNode root, TreeNode dest){
-        ArrayList path = new ArrayList<>();
+        ArrayList<Integer> path = new ArrayList<>();
         printPathHelper(root, dest, path);
         System.out.println(path);
     }
-    boolean printPathHelper(TreeNode root, TreeNode dest, ArrayList path){
+    boolean printPathHelper(TreeNode root, TreeNode dest, ArrayList<Integer> path){
         if(root == null) return false;
         if(root == dest
         ||printPathHelper(root.left, dest, path)
@@ -2145,6 +2146,25 @@ public class Tree {
 
     //not the correct solution, some changes are needed
 
+    int sumBST = 0;
+    void addGreaterBST(TreeNode root2) {
+        if (root2 == null)
+            return;
+        addGreaterBST(root2.right);
+        root2.key += sum;
+        sum = root2.key;
+        addGreaterBST(root2.left);
+
+    }
+
+    TreeNode treeFromInorder(int[] arr, int start, int end){
+        if(start>end) return null;
+        int mid = (start+end)/2;
+        TreeNode root = new TreeNode(arr[mid]);
+        root.left = treeFromInorder(arr, start, mid-1);
+        root.right = treeFromInorder(arr, mid+1, end);
+        return root;
+    }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
@@ -2161,13 +2181,20 @@ public class Tree {
 
         int[] pre = {4,2,1,3,6};
         int[] in = {1,2,3,4,6};
-        TreeNode tree25jun =  tree.createTree(pre, in, 0, 0, pre.length-1);
-        System.out.println(tree25jun.key);
-        System.out.println(tree25jun.left.key);
-        System.out.println(tree25jun.right.key);
-        tree.Inorder(tree25jun);
-        System.out.println("now pre");
-        tree.Preorder(tree25jun);
+        // TreeNode tree25jun =  tree.createTree(pre, in, 0, 0, pre.length-1);
+        // System.out.println(tree25jun.key);
+        // System.out.println(tree25jun.left.key);
+        // System.out.println(tree25jun.right.key);
+        // tree.Inorder(tree25jun);
+        // System.out.println("now pre");
+        // tree.Preorder(tree25jun);
+
+        // tree.addGreaterBST(tree.root);
+        // tree.levelOrderTraversal(tree.root);
+
+        int[] inOrder = {1,2,3,4,5,6,7,8,9};
+        
+        tree.levelOrderTraversal(tree.treeFromInorder(inOrder, 0, inOrder.length-1));
         // tree.findLargestLessThanOrEqualToN(tree.root, 9);
         // int in[] = {4, 5, 7}; int n = in.length;
         // ArrayList<TreeNode> trees = tree.getTrees(in, 0, n - 1); 
