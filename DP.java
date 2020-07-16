@@ -488,6 +488,7 @@ public class DP {
 
     int minJumpCount = Integer.MAX_VALUE;// 1
 
+    //this is the recursive approach
     int minJumps(int[] arr) {
         int[] dp = new int[arr.length];
         minJumpHelper(arr, dp, 0, 0);
