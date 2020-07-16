@@ -1653,12 +1653,12 @@ public class Tree {
                 left = left.left;
                 // System.out.println("left "+left.key);
             }
-            System.out.println("line 1659 " + stackPostorder.peek().key);
+            System.out.println("line 1656 " + stackPostorder.peek().key);
 
             while ((stackPostorder.peek()).right == null) {
                 TreeNode x = stackPostorder.removeFirst();
                 System.out.print(x.key + ", ");
-                System.out.println("line 1663 " + stackPostorder.peek().key);
+                System.out.println("line 1661 " + stackPostorder.peek().key);
             }
             right = stackPostorder.peek().right;
             if (right.right != null)

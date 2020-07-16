@@ -401,90 +401,6 @@ public class DP {
         }
     }
 
-    //1 july
-    // public int deleteAndEarnDP(int[] nums) {
-    //     int n = nums.length;
-    //     if(n==0) return 0;
-    //     if(n == 1) return nums[0];
-    //     int[] dp = new int[n];
-    //     int[] sum = new int[n];
-        
-    //     dp[0] = 1; 
-        
-    //     for(int i =0; i<n ;i++){
-    //         sum[i] = nums[i];
-    //     }
-
-    //     int maxSum = 0;
-    //     for(int i=1; i<n ; i++){
-    //         for(int j = 0; j<i ; j++){
-    //             if((nums[j] == nums[i] || Math.abs(nums[i]-nums[j])>1) && dp[i]<dp[j]){
-    //               if(sum[i]<sum[j]+nums[i]){
-    //                 dp[i] =dp[j];
-    //                 sum[i]+=nums[j];
-    //                 maxSum = Math.max(maxSum, sum[j]);
-    //             }
-    //         }
-    //         dp[i]++;
-    //         sum[i]+=maxSum;
-    //         System.out.println("masxSum "+maxSum + " i "+i+" sum[i] "+sum[i]);
-    //         maxSum = 0;
-    //         }
-    //     }
-        
-    //     int max = 0;
-    //     for(int i =0; i<n ; i++){
-    //         max = Math.max(max, sum[i]);
-    //     }
-    //     System.out.print("dp ");
-    //     print1DMatrix(dp);
-    //     System.out.println();
-    //     System.out.print("sum ");
-    //     print1DMatrix(sum);
-    //     return max;
-    // }
-
-
-    int deleteAndEarn4jul(int[] arr){
-        if(arr.length == 0) return 0;
-        if(arr.length == 1) return arr[0];
-
-        Arrays.sort(arr);
-        ArrayList<Integer> dp = new ArrayList<Integer>();
-        int max = 0;
-        dp.add(arr[0]);
-        if(arr[1]-arr[0]==1) dp.add(Math.max(arr[0], arr[1]));
-        else dp.add(arr[0]+arr[1]);
-
-        if(arr.length == 2) return dp.get(dp.size()-1);
-
-        System.out.println("dp list size "+dp.size());
-        for(int i =2; i<arr.length; i++){
-            if(arr[i]-arr[i-1] ==1){
-                if(dp.size()==1) dp.add(dp.remove(dp.size()-1)+arr[i]);
-                dp.add(Math.max(dp.get(dp.size()-2)+arr[i], dp.get(dp.size()-1)));
-            }else if(arr[i] == arr[i-1]){
-                int val = dp.get(dp.size()-1);
-                dp.remove(dp.size()-1);
-                dp.add(val+arr[i]);
-            }else{
-                dp.add(dp.get(dp.size()-1)+arr[i]);
-            }
-        }
-
-        System.out.println("dp size "+dp.size());
-        for(int i =0; i<dp.size() ; i++){
-            System.out.print(dp.get(i)+", ");
-            System.out.println();
-            max = Math.max(max, dp.get(i));
-        }
-
-        for(int i =0; i<dp.size(); i++){
-            System.out.print(dp.get(i)+", ");
-        }
-        System.out.println("max from delete and earn is "+ max);
-        return max;
-    }
 
     int deleteAndEarn9jul(int[] arr){
         if(arr.length==0) return 0;
@@ -501,11 +417,17 @@ public class DP {
             dp[arr[i]]+=arr[i];
         }
 
-        // Arrays.sort(holder);
-        dp[dp.length-2] = Math.max(dp[dp.length-2],dp[dp.length-1]);
-        for(int i =dp.length-3; i>0; i--){
-            dp[i] = Math.max(dp[i+1], dp[i]+ dp[i+2]);
+        print1DMatrix(dp);
+        dp[2] = Math.max(dp[1], dp[2]);
+        for(int i =3; i<dp.length; i++){
+            dp[i] = Math.max(dp[i]+dp[i-2], dp[i-1]);
         }
+
+        // System.out.println(dp[dp.length-1]);
+        // dp[dp.length-2] = Math.max(dp[dp.length-2],dp[dp.length-1]);
+        // for(int i =dp.length-3; i>0; i--){
+        //     dp[i] = Math.max(dp[i+1], dp[i]+ dp[i+2]);
+        // }
 
         System.out.println("max is "+dp[1]);
         return dp[1];
@@ -602,7 +524,7 @@ public class DP {
      * 2 for i =1 loop j from j=0 till i
      * 3 if arr[j]+j >=i checking if we can reach index i from index j
      */
-    int jump(int[] arr) {
+    int jumpDP(int[] arr) {
         // int[] result = new int[arr.length];
         int []dp = new int[arr.length];
         dp[0] = 0;
@@ -612,11 +534,9 @@ public class DP {
         
         for(int i=1; i < arr.length; i++){
             for(int j=0; j < i; j++){
-                if(arr[j] + j >= i){
-                    if(dp[i] > dp[j] + 1){
-                        // result[i] = j;
-                        dp[i] = dp[j] + 1;
-                    }
+                if(arr[j] + j >= i && dp[i] > dp[j] + 1){
+                    // result[i] = j;
+                    dp[i] = dp[j] + 1;
                 }
             }
         }
@@ -1411,7 +1331,7 @@ public class DP {
         {4,10,10,8,1,4,10,9,7,6};
         // dp.deleteAndEarnDP(numsDeleteAndEarn);
         // dp.deleteAndEarn4jul(numsDeleteAndEarn);
-        // dp.deleteAndEarn9jul(numsDeleteAndEarn);
+        dp.deleteAndEarn9jul(numsDeleteAndEarn);
 
         // int board[] = {6, 7, 12, 13, 14};
         // int revenue[] = {5, 6, 5, 3, 1};
@@ -1420,8 +1340,11 @@ public class DP {
         int[][] uniquePathArr = { { 1, 2, 3 }, { 4, 5, 6 } };
         // System.out.println(dp.noOfUniquePaths(uniquePathArr));
 
-        int[] jumpArr = { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 };
+        int[] jumpArr = 
+        // { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 };
+        { 1, 3, 6, 1, 0, 9 }; 
         // System.out.println("min no of jumps " + dp.minJumps(jumpArr));
+        System.out.println("min no of jumps " + dp.jumpDP(jumpArr));
 
         int[] steps = {1,2};
         int stairs = 3;
@@ -1492,7 +1415,7 @@ public class DP {
         // System.out.println("max stone value by first player is "+dp.twoPlayerStoneGame(stone, 0, stone.length-1));
         // System.out.println("did the first player win : "+dp.twoPlayerStoneGameDP(stone));
 
-        System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
+        // System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
 
         int set[] = {2, 3, 5, 7, 10, 15};
         int sumSet  = 20;

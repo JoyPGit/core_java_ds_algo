@@ -27,10 +27,15 @@ class LinkedList1 {
         }
     }
 
-    void showList(ListNode head){
+    void printList(ListNode head){
         while(head!=null){
-            System.out.println(head.key+"->");
+            System.out.print(head.key+"->");
             head = head.next;
+            if(head.next == null) {
+                System.out.print(head.key+"-~~!");
+                System.out.println();
+                return;
+            }
         }
     }
     void addNode(int data) {
@@ -162,10 +167,10 @@ class LinkedList1 {
                 // System.out.println(tracker.key);
                 tracker= tracker.next;
             }
-            showList(head);
+            printList(head);
             if (direction) {
                 System.out.println("direction");
-                showList(head);
+                printList(head);
                 head = reverseList(head);
                 if(head.next==null) return head.key;
                 head = head.next;
@@ -175,14 +180,14 @@ class LinkedList1 {
                     // System.out.println(tracker.key);
                     tracker= tracker.next;
                 }
-                showList(head);
+                printList(head);
             } else {
                 System.out.println("direction change");
                 head = reverseList(head);
                 System.out.println("new head after reversal "+head.key);
                 if(head.next==null) return head.key;
                 head = head.next;
-                showList(head);
+                printList(head);
                 tracker = head;
                 while(tracker!=null && tracker.next!=null){
                     
@@ -202,7 +207,7 @@ class LinkedList1 {
     }
 
     ListNode reverseList(ListNode node) {
-        // showList(node);
+        // printList(node);
         ListNode prev = null;
         ListNode curr = node;
         ListNode next;
@@ -218,6 +223,16 @@ class LinkedList1 {
         return prev;
     }
 
+    void reverseListWithoutPointer(ListNode head, ListNode node, ListNode next){
+        if(next==null) {
+            this.head = node;
+            return;
+        }
+        reverseListWithoutPointer(head, next, next.next);
+        next.next = node;
+        node.next = null;//not adding this creates a loop between 1 and 2
+    }
+
     public static void main(String[] args) {
         LinkedList1 linked = new LinkedList1();
         linked.addNode(1);
@@ -230,7 +245,10 @@ class LinkedList1 {
         linked.addNode(8);
         linked.addNode(9);
 
-        System.out.println(linked.josephusCircle(linked.head));
+        // System.out.println(linked.josephusCircle(linked.head));
+        linked.reverseListWithoutPointer( linked.head,linked.head, linked.head.next);
+        linked.printList(linked.head);
+
         // Node looper = linked.head;
         // looper = looper.next.next;//5
         // linked.current.next = looper;
