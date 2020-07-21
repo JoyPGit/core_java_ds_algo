@@ -461,6 +461,35 @@ public class DP {
         return max;
     }
 
+
+    int maxSumIncreasingSubsequence(int[] nums){
+        int n = nums.length;
+        int[] dp = new int[n];
+
+        for(int i =0; i<n; i++){
+            dp[i] = nums[i];
+        }
+
+        /** the dp[i] is incremented by the addition of nums[j],
+         * and for the next iteration of j, we check if the nums[i] + nums[j]>dp[i];
+         * if yes, then nums[j] is greater than nums[j-1] and dp[i] is incremented
+         */
+        for(int i =1 ; i<n; i++){
+            for(int j =0; j<i; j++){
+                if(nums[j]<nums[i] && nums[i]+nums[j]>=dp[i]){
+                    dp[i] += nums[j];
+                }
+            }
+        }
+
+        int max  = 0;
+        for(int i=0; i<n; i++){
+            max = Math.max(max, dp[i]);
+        }
+        print1DMatrix(dp);
+        return max;
+    }
+
     int uniquePathCount = 0;
 
     int noOfUniquePaths(int[][] arr) {
@@ -560,8 +589,8 @@ public class DP {
     int staircase(int n){
         int[] dp = new int[n+1];
         
-        dp[0] = 1; dp[1] = 1;
-        for(int i=2; i<=n;i++){
+        dp[0] = 1; dp[1] = 1; dp[2] = 2;
+        for(int i=3; i<=n;i++){
             dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
         }
         
@@ -596,7 +625,7 @@ public class DP {
         dp[0] = 0;
 
         //the code is similar to LIS i=1, j=0, 
-        //after for lopp dp[i] value 
+        //after for loop dp[i] value 
         for(int i=1; i<=arr.length; i++ ){
             int max = Integer.MIN_VALUE;
             for(int j = 0; j<i; j++){
@@ -1013,18 +1042,24 @@ public class DP {
      */
 
     boolean subsetSumDP(int[] set, int sum){
-        boolean[][] dp = new boolean[set.length+1][sum+1];
-        dp[0][0] =true;
-        for(int i = 1; i<=set.length; i++){
+        // dp[0][0] =true;
+        int n = set.length;
+        boolean[][] dp = new boolean[n][sum+1];
+
+        for(int i=1; i<n; i++){
+            if(i == set[0]) dp[0][i] = true;
+        }
+        for(int i = 1; i<set.length; i++){
             for(int j =0; j<=sum; j++){
-                if(j==0) dp[i][j] = true;
-                else if(set[i-1]>j) dp[i][j] = dp[i-1][j];//tricky : false or from above
-                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i-1]];
+                // if(j==0) dp[i][j] = true;
+                // else 
+                if(set[i]>j) dp[i][j] = dp[i-1][j];//tricky : false or from above
+                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i]];
             }
         }
         printMatrixBool(dp);
-        System.out.println("the subset exists : "+dp[dp.length-1][dp[0].length-1]);
-        return dp[set.length][sum];
+        System.out.println("the subset exists : "+dp[n-1][sum]);
+        return dp[n-1][sum];
     }
 
     int maxSizeSubset(int[] set, int sum){
@@ -1312,6 +1347,12 @@ public class DP {
         int[] house = { 2, 7, 9, 3, 1 };// {1,2,3,1};
         // System.out.println(dp.houseRobber(house));
 
+        int maxArr[] = //{1, 101, 2, 3, 100, 4, 5}; 
+        { 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11 };
+        System.out.println("Sum of maximum sum "+ 
+                            "increasing subsequence is "+ 
+                              dp.maxSumIncreasingSubsequence(maxArr)); 
+
         ArrayList<Integer> list = new ArrayList<>();
         list.add(5);
         list.add(4);
@@ -1332,7 +1373,7 @@ public class DP {
         {4,10,10,8,1,4,10,9,7,6};
         // dp.deleteAndEarnDP(numsDeleteAndEarn);
         // dp.deleteAndEarn4jul(numsDeleteAndEarn);
-        dp.deleteAndEarn9jul(numsDeleteAndEarn);
+        // dp.deleteAndEarn9jul(numsDeleteAndEarn);
 
         // int board[] = {6, 7, 12, 13, 14};
         // int revenue[] = {5, 6, 5, 3, 1};
@@ -1345,7 +1386,7 @@ public class DP {
         // { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 };
         { 1, 3, 6, 1, 0, 9 }; 
         // System.out.println("min no of jumps " + dp.minJumps(jumpArr));
-        System.out.println("min no of jumps " + dp.jumpDP(jumpArr));
+        // System.out.println("min no of jumps " + dp.jumpDP(jumpArr));
 
         int[] steps = {1,2};
         int stairs = 3;
@@ -1365,7 +1406,7 @@ public class DP {
         // int[] coins = {1,2,3}; int coinSum =4;
         // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length));
         // dp.coinChangeDP(coins, coinSum);
-        int[] coinsMin = {1,5,6,9};//
+        int[] coinsMin = {5,6,9};//
         // {25, 10, 5}; 
         int sum  = 11;
         // 30;
@@ -1396,9 +1437,9 @@ public class DP {
         int[][] blockSum = {{1,2,3},{4,5,6},{7,8,9}};
         // dp.matrixBlockSum(blockSum, 1);
 
-        // int set[] = {3, 34, 4, 12, 5, 2}; int sum = 9;
+        int subSetDP[] = {3, 34, 16, 12, 5, 2}; int subsetSum = 36;
         // dp.subsetSum(set, sum, 0);
-        // dp.subsetSumDP(set, sum);
+        // dp.subsetSumDP(subSetDP, subsetSum);
 
         int[] setPartition = //{1, 2, 3, 4};
         {28,63,95,30,39,16,36,44,37,100,61,73,32,71,100,2,37,60,23,71,53,70,69,82,97,
