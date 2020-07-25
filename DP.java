@@ -465,7 +465,7 @@ public class DP {
     int maxSumIncreasingSubsequence(int[] nums){
         int n = nums.length;
         int[] dp = new int[n];
-
+        
         for(int i =0; i<n; i++){
             dp[i] = nums[i];
         }
@@ -473,6 +473,8 @@ public class DP {
         /** the dp[i] is incremented by the addition of nums[j],
          * and for the next iteration of j, we check if the nums[i] + nums[j]>dp[i];
          * if yes, then nums[j] is greater than nums[j-1] and dp[i] is incremented
+         * 
+         * nums[i]+nums[j]>=dp[i] the equal to here is needed in case 3+100 = 1+2+100
          */
         for(int i =1 ; i<n; i++){
             for(int j =0; j<i; j++){
@@ -489,6 +491,7 @@ public class DP {
         print1DMatrix(dp);
         return max;
     }
+
 
     int uniquePathCount = 0;
 
@@ -610,11 +613,13 @@ public class DP {
     }
 
     //trying a unifying pattern for rod cutting, coin change and knapsack
-    int rodCuttingIncludeExclude(int[] price, int[] length, int L, int index){ //size is for fixing the for loop iteration number
+    int rodCuttingIncludeExclude(int[] price, int[] length, int L, int index){ 
+        //size is for fixing the for loop iteration number
         if(index<0) return 0;
         if(L<0) return Integer.MIN_VALUE;
         if(L==0) return 0;
-        int incl = price[index]+rodCuttingIncludeExclude(price, length, L-length[index], index); //either select or not
+        //either select or not
+        int incl = price[index]+rodCuttingIncludeExclude(price, length, L-length[index], index); 
         int excl = rodCuttingIncludeExclude(price, length, L, index-1);
         return Math.max(incl,excl);
     }
@@ -629,7 +634,8 @@ public class DP {
         for(int i=1; i<=arr.length; i++ ){
             int max = Integer.MIN_VALUE;
             for(int j = 0; j<i; j++){
-                max = Math.max(dp[i-j-1]+arr[j], max);//same as recursive function, just change the arrays
+                max = Math.max(dp[i-j-1]+arr[j], max);
+                //same as recursive function, just change the arrays
             }
             
             dp[i] = max;
@@ -652,7 +658,8 @@ public class DP {
                     dp[i][j] = Math.max(value[i-1]+dp[i][j-length[i-1]], dp[i-1][j]);
                     /**
                      * as we can select the same element multiple times, dp[i] is used
-                     * row doesn't denote indexes, it simply denotes if the element is selected or not
+                     * row doesn't denote indexes, it simply denotes if the element 
+                     * is selected or not
                      * hence we have 0th row(1st el not selected)
                      */
                 }
@@ -699,8 +706,10 @@ public class DP {
     }
 
 
-    //https://www.techiedelight.com/coin-change-problem-find-total-number-ways-get-denomination-coins/
-    /** if we use for loop as in rod cutting
+    /**
+     * https://www.techiedelight.com/coin-change-problem-find-total-
+     * number-ways-get-denomination-coins/ 
+     * if we use for loop as in rod cutting
      * public static int count(int[] S, int N)
 	{
 		// if total is 0, return 1
@@ -1018,7 +1027,8 @@ public class DP {
     //IMP
     //2 subset problrms for practice
     
-    // https://www.geeksforgeeks.org/partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum/
+    // https://www.geeksforgeeks.org/partition-a-set-into-two-subsets
+    //-such-that-the-difference-of-subset-sums-is-minimum/
     // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
 
 
@@ -1098,7 +1108,8 @@ public class DP {
         if(target == 0) return true;
         if(index>=set.length) return false;
         System.out.println("target "+target+" current set el "+set[index]);
-        return canPartitionHelper(set, target-set[index], index+1) || canPartitionHelper(set, target, index+1);
+        return canPartitionHelper(set, target-set[index], index+1) || 
+        canPartitionHelper(set, target, index+1);
     }
 
     boolean canPartitionDP(int[] set){
@@ -1236,7 +1247,14 @@ public class DP {
         int n1 = textArr.length;
         char[] patternArr =  pattern.toCharArray();
         int n2 = patternArr.length;
-        System.out.println("n2 "+n2);
+
+        // for(int i =1; i<n2-1; i++){
+        //     for(int j =0; j<i; j++){
+        //         if(patternArr[j]=='*' && patternArr[i]=='*'){
+        //             patternArr[j] = '*';
+        //         }
+        //     }
+        // }
 
         boolean[][] dp = new boolean[n1+1][n2+1];
 
@@ -1280,7 +1298,8 @@ public class DP {
         return dp[n1][n2];
     }
 
-    //https://www.geeksforgeeks.org/ways-to-arrange-balls-such-that-adjacent-balls-are-of-different-types/
+    //https://www.geeksforgeeks.org/ways-to-arrange-balls-such-that-adjacent-
+    //balls-are-of-different-types/
     // int arrangeBalls(int p , int q, int r){
     //     int n  = p+q+r;
     //     int[] arr = new int[n];
@@ -1349,9 +1368,9 @@ public class DP {
 
         int maxArr[] = //{1, 101, 2, 3, 100, 4, 5}; 
         { 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11 };
-        System.out.println("Sum of maximum sum "+ 
-                            "increasing subsequence is "+ 
-                              dp.maxSumIncreasingSubsequence(maxArr)); 
+        // System.out.println("Sum of maximum sum "+ 
+        //                     "increasing subsequence is "+ 
+        //                       dp.maxSumIncreasingSubsequence(maxArr)); 
 
         ArrayList<Integer> list = new ArrayList<>();
         list.add(5);
@@ -1362,7 +1381,7 @@ public class DP {
         // dp.sortList(list, list.size()-1, 0);
         // System.out.println(list);
 
-        int[] numsDeleteAndEarn = //{1,1,1,2,4,5,5,5,6} ;//{3,3,3,4,2,2};//
+        // int[] numsDeleteAndEarn = //{1,1,1,2,4,5,5,5,6} ;//{3,3,3,4,2,2};//
         // {8,10,4,9,1,3,5,9,4,10};
         // {1,6,3,3,8,4,8,10,1,3};
         // {12,32,93,17,100,72,40,71,37,92,58,34,29,78,11,84,77,90,92,35,12,
@@ -1370,7 +1389,7 @@ public class DP {
         // 48,78,63,11,20,51,78,42,37,21,100,13,60,57,91,53,49,15,45,19,51,2,
         // 96,22,32,2,46,62,58,11,29,6,74,38,70,97,4,22,76,19,1,90,63,55,64,
         // 44,90,51,36,16,65,95,64,59,53,93};
-        {4,10,10,8,1,4,10,9,7,6};
+        // {4,10,10,8,1,4,10,9,7,6};
         // dp.deleteAndEarnDP(numsDeleteAndEarn);
         // dp.deleteAndEarn4jul(numsDeleteAndEarn);
         // dp.deleteAndEarn9jul(numsDeleteAndEarn);
@@ -1454,10 +1473,11 @@ public class DP {
 
         // int[] stone= {1, 5, 3, 7, 10};
         int[] stone= {8, 15, 3, 7};
-        // System.out.println("max stone value by first player is "+dp.twoPlayerStoneGame(stone, 0, stone.length-1));
+        // System.out.println("max stone value by first player is "+
+        //dp.twoPlayerStoneGame(stone, 0, stone.length-1));
         // System.out.println("did the first player win : "+dp.twoPlayerStoneGameDP(stone));
 
-        // System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
+        System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
 
         int set[] = {2, 3, 5, 7, 10, 15};
         int sumSet  = 20;

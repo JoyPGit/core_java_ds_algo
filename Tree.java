@@ -2165,18 +2165,59 @@ public class Tree {
         root.right = treeFromInorder(arr, mid+1, end);
         return root;
     }
+
+
+    int countPath=0;
+    public int sumNumbers(TreeNode root) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        f(root, list, 0);
+        return countPath;
+    }
+    
+    void f(TreeNode node, ArrayList<Integer> l, int index){
+        if(node==null){
+            return;
+        }
+        
+        if(node!=null){
+            l.add(index, node.key);
+            if(node.left == null && node.right == null){
+                this.countPath+=sum(l);
+                // l.remove(index);
+            }else{
+                // index ++;
+                int newIndex = index+1;
+                f(node.left, l, newIndex);
+                // l.remove(l.size()-1);
+                // index ++;
+                f(node.right, l, newIndex);
+            }
+            l.remove(index);
+        }
+    }
+    
+    int sum(ArrayList<Integer> list){
+        int sum =0;
+        for(int i =0; i<list.size(); i++){
+            sum+= list.get(i)*Math.pow(10, list.size()-i-1);
+        }
+        System.out.println(sum);
+        return sum;
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
         tree.root = new TreeNode(4);
         tree.root.left = new TreeNode(2);
         tree.root.right = new TreeNode(6);
-        tree.root.left.left = new TreeNode(1);
-        tree.root.left.right = new TreeNode(3);
-        tree.root.right.left = new TreeNode(5);
-        tree.root.right.right = new TreeNode(8);
-        tree.root.right.right.right = new TreeNode(9);
-        tree.root.right.right.left = new TreeNode(7);
+        // tree.root.left.left = new TreeNode(1);
+        // tree.root.left.right = new TreeNode(3);
+        // tree.root.right.left = new TreeNode(5);
+        // tree.root.right.right = new TreeNode(8);
+        // tree.root.right.right.right = new TreeNode(9);
+        // tree.root.right.right.left = new TreeNode(7);
+
 
 
         int[] pre = {4,2,1,3,6};

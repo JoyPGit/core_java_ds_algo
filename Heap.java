@@ -1,9 +1,11 @@
+import java.util.*;
+
 public class Heap {
 
     int[] heapArray;
     int lastIndex;
     private int lastIndexDelete = -1;
-    private int largestSingle ;
+    private int largestSingle;
 
     Heap(int capacity) {
         heapArray = new int[capacity];
@@ -38,6 +40,29 @@ public class Heap {
     void printHeap() {
         for (int i = 0; i < heapArray.length; i++) {
             System.out.println(this.heapArray[i]);
+        }
+    }
+
+    void printMatrix(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (i == arr.length - 1 && j == arr[0].length - 1) {
+                    System.out.println(arr[i] + ";");
+                    System.out.println();
+                } else
+                    System.out.print(arr[i][j] + ", ");
+            }
+            System.out.println();
+        }
+    }
+
+    void print1DMatrix(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (i == arr.length - 1) {
+                System.out.println(arr[i] + ";");
+                System.out.println();
+            } else
+                System.out.print(arr[i] + ", ");
         }
     }
 
@@ -98,68 +123,100 @@ public class Heap {
      * So use -1 as initial value
      * 
      * also the variables need to be initialized outside of current scope.
-     * 
-     * @param args
      */
 
     void deleteFromHeap() {
         for (int i = 0; i < heapArray.length; i++) {
-            if (heapArray[i] == 0 ) {
+            if (heapArray[i] == 0) {
 
                 System.out.println("the empty index is " + i);
                 System.out.println("the last value is " + heapArray[i]);
                 lastIndexDelete = i;
-                
+
             }
         }
 
-        if(lastIndexDelete == -1){
-            lastIndexDelete = heapArray.length-1;
+        if (lastIndexDelete == -1) {
+            lastIndexDelete = heapArray.length - 1;
         }
 
-        System.out.println("lastIndexDelete " + lastIndexDelete + " value is " +heapArray[lastIndexDelete]);
+        System.out.println("lastIndexDelete " + lastIndexDelete + " value is " + heapArray[lastIndexDelete]);
         heapArray[0] = heapArray[lastIndexDelete];
-        heapArray[lastIndexDelete]=0;
+        heapArray[lastIndexDelete] = 0;
 
         printHeap();
         heapifySinglePath(0);
     }
 
-    void heapifySinglePath(int index){
-        /**Always the heapify FLOATS DOWN */
-        System.out.println("index "+index);
+    void heapifySinglePath(int index) {
+        /** Always the heapify FLOATS DOWN */
+        System.out.println("index " + index);
         largestSingle = index;
-        if(index < heapArray.length){
-            
-            if(((2*index)+1)<heapArray.length){
-                System.out.println("2*index+1 " + (2*index)+1);
-                if(heapArray[largestSingle]<heapArray[(2*index)+1]){
-                    largestSingle = (2*index)+1;
+        if (index < heapArray.length) {
+
+            if (((2 * index) + 1) < heapArray.length) {
+                System.out.println("2*index+1 " + (2 * index) + 1);
+                if (heapArray[largestSingle] < heapArray[(2 * index) + 1]) {
+                    largestSingle = (2 * index) + 1;
                 }
             }
 
-           
-            if(((2*index)+2)<heapArray.length){
-                System.out.println("2*index+2 " + (2*index)+2);
-                if(heapArray[(2*index)+2]>heapArray[largestSingle]){
-                    largestSingle = 2*index+2;
+            if (((2 * index) + 2) < heapArray.length) {
+                System.out.println("2*index+2 " + (2 * index) + 2);
+                if (heapArray[(2 * index) + 2] > heapArray[largestSingle]) {
+                    largestSingle = 2 * index + 2;
                 }
             }
-            
 
-            if(largestSingle != index){
+            if (largestSingle != index) {
                 int temp = heapArray[index];
                 heapArray[index] = heapArray[largestSingle];
                 heapArray[largestSingle] = temp;
-                System.out.println("swapped "+ heapArray[index] + "  " + heapArray[largestSingle]);
+                System.out.println("swapped " + heapArray[index] + "  " + heapArray[largestSingle]);
                 heapifySinglePath(largestSingle);
             }
-            
+
         }
     }
 
-    //k-sorted array
-    
+    /*
+     * * provides O(log(n)) time for the enqueuing and dequeuing methods ({@code
+     * offer}, {@code poll}, {@code remove()} and {@code add}); linear time for the
+     * {@code remove(Object)} and {@code contains(Object)} methods; and constant
+     * time for the retrieval methods ({@code peek} ->first el, {@code element}, and
+     * {@code size}).
+     * 
+     * removeEq, removeAt and contains capacity grow automatically listiterator,
+     * hasNext size()
+     */
+    // k-sorted array
+    /**
+     * 1 add comparator
+     * 
+     */
+    int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int[] res = new int[n - k + 1];
+        int index = 0;
+
+        PriorityQueue<Integer> heap = new PriorityQueue<Integer>(Comparator.reverseOrder());
+
+        heap.add(nums[0]);
+        for (int i = 1; i < k; i++) {
+            heap.add(nums[i]);
+        }
+
+        res[index++] = heap.peek();
+
+        for (int i = k; i < n; i++) {
+            heap.add(nums[i]);
+            heap.remove(nums[i - k]);
+            res[index++] = heap.peek();
+        }
+
+        print1DMatrix(res);
+        return res;
+    }
 
     public static void main(String[] args) {
         Heap newHeap = new Heap(17);
@@ -186,18 +243,26 @@ public class Heap {
         newHeap.heapArray[15] = 77;
         newHeap.heapArray[16] = 53;
 
-        newHeap.printHeap();
+        // newHeap.printHeap();
 
         for (int i = (newHeap.heapArray.length) / 2 - 1; i >= 0; i--) {
-            newHeap.maxHeapify(i);
+            // newHeap.maxHeapify(i);
         }
         // newHeap.maxHeapify(7);
 
         // newHeap.printHeap();
 
-        newHeap.deleteFromHeap();
-        
-        newHeap.printHeap();
+        // newHeap.deleteFromHeap();
+
+        // newHeap.printHeap();
+
+        int[] nums = 
+        { 1, 3, 1, 2, 0, 5 };
+        // {7, 2, 4};
+        // {1,-1};
+        // {1,3,-1,-3,5,3,6,7};
+        int k = 3;// 2
+        newHeap.maxSlidingWindow(nums, k);
     }
 }
 
