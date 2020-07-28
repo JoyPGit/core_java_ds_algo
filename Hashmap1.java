@@ -19,6 +19,9 @@ import java.util.*;
         for (CustomClassForSwap element : tree.queueSwapLeafNew) {
             System.out.println(element.node.key);
         }
+
+   3 https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
+   hashmap iterator     
    */
 public class Hashmap1{
 
@@ -109,9 +112,34 @@ public class Hashmap1{
         // return smallest[0];
     }
 
-    void MaxDiffFirstAndLast(int[] arr){
-        
-        // for(int i =0; i<arr.length)
+    // https://www.geeksforgeeks.org/maximum-difference-first-last-indexes-element-array/
+    class FirstLast{
+        int first; int second;
+
+        FirstLast(int f, int s){
+            this.first = f;
+            this.second = s;
+        }
+    }
+
+    int MaxDiffFirstAndLast(int[] arr){
+        int maxDiff = 0;
+        HashMap<Integer, FirstLast> list = new HashMap<>();
+        for(int i =0; i<arr.length; i++){
+            if(list.containsKey(arr[i])){
+                int first = list.get(arr[i]).first;
+                list.put(arr[i], new FirstLast(first, i));
+            }else list.put(arr[i], new FirstLast(i, i));
+        }
+
+        for (Map.Entry<Integer, FirstLast> entry : list.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue().second - entry.getValue().first;
+            maxDiff = Math.max(maxDiff, value);
+            System.out.println("key "+key+" value " +value);
+        }
+        System.out.println("maxDiff is "+maxDiff);
+        return maxDiff;
     }
 
 
@@ -130,11 +158,11 @@ public class Hashmap1{
 
         String arr[] = {"swagat","adarsh","vasil","shivani","hanish","manendra"};
 
-        for(int i=0; i<arr.length; i++){
-            map.put(i,arr[i]);
-        }
+        // for(int i=0; i<arr.length; i++){
+        //     map.put(i,arr[i]);
+        // }
 
-        System.out.println(map.get(0));
+        // System.out.println(map.get(0));
         for(int i =0; i<arr.length; i++){
             // System.out.println(map.get(i));//the values of the map
         }
@@ -145,17 +173,17 @@ public class Hashmap1{
 
         int[] arr1 = {3,4,5,6};
         int[] arr2 = {1,2};
-        boolean val = h.CheckSubsetArray(arr1, arr2);
-        if(val){
-            System.out.println("subset true");
-        }
+        // boolean val = h.CheckSubsetArray(arr1, arr2);
+        // if(val){
+            // System.out.println("subset true");
+        // }
 
         int[] arr3 = {2,2,3,4,5,6,6,6,6,7,7,8,8,8};
-        System.out.println(h.minSubsets(arr3));
+        // System.out.println(h.minSubsets(arr3));
 
 
-        System.out.println("smallest k times is "+h.SmallestElementRepeatedKTimes(arr3, 2));
-
-        
+        // System.out.println("smallest k times is "+h.SmallestElementRepeatedKTimes(arr3, 2));
+        int[] maxDiffArr = {2, 1, 3, 4, 2, 1, 5, 1, 7};
+        h.MaxDiffFirstAndLast(maxDiffArr);
     }
 }

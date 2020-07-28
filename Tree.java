@@ -3,85 +3,6 @@
 // import java.util.Stack;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.List;
-
-// import org.graalvm.compiler.graph.TreeNode; 
-
-// public class Tree { 
-
-//     /* A binary tree node has key, pointer to  
-//     left child and a pointer to right child */
-//     static class Nod{ 
-//         int key; 
-//         TreeNode left, right; 
-
-//         // constructor 
-//         TreeNode(int key){ 
-//             this.key = key; 
-//             left = null; 
-//             right = null; 
-//         } 
-//     } 
-//     static TreeNode root; 
-//     static TreeNode temp = root; 
-
-//     /* Inorder traversal of a binary tree*/
-//     static void inorder(TreeNode temp) 
-//     { 
-//         if (temp == null) 
-//             return; 
-
-//         inorder(temp.left); 
-//         System.out.print(temp.key+" "); 
-//         inorder(temp.right); 
-//     } 
-
-//     /*function to insert element in binary tree */
-//     static void insert(TreeNode temp, int key) 
-//     { 
-//         Queue<TreeNode> q = new LinkedList<TreeNode>(); 
-//         q.add(temp); 
-
-//         // Do level order traversal until we find 
-//         // an empty place.  
-//         while (!q.isEmpty()) { 
-//             temp = q.peek(); 
-//             q.remove(); 
-
-//             if (temp.left == null) { 
-//                 temp.left = new TreeNode(key); 
-//                 break; 
-//             } else
-//                 q.add(temp.left); 
-
-//             if (temp.right == null) { 
-//                 temp.right = new TreeNode(key); 
-//                 break; 
-//             } else
-//                 q.add(temp.right); 
-//         } 
-//     } 
-
-//     // Driver code 
-//     public static void main(String args[]) 
-//     { 
-//         root = new TreeNode(10); 
-//         root.left = new TreeNode(11); 
-//         root.left.left = new TreeNode(7); 
-//         root.right = new TreeNode(9); 
-//         root.right.left = new TreeNode(15); 
-//         root.right.right = new TreeNode(8); 
-
-//         System.out.print( "Inorder traversal before insertion:"); 
-//         inorder(root); 
-
-//         int key = 12; 
-//         insert(root, key); 
-
-//         System.out.print("\nInorder traversal after insertion:"); 
-//         inorder(root); 
-//     } 
-// } 
 
 class TreeNode {
     int key;
@@ -114,6 +35,28 @@ public class Tree {
         this.root = null;
     }
 
+    void print1DMatrix(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (i == arr.length - 1) {
+                System.out.println(arr[i] + ";");
+                System.out.println();
+            } else
+                System.out.print(arr[i] + ", ");
+        }
+    }
+
+    void printArrayList(ArrayList<Integer> holder){
+        for(int i =0; i<holder.size(); i++){
+            System.out.println(holder.get(i));
+        }
+    }
+
+    void printLinkedList(LinkedList<Integer> list){
+        for(int i =0; i<list.size(); i++){
+            if(i == list.size()-1) System.out.println(list.get(i)+"--|");
+            else System.out.print(list.get(i)+"->");
+        }
+    }
     // now add functions
     void Inorder(TreeNode x) {
         if (x == null) {
@@ -2205,20 +2148,160 @@ public class Tree {
         return sum;
     }
 
+    void spiralPrint(TreeNode root, int level){
+        int h = height25jul(root);
+        Deque<TreeNode> list = new LinkedList<>();
+        list.add(root); 
+        boolean ltor = true;
+        //adding null delimiter
+        spiralPrintHelper(root, list, level, ltor);
+    }
+
+    int height25jul (TreeNode root){
+        int left = 0; int right =0;
+        if(root.left!=null) left = height25jul(root.left);
+        if(root.right!=null) left = height25jul(root.right);
+        return Math.max(left, right)+1;
+    }
+
+    void spiralPrintHelper(TreeNode node, Deque<TreeNode> list, int level, boolean ltor){
+        while(list.size()!=0){
+            TreeNode curr = list.removeFirst();
+            System.out.println(curr.key+"->");
+            count++;
+            if(count%2!=0){
+
+            }
+            ltor = !ltor;//true then left to right
+            if(ltor) {
+                if(curr.left!=null) list.add(curr.left);
+                if(curr.right!=null) list.add(curr.right);
+            } else{
+                if(curr.right!=null) list.add(curr.right);
+                if(curr.left!=null) list.add(curr.left);
+            }
+            
+        }
+    }
+
+    void extremeAlternate(TreeNode root){
+        Deque<TreeNode> list = new LinkedList<>();
+        ArrayList<Integer> holder = new ArrayList<>();
+
+        list.add(root); list.add(null);
+        extremeAlternateHelper(root, list, holder);
+        int count = 0;
+
+        for(int i =0; i<holder.size(); i++){
+            if(holder.get(i) == -1){
+                count++;
+                if(count%2 ==1) {
+                    System.out.println(holder.get(i-1));
+                    if((i+1)<holder.size()) System.out.println(holder.get(i+1));
+                    i++;
+                }
+            }
+        }
+    }
+
+    void extremeAlternateHelper(TreeNode root, Deque<TreeNode> list, 
+    ArrayList<Integer> holder){
+        boolean carryOn = true;
+        while(carryOn){
+            if(list.size()==1 && list.getLast() == null) carryOn = false;
+            TreeNode curr = list.removeFirst();
+            if(curr==null) {
+                list.add(null);
+                holder.add(-1);
+            }else{
+                holder.add(curr.key);
+                if(curr.left!=null)list.add(curr.left);
+                if(curr.right!=null)list.add(curr.right);
+            }
+        }
+    }
+
+    LinkedList treetoCDLL(TreeNode root){
+        LinkedList<Integer> list = new LinkedList<>();
+        treetoCDLLHelper(root, list);
+        printLinkedList(list);
+        return list;
+    }
+
+    void treetoCDLLHelper(TreeNode root, LinkedList<Integer> list){
+        if(root.left!=null) treetoCDLLHelper(root.left, list);
+        list.add(root.key);
+        if(root.right!=null) treetoCDLLHelper(root.right, list);
+    }
+
+
+    // https://leetcode.com/problems/most-frequent-subtree-sum/
+    int sumFrequent;
+    HashMap<Integer, Integer> listFrequent = new HashMap<>();
+    
+    public int[] findFrequentTreeSum(TreeNode root) {
+
+        postOrder(root);
+        int max = 0; int countMax =0;
+        for (Integer value : listFrequent.values()) {
+            // ...
+            if(max<value) max = value;
+        }
+        for (Integer value : listFrequent.values()) {
+            if(value == max) count++;
+        }
+
+        int[] res= new int[count]; int i=0;
+        
+        for (HashMap.Entry<Integer, Integer> entry : listFrequent.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+            if(value == max) res[i++] = key;
+            // ...
+        }
+        print1DMatrix(res);
+        return res;
+    }
+    
+    int postOrder(TreeNode node){
+        int left = 0; int right = 0;
+        if(node.left == null && node.right ==null) {
+            if(listFrequent.containsKey(node.key)) listFrequent.put(node.key, 
+                listFrequent.get(node.key)+1);
+            else listFrequent.put(node.key, 1);
+            return node.key;
+        } 
+        else{
+            if(node.left!=null) left = postOrder(node.left);
+            if(node.right!=null) right = postOrder(node.right);
+
+            int sum = left+right+node.key;
+            if(listFrequent.containsKey(sum)) listFrequent.put(sum, 
+                    listFrequent.get(sum)+1);
+            else listFrequent.put(sum, 1);
+
+            return sum;
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
         tree.root = new TreeNode(4);
         tree.root.left = new TreeNode(2);
         tree.root.right = new TreeNode(6);
-        // tree.root.left.left = new TreeNode(1);
-        // tree.root.left.right = new TreeNode(3);
-        // tree.root.right.left = new TreeNode(5);
-        // tree.root.right.right = new TreeNode(8);
+        tree.root.left.left = new TreeNode(1);
+        tree.root.left.right = new TreeNode(3);
+        tree.root.right.left = new TreeNode(5);
+        tree.root.right.right = new TreeNode(8);
         // tree.root.right.right.right = new TreeNode(9);
         // tree.root.right.right.left = new TreeNode(7);
+        // tree.root.right.right.right.right = new TreeNode(11);
 
-
+        // tree.spiralPrint(tree.root, 0);
+        tree.findFrequentTreeSum(tree.root);
+        // tree.extremeAlternate(tree.root);
+        // tree.treetoCDLL(tree.root);
 
         int[] pre = {4,2,1,3,6};
         int[] in = {1,2,3,4,6};
@@ -2235,7 +2318,7 @@ public class Tree {
 
         int[] inOrder = {1,2,3,4,5,6,7,8,9};
         
-        tree.levelOrderTraversal(tree.treeFromInorder(inOrder, 0, inOrder.length-1));
+        // tree.levelOrderTraversal(tree.treeFromInorder(inOrder, 0, inOrder.length-1));
         // tree.findLargestLessThanOrEqualToN(tree.root, 9);
         // int in[] = {4, 5, 7}; int n = in.length;
         // ArrayList<TreeNode> trees = tree.getTrees(in, 0, n - 1); 

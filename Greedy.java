@@ -96,6 +96,8 @@ class Greedy{
         System.out.println("the min no platforms required are "+ max);
     }
 
+    void MaxTipCalculator(){}
+
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();
         int[] mice = new int[]{-10, -79, -79, 67, 93, -85, -28, -94 };

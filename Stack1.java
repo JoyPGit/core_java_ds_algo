@@ -137,7 +137,7 @@ public class Stack1{
                     while(!intStackPopHolder.isEmpty()){
                         intStack.push(intStackPopHolder.pop());
                     }
-                    System.out.println(" line 134 " +intStack);
+                    System.out.println(" line 140 " +intStack);
                 }
             }
         }
@@ -147,6 +147,34 @@ public class Stack1{
         }
     }
 
+    /**  
+     * 1 first go add 12 or 21
+     * 2 then for 'D' shift and add
+     * 3 check for all consecutive 'D's, move right as many no of times
+     * 4 if possible hold a counter, when I comes reset to -1, else hold preious 'D'
+     */
+    void printPattern27Jul(String s){
+        char[] ch  = s.toCharArray();
+        ArrayList<Integer> list = new ArrayList<>();
+        int index = 0; int Dcounter = 0;
+        for(int i =0; i<ch.length; i++){
+            if(index ==0){
+                if(ch[i] == 'I') {
+                    list.add(1); list.add(2);
+                } else if(ch[i] == 'D'){
+                    list.add(2); list.add(1);
+                }
+            }else{
+                if(ch[i] == 'D'){
+                    swapList(list, )
+                }else if(ch[i] == 'I'){
+
+                }
+            }
+            index = index+2;
+
+        }
+    }
 
     void longestCorrectBracketSubsequence(String s){
         char[] charArray = s.toCharArray();

@@ -61,7 +61,7 @@ class Array {
     }
 
     PriorityQueue<Integer> pQueue = new PriorityQueue<Integer>();
-
+    
     void mergekSortedArrays(int[] arr1, int[] arr2, int[] arr3) {
         int holder1, holder2, holder3 = 0;
 
@@ -548,6 +548,8 @@ class Array {
         print1DMatrix(res);
         return res;
     }
+
+    //https://stackoverflow.com/questions/6780632/returning-an-empty-array
 
     public static void main(String[] args) {
         // code
