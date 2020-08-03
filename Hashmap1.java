@@ -314,7 +314,7 @@ public class Hashmap1{
                 int diff = A[i] - A[j];
                 int counttillnow = hash[j].getOrDefault(diff, 0);
                 System.out.println("diff "+diff+ " countTillNow "+counttillnow);
-                
+
                 //trick to ensure hash[i] get doesn't return null; add condition in and
                 if(hash[i].containsKey(diff) && hash[i].get(diff) > counttillnow) continue;
                 else {
@@ -332,7 +332,7 @@ public class Hashmap1{
     /** elements are stored in hashmap in the order the are inserted,
      * so when we add els of array a, they are sorted relatively.
     */
-
+    // AMAZON
     void relativeSorting(int[] a, int[] b){
         ArrayList<Integer> res = new ArrayList<>();
         HashMap<Integer, Integer> map = new HashMap<>();
