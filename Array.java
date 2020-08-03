@@ -549,7 +549,11 @@ class Array {
         return res;
     }
 
+    
+
+
     //https://stackoverflow.com/questions/6780632/returning-an-empty-array
+
 
     public static void main(String[] args) {
         // code
@@ -610,9 +614,11 @@ class Array {
         // test.largestSumContigousSubarray(a);
 
         int[] nums = // {7, 2, 4};
-                { 1, -1 };
+        {9,10,9,-7,-4,-8,2,-6};
+
+                // { 1, -1 };
         // {1,3,-1,-3,5,3,6,7};
-        int k = 1;// 3;//2
+        int k = 5;//1;// 3;//2
         test.maxSlidingWindow(nums, k);
     }
 

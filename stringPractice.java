@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 class stringPractice {
 
@@ -420,6 +417,78 @@ class stringPractice {
         else if(s.equals("9")) return " ninety ";
         else return "";
     }
+
+    //RABIN KARP algo
+
+    class minWindowString{
+        int start; int end;
+        minWindowString(int s, int e){
+            this.start = s; this.end = e;
+        }
+    }
+    public String minWindow(String s, String t) {
+        if(s.length()<t.length()) return "";
+        if(s.length() == t.length()){
+            System.out.println("in here");
+            // System.out.println(s.equals(t)==false);
+            if(!s.equals(t)) return "";
+        }
+
+        String result = "";
+        HashMap<Character, Integer> map = new HashMap<>();
+        char[] ch = s.toCharArray();
+
+        for(int i =0; i<s.length(); i++){
+            if(t.contains(s.charAt(i)+"")){
+
+                // if(map.containsKey(s.charAt(i))){
+                //     map.put(ch[i], i);
+                // } else 
+                map.put(ch[i], i);
+                
+                if(map.size()==t.length()){
+                    int min = getMin(map);
+                    int max = getMax(map);
+                    //substring is inclusive of lower index only and not higher
+                    String str = s.substring(min, max+1);
+                    
+                    if(result.length()==0) {
+                        result = str;
+                        System.out.println("str first "+str);
+                    }
+                    else result = result.length()<str.length()?result:str;
+                }
+
+            }
+        }
+        // result = result.equals("1")==true?"":result;
+        System.out.println("Result "+result);
+        return result;
+    }
+
+    int getMin(HashMap<Character, Integer>map){
+        int min = Integer.MAX_VALUE;
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            Integer value = entry.getValue();
+            min = Math.min(min, value);
+        }   
+        // System.out.println("min "+ min); 
+        return min;
+    }
+
+    int getMax(HashMap<Character, Integer>map){
+        int max = Integer.MIN_VALUE;
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            Integer value = entry.getValue();
+            max = Math.max(max, value);
+        }   
+        // System.out.println("max "+ max); 
+        return max;
+    }
+
+    //https://leetcode.com/problems/palindromic-substrings/
+    
+
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));
@@ -459,7 +528,13 @@ class stringPractice {
 
         // string.partitionLabels("ababcbacadefegdehijhklij");
         String number = "004";
-        string.stringtoWords(number);
+        // string.stringtoWords(number);
+
+        String S = //"aa";
+        "ADOBECODEBANC";
+        String T = //"aa";
+        "ABC";
+        string.minWindow(S, T);
         
     }
 }

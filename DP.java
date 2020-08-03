@@ -5,7 +5,7 @@ public class DP {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
                 if(i==arr.length-1 && j == arr[0].length-1) {
-                    System.out.println(arr[i]+";");
+                    System.out.println(arr[i][j]+";");
                     System.out.println();
                 } 
                 else System.out.print(arr[i][j] + ", ");
@@ -1345,6 +1345,24 @@ public class DP {
         printMatrix(dp);
         return min;
     }
+
+    
+
+    // public int maxSumDivThree(int[] nums) {
+    //     int n = nums.length;   
+        
+    //     int[] length = new int[n];
+
+    //     for(int i =1; i<n; i++){
+    //         int sum =0;
+    //         for(int j =0; j<i; j++){
+    //             if(((sum+=nums[j])%3)==0){
+                    
+    //             }
+    //         }
+    //     }
+    // }
+
     public static void main(String[] args) {
         DP dp = new DP();
 
@@ -1477,7 +1495,7 @@ public class DP {
         //dp.twoPlayerStoneGame(stone, 0, stone.length-1));
         // System.out.println("did the first player win : "+dp.twoPlayerStoneGameDP(stone));
 
-        System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
+        // System.out.println(dp.wildcardMatch("xbylmz", "x?y*z"));
 
         int set[] = {2, 3, 5, 7, 10, 15};
         int sumSet  = 20;
@@ -1488,5 +1506,13 @@ public class DP {
 
         int[][] fallingSum = {{1,2,3},{4,5,6},{7,8,9}};
         // dp.minFallingPathSum(fallingSum);
+
+        int[] apSeq = //{3,6,9,10};
+        {44,46,22,68,45,66,43,9,37,30,50,67,32,47,44,11,15,4,11,6,
+        20,64,54,54,61,63,23,43,3,12,51,61,16,57,14,12,55,17,18,25,
+        19,28,45,56,29,39,52,8,1,21,17,21,23,70,51,61,21,52,25,28};
+        
+        // dp.longestAP(apSeq);
+
     }
 }

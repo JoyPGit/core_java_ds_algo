@@ -142,6 +142,221 @@ public class Hashmap1{
         return maxDiff;
     }
 
+    // https://www.geeksforgeeks.org/print-maximum-shortest-distance/
+    // https://www.geeksforgeeks.org/common-elements-in-all-rows-of-a-given-matrix/
+    // https://www.geeksforgeeks.org/find-pairs-given-sum-elements-pair-different-rows/
+    
+    // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
+    // arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
+    void smallestSubArrayKDistinct(int[] arr, int k) {
+
+        Deque<Integer> list = new LinkedList<>();
+        list.add(arr[0]);
+        for (int i = 1; i < arr.length; i++) {
+            if (list.getLast() == arr[i]) {
+                list.clear();
+                list.add(arr[i]);
+            } else {
+                list.add(arr[i]);
+                if (list.size() == k) {
+                    System.out.println("start " + (i - k + 1) + " last " + i);
+                }
+                break;// removing this gives all possible ditinct ranges
+            }
+        }
+    }
+
+    // https://www.geeksforgeeks.org/design-a-data-structure-that-supports-
+    // insert-delete-search-and-getrandom-in-constant-time/
+
+    // https://www.geeksforgeeks.org/find-four-elements-a-b-c-and-d-in-an-array-such-that-ab-cd/
+
+    // https://www.geeksforgeeks.org/smallest-element-repeated-exactly-k-times-not-limited-small-range/
+
+    //IMP
+    // https://www.geeksforgeeks.org/print-triplets-sorted-array-form-ap/
+    // https://www.geeksforgeeks.org/find-smallest-range-containing-elements-from-k-lists/
+
+    // IMP check this with largest subarray with equal no of 0s and 1s
+    // https://www.geeksforgeeks.org/substring-equal-number-0-1-2/
+
+    //RABIN KARP ALGO
+
+    // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+    // int pairGreatestProduct(int[] arr){
+        
+    // }
+
+    // https://www.geeksforgeeks.org/longest-subarray-sum-divisible-k/
+    int longestSubArrayDivByK(int[] arr, int k){
+        int max =0; int sum =0;
+        HashMap<Integer, Integer> list = new HashMap<>();
+
+        for(int i =0; i<arr.length; i++){
+            sum+= arr[i];
+            list.put(sum%k, 0);
+        }
+
+        return max;
+    }
+    
+    //https://www.geeksforgeeks.org/longest-arithmetic-progression-dp-35/
+
+    class APHolder{
+        int start, end, count;
+        
+        APHolder(int a, int b, int c){
+            this.start = a;
+            this.end = b;
+            this.count = c;
+        }
+    }
+    
+    
+
+
+    // https://www.geeksforgeeks.org/length-of-the-longest-substring-with-equal-1s-and-0s/
+    // Java Code for finding the length of
+    // the longest balanced substring
+    int longestSubarrayEqual0sAnd1s() {
+        String str = "101001000";
+
+        // Create a map to store differences
+        // between counts of 1s and 0s.
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        // Initially difference is 0;
+        map.put(0, -1);
+        int res = 0;
+        int count_0 = 0, count_1 = 0;
+        for (int i = 0; i < str.length(); i++) {
+            // Keep track of count of 0s and 1s
+            if (str.charAt(i) == '0')
+                count_0++;
+            else
+                count_1++;
+
+            // If difference between current counts
+            // already exists, then substring between
+            // previous and current index has same
+            // no. of 0s and 1s. Update result if this
+            // substring is more than current result.
+
+            if (map.containsKey(count_1 - count_0))
+                res = Math.max(res, (i - map.get(count_1 - count_0)));
+
+            // If the current difference is seen first time.
+            else
+                map.put(count_1 - count_0, i);
+
+        }
+
+        System.out.println("Length of longest balanced sub string = " + res);
+        return res;
+    }
+
+    class ItineraryHolder{
+        String to;
+        int rank;
+        ItineraryHolder(String s, int r){
+            this.to = s;
+            this.rank = r;
+        }
+    }
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        ArrayList<String> result = new ArrayList<>();
+        HashMap<String, ItineraryHolder> map = new HashMap<>();
+
+        for(int i =0; i<tickets.size(); i++){
+            // if(map.containsKey(tickets.get(i)))
+            System.out.println(tickets.get(i));
+        }
+        return result;
+    }
+
+    //didn't work, don't know why
+    public int longestArithSeqLength(int[] arr) {
+        int maxLen = 0;
+        HashMap<Integer, APHolder> map = new HashMap<>();
+
+        for(int i =0; i<arr.length-1; i++){
+            for(int j = i+1; j<arr.length; j++){
+                int diff = arr[i] - arr[j];
+                if(map.containsKey(diff)){
+                    APHolder curr = map.get(diff);
+                    if(curr.end == arr[i]){
+                        map.put(diff, new APHolder(curr.start, arr[j], curr.count+1));
+                    } else map.put(diff, new APHolder(arr[i], arr[j], 2));
+                }
+                else map.put(diff, new APHolder(arr[i], arr[j], 2));
+            }
+        }
+        
+        for (Map.Entry<Integer, APHolder> entry : map.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue().count;
+            maxLen = Math.max(maxLen, value);
+            System.out.println("diff "+key+" value " +value);
+        }
+        System.out.println("maxLen is "+maxLen);
+        return maxLen;
+    }
+
+    //this works
+    public int longestAPHash(int[] A) {
+        HashMap<Integer, Integer> hash[] = new HashMap[A.length];
+        for(int i = 0; i < A.length; i++)
+            hash[i] = new HashMap<Integer, Integer>();
+        int max = 0;
+        for(int i = 1; i < A.length; i++)
+            for(int j = 0; j <i; j++){
+                int diff = A[i] - A[j];
+                int counttillnow = hash[j].getOrDefault(diff, 0);
+                System.out.println("diff "+diff+ " countTillNow "+counttillnow);
+
+                if(hash[i].containsKey(diff) && hash[i].get(diff) > counttillnow) continue;
+                else {
+                    hash[i].put(diff, counttillnow + 1);
+                    max = Math.max(max, counttillnow + 1);
+                }
+            }
+        
+        System.out.print("max AP using Hash "); System.out.println(max+1);
+        return max + 1;
+    }
+
+    //https://www.geeksforgeeks.org/sort-array-according-order-defined-another-array/
+
+    /** elements are stored in hashmap in the order the are inserted,
+     * so when we add els of array a, they are sorted relatively.
+    */
+
+    void relativeSorting(int[] a, int[] b){
+        ArrayList<Integer> res = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i =0; i<a.length; i++){
+            if(map.containsKey(a[i])){
+                map.put(a[i], map.get(a[i])+1);
+            } else map.put(a[i], 1);
+        }
+
+        for(int i =0; i<b.length; i++){
+            int count = map.get(b[i]);
+            for(int j =0; j<count; j++){
+                res.add(b[i]);
+            }
+            map.remove(b[i]);
+        }
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+            res.add(key);
+        }
+
+        System.out.println(res);
+    }
 
     public static void main(String[] args) {
         Hashmap1 h = new Hashmap1();
@@ -184,6 +399,32 @@ public class Hashmap1{
 
         // System.out.println("smallest k times is "+h.SmallestElementRepeatedKTimes(arr3, 2));
         int[] maxDiffArr = {2, 1, 3, 4, 2, 1, 5, 1, 7};
-        h.MaxDiffFirstAndLast(maxDiffArr);
+        // h.MaxDiffFirstAndLast(maxDiffArr);
+
+        int subarrKdis[] = { 1, 2, 2, 3}, 
+        k = 2;
+        // { 1, 1, 2, 2, 3, 3, 4, 5} ,  k = 3;
+        // h.smallestSubArrayKDistinct(subarrKdis, k);
+
+        int[] apSeq = {24,13,1,100,0,94,3,0,3};
+        //{3,6,9,10};
+            // {44,46,22,68,45,66,43,9,37,30,50,67,32,47,
+            // 11,15,4,6,20,64,54,61,63,23,3,12,51,16,57,14,
+            // 55,17,18,25,19,28,56,29,39,52,8,1,21,70};
+        
+        // {44,46,22,68,45,66,43,9,37,30,50,67,32,47,44,11,15,4,11,
+        //  6,20,64,54,54,61,63,23,43,3,12,51,61,16,57,14,12,55,17,18,
+        //  25,19,28,45,56,29,39,52,8,1,21,17,21,23,70,51,61,21,52,25,28};
+
+        // h.longestArithSeqLength(apSeq);
+        // h.longestAPHash(apSeq);
+
+        // List<List<String>> list = ["MUC,LHR"]["JFK,MUC"]["SFO,SJC"]["LHR,SFO"];
+
+        int A1[] = {2, 1, 2, 5, 7, 1, 9, 3, 6, 8, 8};
+        int A2[] = {2, 1, 8, 3};
+        // ans = {2, 2, 1, 1, 8, 8, 3, 5, 6, 7, 9}    
+        h.relativeSorting(A1, A2);
+
     }
 }
