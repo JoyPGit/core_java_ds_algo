@@ -314,7 +314,8 @@ public class Hashmap1{
                 int diff = A[i] - A[j];
                 int counttillnow = hash[j].getOrDefault(diff, 0);
                 System.out.println("diff "+diff+ " countTillNow "+counttillnow);
-
+                
+                //trick to ensure hash[i] get doesn't return null; add condition in and
                 if(hash[i].containsKey(diff) && hash[i].get(diff) > counttillnow) continue;
                 else {
                     hash[i].put(diff, counttillnow + 1);
