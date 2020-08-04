@@ -218,7 +218,9 @@ public class Recursion {
         int[] subset = new int[arr.length];
         allSubsetHelper(arr, subset, 0);
     }
-
+    /** always remember to print when index == arr.length &
+     * assign subset[index] = 0;
+     */
     void allSubsetHelper(int[] arr, int[] subset, int index){
         if(index == arr.length) {
             print1DMatrix(subset);

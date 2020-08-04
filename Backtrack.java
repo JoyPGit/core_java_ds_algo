@@ -22,7 +22,25 @@ class Backtrack {
         }
     }
 
-    ArrayList<ArrayList<Integer>> subsets(int[] nums) {
+    //using extra array
+    void allSubsets(int[] arr, int[] subset, int index){
+        if(index == arr.length) {
+            print1DMatrix(subset);
+            return;
+        }
+        subset[index] = 0;
+        allSubsets(arr, subset, index+1);
+        subset[index] = arr[index];
+        allSubsets(arr, subset, index+1);
+    }
+
+    //now using arraylist
+
+    /** a common BACKTRACKING technique is to add
+     *  and after processing,
+     * remove the element when using ARRAYLIST
+     */
+    ArrayList<ArrayList<Integer>> subsetsList(int[] nums) {
         ArrayList<ArrayList<Integer>> lists = new ArrayList<>();
         // ArrayList
         subsetsHelper(lists, new ArrayList<>(), nums, 0);
@@ -65,7 +83,80 @@ class Backtrack {
         }
     }
 
+    //somewhere around March
+    public List<List<Integer>> subsets(int[] nums) {
+		List<List<Integer>> list = new ArrayList<>();
+		subsetsHelper(list, new ArrayList<>(), nums, 0);
+		return list; 
+	}
 
+	private void subsetsHelper(List<List<Integer>> list, List<Integer> resultList, int[] nums, int start) {
+		// if(resultList.size() == 0) System.out.println(" new ");
+		list.add(new ArrayList<>(resultList)); //this constructor copies the empty arraylist line 22
+		/** empty list is copied for the first time and added
+		 * resultlist refers to the line 22 list always
+		 * so a new list is copied from the existing resultlist and added, but 
+		 * all operations of addition are done in the line 22 arraylist
+		*/ 
+		// list.add((resultList));
+		// System.out.println("list size " + list.size());
+		// System.out.println("resultlist size " + resultList.size());
+		// System.out.println("resultlist contents " + resultList);
+		// printList(resultList);
+		for (int i = start; i < nums.length; i++) {
+			// add element
+			resultList.add(nums[i]);
+			// System.out.println("resultlist contents after addition " + resultList + " index "+ start);
+		
+			/**this is for subsets equalling a sum 
+             * 
+             *  int sum = 0;
+			    for(int j =0; j< resultList.size(); j++){
+				    sum += resultList.get(j);
+				    if(sum == 4 || sum == 5) System.out.println("the set is "+resultList);
+			    }
+            */
+            
+            // System.out.println(resultList);
+             
+			/**this is for k length subsets */
+			// if(resultList.size() == 2) System.out.println("size 2 subsets "+ resultList);
+            
+            // Explore
+			subsetsHelper(list, resultList, nums, i + 1);
+			// printList
+			// printList(resultList);
+			// remove
+			resultList.remove(resultList.size() - 1);
+			// System.out.println("resultlist contents after removal " + resultList);
+		}
+	}
+
+	void printList(List<Integer> list) {
+		Iterator<Integer> iterator = list.iterator();
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
+		}
+	}
+
+	//28 apr haspathsum
+    void printListOfLists(List<List<Integer>> subsets){
+        System.out.println("in print");
+        for (List<Integer> subset: subsets) {
+            // System.out.println("in print, size " + subset.size());
+            System.out.println(subset);
+        }
+	}
+	
+	void printArrayListofArrayLists(ArrayList<ArrayList<Integer>> lists){
+		for(int i=0;i<lists.size();i++) {
+			for(int j=0;j<lists.get(i).size();j++){
+				System.out.println(lists.get(i).get(j));
+			}
+		}
+	}
+
+    ///////////////////////////////////////////
     void nQueenProblem(int[][] arr, int r){
     
         if(r==arr.length){
@@ -463,6 +554,7 @@ class Backtrack {
         return true;
     }
 
+
     /** basically same as backtracking.. a vertex is continually assigned colors
      * from 1 till n, and we check if it's safe, then we recur, else 
      * we go back to assigning it 0.
@@ -551,7 +643,10 @@ class Backtrack {
             { 1, 0, 1, 0 }, 
         }; 
 
-        solbacktrack.mColoring(graph);
+        // solbacktrack.mColoring(graph);
+
+        int[] subset = {1,2,3};
+        solbacktrack.subsets(subset);
     }
     
 }
