@@ -8,32 +8,23 @@ public class SlidingWindow {
         }
     }
 
-    /**mostly we use deque or hashmap or both 
+    // BY DEFAULT, RUN 2 LOOPS, ONE FOR THE FIRST WINDOW AND OTHER TILL N;
+
+    // 3 techniques
+    // 1 IMP LINE 126, FOR LOOP AND THEN SHRINK USING WHILE LOOP 
+    // minSubArrayLenWithSumGreaterThanOrEqualK
+    //  
+    
+    // 2 USING DEQUE, LINE 152, INCLUDE AND EXCLUDE, CHECK OUTGOING WITH INCOMING
+    // findFirstNegative
+
+    // 3 USING DEQUE, LINE 84, WHILE ADDING POP TILL LARGER 
+    // maxSlidingWindowStack
+
+    /**mostly we use deque, sometimes hashmap 
      * deque properties;
      * getLast, getFirst, removeLast, removeFirst, add
     */
-
-    // https://leetcode.com/problems/minimum-size-subarray-sum/
-    /** run 2 loops, continue till sum>s, then
-     * try to decrement from the start, till sum>=s; increment left; track min
-     */
-    public int minSubArrayLenWithSumGreaterThanOrEqualK(int s, int[] nums) {
-        int n = nums.length; int sum =0; 
-        int min =Integer.MAX_VALUE; int left =0;
-        
-        
-        for(int i =0; i<n; i++){
-            sum+=nums[i];
-            while(sum >= s){
-                min = Math.min(i-left+1, min);
-                sum = sum - nums[left++];
-            }
-        }
-        return min == Integer.MAX_VALUE?0:min;
-    }
-    /** the above works for non negative integers, this one for both */
-    // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
-
 
     // MICROSOFT
     // https://www.geeksforgeeks.org/count-distinct-elements-in-every-window-of-size-k/
@@ -52,7 +43,7 @@ public class SlidingWindow {
         res.add(count);
 
         /**
-         * remove outgoing el, decrement count; add incomiiing el; if
+         * remove outgoing el, decrement count; add incoming el; if
          * count>1, don't increment counter; else c+1
          * 
          * map contains mapping of element, by default it's null; check for that too
@@ -130,10 +121,34 @@ public class SlidingWindow {
     }
 
 
+    // https://leetcode.com/problems/minimum-size-subarray-sum/
+    /** run 2 loops, continue till sum>s, then
+     * try to decrement from the start, till sum>=s; increment left; track min
+     */
+    public int minSubArrayLenWithSumGreaterThanOrEqualK(int s, int[] nums) {
+        int n = nums.length; int sum =0; 
+        int min =Integer.MAX_VALUE; int left =0;
+        
+        
+        for(int i =0; i<n; i++){
+            sum+=nums[i];
+            while(sum >= s){
+                min = Math.min(i-left+1, min);
+                sum = sum - nums[left++];
+            }
+        }
+        return min == Integer.MAX_VALUE?0:min;
+    }
+
+    /** the above works for non negative integers, this one for both */
+    // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
+
+
+
     /** tricky thing here is to check for the list size and add the incoming el
      * and then return 0 if list size is empty.
      * 1 add to res after the first for loop
-     * 2 if list is empty anf arr[i-k] == getfirst(); add 0
+     * 2 if list is empty and arr[i-k] == getfirst(); add 0
      * 3 
      */
     List<Integer> findFirstNegative(int[] arr, int k){
@@ -150,7 +165,7 @@ public class SlidingWindow {
         else res.add(list.getFirst());
 
         for(int i =k; i<arr.length; i++){
-            System.out.println(arr[i-k]);
+            // System.out.println(arr[i-k]);
             if(list.size()!=0 && list.getFirst() == arr[i-k]){
                 list.removeFirst(); 
             }
@@ -173,6 +188,48 @@ public class SlidingWindow {
 
     // https://www.geeksforgeeks.org/count-of-subarrays-of-size-k-with-
     // elements-having-even-frequencies/?ref=rp
+    // use XOR
+
+    // similar https://leetcode.com/problems/minimum-window-substring/
+    // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
+    void smallestSubArrayWithKDistinct(int[] arr, int k){
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int counter = 0; int left = 0; int min = Integer.MAX_VALUE;
+
+        for(int i =0; i<arr.length; i++){
+            if(map.containsKey(arr[i])){
+                map.put(arr[i], map.get(arr[i])+1);
+            } else map.put(arr[i], 1);
+
+            while(counter>=k){
+                left = getMin(map);
+                // max = i
+                min = Math.min(min, i-left+1);
+                map.remove(arr[left++]);
+            }
+        }
+    }
+
+    int getMin(HashMap<Integer, Integer>map){
+        int min = Integer.MAX_VALUE;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer value = entry.getValue();
+            min = Math.min(min, value);
+        }   
+        // System.out.println("min "+ min); 
+        return min;
+    }
+
+    int getMax(HashMap<Integer, Integer>map){
+        int max = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer value = entry.getValue();
+            max = Math.max(max, value);
+        }   
+        // System.out.println("max "+ max); 
+        return max;
+    }
+    
 
     public static void main(String[] args) {
         SlidingWindow slide = new SlidingWindow();

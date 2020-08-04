@@ -50,6 +50,7 @@ public class Hashmap1{
         return true;
     }
 
+
     int minSubsets(int[] arr){
         HashMap<Integer, Integer> minsubmap = new HashMap<Integer, Integer>();
 
@@ -78,6 +79,7 @@ public class Hashmap1{
 
         return maxFreq;
     }
+
 
     int SmallestElementRepeatedKTimes(int[] arr, int times){
         HashMap<Integer, Integer> repeatkmap = new HashMap<Integer, Integer>();
@@ -112,6 +114,8 @@ public class Hashmap1{
         // return smallest[0];
     }
 
+    //IMP QUESTIONS
+    
     // https://www.geeksforgeeks.org/maximum-difference-first-last-indexes-element-array/
     class FirstLast{
         int first; int second;
@@ -146,25 +150,74 @@ public class Hashmap1{
     // https://www.geeksforgeeks.org/common-elements-in-all-rows-of-a-given-matrix/
     // https://www.geeksforgeeks.org/find-pairs-given-sum-elements-pair-different-rows/
     
+    
     // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
+    /** it is not sliding window prob, rather a counter is kept when map size 
+     * equals k.
+     * USES SHRINKING TECHNIQUE THOUGH, FOR LOOP THEN SHRINK WITH WHILE
+     * 
+     * the technique is to hold the rightmost index of every el
+     * and if map size>k, remove the min el and find length with next min
+     * 
+     * how to shrink?
+     * once the map size is >k, 
+     * while loop
+     * start with left
+     * remove left, then left = get new min
+     * compare len
+     * 
+     * 
+     * holding left ptr and updating it by checking if the el matches left
+     * helps in removing the min element
     // arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
-    void smallestSubArrayKDistinct(int[] arr, int k) {
+    // arr[] = { 1, 2, 2, 3} , k = 2 o/p = [0,1]
 
-        Deque<Integer> list = new LinkedList<>();
-        list.add(arr[0]);
-        for (int i = 1; i < arr.length; i++) {
-            if (list.getLast() == arr[i]) {
-                list.clear();
-                list.add(arr[i]);
+     */
+    void smallestSubArrayKDistinct(int[] arr, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int minLen = Integer.MAX_VALUE; int left = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (map.containsKey(arr[i])) {
+                map.put(arr[i], i);
+                System.out.println(map);
             } else {
-                list.add(arr[i]);
-                if (list.size() == k) {
-                    System.out.println("start " + (i - k + 1) + " last " + i);
+                map.put(arr[i], i);
+            }
+            if(map.size()==k) System.out.println("start " + left + " end " + i);
+            // left starts with 0, then when shrinking starts, 
+            // it is updated to next min index
+            while(map.size() > k) {
+                map.remove(arr[left]);
+                left = getMin(map);
+                int end = i;
+                if((end- left+1) < minLen){
+                    minLen = end- left+1;
+                    System.out.println("start " + left + " end " + i);
                 }
-                break;// removing this gives all possible ditinct ranges
             }
         }
+        System.out.println("min length : "+minLen+" start : "+left);
     }
+
+    // int shrink(){}
+    int getMin(HashMap<Integer, Integer>map){
+        int min =Integer.MAX_VALUE;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer value = entry.getValue();
+            min = Math.min(min, value);
+        }
+        return min;
+    }
+
+    // int getMax(HashMap<Integer, Integer>map){
+    //     int max =Integer.MIN_VALUE;
+    //     for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+    //         Integer value = entry.getValue();
+    //         max = Math.max(max, value);
+    //     }
+    //     return max;
+    // }
 
     // https://www.geeksforgeeks.org/design-a-data-structure-that-supports-
     // insert-delete-search-and-getrandom-in-constant-time/
@@ -177,9 +230,7 @@ public class Hashmap1{
     // https://www.geeksforgeeks.org/print-triplets-sorted-array-form-ap/
     // https://www.geeksforgeeks.org/find-smallest-range-containing-elements-from-k-lists/
 
-    // IMP check this with largest subarray with equal no of 0s and 1s
-    // https://www.geeksforgeeks.org/substring-equal-number-0-1-2/
-
+   
     //RABIN KARP ALGO
 
     // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
@@ -214,7 +265,8 @@ public class Hashmap1{
     
     
 
-
+    // IMP check this with largest subarray with equal no of 0s and 1s
+    // https://www.geeksforgeeks.org/substring-equal-number-0-1-2/
     // https://www.geeksforgeeks.org/length-of-the-longest-substring-with-equal-1s-and-0s/
     // Java Code for finding the length of
     // the longest balanced substring
@@ -255,25 +307,25 @@ public class Hashmap1{
         return res;
     }
 
-    class ItineraryHolder{
-        String to;
-        int rank;
-        ItineraryHolder(String s, int r){
-            this.to = s;
-            this.rank = r;
-        }
-    }
+    // class ItineraryHolder{
+    //     String to;
+    //     int rank;
+    //     ItineraryHolder(String s, int r){
+    //         this.to = s;
+    //         this.rank = r;
+    //     }
+    // }
 
-    public List<String> findItinerary(List<List<String>> tickets) {
-        ArrayList<String> result = new ArrayList<>();
-        HashMap<String, ItineraryHolder> map = new HashMap<>();
+    // public List<String> findItinerary(List<List<String>> tickets) {
+    //     ArrayList<String> result = new ArrayList<>();
+    //     HashMap<String, ItineraryHolder> map = new HashMap<>();
 
-        for(int i =0; i<tickets.size(); i++){
-            // if(map.containsKey(tickets.get(i)))
-            System.out.println(tickets.get(i));
-        }
-        return result;
-    }
+    //     for(int i =0; i<tickets.size(); i++){
+    //         // if(map.containsKey(tickets.get(i)))
+    //         System.out.println(tickets.get(i));
+    //     }
+    //     return result;
+    // }
 
     //didn't work, don't know why
     public int longestArithSeqLength(int[] arr) {
@@ -359,6 +411,8 @@ public class Hashmap1{
         System.out.println(res);
     }
 
+    //https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+
     public static void main(String[] args) {
         Hashmap1 h = new Hashmap1();
         HashMap<Integer, String> map = new HashMap<>();
@@ -402,10 +456,11 @@ public class Hashmap1{
         int[] maxDiffArr = {2, 1, 3, 4, 2, 1, 5, 1, 7};
         // h.MaxDiffFirstAndLast(maxDiffArr);
 
-        int subarrKdis[] = { 1, 2, 2, 3}, 
-        k = 2;
-        // { 1, 1, 2, 2, 3, 3, 4, 5} ,  k = 3;
-        // h.smallestSubArrayKDistinct(subarrKdis, k);
+        int subarrKdis[] = { 1, 1, 2, 2, 3, 3, 4, 5};
+        // { 1, 2, 2, 3};
+        int k = 3;
+        // 2;
+        h.smallestSubArrayKDistinct(subarrKdis, k);
 
         int[] apSeq = {24,13,1,100,0,94,3,0,3};
         //{3,6,9,10};
@@ -425,7 +480,7 @@ public class Hashmap1{
         int A1[] = {2, 1, 2, 5, 7, 1, 9, 3, 6, 8, 8};
         int A2[] = {2, 1, 8, 3};
         // ans = {2, 2, 1, 1, 8, 8, 3, 5, 6, 7, 9}    
-        h.relativeSorting(A1, A2);
+        // h.relativeSorting(A1, A2);
 
     }
 }

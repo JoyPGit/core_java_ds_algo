@@ -420,6 +420,9 @@ class stringPractice {
 
     //RABIN KARP algo
 
+    //MIN WINDOW
+    //works without duplicates, the prob statement seems inconsistent
+    // https://leetcode.com/problems/minimum-window-substring/
     class minWindowString{
         int start; int end;
         minWindowString(int s, int e){
@@ -440,10 +443,6 @@ class stringPractice {
 
         for(int i =0; i<s.length(); i++){
             if(t.contains(s.charAt(i)+"")){
-
-                // if(map.containsKey(s.charAt(i))){
-                //     map.put(ch[i], i);
-                // } else 
                 map.put(ch[i], i);
                 
                 if(map.size()==t.length()){
@@ -461,7 +460,6 @@ class stringPractice {
 
             }
         }
-        // result = result.equals("1")==true?"":result;
         System.out.println("Result "+result);
         return result;
     }
@@ -488,6 +486,8 @@ class stringPractice {
 
     //https://leetcode.com/problems/palindromic-substrings/
     
+    
+    //aug leetcode valid palindrome
 
     public static void main(String[] args) {
         stringPractice string = new stringPractice();

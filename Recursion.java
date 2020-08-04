@@ -205,6 +205,30 @@ public class Recursion {
         maxSumDivThreeHelper(nums, index+1, sum+nums[index]); 
         maxSumDivThreeHelper(nums, index+1, sum);
     }
+
+    // https://www.geeksforgeeks.org/count-possible-groups-size-2-3-sum-multiple-3/
+    // void max2or3Group(int[] arr){
+    //     max2or3GroupHelper(arr, 0, 0);
+    //     // max2or3GroupHelper(arr, 1);
+    // }
+
+    // void max2or3GroupHelper(int[] arr, int sum, int )
+
+    void allSubsets(int[] arr){
+        int[] subset = new int[arr.length];
+        allSubsetHelper(arr, subset, 0);
+    }
+
+    void allSubsetHelper(int[] arr, int[] subset, int index){
+        if(index == arr.length) {
+            print1DMatrix(subset);
+            return;
+        } 
+        subset[index] = 0;
+        allSubsetHelper(arr, subset, index+1);
+        subset[index] = arr[index];
+        allSubsetHelper(arr, subset, index+1);
+    }
     public static void main (String[] args) throws Exception{
         Recursion recur = new Recursion();
         int[] stones =
@@ -287,6 +311,9 @@ public class Recursion {
             639,290,612,322,289,910,484,300,195,546,499,213,8,623,
             490,473,603,721,793,418,551,331,598,670,960,483,154,
             317,834,352};
-            System.out.println("max sum div by 3 "+recur.maxSumDivThree(nums));
+            // System.out.println("max sum div by 3 "+recur.maxSumDivThree(nums));
+
+            int[] subsets = {1,2};
+            recur.allSubsets(subsets);
     }
 }
