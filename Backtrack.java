@@ -37,8 +37,8 @@ class Backtrack {
     // now using arraylist
 
     /**
-     * a common BACKTRACKING technique is to add and after processing, remove the
-     * element when using ARRAYLIST
+     * a common BACKTRACKING technique is to add and after processing, 
+     * remove the element same when using ARRAYLIST
      */
 
     // somewhere around March

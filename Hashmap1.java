@@ -23,6 +23,12 @@ import java.util.*;
    3 https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
    hashmap iterator     
    */
+
+   /** 
+    * TECHNIQUES
+    1 USE A CUSTOM CLASS FOR STROING VALUE PER KEY
+    2 USE FOR AND THEN WHILE FOR SHRINKING
+    */
 public class Hashmap1{
 
     void findSubArrayWithSumZero(int[] arr){

@@ -8,6 +8,11 @@ class stringPractice {
         }
     }
 
+    /**
+     * QUESTIONS: 1 PARTITION LABELS 2 ALL PALINDROME QUES 3 MIN WINDOW CONTAINING K
+     * DISTINCT 4 SEARCH WORD IN GRID 5 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN
+     */
+
     String reverse(String word) {
         char[] ch = word.toCharArray(); // 1 tocharArray
         int n = ch.length;
@@ -58,6 +63,7 @@ class stringPractice {
         return String.valueOf(in);
     }
 
+    // using backtracking concept
     void generateBinPattern(String str) {
         char[] ch = str.toCharArray();
         int n = ch.length;
@@ -121,56 +127,45 @@ class stringPractice {
         }
     }
 
-    void recPalindrome(String str) {
-        char[] ch = str.toCharArray();
-        recPalindromeUtil(ch, 0, str.length() - 1);
-    }
-
-    void recPalindromeUtil(char[] ch, int start, int end) {
-        if (start > end)
-            return;
-        if (ch[start] != ch[end]) {
-            System.out.println("no match");
-            return;
-        }
-        recPalindromeUtil(ch, start + 1, end - 1);
-    }
-
     void findWordInGrid(char[][] grid, String str) {
         char[] ch = str.toCharArray();
         // int index = 0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 // if (grid[i][j] == ch[index]) {
-                    findWordInGridUtil(grid, ch, 0, i, j);
+                findWordInGridUtil(grid, ch, 0, i, j);
                 // }
             }
         }
     }
 
-    // void findWordInGridUtil(char[][] grid, char[] ch, int index, int rowIndex, int colIndex) {
-    //     if (rowIndex >= grid.length && colIndex >= grid[0].length || rowIndex < 0 && colIndex < 0)
-    //         return;
-    //     int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
-    //     int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
-    //     if (index == ch.length - 1) {
-    //         System.out.println("found");
-    //         return;
-    //     }
-    //     for (int k = 0; k < row.length; k++) {
-    //         if ((rowIndex + row[k]) < grid.length && (colIndex + col[k]) < grid[0].length && (rowIndex + row[k]) > -1
-    //                 && (colIndex + col[k]) > -1 && (index + 1) < ch.length) {
-    //             if (ch[index + 1] == grid[rowIndex + row[k]][colIndex + col[k]]) {
-    //                 // System.out.print(ch[index+1]+", ");
-    //                 findWordInGridUtil(grid, ch, index + 1, rowIndex + row[k], colIndex + col[k]);
-    //             }
-    //         }
-    //     }
+    // void findWordInGridUtil(char[][] grid, char[] ch, int index, int rowIndex,
+    // int colIndex) {
+    // if (rowIndex >= grid.length && colIndex >= grid[0].length || rowIndex < 0 &&
+    // colIndex < 0)
+    // return;
+    // int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
+    // int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
+    // if (index == ch.length - 1) {
+    // System.out.println("found");
+    // return;
     // }
-    
+    // for (int k = 0; k < row.length; k++) {
+    // if ((rowIndex + row[k]) < grid.length && (colIndex + col[k]) < grid[0].length
+    // && (rowIndex + row[k]) > -1
+    // && (colIndex + col[k]) > -1 && (index + 1) < ch.length) {
+    // if (ch[index + 1] == grid[rowIndex + row[k]][colIndex + col[k]]) {
+    // // System.out.print(ch[index+1]+", ");
+    // findWordInGridUtil(grid, ch, index + 1, rowIndex + row[k], colIndex +
+    // col[k]);
+    // }
+    // }
+    // }
+    // }
+
     void findWordInGridUtil(char[][] grid, char[] ch, int index, int rowIndex, int colIndex) {
         if (rowIndex < grid.length && colIndex < grid[0].length && rowIndex >= 0 && colIndex >= 0
-        && ch[index] ==grid[rowIndex][colIndex]) {
+                && ch[index] == grid[rowIndex][colIndex]) {
             int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
             int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
             if (index == ch.length - 1) {
@@ -180,39 +175,34 @@ class stringPractice {
             for (int k = 0; k < row.length; k++) {
                 findWordInGridUtil(grid, ch, index + 1, rowIndex + row[k], colIndex + col[k]);
             }
-        }        
+        }
     }
-
 
     boolean isAnagram(String str1, String str2) {
         HashMap<Character, Integer> list = new HashMap<>();
 
-        for(char c: str1.toCharArray()){
-            if(list.containsKey(c)){
-                list.put(c, list.get(c)+1);
-            } else list.put(c,1);
+        for (char c : str1.toCharArray()) {
+            if (list.containsKey(c)) {
+                list.put(c, list.get(c) + 1);
+            } else
+                list.put(c, 1);
         }
 
         System.out.println(list);
 
-        for(char c:str2.toCharArray()){
-            if(list.containsKey(c)){
-                list.put(c, list.get(c)-1);
+        for (char c : str2.toCharArray()) {
+            if (list.containsKey(c)) {
+                list.put(c, list.get(c) - 1);
                 // System.out.println(list.get(c));// returns the value
-                if(list.get(c) == 0) list.remove(c);
-            }
-            else return false;
+                if (list.get(c) == 0)
+                    list.remove(c);
+            } else
+                return false;
         }
 
-        // Iterator it = list.entrySet().iterator();
-        // while(it.hasNext()){
-        //     HashMap.Entry pair = (HashMap.Entry)it.next();
-        //     System.out.println(pair.getValue());
-        // }
-        System.out.println("final "+list);
+        System.out.println("final " + list);
         return list.isEmpty();
     }
-
 
     String lexicographicSubConcat(String s) {
         int n = s.length();
@@ -242,15 +232,15 @@ class stringPractice {
     public String removeKdigits(String num, int k) {
         String str = num;
         char[] ch = str.toCharArray();
-        
-        while(k!=0){
-            int maxIndex = ch[0]>ch[1]?0:1;
-            move(ch, maxIndex, ch.length-1);
+
+        while (k != 0) {
+            int maxIndex = ch[0] > ch[1] ? 0 : 1;
+            move(ch, maxIndex, ch.length - 1);
             k--;
         }
 
         String ans = String.valueOf(ch);
-        String ans1 = ans.substring(0,ans.indexOf(" "));
+        String ans1 = ans.substring(0, ans.indexOf(" "));
         // System.out.println(ans1);
         // System.out.println(String.valueOf(ch));
 
@@ -259,37 +249,39 @@ class stringPractice {
         // return String.valueOf(ch);
     }
 
-    void move(char[] ch, int start, int end){
-        for(int i = start; i<end; i++){
-            ch[i] = ch[i+1];
+    void move(char[] ch, int start, int end) {
+        for (int i = start; i < end; i++) {
+            ch[i] = ch[i + 1];
         }
         ch[end] = ' ';
     }
 
+    // unsolved solve using hash and shrinking technique
     // ababcbacadefegdehijhklij
-    //https://leetcode.com/problems/partition-labels/
+    // https://leetcode.com/problems/partition-labels/
     // public ArrayList<Integer> partitionLabels(String S) {
     public int partitionLabels(String S) {
         // ArrayList<Integer> result = new ArrayList<Integer>();
         // ArrayList<Character> char1 = new ArrayList<Character>();
-        int[] alphabet = new int[26]; int[] count = new int[S.length()];
+        int[] alphabet = new int[26];
+        int[] count = new int[S.length()];
         count[0] = 1;
-        alphabet[S.charAt(0)-'a']= 0;
+        alphabet[S.charAt(0) - 'a'] = 0;
 
-        for(int i =1; i<S.length(); i++){
-            System.out.println("in here i "+i);
-            System.out.println("alp "+(S.charAt(i)-'a')+ " "+ (S.charAt(i)));
-            if(alphabet[S.charAt(i)-'a']!=0){
-                fill(count, count[S.charAt(i)-'a'], alphabet[S.charAt(i)-'a'], i);
-                //tricky to link count with alphabet
-                alphabet[S.charAt(i)-'a'] = i;
+        for (int i = 1; i < S.length(); i++) {
+            System.out.println("in here i " + i);
+            System.out.println("alp " + (S.charAt(i) - 'a') + " " + (S.charAt(i)));
+            if (alphabet[S.charAt(i) - 'a'] != 0) {
+                fill(count, count[S.charAt(i) - 'a'], alphabet[S.charAt(i) - 'a'], i);
+                // tricky to link count with alphabet
+                alphabet[S.charAt(i) - 'a'] = i;
                 print1DMatrix(count);
                 System.out.println();
                 print1DMatrix(alphabet);
-            }else {
+            } else {
                 System.out.println("in here");
-                alphabet[S.charAt(i)-'a'] = i;
-                count[i] = count[i-1]+1;
+                alphabet[S.charAt(i) - 'a'] = i;
+                count[i] = count[i - 1] + 1;
                 System.out.println();
                 print1DMatrix(count);
                 System.out.println();
@@ -297,204 +289,301 @@ class stringPractice {
             }
         }
 
-        int max  = 0;
+        int max = 0;
         System.out.println();
-        for(int i =0; i<count.length; i++){
-            System.out.print(count[i]+", ");
+        for (int i = 0; i < count.length; i++) {
+            System.out.print(count[i] + ", ");
             max = Math.max(max, count[i]);
         }
         System.out.println();
 
-        for(int i =0; i<alphabet.length; i++){
-            System.out.print(alphabet[i]+", ");
+        for (int i = 0; i < alphabet.length; i++) {
+            System.out.print(alphabet[i] + ", ");
         }
-        
+
         return max;
     }
 
-    void fill(int[] arr, int value, int start, int end){
-        System.out.println("value "+value);
-        for(int i =start; i<=end; i++){
+    void fill(int[] arr, int value, int start, int end) {
+        System.out.println("value " + value);
+        for (int i = start; i <= end; i++) {
             arr[i] = value;
         }
     }
 
-    void keyPadPrint(String str){
-        if(str == "1"){}
-        if(str == "2"){}
-        if(str == "3"){}
-        if(str == "4"){}
-        if(str == "5"){}
-        if(str == "6"){}
-        if(str == "7"){}
-        if(str == "8"){}
-        if(str == "9"){}
+    void keyPadPrint(String str) {
+        if (str == "1") {
+        }
+        if (str == "2") {
+        }
+        if (str == "3") {
+        }
+        if (str == "4") {
+        }
+        if (str == "5") {
+        }
+        if (str == "6") {
+        }
+        if (str == "7") {
+        }
+        if (str == "8") {
+        }
+        if (str == "9") {
+        }
         // keyPadPrintUtil(str);
     }
 
     // https://www.youtube.com/watch?v=qBbZ3tS0McI
     // void generateParentheses(int n){
-    //     int open = n/2;
-    //     char[] arr = new char[n];
+    // int open = n/2;
+    // char[] arr = new char[n];
 
-    //     generateParenthesesHelper(arr, 0, open);
+    // generateParenthesesHelper(arr, 0, open);
     // }
 
     // void generateParenthesesHelper(char[] arr, int index, int count){
-    //     if(index == arr.length){
-    //         System.out.println(arr.toString());
-    //         return;
-    //     }
-    //     if(count == 0){
-    //         arr[index] = ')'; 
-    //         generateParenthesesHelper(arr, index+1, count );
-    //     }else {
-    //         arr[index] = '(';
-    //         generateParenthesesHelper(arr, index+1, count-1);
-    //         // arr[index] = 
-    //     }
+    // if(index == arr.length){
+    // System.out.println(arr.toString());
+    // return;
+    // }
+    // if(count == 0){
+    // arr[index] = ')';
+    // generateParenthesesHelper(arr, index+1, count );
+    // }else {
+    // arr[index] = '(';
+    // generateParenthesesHelper(arr, index+1, count-1);
+    // // arr[index] =
+    // }
 
     // }
 
-    void stringtoWords(String number){
-        int n = number.length(); int i=0;
+    void stringtoWords(String number) {
+        int n = number.length();
+        int i = 0;
         String a, b, c, d;
-        if(n==4){
+        if (n == 4) {
             a = number.substring(0, 1);
             b = number.substring(1, 2);
             c = number.substring(2, 3);
             d = number.substring(3, 4);
-            System.out.println("a "+a);
+            System.out.println("a " + a);
             printDigit(a);
-            if(!a.equals("0")) System.out.print(printDigit(a) +" thousand ");
-            if(!b.equals("0")) System.out.print(printDigit(b) +" hundred ");
-            if(!c.equals("0")) System.out.print(printTensDigit(c));
-            if(!d.equals("0")) System.out.print(printDigit(d));
-        }
-        else if(n==3){
+            if (!a.equals("0"))
+                System.out.print(printDigit(a) + " thousand ");
+            if (!b.equals("0"))
+                System.out.print(printDigit(b) + " hundred ");
+            if (!c.equals("0"))
+                System.out.print(printTensDigit(c));
+            if (!d.equals("0"))
+                System.out.print(printDigit(d));
+        } else if (n == 3) {
             a = number.substring(0, 1);
             b = number.substring(1, 2);
             c = number.substring(2, 3);
-            if(!a.equals("0")) System.out.print(printDigit(a) +" hundred ");
-            if(!b.equals("0")) System.out.print(printTensDigit(b));
-            if(!c.equals("0")) System.out.print(printDigit(c));
-        }
-        else if(n==2){
+            if (!a.equals("0"))
+                System.out.print(printDigit(a) + " hundred ");
+            if (!b.equals("0"))
+                System.out.print(printTensDigit(b));
+            if (!c.equals("0"))
+                System.out.print(printDigit(c));
+        } else if (n == 2) {
             a = number.substring(0, 1);
             b = number.substring(1, 2);
-            if(!a.equals("0")) System.out.print(printTensDigit(a));
-            if(!b.equals("0")) System.out.print(printDigit(b));
-        }
-        else if(n==1){
+            if (!a.equals("0"))
+                System.out.print(printTensDigit(a));
+            if (!b.equals("0"))
+                System.out.print(printDigit(b));
+        } else if (n == 1) {
             a = number.substring(0, 1);
-            if(!a.equals("0")) System.out.print(printDigit(a));
-            else if(a.equals("0")) System.out.print("zero");
+            if (!a.equals("0"))
+                System.out.print(printDigit(a));
+            else if (a.equals("0"))
+                System.out.print("zero");
         }
         System.out.println();
     }
 
-    String printDigit(String s){
-        if(s.equals("1")) return "one ";
-        else if(s.equals("2")) return "two ";
-        else if(s.equals("3")) return "three ";
-        else if(s.equals("4")) return "four";
-        else if(s.equals("5")) return "five";
-        else if(s.equals("6")) return "six";
-        else if(s.equals("7")) return "seven";
-        else if(s.equals("8")) return "eight";
-        else if(s.equals("9")) return "nine";
-        else return "";
-    }
-    String printTensDigit(String s){
-        if(s.equals("1")) return " ten ";
-        else if(s.equals("2")) return " twenty ";
-        else if(s.equals("3")) return " thirty ";
-        else if(s.equals("4")) return " forty ";
-        else if(s.equals("5")) return " fifty ";
-        else if(s.equals("6")) return " sixty ";
-        else if(s.equals("7")) return " seventy ";
-        else if(s.equals("8")) return " eighty ";
-        else if(s.equals("9")) return " ninety ";
-        else return "";
+    String printDigit(String s) {
+        if (s.equals("1"))
+            return "one ";
+        else if (s.equals("2"))
+            return "two ";
+        else if (s.equals("3"))
+            return "three ";
+        else if (s.equals("4"))
+            return "four";
+        else if (s.equals("5"))
+            return "five";
+        else if (s.equals("6"))
+            return "six";
+        else if (s.equals("7"))
+            return "seven";
+        else if (s.equals("8"))
+            return "eight";
+        else if (s.equals("9"))
+            return "nine";
+        else
+            return "";
     }
 
-    //RABIN KARP algo
+    String printTensDigit(String s) {
+        if (s.equals("1"))
+            return " ten ";
+        else if (s.equals("2"))
+            return " twenty ";
+        else if (s.equals("3"))
+            return " thirty ";
+        else if (s.equals("4"))
+            return " forty ";
+        else if (s.equals("5"))
+            return " fifty ";
+        else if (s.equals("6"))
+            return " sixty ";
+        else if (s.equals("7"))
+            return " seventy ";
+        else if (s.equals("8"))
+            return " eighty ";
+        else if (s.equals("9"))
+            return " ninety ";
+        else
+            return "";
+    }
 
-    //MIN WINDOW
-    //works without duplicates, the prob statement seems inconsistent
+    // RABIN KARP algo pattern searching
+
+    // MIN WINDOW
+    // works without duplicates,
+    // leetcode prob statement seems inconsistent
     // https://leetcode.com/problems/minimum-window-substring/
-    class minWindowString{
-        int start; int end;
-        minWindowString(int s, int e){
-            this.start = s; this.end = e;
+    class minWindowString {
+        int start;
+        int end;
+
+        minWindowString(int s, int e) {
+            this.start = s;
+            this.end = e;
         }
     }
+
     public String minWindow(String s, String t) {
-        if(s.length()<t.length()) return "";
-        if(s.length() == t.length()){
+        if (s.length() < t.length())
+            return "";
+        if (s.length() == t.length()) {
             System.out.println("in here");
             // System.out.println(s.equals(t)==false);
-            if(!s.equals(t)) return "";
+            if (!s.equals(t))
+                return "";
         }
 
         String result = "";
         HashMap<Character, Integer> map = new HashMap<>();
         char[] ch = s.toCharArray();
 
-        for(int i =0; i<s.length(); i++){
-            if(t.contains(s.charAt(i)+"")){
+        for (int i = 0; i < s.length(); i++) {
+            if (t.contains(s.charAt(i) + "")) {
                 map.put(ch[i], i);
-                
-                if(map.size()==t.length()){
+
+                if (map.size() == t.length()) {
                     int min = getMin(map);
                     int max = getMax(map);
-                    //substring is inclusive of lower index only and not higher
-                    String str = s.substring(min, max+1);
-                    
-                    if(result.length()==0) {
+                    // substring is inclusive of lower index only and not higher
+                    String str = s.substring(min, max + 1);
+
+                    if (result.length() == 0) {
                         result = str;
-                        System.out.println("str first "+str);
-                    }
-                    else result = result.length()<str.length()?result:str;
+                        System.out.println("str first " + str);
+                    } else
+                        result = result.length() < str.length() ? result : str;
                 }
 
             }
         }
-        System.out.println("Result "+result);
+        System.out.println("Result " + result);
         return result;
     }
 
-    int getMin(HashMap<Character, Integer>map){
+    int getMin(HashMap<Character, Integer> map) {
         int min = Integer.MAX_VALUE;
         for (Map.Entry<Character, Integer> entry : map.entrySet()) {
             Integer value = entry.getValue();
             min = Math.min(min, value);
-        }   
-        // System.out.println("min "+ min); 
+        }
+        // System.out.println("min "+ min);
         return min;
     }
 
-    int getMax(HashMap<Character, Integer>map){
+    int getMax(HashMap<Character, Integer> map) {
         int max = Integer.MIN_VALUE;
         for (Map.Entry<Character, Integer> entry : map.entrySet()) {
             Integer value = entry.getValue();
             max = Math.max(max, value);
-        }   
-        // System.out.println("max "+ max); 
+        }
+        // System.out.println("max "+ max);
         return max;
     }
 
-    //https://leetcode.com/problems/palindromic-substrings/
-    
-    
-    //aug leetcode valid palindrome
+    // PALINDROME
+
+    void recPalindrome(String str) {
+        char[] ch = str.toCharArray();
+        recPalindromeUtil(ch, 0, str.length() - 1);
+    }
+
+    void recPalindromeUtil(char[] ch, int start, int end) {
+        if (start > end)
+            return;
+        if (ch[start] != ch[end]) {
+            System.out.println("no match");
+            return;
+        }
+        recPalindromeUtil(ch, start + 1, end - 1);
+    }
+
+    /**
+     * longest palindrome using Manacher's concept of EXPANDING AROUND MIDDLE
+     * https://www.youtube.com/watch?v=y2BD4MJqV20&t=768s
+     */
+
+    // https://leetcode.com/problems/palindromic-substrings/
+
+    // https://www.geeksforgeeks.org/count-palindrome-sub-strings-string/
+    // all palindromes , string 'abaab'
+    int palinCount = 0;
+    int countAllPalindromes(String s){
+        char[] ch = s.toCharArray();
+        for(int i =0; i<ch.length; i++){
+            palinCount++;
+            expand(ch, i, i+1);
+            expand(ch, i, i);
+        }
+        System.out.println(palinCount);
+        return palinCount;
+    }
+
+    void expand(char[] ch, int start, int second){
+        if(start<0 || second>=ch.length) return;
+        if(start == 0 || second == ch.length-1) {
+            palinCount = (ch[start]==ch[second])?++palinCount:palinCount;
+            System.out.println((ch.toString()).substring(start, second+1));
+            System.out.println("count "+palinCount);  
+            return;
+        }
+        if(ch[start] == ch[second]) expand(ch, --start, ++second); 
+        else return;
+    }
+
+    // https://www.geeksforgeeks.org/find-number-distinct-
+    // palindromic-sub-strings-given-string/
+
+    // aug leetcode valid palindrome
 
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));
-        // System.out.println(string.reverseWordOrderInAString("I love Java Programming"));
+        // System.out.println(string.reverseWordOrderInAString("I love Java
+        // Programming"));
 
-        String x ="123";
+        String x = "123";
         // System.out.println(Integer.parseInt(x)+1);//4
         String str = "GeeksForGeeks12";
         // char[] in = str.toCharArray();
@@ -507,34 +596,36 @@ class stringPractice {
         // string.genBinPerm01s(4);
         // string.recPalindrome("abba");
 
-        char[][] grid = {{'A','C','P','R','C'},
-        {'X','S','O','P','C'},
-        {'V','O','V','N','I'},
-        {'W','G','F','M','N'},//'F','O','R','G','E','E','K','S'}, 
-        // {'G','E','E','K','S','Q','U','I','Z','G','E','E','K'}, 
-        {'Q','A','T','I','T'}};//,'P','R','A','C','T','I','C','E'}}; 
+        char[][] grid = { { 'A', 'C', 'P', 'R', 'C' }, { 'X', 'S', 'O', 'P', 'C' }, { 'V', 'O', 'V', 'N', 'I' },
+                { 'W', 'G', 'F', 'M', 'N' }, // 'F','O','R','G','E','E','K','S'},
+                // {'G','E','E','K','S','Q','U','I','Z','G','E','E','K'},
+                { 'Q', 'A', 'T', 'I', 'T' } };// ,'P','R','A','C','T','I','C','E'}};
 
         String word = "MICROSOFT";
         // string.findWordInGrid(grid, word);
 
         // System.out.println(string.isAnagram("str1", "str1"));
 
-        String s = "abc";  
-        // System.out.println(string.lexicographicSubConcat(s)); 
+        String s = "abc";
+        // System.out.println(string.lexicographicSubConcat(s));
         // string.generateParentheses(3);
 
-        String num = "1432219"; int k = 3;
+        String num = "1432219";
+        int k = 3;
         // string.removeKdigits(num, k);
 
         // string.partitionLabels("ababcbacadefegdehijhklij");
         String number = "004";
         // string.stringtoWords(number);
 
-        String S = //"aa";
-        "ADOBECODEBANC";
-        String T = //"aa";
-        "ABC";
-        string.minWindow(S, T);
-        
+        String S = // "aa";
+                "ADOBECODEBANC";
+        String T = // "aa";
+                "ABC";
+        // string.minWindow(S, T);
+
+        String palin = "abaab";
+        string.countAllPalindromes(palin);
+
     }
 }
