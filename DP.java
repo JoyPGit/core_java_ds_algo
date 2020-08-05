@@ -272,7 +272,12 @@ public class DP {
 
     // https://leetcode.com/explore/interview/card/
     // top-interview-questions-hard/121/dynamic-programming/860/
-    /** max prod in contiguous subarray */
+    /** max prod in contiguous subarray 
+     * we basically hold 4 variables and an ans var
+     * prev is assigned to curr,
+     * max is max of prev*arr[i], arr[i];
+     * same for min
+    */
     // https://www.youtube.com/watch?v=vtJvbRlHqTA
     int maxProdSubarray(int[] arr){
         if(arr.length == 0) return -1;
@@ -498,6 +503,28 @@ public class DP {
         int path_index = pathIndex++;
         noOfUniquePathsHelper(arr, row + 1, col, path, path_index);
         noOfUniquePathsHelper(arr, row, col + 1, path, path_index);
+    }
+
+    /** points:
+     * 1 initialize first row and col
+     * 2 can be done in 2 ways either top down or bottom up
+     */
+    int uniquePathsDP(int m, int n) {
+        int[][] dp = new int[m][n];
+        
+        dp[0][0] = 1;
+        
+        for(int i =0; i<m; i++) dp[i][0] = 1;
+        for(int j =0; j<n; j++) dp[0][j] = 1;
+        
+        for(int i = 1; i<m; i++){
+            for(int j =1; j<n; j++){
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        System.out.println(dp[m-1][n-1]);
+        return dp[m-1][n-1];
     }
 
     int minJumpCount = Integer.MAX_VALUE;// 1
