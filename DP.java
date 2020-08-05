@@ -184,7 +184,10 @@ public class DP {
     }
 
     /**
-     * 1 dp[0]= 1 dont forget 2 i = 1 3 j = 0, j<i 4 dp[i] = dp[j] 5 dp[i]++ 6
+     * 1 dp[0]= 1 
+     * 2 i = 1 
+     * 3 j = 0, j<i 
+     * 4 dp[i] = dp[j] 5 dp[i]++ 6
      * return max of dp
      */
     int LISDP(int[] arr) {
@@ -206,52 +209,6 @@ public class DP {
         return max;
     }
     
-    int LISPrint9jul(int[] arr){  //line 1370
-        int[] dp = new int[arr.length];
-        int[] holder = new int[arr.length];
-
-        for(int i =0; i<dp.length; i++){
-            dp[i] = 1;
-            holder[i] = i;
-        }
-
-        dp[0] =1;
-        for(int i=1; i<dp.length; i++){
-            for(int j=0; j<i; j++){
-                if(arr[j]<=arr[i] && dp[i]<dp[j]+1){
-                    dp[i]=dp[j]+1;
-                    holder[i]=j+1;
-                }
-            }
-            // dp[i]++;
-        }
-        int max = 0;
-        for(int i=0; i<dp.length; i++){
-            max = Math.max(max, dp[i]);
-        }
-
-        int maxIndex = 0;
-
-        for(int i=0; i<dp.length; i++){
-            if(dp[i] == max) maxIndex = i;
-        }
-
-        int next = 0;
-
-        for(int i = max;i>0; i--){
-            if(holder[i] == 0){break;}
-            else {
-                i = holder[maxIndex];
-                System.out.println(dp[i]);
-                // i = next;
-            }
-            
-        }
-
-        print1DMatrix(dp);
-        print1DMatrix(holder);
-        return max;
-    }
 
     int russianDoll(int[][] arr) {
         int n = arr.length;
@@ -310,6 +267,31 @@ public class DP {
                 }
             }
         }
+    }
+
+
+    // https://leetcode.com/explore/interview/card/
+    // top-interview-questions-hard/121/dynamic-programming/860/
+    /** max prod in contiguous subarray */
+    // https://www.youtube.com/watch?v=vtJvbRlHqTA
+    int maxProdSubarray(int[] arr){
+        if(arr.length == 0) return -1;
+
+        int curr_min = arr[0];
+        int curr_max = arr[0];
+        int prev_min = arr[0];
+        int prev_max = arr[0];
+        int ans = arr[0];
+
+        for(int i =1; i<arr.length; i++){
+            curr_max = Math.max(prev_max*arr[i], Math.max(prev_min*arr[i], arr[i]));
+            curr_min = Math.min(prev_max*arr[i],Math.min(prev_min*arr[i], arr[i]));
+            
+            ans = Math.max(ans, curr_max);
+            prev_max = curr_max; prev_min = curr_min;
+        }
+        System.out.println("max prod subarray "+ans);
+        return ans;
     }
 
     /**
@@ -1375,12 +1357,17 @@ public class DP {
         // int[] LISArr = {3,10,2,1,20};
         // int[] LISArr = {50, 3, 10, 7, 40, 80};
         int[] LISArr = //{ 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15 };
-        {10, 22, 9, 33, 21, 50, 41, 60, 80};
+        // {10, 22, 9, 33, 21, 50, 41, 60, 80};
+        {10,9,2,5,3,7,101,18};
         // System.out.println( dp.LIS(LISArr));
         // System.out.println(dp.LISPrint9jul(LISArr));
 
         int[][] russianDollArr = { { 5, 4 }, { 6, 4 }, { 6, 7 }, { 2, 3 } };
         // System.out.println(dp.russianDoll(russianDollArr));
+
+        int[] maxProd = {6, -3, -10, 0, 2};
+        dp.maxProdSubarray(maxProd);
+
         int[] house = { 2, 7, 9, 3, 1 };// {1,2,3,1};
         // System.out.println(dp.houseRobber(house));
 
