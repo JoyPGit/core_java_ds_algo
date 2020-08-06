@@ -8,9 +8,27 @@ class stringPractice {
         }
     }
 
+    void printMatrix(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if(i==arr.length-1 && j == arr[0].length-1) {
+                    System.out.println(arr[i][j]+";");
+                    System.out.println();
+                } 
+                else System.out.print(arr[i][j] + ", ");
+            }
+            System.out.println();
+        }
+    }
+
     /**
-     * QUESTIONS: 1 PARTITION LABELS 2 ALL PALINDROME QUES 3 MIN WINDOW CONTAINING K
-     * DISTINCT 4 SEARCH WORD IN GRID 5 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN
+     * QUESTIONS: 
+     * 1 ALL SUBSTRINGS(2 loops)   
+     * 2 ALL PALINDROME QUES (use SUSBTRING TECHNIQUE FROM ABOVE)
+     * 3 PARTITION LABELS (HASHING) 
+     * 4 MIN WINDOW CONTAINING K DISTINCT (HASHING, WINDOW SHRINKING)
+     * 5 SEARCH WORD IN GRID (DFS)
+     * 6 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION)
      */
 
     String reverse(String word) {
@@ -37,6 +55,7 @@ class stringPractice {
         return output;
     }
 
+    //incomplete
     String sumOf2LargeNos(String str1, String str2) {
         String output = "";
         char[] ch1 = str1.toCharArray();
@@ -204,30 +223,6 @@ class stringPractice {
         return list.isEmpty();
     }
 
-    String lexicographicSubConcat(String s) {
-        int n = s.length();
-
-        // Creating an array to store substrings
-        int sub_count = n * (n + 1) / 2;
-        String[] arr = new String[sub_count];
-
-        // finding all substrings of string
-        int index = 0;
-        for (int i = 0; i < n; i++)
-            for (int len = 1; len <= n - i; len++) {
-                System.out.println(s.substring(i, i + len));
-                arr[index++] = s.substring(i, i + len);
-            }
-        // Sort all substrings in lexicographic order
-        Arrays.sort(arr);
-
-        // Concatenating all substrings
-        String res = "";
-        for (int i = 0; i < sub_count; i++)
-            res += arr[i];
-
-        return res;
-    }
 
     public String removeKdigits(String num, int k) {
         String str = num;
@@ -359,8 +354,8 @@ class stringPractice {
 
     void stringtoWords(String number) {
         int n = number.length();
-        int i = 0;
         String a, b, c, d;
+        //remove all preceding zeroes
         if (n == 4) {
             a = number.substring(0, 1);
             b = number.substring(1, 2);
@@ -389,8 +384,13 @@ class stringPractice {
         } else if (n == 2) {
             a = number.substring(0, 1);
             b = number.substring(1, 2);
-            if (!a.equals("0"))
-                System.out.print(printTensDigit(a));
+            if (!a.equals("0")){
+                if(a.equals("1")) {
+                    System.out.println(printTeen(number));
+                    return;
+                }
+                else System.out.print(printTensDigit(a));
+            }
             if (!b.equals("0"))
                 System.out.print(printDigit(b));
         } else if (n == 1) {
@@ -449,6 +449,18 @@ class stringPractice {
             return "";
     }
 
+    String printTeen(String num){
+        if(num.equals("10")) return "ten";
+        else if(num.equals("11")) return "eleven";
+        else if(num.equals("12")) return "twelve";
+        else if(num.equals("13")) return "thirteen";
+        else if(num.equals("14")) return "fourteen";
+        else if(num.equals("15")) return "fifteen";
+        else if(num.equals("16")) return "sixteen";
+        else if(num.equals("17")) return "seventeen";
+        else if(num.equals("18")) return "eighteen";
+        else return "nineteen";
+    }
     // RABIN KARP algo pattern searching
 
     // MIN WINDOW
@@ -522,6 +534,41 @@ class stringPractice {
         return max;
     }
 
+    /**IMP TECHNIQUE TO GENERATE SUBSTRINGS
+     * 1 i = 0 till n-1
+     * 2 j = 0 till n 
+     * substring takes start and end ptr, includes start but excludes end
+     * ex. ("abc").subsring(2,3) = "c" index 2 = 2 till index 3
+     * Out of bounds error doesn't occur
+    */
+
+    String lexicographicSubConcat(String s) {
+        int n = s.length();
+
+        // Creating an array to store substrings
+        int sub_count = n * (n + 1) / 2;
+        String[] arr = new String[sub_count];
+
+        // finding all substrings of string
+        int index = 0;
+        for (int i = 0; i < n; i++){
+            for (int len = i+1; len <= n; len++) {
+                System.out.println(s.substring(i, len));
+                arr[index++] = s.substring(i, len);
+            }
+        }
+        // Sort all substrings in lexicographic order
+        // Arrays.sort(arr);
+
+        // Concatenating all substrings
+        String res = "";
+        for (int i = 0; i < sub_count; i++)
+            res += arr[i];
+
+        return res;
+    }
+
+
     // PALINDROME
 
     void recPalindrome(String str) {
@@ -539,15 +586,59 @@ class stringPractice {
         recPalindromeUtil(ch, start + 1, end - 1);
     }
 
-    /**
+
+    // https://leetcode.com/problems/palindromic-substrings/
+    // ALL PALINDROMIC SUBSTRINGS
+
+    /** points :
+     * 1 dp size nxn
+     * 2 l here denotes length of substring; goes till n
+     * 3 i+l-1 denotes the ending index; goes till n-1
+     * 
+     * aaa; l= 3; i=0; j = 2; 
+     * l= 2; i=0; j = 1; i=1; j = 3; 
+     * 
+     * 4 if l==1; dp[i][j] = 1; each char is a palindrome
+     * 5 if l==2 check only if s(i) == s(j); no need to check internal substrings
+     * 6 l>=3 check s(i) == s(j) and also internal substrings(dp[i+1][j-1])
+     * 7 increment count whenever dp[i][j] =1;
+     * 
+     * UPPER TRIANGULAR MATRIX
+     */
+    int countPalindromicSubstrings(String s){
+        int n = s.length(); int count = s.length();
+
+        int[][] dp = new int[n][n];
+
+        
+        for(int l = 1; l<=n; l++){
+            for(int i =0; l+i-1<n; i++){
+                int j = l+i-1;
+                if(l==1) dp[i][j] = 1;
+                else if(l==2 && s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = 1;
+                    count++;
+                }
+                else if(s.charAt(i) == s.charAt(j) && dp[i+1][j-1] == 1){
+                    dp[i][j] = 1;
+                    count++;
+                }
+            }
+        }
+        printMatrix(dp);
+        System.out.println("all palindromic substrings' count : "+count);
+        return count;        
+    }
+
+     /**
      * longest palindrome using Manacher's concept of EXPANDING AROUND MIDDLE
      * https://www.youtube.com/watch?v=y2BD4MJqV20&t=768s
      */
 
-    // https://leetcode.com/problems/palindromic-substrings/
-
     // https://www.geeksforgeeks.org/count-palindrome-sub-strings-string/
     // all palindromes , string 'abaab'
+
+    //doesn't work now
     int palinCount = 0;
     int countAllPalindromes(String s){
         char[] ch = s.toCharArray();
@@ -572,6 +663,7 @@ class stringPractice {
         else return;
     }
 
+    
     // https://www.geeksforgeeks.org/find-number-distinct-
     // palindromic-sub-strings-given-string/
 
@@ -606,8 +698,10 @@ class stringPractice {
 
         // System.out.println(string.isAnagram("str1", "str1"));
 
-        String s = "abc";
+        String s = "hello";
+        // System.out.println(s.substring(2,3));
         // System.out.println(string.lexicographicSubConcat(s));
+
         // string.generateParentheses(3);
 
         String num = "1432219";
@@ -615,7 +709,7 @@ class stringPractice {
         // string.removeKdigits(num, k);
 
         // string.partitionLabels("ababcbacadefegdehijhklij");
-        String number = "004";
+        String number = "1440";
         // string.stringtoWords(number);
 
         String S = // "aa";
@@ -624,8 +718,10 @@ class stringPractice {
                 "ABC";
         // string.minWindow(S, T);
 
-        String palin = "abaab";
-        string.countAllPalindromes(palin);
+        String palin = "aaa";//"hellolle";
+        // string.countAllPalindromes(palin);
+
+        string.countPalindromicSubstrings(palin);
 
     }
 }
