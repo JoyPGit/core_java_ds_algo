@@ -230,6 +230,42 @@ public class SlidingWindow {
         return max;
     }
     
+    // https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/
+
+    
+    // CELEBRITY PROBLEM
+
+    // Returns id of celebrity. Else -1
+    /** if a knows b, then a isn't a celeb, and if a doesn't know b, then
+     * b isn't a celeb. eliminate the non celeb; a++; b--;
+     * move 2 pointers, and finally check for a
+     */
+	int findCelebrity(int[][] matrix) 
+	{   
+        int n = matrix.length;
+		int a = 0; int b = n - 1; 
+		
+		while (a < b) { 
+			if (knows(matrix, a, b)) a++; 
+			else b--; 
+		} 
+
+		// Check if a is a celebrity or not
+		for (int i = 0; i < n; i++) { 
+			// If any person doesn't know 'a' or 'a' doesn't 
+			// know any person, return -1 
+			if (i != a && (knows(matrix, a, i) || 
+						!knows(matrix, i, a))) 
+				return -1; 
+		} 
+		return a; 
+    } 
+    
+    // Returns true if a knows b, else false 
+	boolean knows(int[][] matrix, int a, int b) { 
+		return (matrix[a][b] == 1) ? true : false; 
+	} 
+
 
     public static void main(String[] args) {
         SlidingWindow slide = new SlidingWindow();
@@ -244,5 +280,13 @@ public class SlidingWindow {
         // int negArr[] = {12, -1, -7, 8, -15, 30, 16, 28} , negk = 3;
         int negArr[] = {-8, 2, 3, -6, 10}, negk = 2;
         slide.findFirstNegative(negArr, negk);
+        
+        int[][] celebMatrix = 
+        { {0, 0, 1, 0},
+        {0, 0, 1, 0},
+        {0, 0, 0, 0},
+        {0, 0, 1, 0} };
+        slide.findCelebrity(celebMatrix);
     }
+    
 }

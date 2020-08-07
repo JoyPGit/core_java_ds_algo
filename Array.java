@@ -1,7 +1,5 @@
 import java.util.*;
 
-// import org.graalvm.compiler.nodes.calc.LeftShiftNode;
-
 class Array {
 
     void print1DMatrix(int[] arr) {

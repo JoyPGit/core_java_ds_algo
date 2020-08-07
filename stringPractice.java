@@ -42,7 +42,7 @@ class stringPractice {
     void reverseRecursive(String word) {
 
     }
-
+    // https://practice.geeksforgeeks.org/problems/reverse-words-in-a-given-string/0
     String reverseWordOrderInAString(String word) {
         String[] words = word.split(" ");
         String output = "";
@@ -594,8 +594,9 @@ class stringPractice {
     // ALL PALINDROMIC SUBSTRINGS
 
     /**
-     * points : 1 dp size nxn 2 l here denotes length of substring; goes till n 3
-     * i+l-1 denotes the ending index; goes till n-1
+     * points : 1 dp size [n][n] 
+     * 2 l here denotes length of substring; goes till n; starts from 1
+     * 3 i+l-1 denotes the ending index; goes till n-1
      * 
      * aaa; l= 3; i=0; j = 2; l= 2; i=0; j = 1; i=1; j = 3;
      * 
@@ -640,7 +641,7 @@ class stringPractice {
     // technique 1 using upper triangular matrix
     /** points : similar to all palindromic substrings' count
      * 1 if the whole string is a palindrome and if it's allowed l<=n; else l<n
-     * l is imp; denotes substring length
+     * l is imp; denotes substring length; starts from 1
      * 
      * 2 maxlen is 1 as every char is a palindrome; it keeps track of longest length
      * 3 start index is updated everytime
