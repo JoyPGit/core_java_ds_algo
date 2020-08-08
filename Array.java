@@ -196,26 +196,6 @@ class Array {
         arr[b] = temp;
     }
 
-    void trappingRainWater(int[] arr) {
-        int leftBoundary = 0;
-        int rightBoundary = 0;
-        int[] newArray = new int[arr.length];
-
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i] > arr[i - 1])
-                leftBoundary = arr[i];
-        }
-        for (int i = arr.length - 2; i > 0; i--) {
-            if (arr[i] > arr[i - 1])
-                rightBoundary = arr[i];
-        }
-
-        for (int i = 1; i < arr.length; i++) {
-            newArray[i] = leftBoundary - arr[i];
-            if (arr[i] > leftBoundary)
-                leftBoundary = arr[i];
-        }
-    }
 
     void moveAllZeroesToEnd(int[] arr) {
         int zeroCounter = -1;
@@ -550,8 +530,97 @@ class Array {
     
 
 
-    //https://stackoverflow.com/questions/6780632/returning-an-empty-array
+    // https://stackoverflow.com/questions/6780632/returning-an-empty-array
+    // https://practice.geeksforgeeks.org/problems/max-sum-path-in-two-arrays/1
+    
+    // https://leetcode.com/problems/product-of-array-except-self/
+    public int[] productExceptSelf(int[] nums) {
+        /**traversing from both ends
+         do some calculations, will get the idea
+        1st pass from l to r gives last element's output
+        2nd pass gives first element's output
+        
+        middle elements are calculated as product of
+        the 2 arrays correspnding indexes
+        */
+        int n = nums.length;
+        int[] left = new int[n];
+        int[] right = new int[n]; int[] holder = new int[n];
+        
+        int prod = nums[0]; left[0] = nums[0]; left[1] = nums[0];
+        for(int i = 2; i<n; i++){
+            left[i] = prod*nums[i-1]; 
+            prod*=nums[i-1];
+        }
+        print1DMatrix(left);
 
+        prod = nums[n-1]; right[n-1] = nums[n-1]; right[n-2] = nums[n-1];
+        for(int i = n-3; i>=0; i--){
+            right[i] = prod*nums[i+1]; 
+            prod*=nums[i+1];
+        }
+        print1DMatrix(right);
+        
+        holder[0] = right[0]; holder[n-1] = left[n-1];
+        for(int i = 1; i<n-1; i++){
+            holder[i] = left[i]*right[i]; 
+        }
+        print1DMatrix(holder);
+        return holder;
+    }
+
+    //https://leetcode.com/problems/trapping-rain-water/
+    /** technique is similar to product of elements except self
+     * TWO TRAVERSALS NEEDED;
+     * use 3 arrays
+     * 1 store previous max for each el
+     * 2 store next max for each el
+     * 3 third array stores the min of both the max of both arrays
+     * 4 use thge same array to store diff of 3rd array els and original array
+     * 5 use <= as for same height no need to update max
+     * 6 the ends are always zero
+     */
+    public int trapRainwater(int[] height) {
+        int n = height.length;
+        if(n==0 || n==1) return 0;
+        int prev_max = height[0]; int next_max = height[n-1];
+        int[] prev = new int[n];
+        int[] next = new int[n];
+        int[] holder = new int[n];
+        
+        prev[0] = 0;
+        for(int i =1; i<n; i++){
+            if(height[i]<=prev_max) prev[i] = prev_max;
+            else {
+                prev_max = height[i];
+                prev[i] = 0;
+            }
+        }
+        
+        next[n-1] = 0;
+        for(int i =n-2; i>=0; i--){
+            if(height[i]<=next_max) next[i] = next_max;
+            else {
+                next_max = height[i];
+                next[i] = 0;
+            }
+        }
+        
+        for(int i =1; i<n-1; i++){
+            holder[i] = Math.min(prev[i], next[i]);
+        }
+        
+        for(int i =1; i<n-1; i++){
+            holder[i] = (holder[i]-height[i])>0?(holder[i]-height[i]):0;
+        }
+        
+       int sum =0;
+        for(int i =1; i<n-1; i++){
+            sum+=holder[i];
+        }
+          
+        return sum;
+    }
 
     public static void main(String[] args) {
         // code
@@ -617,7 +686,10 @@ class Array {
                 // { 1, -1 };
         // {1,3,-1,-3,5,3,6,7};
         int k = 5;//1;// 3;//2
-        test.maxSlidingWindow(nums, k);
+        // test.maxSlidingWindow(nums, k);
+
+        int[] selfArr = {1,2,3,4};
+        test.productExceptSelf(selfArr);
     }
 
 }
