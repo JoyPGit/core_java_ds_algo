@@ -716,6 +716,8 @@ class stringPractice {
 
     // aug leetcode valid palindrome
 
+    // https://www.geeksforgeeks.org/find-excel-column-name-given-number/
+
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));

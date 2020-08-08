@@ -5,13 +5,14 @@ import java.util.*;
 import java.util.Map.Entry;
 
 class TreeNode {
-    int key;
+    int key; int val;
     TreeNode left;
     TreeNode right;
     TreeNode rightpointer;
 
     TreeNode(int key) {
         this.key = key;
+        this.val = key;
         this.left = null;
         this.right = null;
     }
@@ -2281,6 +2282,54 @@ public class Tree {
             else listFrequent.put(sum, 1);
 
             return sum;
+        }
+    }
+
+    // https://leetcode.com/problems/subtree-of-another-tree
+    /** if the root matches, then recur for that using isSame
+     * else recur for left and right nodes.
+     * 
+     * 1 isSubtree -> isSame
+     * 2 else -> isSubtree(left) || isSubtree(right)
+     */
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if(s==null ) return false;
+        else if(isSame(s, t)) return true;
+        else return isSubtree(s.left, t)|| isSubtree(s.right, t);
+    }
+    
+    boolean isSame(TreeNode a, TreeNode b){
+        if(a == null || b==null) return a==null&&b== null;
+        if(a.val == b.val) return isSame(a.left, b.left) && isSame(a.right, b.right);
+        else return false;
+    }
+
+    // https://leetcode.com/problems/validate-binary-search-tree/
+    // long maxGlobal = Long.MAX_VALUE; long minGlobal = Long.MIN_VALUE;
+    /** doing a postorder traversal, 
+     * earlier was maintaining global vars to keep track of max
+     * and min;
+     * then found local func args work just fine
+     * 
+     * keeping a global var and making it false if BST property
+     * is violated and returning it at the end.
+     * 
+     * */
+    boolean isBST= true;
+    public boolean isValidBST(TreeNode root) {
+        // if(root == null) return true;
+        bstHelper(root, Long.MAX_VALUE, Long.MIN_VALUE);        
+        return isBST;
+    }
+    
+    void bstHelper(TreeNode root, long max, long min){
+        if(root == null) return;
+        bstHelper(root.left, root.val, min);
+        bstHelper(root.right, max, root.val);
+        // maxGlobal = max; minGlobal = min;
+        // if(!(maxGlobal > root.val && root.val > minGlobal)) {
+        if(!(max > root.val && root.val > min)) {
+            isBST = false;
         }
     }
 

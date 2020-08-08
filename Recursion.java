@@ -231,6 +231,46 @@ public class Recursion {
         subset[index] = arr[index];
         allSubsetHelper(arr, subset, index+1);
     }
+
+
+    // https://practice.geeksforgeeks.org/problems/reach-a-given-score/0
+    // int reachScore(int score){
+        
+        // reachScoreHelper(score, )
+    // }
+
+    // https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
+    // int uniqueCombinations(int[] arr, int k){
+    //     ArrayList<Integer> list = new ArrayList<>();
+
+    //     for(int i =0; i<arr.length; i++){
+    //         list.add(arr[i]);
+    //         while(i+1<arr.length && arr[i] == arr[i+1]) i++;
+    //     }
+    //     System.out.println(list);
+    //     return 1;
+    // }
+
+    //https://www.geeksforgeeks.org/sort-a-stack-using-recursion/
+    //incomplete
+    // void sortStack(int[] arr){
+    //     Deque<Integer> stack = new LinkedList<>();
+    //     for(int i =0; i<arr.length; i++){
+    //         stack.addLast(arr[i]);
+    //     }
+
+    //     sortStackUtil(stack);
+    // }
+    // //incomplete
+    // void sortStackUtil(Deque<Integer> stack){
+    //     int top = stack.removeLast();
+    //     while(stack.getLast()>top){
+
+    //     }
+    // }
+    
+    // https://www.geeksforgeeks.org/count-number-ways-reach-given-score-game/
+    // https://www.geeksforgeeks.org/recursively-break-number-3-parts-get-maximum-sum/
     public static void main (String[] args) throws Exception{
         Recursion recur = new Recursion();
         int[] stones =
@@ -316,6 +356,9 @@ public class Recursion {
             // System.out.println("max sum div by 3 "+recur.maxSumDivThree(nums));
 
             int[] subsets = {1,2};
-            recur.allSubsets(subsets);
+            // recur.allSubsets(subsets);
+            
+            int[] uniqueComb = {1,1,2,2,2,2,2,2,3,3,3,5};
+            // recur.uniqueCombinations(uniqueComb, k);
     }
 }
