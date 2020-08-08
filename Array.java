@@ -2,6 +2,15 @@ import java.util.*;
 
 class Array {
 
+    /** 
+    * IMP: TO FIND MIDDLE ALWAYS USE (N-1)/2; NOT N/2
+    * IF LENGTH=6 MID = 2, NOT 3
+    */
+    /**TECHNIQUES
+     * 1 TWO TRAVERSALS
+     * 2 WIGGLE SORT
+     * 3 
+     */
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             if (i == arr.length - 1) {
@@ -123,19 +132,34 @@ class Array {
         return pivot;
     }
 
-    void sort0s1s2s(int[] arr) {
-        int zeroTracker = 0;
-        int oneTracker = 0;
-        int twoTracker = 0;
-
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == 0)
-                zeroTracker = i;
-            if (arr[i] == 1)
-                zeroTracker = i;
-            if (arr[i] == 2)
-                zeroTracker = i;
+    public void sort0s1s(int[] nums) {
+        int index = -1;
+        for(int i =0; i<nums.length; i++){
+            if(nums[i] != 0){
+                index++;
+                swap(nums, index, i);
+            }
         }
+    }
+    
+
+    /** it's a bit tricky, concept of quicksort partition
+     * points:
+     * 1 use while not for
+     * 2 2 pointers needed 
+     * 3 when 0 is seen increment both
+     * 4 when 2 only decrement h; hence while is used
+     *  as for will increment i in all cases
+     */
+    public void dutchNational(int[] nums) {
+        int n = nums.length;
+        int l = 0, h = n - 1, i = 0;
+        while( i <= h ) {
+            if(nums[i] == 0 ) swap(nums, l++, i++);
+            else if(nums[i] == 2) swap(nums, h--, i);    
+            else i++;
+        }
+        print1DMatrix(nums);
     }
 
     void insertionSort(int[] arr) {
@@ -146,6 +170,35 @@ class Array {
                 swap(arr, j, j - 1);
                 j--;
             }
+        }
+    }
+
+    // https://leetcode.com/problems/wiggle-sort-ii/
+    /** technique is to sort and then fill with elements 
+     * at even index from mid and odd index from end
+     * even is smaller so mid is chosen
+     * 
+     * IMP: TO FIND MIDDLE ALWAYS USE (N-1)/2; NOT N/2
+     * IF LENGTH=6 MID = 2, NOT 3
+    */
+    public void wiggleSort(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int[] res = new int[n];
+        int mid = (n-1)/2; int right = n-1; int count = 0;
+        
+        while(mid>=0 || right>(n-1)/2) {
+            if(count%2 == 0){
+                res[count]=nums[mid--];
+            }
+            if(count%2 != 0){
+                res[count]=nums[right--];
+            }
+            count++;
+        }
+        
+        for(int i =0; i<n; i++){
+            nums[i] = res[i];
         }
     }
 
@@ -196,19 +249,6 @@ class Array {
         arr[b] = temp;
     }
 
-
-    void moveAllZeroesToEnd(int[] arr) {
-        int zeroCounter = -1;
-
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != 0) {
-                // zeroCounter++;
-                swap(arr, i, ++zeroCounter);
-            }
-        }
-
-        showArray(arr);
-    }
 
     void sortOddAscEvenDesc(int[] arr) {
         // arr[] = {1, 2, 3, 5, 4, 7, 10}, Output : {7, 5, 3, 1, 2, 4, 10}
@@ -622,6 +662,32 @@ class Array {
         return sum;
     }
 
+    // https://leetcode.com/problems/first-missing-positive/
+    // inaccurate soln but works for tougher ques
+    public int firstMissingPositive(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length; 
+        int i = 0; int j =0;
+        int min = 1; boolean found = false;
+        
+        while(nums[i]<=0 && i<n) i++;
+        // min = nums[i]<0?1:nums[i];
+        
+        if(i==n-1) return min;
+        if(i==n) return min;
+        // else min = nums[i];
+        System.out.println(i);
+        for(j =i+1; j<n; j++){
+            if((nums[j] - nums[j-1])!=1) {
+                min = nums[j-1]+1;
+                found =true;
+                System.out.println("min "+min);
+            }
+        }
+        System.out.println(j);
+        if(j== n && !found) return nums[n-1]+1;
+        return min;
+    }
     public static void main(String[] args) {
         // code
 
@@ -689,7 +755,10 @@ class Array {
         // test.maxSlidingWindow(nums, k);
 
         int[] selfArr = {1,2,3,4};
-        test.productExceptSelf(selfArr);
+        // test.productExceptSelf(selfArr);
+
+        int[] dutch = {2,1,2,1,0,0,0,1,0,2};
+        test.dutchNational(dutch);
     }
 
 }
