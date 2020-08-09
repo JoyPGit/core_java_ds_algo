@@ -26,10 +26,10 @@ import java.util.*;
 
    /** 
     * TECHNIQUES
-    1 USE A CUSTOM CLASS FOR STROING VALUE PER KEY
+    1 USE A CUSTOM CLASS FOR STORING VALUE PER KEY
     2 USE FOR AND THEN WHILE FOR SHRINKING
     */
-public class Hashmap1{
+public class HashPractice{
 
     void findSubArrayWithSumZero(int[] arr){
         int sum = 0;
@@ -420,7 +420,7 @@ public class Hashmap1{
     //https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
 
     public static void main(String[] args) {
-        Hashmap1 h = new Hashmap1();
+        HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();
 
         // map.put("12",1);

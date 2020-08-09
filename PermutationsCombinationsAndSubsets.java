@@ -37,7 +37,8 @@ public class PermutationsCombinationsAndSubsets {
 		return list; 
 	}
 
-	private void subsetsHelper(List<List<Integer>> list, List<Integer> resultList, int[] nums, int start) {
+    private void subsetsHelper(List<List<Integer>> list, List<Integer> resultList, 
+    int[] nums, int start) {
 		// if(resultList.size() == 0) System.out.println(" new ");
 		list.add(new ArrayList<>(resultList)); //this constructor copies the empty arraylist line 22
 		/** empty is copied for the first time and added
@@ -53,15 +54,18 @@ public class PermutationsCombinationsAndSubsets {
 		for (int i = start; i < nums.length; i++) {
 			// add element
 			resultList.add(nums[i]);
-			// System.out.println("resultlist contents after addition " + resultList + " index "+ start);
+            // System.out.println("resultlist contents after addition " + 
+            // resultList + " index "+ start);
 		
-			/**this is for subsets equalling a sum */
-
-			// int sum = 0;
-			// for(int j =0; j< resultList.size(); j++){
-			// 	sum += resultList.get(j);
-			// 	if(sum ==4 || sum == 5) System.out.println("the set is "+resultList);
-			// }
+			/**this is for subsets equalling a sum 
+             * 
+                int sum = 0;
+                for(int j =0; j< resultList.size(); j++){
+                    sum += resultList.get(j);
+                    if(sum ==4 || sum == 5) System.out.println("the set is "+resultList);
+                }
+             * 
+            */
 
 			/**this is for k length subsets */
 
@@ -112,7 +116,8 @@ public class PermutationsCombinationsAndSubsets {
         return list;
     }
     
-    private void backtrack1(List<List<Integer>> list , List<Integer> tempList, int [] nums, int start){
+    private void backtrack1(List<List<Integer>> list , List<Integer> tempList, 
+    int [] nums, int start){
         list.add(new ArrayList<>(tempList));
         for(int i = start; i < nums.length; i++){
             tempList.add(nums[i]);
@@ -169,7 +174,8 @@ public class PermutationsCombinationsAndSubsets {
         return list;
     }
     
-    private void backtrack4(List<List<Integer>> list, List<Integer> tempList, int [] nums, boolean [] used){
+    private void backtrack4(List<List<Integer>> list, List<Integer> tempList, 
+    int [] nums, boolean [] used){
         if(tempList.size() == nums.length){
             list.add(new ArrayList<>(tempList));
         } else{
@@ -192,18 +198,21 @@ public class PermutationsCombinationsAndSubsets {
         return list;
     }
     
-    private void backtrack5(List<List<Integer>> list, List<Integer> tempList, int [] nums, int remain, int start){
+    private void backtrack5(List<List<Integer>> list, List<Integer> tempList, 
+    int [] nums, int remain, int start){
         if(remain < 0) return;
         else if(remain == 0) list.add(new ArrayList<>(tempList));
         else{ 
             for(int i = start; i < nums.length; i++){
                 tempList.add(nums[i]);
-                backtrack5(list, tempList, nums, remain - nums[i], i); // not i + 1 because we can reuse same elements
+                backtrack5(list, tempList, nums, remain - nums[i], i); 
+                // not i + 1 because we can reuse same elements
                 tempList.remove(tempList.size() - 1);
             }
         }
     }
-    // Combination Sum II (can't reuse same element) : https://leetcode.com/problems/combination-sum-ii/
+    // Combination Sum II (can't reuse same element) : 
+    // https://leetcode.com/problems/combination-sum-ii/
     
     public List<List<Integer>> combinationSum2(int[] nums, int target) {
         List<List<Integer>> list = new ArrayList<>();
@@ -213,7 +222,8 @@ public class PermutationsCombinationsAndSubsets {
         
     }
     
-    private void backtrack6(List<List<Integer>> list, List<Integer> tempList, int [] nums, int remain, int start){
+    private void backtrack6(List<List<Integer>> list, List<Integer> tempList, 
+    int [] nums, int remain, int start){
         if(remain < 0) return;
         else if(remain == 0) list.add(new ArrayList<>(tempList));
         else{

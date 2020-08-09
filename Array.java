@@ -662,6 +662,8 @@ class Array {
         return sum;
     }
 
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+
     // https://leetcode.com/problems/first-missing-positive/
     // inaccurate soln but works for tougher ques
     public int firstMissingPositive(int[] nums) {

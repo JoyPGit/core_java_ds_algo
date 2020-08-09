@@ -68,7 +68,56 @@ public class stackPractice {
         print1DMatrix(res);
         return res;
     }
+    // https://leetcode.com/problems/asteroid-collision/
+    public int[] asteroidCollision(int[] asteroids) {
+        int n = asteroids.length;
+        int[] res; boolean same= false; boolean greater = false;
+        Deque<Integer> list = new LinkedList<>();
+        list.add(asteroids[0]);
+        for(int i =1; i<n; i++){
+            int curr = asteroids[i];
+            same = false; greater = false;
+            // if((list.getLast()>0 && curr>0)
+            // || (list.getLast()<0 && curr<0)
+            // || (list.getLast()<0 && curr>0)) list.add((curr));
+            // else{
+                System.out.println("in else");
 
+                while(list.size()!=0 && list.getLast()>0 && curr<0){
+                    int popped = list.removeLast();
+                    // System.out.println("new last "+list.getLast());
+                    System.out.println("popped "+popped);
+                    if(Math.abs(popped)<Math.abs(curr)){
+                        System.out.println("line 89");
+                        // list.add(curr);
+                    }
+                    else if(Math.abs(popped) == Math.abs(curr)){
+                        System.out.println("line 93");
+                        same = true;
+                        break;
+                    }
+                    else if(Math.abs(popped) > Math.abs(curr)){
+                        System.out.println("line 98");
+                        list.add(popped);
+                        greater = true;
+                        break;
+                    }
+                }
+                if(!same && !greater)list.add(curr);
+            // }
+            System.out.println("for i "+i+" "+list);    
+        }
+        System.out.println(list);
+        res = new int[list.size()];
+        int i =0;
+        while(list.size()!=0){
+            res[i] = list.removeFirst();
+            i++;
+        }
+        print1DMatrix(res);
+        return res;
+    }
+    
     public static void main(String[] args) {
         stackPractice stack = new stackPractice();
 
@@ -83,7 +132,14 @@ public class stackPractice {
                 // { 1, -1 };
         // {1,3,-1,-3,5,3,6,7};
         int k = 5;//1;// 3;//2
-        stack.maxSlidingWindowStack(nums, k);
+        // stack.maxSlidingWindowStack(nums, k);
+
+        int[] asteroids = {1,-2,-2,-2};
+        // {-2,-2,1,1,1,-2};
+        // {10, 2, -5};
+        // {5,-5};
+        // {-2, -1, 1, 2};
+        stack.asteroidCollision(asteroids);
     }
 
 }

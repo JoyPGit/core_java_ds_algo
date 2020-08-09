@@ -232,6 +232,21 @@ public class Recursion {
         allSubsetHelper(arr, subset, index+1);
     }
 
+    /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
+  int lcs( char[] X, char[] Y, int m, int n ) 
+  { 
+    System.out.println("m " + m +" n "+n);
+    if (m == 0 || n == 0) 
+      return 0; 
+    if (X[m-1] == Y[n-1]) {
+      System.out.println("X " +X[m-1]+" Y "+Y[n-1]);  
+      return 1 + lcs(X, Y, m-1, n-1); 
+    }
+    else {
+        System.out.println("in else");
+      return Math.max(lcs(X, Y, m, n-1), lcs(X, Y, m-1, n)); 
+    }
+  } 
 
     // https://practice.geeksforgeeks.org/problems/reach-a-given-score/0
     // int reachScore(int score){

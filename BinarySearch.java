@@ -100,6 +100,36 @@ public class BinarySearch {
      /**
       * https://www.geeksforgeeks.org/find-the-row-with-maximum-number-1s/
       */
+      boolean searchRowColSortedMatrix(final int[][] arr, final int num) {
+        int row = -1;
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i + 1][0] > num && arr[i][0] < num)
+                row = i;
+        }
+        if (row == -1) {
+            if (arr[arr.length - 1][0] < num)
+                row = arr.length - 1;
+            else if (row == -1)
+                return false;
+        }
+        System.out.println(row);
+        return binsearch(arr, row, num, 0, arr[0].length - 1);
+    }
+
+    boolean binsearch(final int[][] arr, final int row, final int num, final int start, final int end) {
+        if (start > end)
+            return false;
+        int mid = -1;
+        if (start <= end) {
+            mid = (start + end) / 2;
+        }
+        if (arr[row][mid] == num)
+            return true;
+        else if (arr[row][mid] > num)
+            return binsearch(arr, row, num, start, mid - 1);
+        else
+            return binsearch(arr, row, num, mid + 1, end);
+    }
 
 
       public static void main(String[] args) {

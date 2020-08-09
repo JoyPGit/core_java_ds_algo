@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 class stringPractice {
 
@@ -21,11 +22,21 @@ class stringPractice {
         }
     }
 
+    void hashiterator(HashMap<Integer, Integer> list){
+        for (Map.Entry<Integer, Integer> entry : list.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+            System.out.println("key "+key+" value " +value);
+        }
+    }
+
     /**
-     * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 2 ALL PALINDROME QUES (use SUSBTRING
-     * TECHNIQUE FROM ABOVE) 3 PARTITION LABELS (HASHING) 4 MIN WINDOW CONTAINING K
-     * DISTINCT (HASHING, WINDOW SHRINKING) 5 SEARCH WORD IN GRID (DFS) 6 INCLUDE OR
-     * EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION)
+     * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 
+     * 2 ALL PALINDROME QUES (use SUSBTRING TECHNIQUE FROM lexicographicSubConcat) 
+     * 3 PARTITION LABELS (HASHING) 
+     * 4 MIN WINDOW CONTAINING K DISTINCT (HASHING, WINDOW SHRINKING) 
+     * 5 SEARCH WORD IN GRID (DFS) 
+     * 6 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION)
      */
 
     String reverse(String word) {
@@ -42,6 +53,7 @@ class stringPractice {
     void reverseRecursive(String word) {
 
     }
+
     // https://practice.geeksforgeeks.org/problems/reverse-words-in-a-given-string/0
     String reverseWordOrderInAString(String word) {
         String[] words = word.split(" ");
@@ -191,6 +203,20 @@ class stringPractice {
             for (int k = 0; k < row.length; k++) {
                 findWordInGridUtil(grid, ch, index + 1, rowIndex + row[k], colIndex + col[k]);
             }
+        }
+    }
+
+    /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
+    int lcs(char[] X, char[] Y, int m, int n) {
+        System.out.println("m " + m + " n " + n);
+        if (m == 0 || n == 0)
+            return 0;
+        if (X[m - 1] == Y[n - 1]) {
+            System.out.println("X " + X[m - 1] + " Y " + Y[n - 1]);
+            return 1 + lcs(X, Y, m - 1, n - 1);
+        } else {
+            System.out.println("in else");
+            return Math.max(lcs(X, Y, m, n - 1), lcs(X, Y, m - 1, n));
         }
     }
 
@@ -594,9 +620,8 @@ class stringPractice {
     // ALL PALINDROMIC SUBSTRINGS
 
     /**
-     * points : 1 dp size [n][n] 
-     * 2 l here denotes length of substring; goes till n; starts from 1
-     * 3 i+l-1 denotes the ending index; goes till n-1
+     * points : 1 dp size [n][n] 2 l here denotes length of substring; goes till n;
+     * starts from 1 3 i+l-1 denotes the ending index; goes till n-1
      * 
      * aaa; l= 3; i=0; j = 2; l= 2; i=0; j = 1; i=1; j = 3;
      * 
@@ -639,14 +664,14 @@ class stringPractice {
      */
 
     // technique 1 using upper triangular matrix
-    /** points : similar to all palindromic substrings' count
-     * 1 if the whole string is a palindrome and if it's allowed l<=n; else l<n
-     * l is imp; denotes substring length; starts from 1
+    /**
+     * points : similar to all palindromic substrings' count 1 if the whole string
+     * is a palindrome and if it's allowed l<=n; else l<n l is imp; denotes
+     * substring length; starts from 1
      * 
      * 2 maxlen is 1 as every char is a palindrome; it keeps track of longest length
-     * 3 start index is updated everytime
-     * 4 substring start, start+maxlen
-      */
+     * 3 start index is updated everytime 4 substring start, start+maxlen
+     */
     String longestPalindromicSubstring(String s) {
         int n = s.length();
         int start = 0;
@@ -674,8 +699,7 @@ class stringPractice {
                 }
             }
         }
-        System.out.println("longest palindromic substring : " + 
-        s.substring(start, start+maxlen));
+        System.out.println("longest palindromic substring : " + s.substring(start, start + maxlen));
         return s.substring(start, start + maxlen);
     }
 
@@ -717,6 +741,52 @@ class stringPractice {
     // aug leetcode valid palindrome
 
     // https://www.geeksforgeeks.org/find-excel-column-name-given-number/
+    // https://leetcode.com/problems/partition-labels/
+
+    class partition{
+        int index; int group;
+        partition(int i, int g){
+        this.index = i;
+        this.group = g;
+        }
+    }
+    int[] partitionLabels9Aug(String s){
+        HashMap<Character, partition> map = new HashMap<>();
+        int[] ans;
+        int group = 1;
+        map.put(s.charAt(0), new partition(0, group++));
+        for(int i =1; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                shrinkMap(map, s, i, group);
+            }
+            else map.put(s.charAt(i), new partition(i, group++));
+        }
+
+        ans= new int[group];
+        //iterate over map and count
+        // System.out.println(map);
+        hashiterator1(map);
+
+        return ans;
+    }
+
+    void shrinkMap(HashMap<Character, partition> map, String s,
+    int index, int group){
+        int i = index-1; int curr = map.get(s.charAt(index)).group;
+        while(s.charAt(i)!= s.charAt(index)){
+            map.put(s.charAt(i), 
+            new partition(map.get(s.charAt(i)).index, curr));
+            i--;
+        }
+    }
+
+    void hashiterator1(HashMap<Character, partition> map) {
+        for (Map.Entry<Character, partition> entry : map.entrySet()) {
+            Character key = entry.getKey();
+            Integer value = entry.getValue().group;
+            System.out.println("key "+key+" value " +value);
+        }
+    }
 
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
@@ -771,7 +841,10 @@ class stringPractice {
         // string.countAllPalindromes(palin);
 
         // string.countPalindromicSubstrings(palin);
-        string.longestPalindromicSubstring(palin);
+        // string.longestPalindromicSubstring(palin);
+
+        String partition = "ababcbacadefegdehijhklij";
+        string.partitionLabels9Aug(partition);
 
     }
 }
