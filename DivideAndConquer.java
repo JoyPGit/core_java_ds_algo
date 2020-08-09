@@ -1,5 +1,16 @@
 class DivideAndConquer{
     
+    /**TECHNIQUES
+     * 1 DIVIDE AND CONQUER MOSTLY USES HEAPS
+     * 2 OR ELSE SOME SORT OF SORTING, BE IT ARRAY OR HEAP
+     */
+    // https://leetcode.com/tag/divide-and-conquer/
+    
+    // https://leetcode.com/problems/different-ways-to-add-parentheses/
+    // discuss/66328/A-recursive-Java-solution-(284-ms)
+
+    // https://leetcode.com/problems/find-all-duplicates-in-an-array/
+
     void findCountSortedInRange(int[] arr){
         int length = arr.length;
         breakAndFind(arr, 0, length/2-1);
@@ -18,6 +29,8 @@ class DivideAndConquer{
             }
         }
     }
+    // https://leetcode.com/problems/maximum-subarray/
+
 
     public static void main(String[] args) {
         DivideAndConquer soluDivideAndConquer = new DivideAndConquer();

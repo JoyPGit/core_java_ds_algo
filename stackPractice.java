@@ -57,7 +57,6 @@ public class stackPractice {
             }
             
             while(list.size()!=0 && list.getLast()<nums[i]){
-                System.out.println("in here");
                 list.removeLast();
             }
             
@@ -68,6 +67,8 @@ public class stackPractice {
         print1DMatrix(res);
         return res;
     }
+
+    // MINOR MODS NEEDED
     // https://leetcode.com/problems/asteroid-collision/
     public int[] asteroidCollision(int[] asteroids) {
         int n = asteroids.length;

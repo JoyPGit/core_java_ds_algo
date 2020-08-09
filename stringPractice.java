@@ -276,57 +276,7 @@ class stringPractice {
     // unsolved solve using hash and shrinking technique
     // ababcbacadefegdehijhklij
     // https://leetcode.com/problems/partition-labels/
-    // public ArrayList<Integer> partitionLabels(String S) {
-    public int partitionLabels(String S) {
-        // ArrayList<Integer> result = new ArrayList<Integer>();
-        // ArrayList<Character> char1 = new ArrayList<Character>();
-        int[] alphabet = new int[26];
-        int[] count = new int[S.length()];
-        count[0] = 1;
-        alphabet[S.charAt(0) - 'a'] = 0;
-
-        for (int i = 1; i < S.length(); i++) {
-            System.out.println("in here i " + i);
-            System.out.println("alp " + (S.charAt(i) - 'a') + " " + (S.charAt(i)));
-            if (alphabet[S.charAt(i) - 'a'] != 0) {
-                fill(count, count[S.charAt(i) - 'a'], alphabet[S.charAt(i) - 'a'], i);
-                // tricky to link count with alphabet
-                alphabet[S.charAt(i) - 'a'] = i;
-                print1DMatrix(count);
-                System.out.println();
-                print1DMatrix(alphabet);
-            } else {
-                System.out.println("in here");
-                alphabet[S.charAt(i) - 'a'] = i;
-                count[i] = count[i - 1] + 1;
-                System.out.println();
-                print1DMatrix(count);
-                System.out.println();
-                print1DMatrix(alphabet);
-            }
-        }
-
-        int max = 0;
-        System.out.println();
-        for (int i = 0; i < count.length; i++) {
-            System.out.print(count[i] + ", ");
-            max = Math.max(max, count[i]);
-        }
-        System.out.println();
-
-        for (int i = 0; i < alphabet.length; i++) {
-            System.out.print(alphabet[i] + ", ");
-        }
-
-        return max;
-    }
-
-    void fill(int[] arr, int value, int start, int end) {
-        System.out.println("value " + value);
-        for (int i = start; i <= end; i++) {
-            arr[i] = value;
-        }
-    }
+    // public ArrayList<
 
     void keyPadPrint(String str) {
         if (str == "1") {
@@ -735,6 +685,7 @@ class stringPractice {
             return;
     }
 
+    // https://www.geeksforgeeks.org/longest-prefix-also-suffix/
     // https://www.geeksforgeeks.org/find-number-distinct-
     // palindromic-sub-strings-given-string/
 
@@ -750,7 +701,11 @@ class stringPractice {
         this.group = g;
         }
     }
-    int[] partitionLabels9Aug(String s){
+
+
+    // 9 Aug 
+    //IMCOMPLETE
+    int[] partitionLabels(String s){
         HashMap<Character, partition> map = new HashMap<>();
         int[] ans;
         int group = 1;
@@ -788,6 +743,9 @@ class stringPractice {
         }
     }
 
+    // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
+    // https://leetcode.com/problems/compare-version-numbers/
+    // https://leetcode.com/problems/reformat-date/
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));
@@ -844,7 +802,7 @@ class stringPractice {
         // string.longestPalindromicSubstring(palin);
 
         String partition = "ababcbacadefegdehijhklij";
-        string.partitionLabels9Aug(partition);
+        string.partitionLabels(partition);
 
     }
 }

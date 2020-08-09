@@ -61,6 +61,9 @@ public class DP {
         }
         return dp[n];
     }
+
+    // KADANE'S ALGO
+    // https://leetcode.com/problems/maximum-subarray/
     /**
      * points: only right and down movements, else visited matrix would have
      * needed global var count to be used
@@ -1372,11 +1375,48 @@ public class DP {
     //     }
     // }
 
+    // IMP CHECK WHY dp[0][0] = 1 was required
+    // https://leetcode.com/problems/perfect-squares/
+    int perfectSquares(int n){
+        double n1 = n;
+        double limit1 = Math.sqrt(n1);
+        int limit = (int) limit1;
+        System.out.println(limit);
+
+        int[] nums = new int[limit];
+
+        for(int i =0; i<nums.length; i++){
+            nums[i] = (i+1)*(i+1);
+        }
+
+        int[][] dp = new int[limit][n+1];
+
+        for(int i =0; i<=n; i++){
+            dp[0][i] = i;
+        }
+
+        dp[0][0] =1;
+       
+        for(int i =1; i<limit; i++){
+            for(int j =1; j<=n; j++){
+                
+                //take care here
+                if (nums[i]>j) dp[i][j] = dp[i-1][j];
+                else{
+                    dp[i][j] = Math.min(dp[i-1][j], dp[i][j-nums[i]]+1);
+                }
+            }
+        }
+        printMatrix(dp);
+        return dp[limit-1][n];
+    }
     public static void main(String[] args) {
         DP dp = new DP();
 
         // System.out.println(dp.factorialDP(4));
         // System.out.println(dp.factorial(4));
+
+        dp.perfectSquares(12);
 
         int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
         // dp.countPathsMatrixDP(arr);
@@ -1393,7 +1433,7 @@ public class DP {
         // System.out.println(dp.russianDoll(russianDollArr));
 
         int[] maxProd = {6, -3, -10, 0, 2};
-        dp.maxProdSubarray(maxProd);
+        // dp.maxProdSubarray(maxProd);
 
         int[] house = { 2, 7, 9, 3, 1 };// {1,2,3,1};
         // System.out.println(dp.houseRobber(house));

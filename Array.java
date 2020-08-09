@@ -9,7 +9,8 @@ class Array {
     /**TECHNIQUES
      * 1 TWO TRAVERSALS
      * 2 WIGGLE SORT
-     * 3 
+     * 3 USING STACK/DEQUE
+     * 4 USING XOR
      */
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
