@@ -20,7 +20,7 @@ public class PermutationsCombinationsAndSubsets {
         }
     }
 
-    void printList(List<Integer> list) {
+    void printList(ArrayList<Integer> list) {
         Iterator<Integer> iterator = list.iterator();
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
@@ -31,13 +31,13 @@ public class PermutationsCombinationsAndSubsets {
 
     //28 apr
 
-    public List<List<Integer>> subsets28apr(int[] nums) {
-		List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> subsets28apr(int[] nums) {
+		ArrayList<ArrayList<Integer>> list = new ArrayList<>();
 		subsetsHelper(list, new ArrayList<>(), nums, 0);
 		return list; 
 	}
 
-    private void subsetsHelper(List<List<Integer>> list, List<Integer> resultList, 
+    private void subsetsHelper(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> resultList, 
     int[] nums, int start) {
 		// if(resultList.size() == 0) System.out.println(" new ");
 		list.add(new ArrayList<>(resultList)); //this constructor copies the empty arraylist line 22
@@ -109,14 +109,14 @@ public class PermutationsCombinationsAndSubsets {
     
     // Subsets : https://leetcode.com/problems/subsets/
 
-    public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> subsets(int[] nums) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
         backtrack1(list, new ArrayList<>(), nums, 0);
         return list;
     }
     
-    private void backtrack1(List<List<Integer>> list , List<Integer> tempList, 
+    private void backtrack1(ArrayList<ArrayList<Integer>> list , ArrayList<Integer> tempList, 
     int [] nums, int start){
         list.add(new ArrayList<>(tempList));
         for(int i = start; i < nums.length; i++){
@@ -127,14 +127,14 @@ public class PermutationsCombinationsAndSubsets {
     }
     // Subsets II (contains duplicates) : https://leetcode.com/problems/subsets-ii/
     
-    public List<List<Integer>> subsetsWithDup(int[] nums) {
-        List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] nums) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
         backtrack2(list, new ArrayList<>(), nums, 0);
         return list;
     }
     
-    private void backtrack2(List<List<Integer>> list, List<Integer> tempList, int [] nums, int start){
+    private void backtrack2(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tempList, int [] nums, int start){
         list.add(new ArrayList<>(tempList));
         for(int i = start; i < nums.length; i++){
             if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
@@ -146,14 +146,14 @@ public class PermutationsCombinationsAndSubsets {
 
     // Permutations : https://leetcode.com/problems/permutations/
     
-    public List<List<Integer>> permute(int[] nums) {
-       List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> permute(int[] nums) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
        // Arrays.sort(nums); // not necessary
        backtrack3(list, new ArrayList<>(), nums);
        return list;
     }
     
-    private void backtrack3(List<List<Integer>> list, List<Integer> tempList, int [] nums){
+    private void backtrack3(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tempList, int [] nums){
        if(tempList.size() == nums.length){
           list.add(new ArrayList<>(tempList));
        } else{
@@ -167,14 +167,14 @@ public class PermutationsCombinationsAndSubsets {
     } 
     // Permutations II (contains duplicates) : https://leetcode.com/problems/permutations-ii/
     
-    public List<List<Integer>> permuteUnique(int[] nums) {
-        List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> permuteUnique(int[] nums) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
         backtrack4(list, new ArrayList<>(), nums, new boolean[nums.length]);
         return list;
     }
     
-    private void backtrack4(List<List<Integer>> list, List<Integer> tempList, 
+    private void backtrack4(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tempList, 
     int [] nums, boolean [] used){
         if(tempList.size() == nums.length){
             list.add(new ArrayList<>(tempList));
@@ -191,14 +191,14 @@ public class PermutationsCombinationsAndSubsets {
     }
     // Combination Sum : https://leetcode.com/problems/combination-sum/
     
-    public List<List<Integer>> combinationSum(int[] nums, int target) {
-        List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> combinationSum(int[] nums, int target) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
         backtrack5(list, new ArrayList<>(), nums, target, 0);
         return list;
     }
     
-    private void backtrack5(List<List<Integer>> list, List<Integer> tempList, 
+    private void backtrack5(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tempList, 
     int [] nums, int remain, int start){
         if(remain < 0) return;
         else if(remain == 0) list.add(new ArrayList<>(tempList));
@@ -214,15 +214,15 @@ public class PermutationsCombinationsAndSubsets {
     // Combination Sum II (can't reuse same element) : 
     // https://leetcode.com/problems/combination-sum-ii/
     
-    public List<List<Integer>> combinationSum2(int[] nums, int target) {
-        List<List<Integer>> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> combinationSum2(int[] nums, int target) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         Arrays.sort(nums);
         backtrack6(list, new ArrayList<>(), nums, target, 0);
         return list;
         
     }
     
-    private void backtrack6(List<List<Integer>> list, List<Integer> tempList, 
+    private void backtrack6(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tempList, 
     int [] nums, int remain, int start){
         if(remain < 0) return;
         else if(remain == 0) list.add(new ArrayList<>(tempList));
@@ -237,13 +237,13 @@ public class PermutationsCombinationsAndSubsets {
     } 
     // Palindrome Partitioning : https://leetcode.com/problems/palindrome-partitioning/
     
-    public List<List<String>> partition(String s) {
-       List<List<String>> list = new ArrayList<>();
-       backtrack7(list, new ArrayList<>(), s, 0);
-       return list;
+    public ArrayList<ArrayList<String>> partition(String s) {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        backtrack7(list, new ArrayList<>(), s, 0);
+        return list;
     }
     
-    public void backtrack7(List<List<String>> list, List<String> tempList, String s, int start){
+    public void backtrack7(ArrayList<ArrayList<String>> list, ArrayList<String> tempList, String s, int start){
        if(start == s.length())
           list.add(new ArrayList<>(tempList));
        else{

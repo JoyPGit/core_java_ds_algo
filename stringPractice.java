@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class stringPractice {
 
@@ -30,6 +29,13 @@ class stringPractice {
         }
     }
 
+    String sortString(String s){
+        char[] ch = s.toCharArray();
+        Arrays.sort(ch);
+        // System.out.println(ch);
+        return new String(ch);
+    }
+
     /**
      * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 
      * 2 ALL PALINDROME QUES (use SUSBTRING TECHNIQUE FROM lexicographicSubConcat) 
@@ -37,6 +43,8 @@ class stringPractice {
      * 4 MIN WINDOW CONTAINING K DISTINCT (HASHING, WINDOW SHRINKING) 
      * 5 SEARCH WORD IN GRID (DFS) 
      * 6 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION)
+     * 7 VERSION COMPARE
+     * 8 GROUP ANAGRAM
      */
 
     String reverse(String word) {
@@ -245,6 +253,20 @@ class stringPractice {
         System.out.println("final " + list);
         return list.isEmpty();
     }
+
+    //works in leetcode
+    // public List<List<String>> groupAnagrams(String[] strs) {
+    //     if (strs == null || strs.length == 0) return new ArrayList<>();
+    //     Map<String, List<String>> map = new HashMap<>();
+    //     for (String s : strs) {
+    //         String keyStr = sortString(s);
+            
+    //         //optimization adding in both cases
+    //         if (!map.containsKey(keyStr)) map.put(keyStr, new ArrayList<>());
+    //         map.get(keyStr).add(s);
+    //     }
+    //     return new ArrayList<>(map.values());
+    // }
 
     public String removeKdigits(String num, int k) {
         String str = num;
@@ -649,7 +671,8 @@ class stringPractice {
                 }
             }
         }
-        System.out.println("longest palindromic substring : " + s.substring(start, start + maxlen));
+        System.out.println("longest palindromic substring : " + 
+                                s.substring(start, start + maxlen));
         return s.substring(start, start + maxlen);
     }
 
@@ -745,6 +768,37 @@ class stringPractice {
 
     // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
     // https://leetcode.com/problems/compare-version-numbers/
+    // "0.1.2", "0.01.2"
+    /**  
+     * mapping between integer and char
+     * 
+     * 1 create an int for every substring b/w dots and compare
+     * 2 two while loops 
+     * 3 p1, p2 are incremented once when dot is encountered, p1++ takes it till '.'
+     * 4 char value of '0' is 0
+     * 5 for chars use single quotes and double for strings
+     */
+
+     public int compareVersion(String version1, String version2) {
+        int p1=0,p2=0;
+        while(p1<version1.length() || p2<version2.length()){
+            int num1=0,num2=0;
+            while(p1<version1.length() && version1.charAt(p1)!='.'){
+                // System.out.println("char val of 0 "+'0');
+                // System.out.print("char val of '1'-'0' ");
+                // System.out.println('1'-'0');
+                num1 = num1*10 + (version1.charAt(p1++) - '0'); 
+            }
+            while(p2<version2.length() && version2.charAt(p2)!='.') {
+                num2 = num2*10 + (version2.charAt(p2++) - '0');
+            }
+
+            if(num1 != num2) return num1>num2 ? 1:-1;
+            p1++;
+            p2++;
+        }
+        return 0;
+    }
     // https://leetcode.com/problems/reformat-date/
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
@@ -765,7 +819,8 @@ class stringPractice {
         // string.genBinPerm01s(4);
         // string.recPalindrome("abba");
 
-        char[][] grid = { { 'A', 'C', 'P', 'R', 'C' }, { 'X', 'S', 'O', 'P', 'C' }, { 'V', 'O', 'V', 'N', 'I' },
+        char[][] grid = { { 'A', 'C', 'P', 'R', 'C' }, { 'X', 'S', 'O', 'P', 'C' }, 
+                { 'V', 'O', 'V', 'N', 'I' },
                 { 'W', 'G', 'F', 'M', 'N' }, // 'F','O','R','G','E','E','K','S'},
                 // {'G','E','E','K','S','Q','U','I','Z','G','E','E','K'},
                 { 'Q', 'A', 'T', 'I', 'T' } };// ,'P','R','A','C','T','I','C','E'}};
@@ -802,7 +857,9 @@ class stringPractice {
         // string.longestPalindromicSubstring(palin);
 
         String partition = "ababcbacadefegdehijhklij";
-        string.partitionLabels(partition);
+        // string.partitionLabels(partition);
+
+        System.out.println(string.compareVersion("0.1.2", "0.01.2"));
 
     }
 }

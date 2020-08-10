@@ -664,6 +664,24 @@ class Array {
     }
 
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    public List<Integer> findDuplicates(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        ArrayList<Integer> list = new ArrayList<>();
+        
+        for(int i =0; i<n-1; i++){
+            while((i<n-1) && (nums[i]^nums[i+1]) == 0){
+                list.add(nums[i]);
+                i++;//to get rid of similar elements
+            } 
+            // val = val^nums[i];
+        }
+        
+        System.out.println(3^3);
+        // System.out.println(4^3);
+        System.out.println("list is "+list);
+        return list;
+    }
 
     // https://leetcode.com/problems/first-missing-positive/
     // inaccurate soln but works for tougher ques
@@ -761,7 +779,10 @@ class Array {
         // test.productExceptSelf(selfArr);
 
         int[] dutch = {2,1,2,1,0,0,0,1,0,2};
-        test.dutchNational(dutch);
+        // test.dutchNational(dutch);
+
+        int[] dup = {1,3,4,5,6,2,3,4,5,6,8,8,9,11,1,11};
+        test.findDuplicates(dup);
     }
 
 }

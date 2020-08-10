@@ -28,7 +28,7 @@ public class SlidingWindow {
 
     // MICROSOFT
     // https://www.geeksforgeeks.org/count-distinct-elements-in-every-window-of-size-k/
-    List<Integer> distinctElsinWindow(int[] arr, int k){
+    ArrayList<Integer> distinctElsinWindow(int[] arr, int k){
         ArrayList<Integer> res = new ArrayList<>();
         HashMap<Integer, Integer> map = new HashMap<>();
         int count = 0;
@@ -151,7 +151,7 @@ public class SlidingWindow {
      * 2 if list is empty and arr[i-k] == getfirst(); add 0
      * 3 
      */
-    List<Integer> findFirstNegative(int[] arr, int k){
+    ArrayList<Integer> findFirstNegative(int[] arr, int k){
         ArrayList<Integer> res = new ArrayList<>();
         Deque<Integer> list = new LinkedList<>();
 
