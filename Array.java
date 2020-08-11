@@ -11,6 +11,7 @@ class Array {
      * 2 WIGGLE SORT
      * 3 USING STACK/DEQUE
      * 4 USING XOR
+     * 5 CIRCULAR ARRAY 
      */
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -506,19 +507,22 @@ class Array {
 
     // KADANE' ALGO
     // int [] a = {-2, -3, 4, -1, -2, 1, 5, -3};
-    int largestSumContigousSubarray(int[] arr) {
-        int sum = 0;
-        int max = 0;
-
-        for (int i = 0; i < arr.length; i++) {
-            sum += arr[i];
-            if (sum < 0)
-                sum = 0;
-            if (max < sum)
-                max = sum;
-            // System.out.println("max "+max+" sum "+sum);
+    /** point : max is found first and then
+     * sum check is done. Doing the opposite 
+     * doesn't work for negative numbers, as max
+     * can never be negative as sumis set zero
+     * beforehand and 0>-ve.
+     */
+    int maxSubArrayContiguous(int[] arr) {
+        if(arr.length ==1) return arr[0];
+        int max = Integer.MIN_VALUE; int sum = 0;
+        
+        for(int i =0; i<arr.length; i++){
+            sum+= arr[i];
+            max = Math.max(max, sum);
+            if(sum<0) sum = 0;
         }
-        System.out.println("max sum is " + max);
+        
         return max;
     }
 
@@ -664,7 +668,7 @@ class Array {
     }
 
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
-    public List<Integer> findDuplicates(int[] nums) {
+    public ArrayList<Integer> findDuplicates(int[] nums) {
         int n = nums.length;
         Arrays.sort(nums);
         ArrayList<Integer> list = new ArrayList<>();
@@ -709,6 +713,9 @@ class Array {
         if(j== n && !found) return nums[n-1]+1;
         return min;
     }
+
+    // CIRCULAR ARRAY 
+    // https://leetcode.com/problems/next-greater-element-ii/
     public static void main(String[] args) {
         // code
 

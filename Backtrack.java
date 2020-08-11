@@ -113,7 +113,7 @@ class Backtrack {
         }
     }
 
-    void printList(List<Integer> list) {
+    void printList(ArrayList<Integer> list) {
         Iterator<Integer> iterator = list.iterator();
         while (iterator.hasNext()) {
             System.out.println(iterator.next());

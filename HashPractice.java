@@ -385,10 +385,16 @@ public class HashPractice{
         return max + 1;
     }
 
-    //https://www.geeksforgeeks.org/sort-array-according-order-defined-another-array/
+    // https://www.geeksforgeeks.org/sort-array-according-order-defined-another-array/
+    // sort 'a' accdng to 'b'
+    // similar to sort by frequency
 
-    /** elements are stored in hashmap in the order the are inserted,
-     * so when we add els of array a, they are sorted relatively.
+    /** elements are NOT stored in hashmap in the order they 
+     * are inserted, sort the uncommon elements and add
+     * 
+     * add elements of a to map, for el of,
+     * add in res 'count' number of times
+     * add remaining from map
     */
     // AMAZON
     void relativeSorting(int[] a, int[] b){
@@ -398,7 +404,8 @@ public class HashPractice{
         for(int i =0; i<a.length; i++){
             if(map.containsKey(a[i])){
                 map.put(a[i], map.get(a[i])+1);
-            } else map.put(a[i], 1);
+            } else 
+            map.put(a[i], 1);
         }
 
         for(int i =0; i<b.length; i++){
@@ -408,6 +415,7 @@ public class HashPractice{
             }
             map.remove(b[i]);
         }
+
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
@@ -417,8 +425,43 @@ public class HashPractice{
         System.out.println(res);
     }
 
-    //https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+    class Relative{
 
+    }
+
+    void relativeSorting11Aug(int[] a, int[] b){
+        ArrayList<Integer> res = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i =0; i<b.length; i++){
+            map.put(b[i],1);
+        }
+
+        System.out.println(map);
+        for(int i =0; i<a.length; i++){
+            if(map.containsKey(a[i])){
+                if(map.get(a[i])==1) continue;
+                else map.put(a[i], map.get(a[i])+1);
+            } else 
+            map.put(a[i], 1);
+        }
+
+        
+
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+            for(int i =0; i<value; i++){
+                res.add(key);
+            }
+            
+        }
+
+        System.out.println(res);
+    }
+
+    //https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+    // https://leetcode.com/problems/top-k-frequent-words/
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();
@@ -466,7 +509,7 @@ public class HashPractice{
         // { 1, 2, 2, 3};
         int k = 3;
         // 2;
-        h.smallestSubArrayKDistinct(subarrKdis, k);
+        // h.smallestSubArrayKDistinct(subarrKdis, k);
 
         int[] apSeq = {24,13,1,100,0,94,3,0,3};
         //{3,6,9,10};
@@ -486,7 +529,8 @@ public class HashPractice{
         int A1[] = {2, 1, 2, 5, 7, 1, 9, 3, 6, 8, 8};
         int A2[] = {2, 1, 8, 3};
         // ans = {2, 2, 1, 1, 8, 8, 3, 5, 6, 7, 9}    
-        // h.relativeSorting(A1, A2);
+        h.relativeSorting(A1, A2);
+        // h.relativeSorting11Aug(A1, A2);
 
     }
 }

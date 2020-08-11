@@ -2015,8 +2015,8 @@ public class Tree {
     }
 
     ////////////////////////////////////////////////////////
-    void printListOfLists(List<List<Integer>> subsets){
-        for (List<Integer> subset: subsets) {
+    void printListOfLists(ArrayList<ArrayList<Integer>> subsets){
+        for (ArrayList<Integer> subset: subsets) {
             // System.out.println("in print, size " + subset.size());
             System.out.println(subset);
         }
@@ -2025,18 +2025,18 @@ public class Tree {
 
 
     //////////////////////////////
-    List<List<Integer>> findRootToLeafPathsWithGivenSumLists6Jun(TreeNode root, int sum){
-        List<List<Integer>> lists = new ArrayList<>();
-        if(root == null) return null;
-        findRootToLeafPathsWithGivenSumListsHelper(root, sum , lists, new ArrayList<Integer>());
+    // List<List<Integer>> findRootToLeafPathsWithGivenSumLists6Jun(TreeNode root, int sum){
+    //     List<List<Integer>> lists = new ArrayList<>();
+    //     if(root == null) return null;
+    //     findRootToLeafPathsWithGivenSumListsHelper(root, sum , lists, new ArrayList<Integer>());
 
-        printListOfLists(lists);
+    //     printListOfLists(lists);
 
-        return lists;
-    }
+    //     return lists;
+    // }
 
-    void findRootToLeafPathsWithGivenSumListsHelper(TreeNode root, int sum, List<List<Integer>> lists, 
-    List<Integer> list){
+    void findRootToLeafPathsWithGivenSumListsHelper(TreeNode root, int sum, 
+    ArrayList<ArrayList<Integer>> lists, ArrayList<Integer> list){
         if(sum == root.key) {
             System.out.println("in here");
             list.add(root.key);

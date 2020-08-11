@@ -37,6 +37,8 @@ class stringPractice {
     }
 
     /**
+     * s.length() braces needed
+     * 
      * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 
      * 2 ALL PALINDROME QUES (use SUSBTRING TECHNIQUE FROM lexicographicSubConcat) 
      * 3 PARTITION LABELS (HASHING) 
@@ -777,22 +779,34 @@ class stringPractice {
      * 3 p1, p2 are incremented once when dot is encountered, p1++ takes it till '.'
      * 4 char value of '0' is 0
      * 5 for chars use single quotes and double for strings
+     * 
+     * can be done using Integer.parseInt too
+     * one base case for str = "" when no dot is present
+     * then add a check
      */
 
      public int compareVersion(String version1, String version2) {
         int p1=0,p2=0;
         while(p1<version1.length() || p2<version2.length()){
             int num1=0,num2=0;
+
+            String str1 = ""; String str2 =""; 
             while(p1<version1.length() && version1.charAt(p1)!='.'){
                 // System.out.println("char val of 0 "+'0');
                 // System.out.print("char val of '1'-'0' ");
                 // System.out.println('1'-'0');
-                num1 = num1*10 + (version1.charAt(p1++) - '0'); 
+                // num1 = num1*10 + (version1.charAt(p1++) - '0'); 
+                str1+=version1.charAt(p1++);
+                System.out.println("str1 "+str1);
             }
             while(p2<version2.length() && version2.charAt(p2)!='.') {
-                num2 = num2*10 + (version2.charAt(p2++) - '0');
+                // num2 = num2*10 + (version2.charAt(p2++) - '0');
+                str2+=version2.charAt(p2++);
+                System.out.println("str2 "+str2);
             }
 
+            num1 = Integer.parseInt(str1); 
+            num2 = Integer.parseInt(str2);
             if(num1 != num2) return num1>num2 ? 1:-1;
             p1++;
             p2++;
@@ -800,6 +814,10 @@ class stringPractice {
         return 0;
     }
     // https://leetcode.com/problems/reformat-date/
+    // https://leetcode.com/problems/integer-to-english-words/
+
+    // https://leetcode.com/problems/next-closest-time/
+    // https://www.codertrain.co/next-closest-time
     public static void main(String[] args) {
         stringPractice string = new stringPractice();
         // System.out.println(string.reverse("word of"));
