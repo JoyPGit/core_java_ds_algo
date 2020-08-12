@@ -11,6 +11,9 @@ public class Utility {
         }
     }
 
+    // MAP.PUT(C, MAP.GETORDEFAULT(C,0)+1);
+    // for(char c: tasks) map.put(c, map.getOrDefault(c, 0)+1);
+
     // coverting min heap to max heap
     void maxheap() {
         PriorityQueue<Integer> pq = new PriorityQueue<>((x, y) -> y - x);
@@ -100,7 +103,9 @@ public class Utility {
         for(char t : tasks){
             c[t - 'A']++;
         }
-        Arrays.sort(c); */
+        Arrays.sort(c); 
+    */
+
     public static void main(String[] args) {
         Utility utility = new Utility();
         // utility.sortString("original");

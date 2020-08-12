@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class stackPractice {
+public class StackPractice {
     
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -368,7 +368,7 @@ public class stackPractice {
         
     }
     public static void main(String[] args) {
-        stackPractice stack = new stackPractice();
+        StackPractice stack = new StackPractice();
 
         String dup = "ibdyigbklifapflhpafjstizipojdrsykvskxtzadkdblmikwlofjiujlnpr";
         // stack.removeDuplicates(dup);

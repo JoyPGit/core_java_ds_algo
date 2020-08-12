@@ -1,6 +1,6 @@
 import java.util.*;
 
-class stringPractice {
+class StringPractice {
 
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -467,6 +467,30 @@ class stringPractice {
         else
             return "nineteen";
     }
+
+    // https://leetcode.com/problems/split-a-string-in-balanced-strings/
+    // "RLLLLRRRLR"
+    public int balancedStringSplit(String s) {
+        Deque<Character> list = new LinkedList<>();
+        list.addLast(s.charAt(0));
+        
+        int count =0;
+        for(int i =1; i<s.length(); i++){
+            if(!list.isEmpty() && list.getLast()==s.charAt(i)){
+                list.addLast(s.charAt(i));
+                System.out.println(list +" line add");
+            }
+            else if(list.size()!=0 && list.getLast()!=s.charAt(i)){
+                list.removeLast();
+            }
+            else if(list.size()==0) list.addLast(s.charAt(i));
+            System.out.println(list);
+            if(list.size()==0)count++;
+        }
+        System.out.println("count "+count);
+        return count;
+    }
+
     // RABIN KARP algo pattern searching
 
     // MIN WINDOW
@@ -822,7 +846,7 @@ class stringPractice {
     // https://leetcode.com/problems/next-closest-time/
     // https://www.codertrain.co/next-closest-time
     public static void main(String[] args) {
-        stringPractice string = new stringPractice();
+        StringPractice string = new StringPractice();
         // System.out.println(string.reverse("word of"));
         // System.out.println(string.reverseWordOrderInAString("I love Java
         // Programming"));
@@ -880,7 +904,10 @@ class stringPractice {
         String partition = "ababcbacadefegdehijhklij";
         // string.partitionLabels(partition);
 
-        System.out.println(string.compareVersion("0.1.2", "0.01.2"));
+        // System.out.println(string.compareVersion("0.1.2", "0.01.2"));
+
+        String balanceLR ="RLLLLRRRLR";
+        string.balancedStringSplit(balanceLR); 
 
     }
 }

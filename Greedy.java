@@ -175,6 +175,7 @@ class Greedy{
     }
 
     // https://leetcode.com/problems/reorganize-string/
+    
     // https://leetcode.com/problems/task-scheduler/
 
     /** POINTS : 
@@ -189,10 +190,10 @@ class Greedy{
      * 8 ADD A CHECK FOR LIST.SIZE()!=0 WHILE REMOVING
      * 9 --I>0
      * 10 MOST IMP HOW CYCLES ARE CALULATED : IF LIST IS NOT EMPTY,
-     * WE COUNT THE INTERVAL CYCLES, N+1 
-     * A->B->IDLE  = N+1
-     * WHEN LIST IS EMPTY WE ADD TEMP SIZE
-     * ONLY A-> THEN WE ADD +1(TEMP SIZE)
+     *    WE COUNT THE INTERVAL CYCLES, N+1 
+     *    A->B->IDLE  = N+1
+     *    WHEN LIST IS EMPTY WE ADD TEMP SIZE
+     *    ONLY A-> THEN WE ADD +1(TEMP SIZE)
      * 
      */
     public int leastInterval(char[] tasks, int k) {
@@ -233,6 +234,9 @@ class Greedy{
     // https://leetcode.com/problems/maximum-performance-of-a-team/
     // https://leetcode.com/problems/queue-reconstruction-by-height/
     // https://leetcode.com/problems/largest-values-from-labels/
+    // https://leetcode.com/problems/candy/
+    // https://leetcode.com/problems/find-the-minimum-number-of-fibonacci-numbers-whose-sum-is-k/
+
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();
         int[] mice = new int[]{-10, -79, -79, 67, 93, -85, -28, -94 };

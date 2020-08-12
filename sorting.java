@@ -19,9 +19,9 @@ class linkedListSort{
     }
 }
 
-public class sorting {
+public class Sorting {
     
-    sorting(){}
+    Sorting(){}
 
     void heapSort (int[] arr){
         int i =0;
@@ -111,7 +111,7 @@ public class sorting {
     }
 
     public static void main(String[] args){
-        sorting coronaSort = new sorting();
+        Sorting coronaSort = new Sorting();
         int[] arr = {10,3,5,6,8,1,4,6,7,9,21,43};
         coronaSort.heapSort(arr);
         for(int i =0; i<arr.length; i++){
