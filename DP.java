@@ -1445,6 +1445,33 @@ public class DP {
         return Math.max(dp[n-1].pos, dp[n-1].neg);
     }
     
+    /** PALINDROME QUES */    
+    // https://leetcode.com/problems/longest-palindromic-subsequence/
+    // https://leetcode.com/problems/palindromic-substrings/
+    int countPalindromicSubstrings(String s) {
+        int n = s.length();
+        int count = s.length();
+
+        int[][] dp = new int[n][n];
+
+        for (int l = 1; l <= n; l++) {
+            for (int i = 0; l + i - 1 < n; i++) {
+                int j = l + i - 1;
+                if (l == 1)
+                    dp[i][j] = 1;
+                else if (l == 2 && s.charAt(i) == s.charAt(j)) {
+                    dp[i][j] = 1;
+                    count++;
+                } else if (s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1] == 1) {
+                    dp[i][j] = 1;
+                    count++;
+                }
+            }
+        }
+        printMatrix(dp);
+        System.out.println("all palindromic substrings' count : " + count);
+        return count;
+    }
     public static void main(String[] args) {
         DP dp = new DP();
 

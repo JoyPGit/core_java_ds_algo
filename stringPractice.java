@@ -713,10 +713,13 @@ class stringPractice {
     // https://www.geeksforgeeks.org/longest-prefix-also-suffix/
     // https://www.geeksforgeeks.org/find-number-distinct-
     // palindromic-sub-strings-given-string/
-
+    // https://leetcode.com/problems/longest-palindromic-subsequence/
     // aug leetcode valid palindrome
-
+    // https://leetcode.com/problems/distinct-subsequences-ii/
+    
     // https://www.geeksforgeeks.org/find-excel-column-name-given-number/
+    
+    
     // https://leetcode.com/problems/partition-labels/
 
     class partition{
