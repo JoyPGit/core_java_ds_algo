@@ -1415,6 +1415,35 @@ public class DP {
     // discuss/766002/Java-DP-without-recursion
 
     // https://leetcode.com/problems/wiggle-subsequence/
+    class Wiggle{
+        int pos; int neg;
+        Wiggle(int p , int n){
+            this.pos = p; this.neg = n;
+        }
+    }
+    
+    public int wiggleMaxLength(int[] nums) {
+        int n = nums.length;
+        if(n==0) return 0;
+        if(n==1) return 1;
+        Wiggle[] dp = new Wiggle[n];
+        for(int i =0; i<n; i++){
+            dp[i] = new Wiggle(1,1);
+        }
+        
+        for(int i =1; i<n; i++){
+            for(int j =0; j<=i; j++){
+                if(nums[i]-nums[j]>0){
+                    dp[i].pos = Math.max(dp[j].neg+1, dp[i].pos);
+                }
+                else if(nums[i]-nums[j]<0){
+                    dp[i].neg = Math.max(dp[j].pos+1, dp[i].neg);
+                }
+            }        
+        }
+        
+        return Math.max(dp[n-1].pos, dp[n-1].neg);
+    }
     
     public static void main(String[] args) {
         DP dp = new DP();

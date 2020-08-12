@@ -89,7 +89,27 @@ public class sorting {
         
     }
 
-    
+    public void wiggleSort(int[] nums) {
+        Arrays.sort(nums);
+        int n = nums.length;
+        int[] res = new int[n];
+        int mid = (n-1)/2; int right = n-1; int count = 0;
+        
+        while(mid>=0 || right>(n-1)/2) {
+            if(count%2 == 0){
+                res[count]=nums[mid--];
+            }
+            if(count%2 != 0){
+                res[count]=nums[right--];
+            }
+            count++;
+        }
+        
+        for(int i =0; i<n; i++){
+            nums[i] = res[i];
+        }
+    }
+
     public static void main(String[] args){
         sorting coronaSort = new sorting();
         int[] arr = {10,3,5,6,8,1,4,6,7,9,21,43};

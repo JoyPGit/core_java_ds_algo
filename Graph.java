@@ -211,7 +211,10 @@ class Graph {
 	
 	// https://leetcode.com/problems/course-schedule/
 	// https://leetcode.com/problems/is-graph-bipartite/
+	// https://leetcode.com/problems/redundant-connection-ii/ BFS CAN BE USED?
 	// https://leetcode.com/problems/critical-connections-in-a-network/
+	// https://leetcode.com/problems/minimum-height-trees/
+
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
 		Graph g = new Graph(7);

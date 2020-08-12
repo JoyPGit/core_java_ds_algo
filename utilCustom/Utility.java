@@ -91,6 +91,16 @@ public class Utility {
 
     // for hashmap use getOrDefault
 
+    // add hashmap sort
+    // map.putIfAbsent
+
+    /**
+     * use a char map instead if chars are there 
+     * int[] c = new int[26];
+        for(char t : tasks){
+            c[t - 'A']++;
+        }
+        Arrays.sort(c); */
     public static void main(String[] args) {
         Utility utility = new Utility();
         // utility.sortString("original");
