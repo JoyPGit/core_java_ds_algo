@@ -77,6 +77,9 @@ public class QueuePrac {
             people[i][1] = people[i+1][1];
         }
     }
+
+    // https://leetcode.com/problems/lru-cache/
+    // ALSO LFU CACHE
     public static void main(String[] args) {
         QueuePrac queueSol = new QueuePrac();
         Deque<Integer> queue = new LinkedList<>();

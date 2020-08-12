@@ -11,11 +11,11 @@ class ListNode {
     }
 }
 
-class LinkedList1 {
+class Linkedprac {
     ListNode head = null;
     ListNode current = null;
 
-    void printList(LinkedList1 list) {
+    void printList(Linkedprac list) {
         ListNode current = list.head;
         System.out.print(head.key + "->");
         while (current.next != null) {
@@ -50,11 +50,11 @@ class LinkedList1 {
         }
     }
 
-    void findIntersection(LinkedList1 list1, LinkedList1 list2) {
+    void findIntersection(Linkedprac list1, Linkedprac list2) {
         // HashMap h =
     }
 
-    void sortList(LinkedList1 list) {
+    void sortList(Linkedprac list) {
         ListNode head = list.head;
         ListNode currentMax = head;
         ListNode current = head.next;
@@ -76,7 +76,7 @@ class LinkedList1 {
 
     }
 
-    void mergeSort(LinkedList1 list) {
+    void mergeSort(Linkedprac list) {
         ListNode middle = getMiddle(list);// finding middle is tricky
         ListNode nextOfMiddle = middle.next;
 
@@ -84,7 +84,7 @@ class LinkedList1 {
         System.out.println("middle" + middle.key);
     }
 
-    ListNode getMiddle(LinkedList1 list) {
+    ListNode getMiddle(Linkedprac list) {
         ListNode current = list.head;
         ListNode middle = list.head;
 
@@ -233,8 +233,61 @@ class LinkedList1 {
         node.next = null;//not adding this creates a loop between 1 and 2
     }
 
+    void oddEvenGroup(ListNode head) {
+        ListNode odd = head;
+        ListNode even = null;
+        if (head.next != null)
+            even = head.next;
+        ListNode evencount = even;
+
+        while (odd.next != null) {
+            odd.next = evencount.next;
+            odd = odd.next;
+            evencount.next = odd.next;
+            evencount = evencount.next;
+        }
+
+        odd.next = even;
+    }
+
+    void mergeKSortedLists(int k, Linkedprac list1, Linkedprac list2, 
+    Linkedprac list3) {
+        ListNode listK = null;
+        while (list1.head.next != null || list2.head.next != null || list3.head.next != null) {
+            // System.err.println("in while");
+            int min = 100000000;
+            for (int i = 0; i < k; i++) {
+                if (list1.head.key < min) {
+                    min = list1.head.key;
+                    if (list1.head.next != null)
+                        list1.head = list1.head.next;
+                }
+                if (list2.head.key < min) {
+                    min = list2.head.key;
+                    if (list2.head.next != null)
+                        list2.head = list2.head.next;
+                }
+                if (list3.head.key < min) {
+                    min = list3.head.key;
+                    if (list3.head.next != null)
+                        list3.head = list3.head.next;
+                }
+            }
+            System.out.println("min" + min);
+            listK = new ListNode(min);
+        }
+
+        printList(listK);
+    }
+
+
+    
+
+    // https://leetcode.com/problems/add-two-numbers/
+    // https://leetcode.com/problems/merge-k-sorted-lists/
+
     public static void main(String[] args) {
-        LinkedList1 linked = new LinkedList1();
+        Linkedprac linked = new Linkedprac();
         linked.addNode(1);
         linked.addNode(2);
         linked.addNode(3);

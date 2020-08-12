@@ -578,6 +578,7 @@ class Array {
     // https://stackoverflow.com/questions/6780632/returning-an-empty-array
     // https://practice.geeksforgeeks.org/problems/max-sum-path-in-two-arrays/1
     
+    // TWO TRAVERSAL TECHNIQUE
     // https://leetcode.com/problems/product-of-array-except-self/
     public int[] productExceptSelf(int[] nums) {
         /**traversing from both ends
@@ -713,6 +714,24 @@ class Array {
         if(j== n && !found) return nums[n-1]+1;
         return min;
     }
+
+    // PIVOT
+    // https://leetcode.com/problems/find-pivot-index/
+    public int pivotIndex(int[] nums) {
+        int n = nums.length;
+        int left = 0; int sum =0;
+        
+        for(int i=0; i<n; i++){
+            sum+=nums[i];
+        }
+        
+        for(int i =0; i<n; i++){
+            if(sum-left-nums[i] == left) return i;
+            left += nums[i];
+        }
+        return -1;
+    }
+    // https://leetcode.com/problems/subarray-sum-equals-k/
 
     // CIRCULAR ARRAY 
     // https://leetcode.com/problems/next-greater-element-ii/

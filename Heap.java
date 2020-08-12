@@ -218,6 +218,8 @@ public class Heap {
         return res;
     }
 
+    // SKYLINE
+    // FINDING MEDIAN
     // https://www.techiedelight.com/convert-min-heap-to-max-heap-linear-time/
     public static void main(String[] args) {
         Heap newHeap = new Heap(17);
@@ -266,7 +268,3 @@ public class Heap {
         newHeap.maxSlidingWindow(nums, k);
     }
 }
-
-/**
- * errors : insert '}' to complete class body
- */

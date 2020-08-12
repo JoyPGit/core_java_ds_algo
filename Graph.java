@@ -151,14 +151,11 @@ class Graph {
         for (int i = 1; i < 10; i++) {
             if (!foundMinColor) {
                 color[vertex] = i;
-
                 if (isSafemColor(arr, vertex, color)) {
                     mcolorUtil(arr, vertex + 1, color);
                 }
-
                 color[vertex] = 0;
             }
-
         }
     }
 
@@ -177,22 +174,64 @@ class Graph {
 			this.col = c;
 		}
 	}
+
+	/** points:
+	 * 1 use structure of backtracking, add, recur and remove
+	 * 2 maintain visited array
+	 * 3 procedure visited = true, recur, add to list
+	 * 4 Iterator<Integer> it = g.adj.get(i).iterator(); 
+	 * 5 Integer vertex = it.next()
+	 */
+	void topoSort(Graph g){
+		Deque<Integer> list = new LinkedList<>();
+		int[] visited  =  new int[g.V];
+		System.out.println("V "+g.V);
+		for(int i =0; i<g.V; i++){
+			if(visited[i]!=1){
+				visited[i] = 1;
+				topoSortHelper(g, i, list, visited);
+				list.add(i);
+			}
+		}
+		System.out.println("list "+list.toString());
+	}
+
+	void topoSortHelper(Graph g, int i, Deque<Integer> list, int[] visited){
+		Iterator<Integer> it = g.adj.get(i).iterator();
+		while(it.hasNext()){
+			Integer vertex = it.next();
+			System.out.println("vertex " + vertex);
+			if(visited[vertex]==1) continue;
+			visited[vertex] = 1;
+			topoSortHelper(g, vertex, list, visited);
+			list.add(vertex);
+			System.out.println("list help "+list);
+		}
+	}
 	
+	// https://leetcode.com/problems/course-schedule/
+	// https://leetcode.com/problems/is-graph-bipartite/
+	// https://leetcode.com/problems/critical-connections-in-a-network/
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
-		Graph g = new Graph(6);
+		Graph g = new Graph(7);
 		g.addEdge(5, 2);
-		g.addEdge(5, 0);
-		g.addEdge(4, 0);
+		g.addEdge(5, 6);
+		g.addEdge(6, 0);
+		g.addEdge(6, 4);
+		// g.addEdge(4, 0);
+		g.addEdge(0, 2); 
+		g.addEdge(0, 1); 
 		g.addEdge(4, 1);
-		g.addEdge(2, 3);
-		g.addEdge(3, 1);
-		g.addEdge(3, 5);
+		g.addEdge(1, 3); 
+		// g.addEdge(2, 3);
+		// g.addEdge(3, 1);
+		// g.addEdge(3, 5);
 
 		System.out.println("Following is a Topological " + "sort of the given graph");
-		g.topologicalSort();
+		// g.topologicalSort();
 
-		g.detectLoopInGraph();
+		// g.detectLoopInGraph();
 
 		int[][] graph = {
 			{0,1,1,1},
@@ -200,6 +239,8 @@ class Graph {
 			{1,1,0,0},
 			{0,0,0,0}
 		};
+
+		g.topoSort(g);
 	}
 }
 

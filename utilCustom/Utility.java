@@ -100,4 +100,29 @@ public class Utility {
         utility.maxheap();
     }
 
+    // public void main(String[] args) {
+    //     Scanner sc = new Scanner(System.in);
+    //     int T = sc.nextInt();
+    //     while (T > 0) {
+    //         int n1 = sc.nextInt();
+    //         Add_LinkedList list1 = new Add_LinkedList();
+    //         for (int i = 1; i <= n1; i++) {
+    //             int a = sc.nextInt();
+    //             list1.push(a);
+    //         }
+    //         int n2 = sc.nextInt();
+    //         Add_LinkedList list2 = new Add_LinkedList();
+    //         for (int i = 0; i < n2; i++) {
+    //             int b = sc.nextInt();
+    //             list2.push(b);
+    //         }
+    //         Add_LinkedList list3 = new Add_LinkedList();
+    //         // Add g = new Add();
+    //         // Node rs = g.addTwoLists(list1.head, list2.head);
+    //         // list3.printList(rs);
+    //         System.out.println();
+    //         T--;
+    //     }
+    // }
+
 }
