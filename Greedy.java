@@ -1,5 +1,7 @@
 import java.util.*;
 
+import utilCustom.*;
+
 class Greedy{
 
     /**IMP
@@ -7,6 +9,19 @@ class Greedy{
      * 2 ORGANIZE STRING
      * 3 TASK SCHEDULER
      */
+
+     /**
+      * TECHNIQUES
+      1 CREATE A MAP
+      2 CREATE A QUEUE
+      3 ADD FROM MAP TO QUEUE
+      4 ADD FROM QUEUE TO LIST
+      5 ADD BACK TO QUEUE FROM LIST
+
+      HOW TO ADD FROM MAP TO QUEUE?
+      QUEUE.ADD(MAP.VALUES())
+      IF NOT MATCHING THEN, ITERATE OVER MAP
+      */
 
     void MiceHole(int[] mice, int[] holes){
         Arrays.sort(mice);
@@ -231,11 +246,170 @@ class Greedy{
     }
 
     // https://leetcode.com/problems/partition-labels/
+    // public List<Integer> partitionLabels(String S) {
+        //trick is to use hashmap and hint: contiguous so shrink
+        
+    // }
     // https://leetcode.com/problems/maximum-performance-of-a-team/
     // https://leetcode.com/problems/queue-reconstruction-by-height/
+    class People{
+        int h; int k;
+        People(int height, int num){
+            this.h = height;
+            this.k = num;
+        }
+    }
+    public int[][] reconstructQueue(int[][] people) {
+        int n = people.length;
+        ArrayList<People> list = new ArrayList<People>();
+        
+
+        for(int i = 0; i<n; i++){
+            list.add(new People(people[i][0], people[i][1]));
+        }
+        Collections.sort(list, (x, y)-> y.h-x.h);
+        
+        for(int i =1; i<n; i++){
+            People curr = list.remove(i);
+            list.add(curr.k, curr);
+        }
+        int i=0; 
+        for(People p :list) {
+            people[i][0] = p.h;
+            people[i][1] = p.k;
+            i++;
+        }
+
+        for(People p:list) System.out.println(p.h+" "+p.k);
+        utilCustom.Utility.printMatrix(people);
+        return people;
+        // return list.toArray();
+    }
     // https://leetcode.com/problems/largest-values-from-labels/
     // https://leetcode.com/problems/candy/
-    // https://leetcode.com/problems/find-the-minimum-number-of-fibonacci-numbers-whose-sum-is-k/
+
+    /**use map for memoization of fibonacci series
+     * add to heap
+     * greedily subtract the max from k,
+     * if top is greater than k remove
+     * else subtract from k
+     * ALWAYS ADD CHECK FOR HEAP!=0
+     * 
+     * 
+     * had to add 45 as 10^7 was limit(saw in soln)
+     */
+    // https://leetcode.com/problems/find-the-minimum-number-of-
+    // fibonacci-numbers-whose-sum-is-k/(truly greedy approach)
+
+    public int findMinFibonacciNumbers(int k) {
+        PriorityQueue<Integer> heap = new PriorityQueue<>((x,y)->y-x);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(2, 1); map.put(1, 1);
+
+        fib(45, map);
+        heap.addAll(map.values());
+        System.out.println(heap);        
+        // https://stackoverflow.com/questions/5695017/priorityqueue-not-sorting-on-add
+
+        int count =0; int curr =k;
+        System.out.println(heap);
+        while(heap.peek()>k) heap.remove();
+        System.out.println(heap);
+        while(true){
+            if(curr - heap.peek()==0){
+                return count+1;
+            }
+            else if(heap.size()!=0 && curr - heap.peek()>0){
+                curr-=heap.remove();
+                count++;
+            }
+            if(curr==0) return count;
+            else if(heap.peek()>curr) heap.remove();
+        }
+
+        // System.out.println("min fib count "+count);
+        // return count;
+    }
+
+    
+    int fib(int index, HashMap<Integer, Integer> map){
+        if(index <=2 ) return map.get(index);
+        if(map.containsKey(index)) return map.get(index);
+        int c = fib(index-1, map)+fib(index-2, map);
+        map.put(index, c);
+        return c;
+    }
+
+    class Divide{
+        int key, freq;
+        Divide(int k, int f){
+            this.key = k; this.freq =f;
+        }
+    }
+    /** technique :
+     * 1 sort 
+     * 2 add in hashmap
+     * 3 add in pQueue which is sorted in terms of lower key
+     * 4 add to ArrayList(why not map? 
+     *  because in arraylist you can fetch at index, required for 
+     *  putting back to heap)
+     * 
+     * the TRICK is to remove k elements in one go so that we don't get the 
+     * same element again from heap on removal
+     * 
+     * 5 if freq is zero don't put back
+     * 6 final check for consecutive
+     */
+    // https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
+    public boolean isPossibleDivide(int[] nums, int k) {
+        Arrays.sort(nums);
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i:nums) map.put(i, map.getOrDefault(i, 0)+1);
+
+        PriorityQueue<Divide> heap = new PriorityQueue<Divide>((x,y)->x.key-y.key);
+        for(Map.Entry<Integer, Integer> e : map.entrySet()){
+            heap.add(new Divide(e.getKey(), e.getValue()));
+        }
+
+        ArrayList<Divide> list = new ArrayList<Divide>(k);
+
+        while(heap.size()!=0){
+
+            for(int i =0; i<k; i++){
+                if(heap.size()!=0){
+                    Divide curr = heap.remove();
+                    if((i-1)!=0 && (curr.key - list.get(i-1).key)!=1) return false; 
+                    list.add(new Divide(curr.key, curr.freq));
+                }else return false;
+            }
+            
+            for(int i =0; i<list.size(); i++){
+                Divide retrace = list.get(i); 
+                if(retrace.freq>1) {
+                    heap.add(new Divide(retrace.key, retrace.freq -1));
+                }
+            }
+            
+            // checking for consecutive
+            for(int i=0; i<k; i++){
+                if((list.get(i+1).key - list.get(i).key) !=1) return false;
+            }
+
+            list.clear();
+
+        }
+        return true;
+    }
+    // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
+
+    // https://leetcode.com/problems/car-pooling/
+    // https://leetcode.com/problems/construct-target-array-with-multiple-sums/
+
+    /**Similar compare prev end and next start
+     * https://leetcode.com/problems/merge-intervals/discuss/21222/A-simple-Java-solution
+    */
+
 
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();
@@ -249,6 +423,11 @@ class Greedy{
 
         // solGreedy.trainPlatform(arrivalTimes, departureTimes);
         int numBottles = 9; int numExchange = 3;
-        solGreedy.numWaterBottles(numBottles, numExchange);
+        // solGreedy.numWaterBottles(numBottles, numExchange);
+
+        // int[][] queue = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
+        // solGreedy.reconstructQueue(queue);
+
+        System.out.println(solGreedy.findMinFibonacciNumbers(513314));
     }
 }

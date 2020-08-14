@@ -194,33 +194,131 @@ public class Heap {
      * 1 add comparator
      * 
      */
-    int[] maxSlidingWindow(int[] nums, int k) {
-        int n = nums.length;
-        int[] res = new int[n - k + 1];
-        int index = 0;
-
-        PriorityQueue<Integer> heap = new PriorityQueue<Integer>(Comparator.reverseOrder());
-
-        heap.add(nums[0]);
-        for (int i = 1; i < k; i++) {
-            heap.add(nums[i]);
-        }
-
-        res[index++] = heap.peek();
-
-        for (int i = k; i < n; i++) {
-            heap.add(nums[i]);
-            heap.remove(nums[i - k]);
-            res[index++] = heap.peek();
-        }
-
-        print1DMatrix(res);
-        return res;
-    }
 
     // SKYLINE
     // FINDING MEDIAN
     // https://www.techiedelight.com/convert-min-heap-to-max-heap-linear-time/
+
+    /**
+     * one optimization can be to keep heap size limited to k
+     * 
+     * USE A CUSTOM CLASS MOSTLY IS REQUIRED
+     * 
+     * one idea was to map freq with an arrayList of strings but how to fetch
+     * previous count? will have to traverse over all freqs to find where string is
+     * residing, remove it and then add to new freq(old freq+1)
+     * 
+     * BEST TO GO FOR SIMPLE HASHMAP AND pQueue
+     * 
+     * wny go for pQueue? hashmap stores in a sequential order so for fetching all k
+     * we have to traverse the whole heap So pQueue.
+     * 
+     * for fetching all the els with freq say 4 we have to remove as many times,
+     * keep a track of last freq and update counter when freq value changes
+     * 
+     * IMP : 
+     * 1 STR1.COMPARETO(STR2)
+     * 2 how to implement a pQueue with 2 comparators 
+     * 3 heap.size() check before removing
+     * 
+     */
+    // https://leetcode.com/problems/top-k-frequent-words/
+
+    class KFreq {
+        int freq;
+        String str;
+
+        KFreq(int f, String s) {
+            this.freq = f;
+            this.str = s;
+        }
+    }
+
+    public ArrayList<String> topKFrequent(String[] words, int k) {
+        int n = words.length;
+        ArrayList<String> res = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+
+        System.out.println('a' - 'b');
+        for (int i = 0; i < n; i++) {
+            map.put(words[i], map.getOrDefault(words[i], 0) + 1);
+        }
+
+        PriorityQueue<KFreq> heap = new PriorityQueue<KFreq>((x, y) -> {
+            if (x.freq == y.freq)
+                return x.str.compareTo(y.str);
+            // y.str.charAt(0) - x.str.charAt(0);
+            return y.freq - x.freq;
+        });
+
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            String s = e.getKey();
+            int freq = e.getValue();
+            heap.add(new KFreq(freq, s));
+        }
+        int counter = 0;
+
+        while (heap.size() != 0 && counter<k) {
+            System.out.println((heap.remove().str));
+            counter++;
+        }
+
+        return res;
+    }
+
+    // IF ALL K DIFF FREQ WORDS HAD TO PRINTED
+
+    /**
+     * ["the", "day", "is", "bun" , bun ", ""sunny", "the", "the", "the", "sunny",
+     * "is", "is"], k = 3 the - 4, day - 1, is - 3, bun - 2, sunny -2 WE HAVE TO
+     * PRINT the-is-bun-sun bun and sun have same freq so both need to be printed
+     * 
+     * 
+     * MAINTAIN A COUNTER AND PREVFREQ != CURRFREQ, INCREMENT COUNTER
+     * 
+     * INITIALIZE PREVFREQ BY POPPING ONCE KFREQ CURR
+     * 
+     * THEN RUN WHILE LOOP
+     */
+    public ArrayList<String> topKFrequentDiff(String[] words, int k) {
+        int n = words.length;
+        ArrayList<String> res = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // System.out.println('a' - 'b'); //prints-1
+        for (int i = 0; i < n; i++) {
+            map.put(words[i], map.getOrDefault(words[i], 0) + 1);
+        }
+
+        PriorityQueue<KFreq> heap = new PriorityQueue<KFreq>((x, y) -> {
+            if (x.freq == y.freq) return x.str.compareTo(y.str);
+            return y.freq - x.freq;
+        });
+
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            String s = e.getKey();
+            int freq = e.getValue();
+            heap.add(new KFreq(freq, s));
+        }
+
+        int counter = 0; int prevFreq = 0;
+        KFreq curr = null;
+        if(heap.size()!=0){
+            curr = heap.remove();
+            prevFreq = curr.freq;
+            res.add(curr.str);
+        }
+
+        while (heap.size() != 0 && counter<k) {
+            curr = heap.remove();
+            res.add(curr.str);
+            if(curr.freq != prevFreq) counter++;
+        }
+
+        System.out.println(res);
+        return res;
+    }
+
     public static void main(String[] args) {
         Heap newHeap = new Heap(17);
 
@@ -258,13 +356,11 @@ public class Heap {
         // newHeap.deleteFromHeap();
 
         // newHeap.printHeap();
+        String[] topk = { "a", "ba", "aaa" };
+        int k = 1;
+        // newHeap.topKFrequent(topk, k);
 
-        int[] nums = 
-        { 1, 3, 1, 2, 0, 5 };
-        // {7, 2, 4};
-        // {1,-1};
-        // {1,3,-1,-3,5,3,6,7};
-        int k = 3;// 2
-        newHeap.maxSlidingWindow(nums, k);
+        newHeap.topKFrequentDiff(topk, k);
+
     }
 }

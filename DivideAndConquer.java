@@ -1,3 +1,5 @@
+import java.util.*;
+
 class DivideAndConquer{
     
     /**TECHNIQUES
@@ -29,7 +31,49 @@ class DivideAndConquer{
             }
         }
     }
+
+
+    /** one optimization can be to keep heap size limited to k */
+    // https://leetcode.com/problems/k-closest-points-to-origin/
+    class Holder{
+        int index; int dist;
+        Holder(int i, int d){
+            this.index = i;
+            this.dist =d;
+        }
+    }
+    
+    public int[][] kClosest(int[][] points, int K) {
+        int n = points.length;
+        
+        PriorityQueue<Holder> heap = 
+            new PriorityQueue<Holder>((x, y)-> x.dist - y.dist);
+        
+        for(int i=0; i<n; i++){
+            int a = points[i][0]; int b = points[i][1];
+            int c = a*a + b*b;
+            heap.add(new Holder(i, c));
+        }
+        
+        int[][] res = new int[K][2];
+        
+        for(int i =0; i<K; i++){
+            Holder curr = heap.remove();
+            res[i][0] = points[curr.index][0];
+            res[i][1] = points[curr.index][1];
+        }
+        
+        return res;
+    }
+
+    
+    
     // https://leetcode.com/problems/maximum-subarray/
+    // https://leetcode.com/problems/search-a-2d-matrix-ii/
+    // https://leetcode.com/problems/different-ways-to-add-parentheses/
+    // https://leetcode.com/problems/count-of-range-sum/
+    // https://leetcode.com/problems/the-skyline-problem/
+    // https://leetcode.com/problems/merge-k-sorted-lists/
 
 
     public static void main(String[] args) {
