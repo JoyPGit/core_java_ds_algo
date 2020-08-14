@@ -72,21 +72,62 @@ public class Utility {
         System.out.println(num);
     }
 
+    void print1DMatrix(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            if (i == arr.length - 1) {
+                System.out.println(arr[i] + ";");
+                System.out.println();
+            } else
+                System.out.print(arr[i] + ", ");
+        }
+    }
+
+    public static void printMatrix(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if (i == arr.length - 1 && j == arr[0].length - 1) {
+                    System.out.println(arr[i][j] + ";");
+                    System.out.println();
+                } else
+                    System.out.print(arr[i][j] + ", ");
+            }
+            System.out.println();
+        }
+    }
+
+    void printMatrixBool(boolean[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                if(i==arr.length-1 && j == arr[0].length-1) {
+                    System.out.println(arr[i][j]+";");
+                    System.out.println();
+                } 
+                else System.out.print(arr[i][j] + ", ");
+            }
+            System.out.println();
+        }
+    }
+
     /**
      * for k smallest or largest, when we use heap techniques : 1 sort the array and
      * return kth index nums[n-k]
      * 
      * https://leetcode.com/problems/k-closest-points-to-origin/discuss/
-     * 367136/Very-Simple-PriorityQueue 2 use a heap of size k and poll when size
-     * exceeds k
+     * 367136/Very-Simple-PriorityQueue 
      * 
-     * 3 use a hashmap and add arraylist as values
-     * https://leetcode.com/problems/k-closest-points-to-origin/discuss/
-     * 695451/java-solution-using-PriorityQueue-(Simple-solution-)
+     * 1 use a custom class to hold index and dist
+     * 2 add class to pQueue
+     * 3 iterate for k times and add elemnst to res array
      * 
-     * HashMap<Integer,ArrayList<int[]>> map= new HashMap(); if(map.containsKey(d)){
-     * ArrayList<int[]> l = map.get(d); l.add(arr); map.put(d,l); } else{
-     * ArrayList<int[]> l = new ArrayList(); l.add(arr); map.put(d,l); }
+     * for(int i =0; i<K; i++){
+            Holder curr = heap.remove();
+            res[i][0] = points[curr.index][0];
+            res[i][1] = points[curr.index][1];
+        }
+     * 
+     * index holds the index of the closest el
+     * so add values by mapping directly mapping to index of 
+     * original array
      */
 
     // USING XOR
@@ -106,6 +147,35 @@ public class Utility {
         Arrays.sort(c); 
     */
 
+    /**
+     * ARRAYLIST SORT
+     *  for(int i = 0; i<n; i++){
+            list.add(new People(people[i][0], people[i][1]));
+        }
+        Collections.sort(list, (x, y)-> y.h-x.h);
+     */
+    
+
+    //HEAP 
+    // https://stackoverflow.com/questions/5695017/priorityqueue-not-sorting-on-add 
+    // heap.addAll(map.values());
+
+
+    // https://leetcode.com/problems/merge-k-sorted-lists/
+
+
+    /**PQUEUE WITH 2 COMPARATORS 
+     * 
+     *  PriorityQueue<KFreq> heap = new PriorityQueue<KFreq>((x, y) -> {
+            if (x.freq == y.freq)
+                return x.str.compareTo(y.str);
+            // y.str.charAt(0) - x.str.charAt(0);
+            return y.freq - x.freq;
+        });
+
+        IF 2 STRS HAVE SAME FREQ, SMALLER IS INSERTED FIRST
+        A BEFORE AA
+    */
     public static void main(String[] args) {
         Utility utility = new Utility();
         // utility.sortString("original");
