@@ -148,11 +148,29 @@ public class Utility {
     */
 
     /**
+     * ARRAYLIST
+     * 
+     * List<Integer> res = (List<Integer>) new ArrayList<Integer>();
+     * add a cast (List<Integer>), it works
+     * 
      * ARRAYLIST SORT
      *  for(int i = 0; i<n; i++){
             list.add(new People(people[i][0], people[i][1]));
         }
         Collections.sort(list, (x, y)-> y.h-x.h);
+     *
+     * https://leetcode.com/problems/merge-intervals/
+     * 
+     * ArrayList<int[]> result = new ArrayList<>();
+     * int[] prevInterval = intervals[0];
+     * result.add(prevInterval);
+     * printListArray(result);
+     * return result.toArray(new int[result.size()][]);
+     * 
+     * 
+     * void printListArray(ArrayList<int[]> list){
+     *  for(int[]i : list) System.out.print("["+i[0]+","+i[1]+"], ");
+     * }
      */
     
 
@@ -176,6 +194,8 @@ public class Utility {
         IF 2 STRS HAVE SAME FREQ, SMALLER IS INSERTED FIRST
         A BEFORE AA
     */
+
+    
     public static void main(String[] args) {
         Utility utility = new Utility();
         // utility.sortString("original");

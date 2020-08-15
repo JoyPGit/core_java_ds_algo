@@ -4,6 +4,20 @@ import utilCustom.*;
 
 class Greedy{
 
+    void printList(ArrayList<Integer> list){
+        for(int i : list){
+            System.out.println(list.get(i));
+        }
+    }
+    void printListArray(ArrayList<int[]> list){
+        // for(int i =0; i<list.size(); i++){
+        //     System.out.print("["+list.get(i)[0]+","+list.get(i)[1]+"], ");
+        // }
+        for(int[]i : list){
+            System.out.print("["+i[0]+","+i[1]+"], ");
+        }
+    }
+
     /**IMP
      * 1 PAIRS DIV BY K
      * 2 ORGANIZE STRING
@@ -211,7 +225,7 @@ class Greedy{
      *    ONLY A-> THEN WE ADD +1(TEMP SIZE)
      * 
      */
-    public int leastInterval(char[] tasks, int k) {
+    public int schdeuleTasks(char[] tasks, int k) {
         HashMap<Character, Integer> map = new HashMap<>();
         int n = tasks.length; 
         // for(int i=0; i< n; i++){
@@ -246,11 +260,54 @@ class Greedy{
     }
 
     // https://leetcode.com/problems/partition-labels/
+    public List<Integer> partitionLabels(String S) {
+        //trick is to use hashmap and hint: contiguous so shrink
+        HashMap<Character, Integer> map = new HashMap<>();
+        char[] ch = S.toCharArray(); 
+        int group = 0;
+
+        for(int i=0; i<ch.length; i++){
+            if(map.containsKey(ch[i])){
+                group = map.get(ch[i]);
+                shrinkGroup(map, ch, ch[i], i-1, group);
+            }else map.put(ch[i], ++group);
+        }
+
+        ArrayList<Integer> res = new ArrayList<>();
+
+        System.out.println(map);
+        int currBucket = map.get(S.charAt(0)); int currStart = 0;
+        for(int i = 1; i<ch.length; i++){
+         
+
+            int bucket = map.get(ch[i]);
+            if(bucket != currBucket){
+                res.add(i-currStart);
+                currStart = i;
+                currBucket = bucket;
+            }
+            if(i == ch.length-1){
+                res.add(i- currStart+1);
+            }
+        }
+        System.out.println(res);
+        return (List<Integer>)res;    
+    }
+
+    void shrinkGroup(HashMap<Character, Integer> map, char[] ch, char c, 
+        int index, int currGroup){
+        while(ch[index]!=c){
+            map.put(ch[index], currGroup);
+            index--;
+        }
+    }
     // public List<Integer> partitionLabels(String S) {
         //trick is to use hashmap and hint: contiguous so shrink
         
     // }
     // https://leetcode.com/problems/maximum-performance-of-a-team/
+
+
     // https://leetcode.com/problems/queue-reconstruction-by-height/
     class People{
         int h; int k;
@@ -409,7 +466,55 @@ class Greedy{
     /**Similar compare prev end and next start
      * https://leetcode.com/problems/merge-intervals/discuss/21222/A-simple-Java-solution
     */
+    // https://leetcode.com/problems/merge-intervals/
+    /** 
+     * Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+     * Output: [[1,6],[8,10],[15,18]]
+     * 
+     * POINTS:
+     * 1 Arrays.sort()
+     * 2 ARRAYLIST OF int[]
+     * 3 prevInterval = intervals[0] prevInterval holds a reference to the intervals[0]
+     * so any time it is changed the entry in the list changes, until prevInterval is
+     * updated to point ot something else 
+     * 
+     * 4 prevInterval is added to list and its ref maintained
+     * we iterate over the list and if current[0]<pev[1], then we update 
+     * prev[1] to max of prev[1], current[1], 
+     * for cases like [1,8] and [2,4], prev must be [1,8]
+     * else update reference and add to list
+     * 
+     * 5 list.toArrays(new int[list.size()][]);
+     */
 
+    public int[][] mergeIntervals(int[][] intervals) {
+		if (intervals.length <= 1) return intervals;
+
+		// Sort by smaller starting point
+        // Arrays.sort(intervals, (x, y) -> Integer.compare(x[0], y[0]));
+        Arrays.sort(intervals, (x, y) -> x[0] - y[0]);
+
+        ArrayList<int[]> result = new ArrayList<>();
+        
+        int[] prevInterval = intervals[0];
+        
+        result.add(prevInterval);
+
+        for (int[] interval : intervals) {
+			if (interval[0] <= prevInterval[1]){
+                // Overlapping intervals, update the end if needed
+                prevInterval[1] = Math.max(prevInterval[1], interval[1]);
+            } 
+            else {                           
+                // Disjoint intervals, add the new interval to the list
+				prevInterval = interval;
+				result.add(prevInterval);
+            }
+        }
+        printListArray(result);
+		return result.toArray(new int[result.size()][]);
+    }
+    // https://leetcode.com/problems/insert-interval/
 
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();
@@ -428,6 +533,13 @@ class Greedy{
         // int[][] queue = {{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
         // solGreedy.reconstructQueue(queue);
 
-        System.out.println(solGreedy.findMinFibonacciNumbers(513314));
+        // System.out.println(solGreedy.findMinFibonacciNumbers(513314));
+
+        int[][] intervals = new int[][] {{1,3},{2,6},{8,10},{15,18}};
+        // solGreedy.mergeIntervals(intervals);
+
+        String parLabel = "ababcbacadefegdehijhklij";
+        // "eaaaabaaec";
+        solGreedy.partitionLabels(parLabel);
     }
 }

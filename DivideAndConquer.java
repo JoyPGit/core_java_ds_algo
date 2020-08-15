@@ -2,6 +2,30 @@ import java.util.*;
 
 class DivideAndConquer{
     
+    void printList(ArrayList<Integer> list){
+        for(int i : list){
+            System.out.println(list.get(i));
+        }
+    }
+    void printListArray(ArrayList<int[]> list){
+        for(int i =0; i<list.size(); i++){
+            System.out.print("["+list.get(i)[0]+","+list.get(i)[1]+"], ");
+        }
+    }
+
+    int binarySearch(int[] arr, int low, int high, int key) {
+        if (low >= 0 && high < arr.length) {
+            int mid = (low + high) / 2;
+            if (arr[mid] == key)
+                return mid;
+            if (arr[mid] < key)
+                binarySearch(arr, mid + 1, high, key);
+            if (arr[mid] > key)
+                binarySearch(arr, low, mid, key);
+        }
+        return -1;
+    }
+    
     /**TECHNIQUES
      * 1 DIVIDE AND CONQUER MOSTLY USES HEAPS
      * 2 OR ELSE SOME SORT OF SORTING, BE IT ARRAY OR HEAP
@@ -32,41 +56,6 @@ class DivideAndConquer{
         }
     }
 
-
-    /** one optimization can be to keep heap size limited to k */
-    // https://leetcode.com/problems/k-closest-points-to-origin/
-    class Holder{
-        int index; int dist;
-        Holder(int i, int d){
-            this.index = i;
-            this.dist =d;
-        }
-    }
-    
-    public int[][] kClosest(int[][] points, int K) {
-        int n = points.length;
-        
-        PriorityQueue<Holder> heap = 
-            new PriorityQueue<Holder>((x, y)-> x.dist - y.dist);
-        
-        for(int i=0; i<n; i++){
-            int a = points[i][0]; int b = points[i][1];
-            int c = a*a + b*b;
-            heap.add(new Holder(i, c));
-        }
-        
-        int[][] res = new int[K][2];
-        
-        for(int i =0; i<K; i++){
-            Holder curr = heap.remove();
-            res[i][0] = points[curr.index][0];
-            res[i][1] = points[curr.index][1];
-        }
-        
-        return res;
-    }
-
-    
     
     // https://leetcode.com/problems/maximum-subarray/
     // https://leetcode.com/problems/search-a-2d-matrix-ii/
@@ -74,11 +63,16 @@ class DivideAndConquer{
     // https://leetcode.com/problems/count-of-range-sum/
     // https://leetcode.com/problems/the-skyline-problem/
     // https://leetcode.com/problems/merge-k-sorted-lists/
+    // https://leetcode.com/problems/count-of-smaller-numbers-after-self/
 
+    
+
+    // https://www.geeksforgeeks.org/find-the-row-with-maximum-number-1s/
 
     public static void main(String[] args) {
         DivideAndConquer soluDivideAndConquer = new DivideAndConquer();
         int[] arr = new int[]{1, 1, 1, 2, 3, 3, 5, 5, 8, 8, 8, 9, 9, 10};
-        soluDivideAndConquer.findCountSortedInRange(arr);
+        // soluDivideAndConquer.findCountSortedInRange(arr);
+        
     }
 }
