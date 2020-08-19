@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 public class StackPractice {
     
     void print1DMatrix(int[] arr) {
@@ -14,7 +15,7 @@ public class StackPractice {
     /** POINTS
      * 1 FOR REMOVING DUPLICATES USE STACK
      * 2 NEXT GREATER EL (DAILY TEMP - STORE INDEX)
-     * 3 LARGEST RECT IN HIISTOGRAM
+     * 3 LARGEST RECT IN HISTOGRAM
      * 4 TREE TRAVERSAL ITERATIVE
      * 5 EVALUATE POLISH(REVERSE) NOTATION 
      * 6 REMOVE K DIGITS
@@ -365,7 +366,71 @@ public class StackPractice {
         
         System.out.println(sb.toString());
         return sb.toString();
+    }
+
+    // https://leetcode.com/problems/reorganize-string/
+    public String decodeString(String s) {
+        int n = s.length();
+        if(n==1) return s;
         
+        Deque<Integer> num = new LinkedList<>();
+        Deque<Character> letter = new LinkedList<>();
+        
+        String res= "";
+        
+        for(int i =0; i<n; i++){
+            if(Character.isDigit(s.charAt(i))){
+                int count = check(s, num, i);
+                if(count>1){
+                    while(count-->0)i++;
+                }
+                // num.addLast(Integer.parseInt(String.valueOf(s.charAt(i))));
+            }
+            else if(s.charAt(i) == '['){
+                letter.addLast(s.charAt(i));
+            }
+            else if(s.charAt(i) == ']'){
+                process(letter, num);
+            }
+            else if(Character.isLetter(s.charAt(i))){
+                letter.addLast(s.charAt(i));
+            }
+        }
+
+        // for(int i =0; i<=letter.size(); i++){
+        while(letter.size()!=0){
+            res+=letter.removeFirst();
+        }
+
+        System.out.println("final "+res);
+        return res;
+    }
+
+    int check(String s, Deque<Integer> num, int i){
+        String number = ""; int c = 0;
+        int index = i;
+        while(s.charAt(index)!='[') {
+            number+=s.charAt(index); index++; c++;
+        }
+        System.out.println("number "+number);
+        System.out.println("count "+c);
+        num.addLast(Integer.parseInt(number));
+        return c;
+    }
+    void process(Deque<Character> letter, Deque<Integer> number){
+        String res = "";
+        while(letter.size()!=0 && letter.peekLast()!='['){
+            res = letter.removeLast()+ res;
+        }
+        if(letter.size()!=0)letter.removeLast();
+        int n = number.removeLast();
+        System.out.println("num "+n);
+        for(int i =0; i<n; i++){
+            for(char s : res.toCharArray()){
+                letter.addLast(s);
+            }
+        }
+        System.out.println("letter "+letter);
     }
     public static void main(String[] args) {
         StackPractice stack = new StackPractice();
@@ -398,7 +463,10 @@ public class StackPractice {
         // stack.asteroidCollision(asteroids);
 
         String bracketReverse = "(ed(et(oc))el)";//co octe leetcode 
-        stack.reverseParentheses(bracketReverse);
+        // stack.reverseParentheses(bracketReverse);
+
+        String decode = "100[leetcode]";// "3[a2[c]]";//"3[a]2[bc]";
+        stack.decodeString(decode);
     }
 
 }

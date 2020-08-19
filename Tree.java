@@ -1,8 +1,4 @@
-
-// import java.util.Queue;
-// import java.util.Stack;
 import java.util.*;
-import java.util.Map.Entry;
 
 class TreeNode {
     int key; int val;
@@ -58,6 +54,140 @@ public class Tree {
             else System.out.print(list.get(i)+"->");
         }
     }
+    
+    /** POINTS : 
+     * 1 USE ONE OF TWO DISTINCT FUNC DEFINITIONS
+     * PREORDER WITH TAIL RECURSION 
+     * IS-SAME-TREE
+     * VALID-BST
+     * 
+     * public boolean isValidBST(TreeNode root) {
+        return bstHelper(root, Long.MAX_VALUE, Long.MIN_VALUE);        
+    }
+    
+     * boolean bstHelper(TreeNode root, long max, long min){
+        if(root == null) return true;
+        if(!(max > root.val && root.val > min)) return false;
+        return bstHelper(root.left, root.val, min) && bstHelper(root.right, max, root.val);
+    }
+
+     * return a helper func
+     * in the helper func add a check for root == null
+     * and not for root.left or root.right individually
+     * return left and right
+     * 
+     *
+     * 
+     * --------------------------------------------------------------------
+     * 2 OR USE POSTORDER AS IN MAX SIZE BST
+     *  
+     * SIMILAR TO HEIGHT OF TREE
+     * 
+     * function h(root){
+     *      if(root == null) return 0;
+     *      int left = h(left);
+     *      int right = h(right);
+     *      return max(left, right)+1;
+     * }
+     * 
+     * --------------------------------------------------------------------
+     * 3 USE ROOT.LEFT = F() AND ROOT.RIGHT = F()
+     * THIS CAN BE USED WHEN BUILDING A TREE OR DELETING SOME NODES
+     * BINARY TREE PRUNING
+     * 
+     * https://leetcode.com/problems/binary-tree-pruning/
+        * public TreeNode pruneTree(TreeNode root) {
+            if(root == null) return null;
+            root.left = pruneTree(root.left);
+            root.right = pruneTree(root.right);
+            if(root.left== null && root.right ==null && root.val ==0) return null;
+            return root;
+         }
+     */ 
+    
+
+     /**  
+      * QUESTIONS
+      1 BST (3 POINTS : 
+      1 LEFT.MAX<ROOT<RIGHT.MIN 
+      2 INORDER IS SORTED ARRAY)
+      3 POSTORDER TAKES O(N) AND PREORDER 0(N^2))
+      
+      1.1 VALIDATE BST
+      1.2 MAX SIZE BST
+      1.3 MAX SUM BST
+      1.4 DELETE IN BST
+      1.5 BALANCE A BST (SORTED ARRAY INRODER)
+      1.6 FIX A BST
+      1.7 BST TO CDLL
+      1.8 SORTED DLL TO BALANCED BST
+      1.9 FLOOR AND CEILING
+      1.10 ALL IN RANGE
+
+      2 BINARY TREES
+      
+      2.1 TRAVERSAL
+      2.1.1 INORDER, PREORDER, POSTORDER
+      2.1.2 ITERATIVE TRAVERSAL
+      
+      2.1.3 LEVEL ORDER
+      2.1.3.1 QUEUE
+      2.1.3.2 USING RECURSION
+      2.1.3.3 FINDING ANAGRAMS
+      2.1.3.4 NEXT POINTER (INSERTING NULL TO DEMARCATE LEVELS)
+      2.1.3.5 MAX LEVEL SUM
+      
+      2.1.4 SPIRAL TRAVERSAL
+      2.1.5 BOUNDARY TRAVERSAL
+      2.1.6 CREATE TREE FROM TRAVERSAL  
+
+
+      2.2 VIEWS
+      2.2.1 TOP, BOTTOM, LEFT, RIGHT
+
+      2.3 HASHMAP
+      2.3.1 NODES AT DIST K
+
+      2.4
+
+      3 HEIGHT
+      3.1 HEIGHT
+      3.2 DIA
+      3.3 NODES AT DIA END
+      3.4 LCA (SIMILAR CONCEPT OF LEFT AND RIGHT SUBTREES)
+      3.5 IS SUBTREE
+      3.6 IS SAME TREE
+      3.7 MIN DEPTH
+
+      4 SUBTREES
+      4.1 IS SUBTREE 
+      4.2 IS SAME TREE (PREORDER WITH TAIL REC)
+
+      5 LEAF NODES
+      5.1 CHECK LEAF NODES
+      5.2 REMOVE LEAF NODES
+      5.3 CHECK IF COMPLETE BINARY TREE
+      5.4 PRUNING
+      5.5 HALF NDOES
+
+
+      6 DP QUES
+      https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
+
+
+      7 MISC
+      FOREST BURNING, MIN TIME TO INFORM EMP
+      COUSINS IN BINARY TREE, FLATTEN TO LINKED LIST
+      ROOT TO LEAF PATHS, NEXT SIBLING,
+      ISOMORPHISM, MIRROR, MAX SUM PATH BETWEEN ANY TWO NODES
+      SERIALIZE DESERIALIZE
+
+      8 PREORDER WITH TAIL RECURSION
+      IS-SAME, IS-VALID-BST
+        
+      
+      */
+    
     // now add functions
     void Inorder(TreeNode x) {
         if (x == null) {
@@ -281,24 +411,9 @@ public class Tree {
 
     ///////////////////////////////////////////////////////////////////////////////////
     // find height of tree
-    int height(TreeNode node) {
-        if (root == null) {
-            return 0;
-        } else {
-            int lheight = 0;
-            int rheight = 0;
-            if (node.left != null) {
-                lheight = height(node.left);
-            }
-            if (node.right != null) {
-                rheight = height(node.right);
-            }
-
-            if (lheight > rheight) {
-                return lheight + 1;
-            } else
-                return rheight + 1;
-        }
+    int height(TreeNode root) {
+        if (root == null) return 0;
+        return Math.max(height(root.left), height(root.right))+1;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -356,6 +471,8 @@ public class Tree {
             }
         }
     }
+
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -581,18 +698,6 @@ public class Tree {
     // }
     // }
 
-    int heightnew(TreeNode node) {
-        int lh = -1;
-        int rh = -1;
-        if (node.left != null) {
-            lh = heightnew(node.left);
-        }
-        if (node.right != null) {
-            rh = heightnew(node.right);
-        }
-
-        return 1 + max(lh, rh);
-    }
 
     int max(int a, int b) {
         int maximum = a >= b ? a : b;
@@ -601,9 +706,9 @@ public class Tree {
     }
 
     void diameter(TreeNode node) {
-        int dia = heightnew(node.left) + heightnew(node.right);
-        System.out.println("heightnew(node.left) " + heightnew(node.left));
-        System.out.println("heightnew(node.right) " + heightnew(node.right));
+        int dia = height(node.left) + height(node.right);
+        System.out.println("heightnew(node.left) " + height(node.left));
+        System.out.println("heightnew(node.right) " + height(node.right));
         System.out.println("dia " + dia);
     }
 
@@ -656,15 +761,6 @@ public class Tree {
         return largestNode;
     }
 
-    int heightofTree(TreeNode node) {
-        int lehi = 0;
-        int rehi = 0;
-        if (node.left != null)
-            lehi = 1 + heightofTree(node.left);
-        if (node.right != null)
-            rehi = 1 + heightofTree(node.right);
-        return 0;
-    }
 
     void levelLast(TreeNode node) {
         java.util.Stack<TreeNode> stackLevelLast = new java.util.Stack<TreeNode>();
@@ -1194,102 +1290,19 @@ public class Tree {
     //     }
     // }
 
-    ///////////////////////////// 5th feb
+    ///////////////////////////// 5th feb LCA
     /**
      * 2 problems one index++ second check the index before assigning
      */
-    void lowestCommonAncestor(TreeNode root, TreeNode node1, TreeNode node2) {
-        int[] path1 = new int[10];
-        int[] path2 = new int[10];
-        int[] resultPath1 = findPath(path1, root, node1.key, 0);
-        for (int i = 0; i < resultPath1.length; i++) {
-            System.out.println("resultPath1 " + resultPath1[i]);
-        }
-
-        int[] resultPath2 = findPath(path2, root, node2.key, 0);
-        for (int i = 0; i < resultPath2.length; i++) {
-            System.out.println("resultPath2 " + resultPath2[i]);
-        }
-        System.out.println("lca is " + findCommon(path1, path2));
-    }
-
-    int[] findPath(int[] path, TreeNode root, int key, int index) {
-        System.out.println("key " + key);
-        TreeNode node = root;
-        if (path[index] == key)
-            return path;
-        else {
-            path[index] = node.key;
-            index++;// ERROR HERE---CHECK
-            if (node.left != null) {
-                findPath(path, node.left, key, index);
-            }
-            if (node.right != null) {
-                findPath(path, node.right, key, index);
-            }
-        }
-        return path;
-    }
-
-    int findCommon(int[] arr1, int[] arr2) {
-        int maxLength = 0;
-        int[] minArray = null;
-        int[] maxArray = null;
-        int common = -1;
-        int common1 = -1;
-        if (arr1.length < arr2.length) {
-            maxArray = arr2;
-            minArray = arr1;
-        } else {
-            maxArray = arr1;
-            minArray = arr2;
-        }
-
-        // for(int i =0; i<maxArray.length; i++){
-        // common1 = binarySearch(minArray, 0, minArray.length-1, maxArray[i]);
-        // if(common < common1 ) common = common1;
-        // }
-
-        for (int i = 0; i < arr1.length; i++) {
-            for (int j = 0; j < arr2.length; j++) {
-                if (arr1[i] == arr2[j] && arr1[i] != 0)
-                    common = j;
-            }
-        }
-        return arr2[common];
-    }
-
-    int binarySearch(int[] arr, int low, int high, int key) {
-        if (low >= 0 && high < arr.length) {
-            int mid = (low + high) / 2;
-            if (arr[mid] == key)
-                return mid;
-            if (arr[mid] < key)
-                binarySearch(arr, mid + 1, high, key);
-            if (arr[mid] > key)
-                binarySearch(arr, low, mid, key);
-        }
-        return -1;
-    }
-
+    
     int count = 0;
     int heightCorona = 0;
     boolean stop = false;
 
     void findCompleteNodes(TreeNode root) {
-        this.heightCorona = heightCorona(root);
+        this.heightCorona = height(root);
         findCompleteNodesHelper(root, 1);
         System.out.println("the count is " + this.count);
-    }
-
-    int heightCorona(TreeNode node) {
-        int lh = 0;
-        int rh = 0;
-        if (node.left != null)
-            lh = heightCorona(node.left);
-        if (node.right != null)
-            rh = heightCorona(node.right);
-        return 1 + Math.max(lh, rh);
     }
 
     void findCompleteNodesHelper(TreeNode root, int level) {
@@ -1377,7 +1390,7 @@ public class Tree {
     }
 
     void spiralTraversal(TreeNode node) {
-        int height = height21Apr(node);
+        int height = height(node);
         boolean ltor = false;
         // System.out.println(height);
         for (int i = 0; i < height; i++) {
@@ -1390,17 +1403,6 @@ public class Tree {
         }
 
     }
-
-    int height21Apr(TreeNode node) {
-        int lh = 0;
-        int rh = 0;
-        if (node.left != null)
-            lh = height21Apr(node.left);
-        if (node.right != null)
-            rh = height21Apr(node.right);
-        return Math.max(lh, rh) + 1;
-    }
-
     void spiralHelper(TreeNode node, int count, boolean direction) {
         if (count == 0)
             System.out.print(node.key + ", ");
@@ -1495,7 +1497,17 @@ public class Tree {
      * 
      */
 
-    public ArrayList<ArrayList<Integer>> hasPathSum(TreeNode root, int sum) {
+     // https://leetcode.com/problems/path-sum/
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null) return false;
+        if(root.left == null && root.right== null && sum-root.val ==0) return true;
+
+        return hasPathSum(root.left, sum- root.val) || hasPathSum(root.right, sum- root.val);
+    }
+
+
+
+    public ArrayList<ArrayList<Integer>> hasPathSumList(TreeNode root, int sum) {
         ArrayList<ArrayList<Integer>> paths = new ArrayList<>();
 
         hasPathSumHelper(root, sum, new ArrayList<Integer>(), paths);
@@ -1664,10 +1676,10 @@ public class Tree {
         diagonalPrintUtil(root, 0, diagonalPrint, k);
 
         System.out.println("Diagonal Traversal of Binary Tree");
-        for (Entry<Integer, Vector<Integer>> entry : diagonalPrint.entrySet()) {
-            System.out.println(entry.getValue());
+        // for (Entry<Integer, Vector<Integer>> entry : diagonalPrint.entrySet()) {
+            // System.out.println(entry.getValue());
         }
-    }
+// }
 
     void findCousins(TreeNode root, TreeNode node) {
         int level = findLevel(root, node, 0);
@@ -2150,7 +2162,7 @@ public class Tree {
     }
 
     void spiralPrint(TreeNode root, int level){
-        int h = height25jul(root);
+        int h = height(root);
         Deque<TreeNode> list = new LinkedList<>();
         list.add(root); 
         boolean ltor = true;
@@ -2158,12 +2170,6 @@ public class Tree {
         spiralPrintHelper(root, list, level, ltor);
     }
 
-    int height25jul (TreeNode root){
-        int left = 0; int right =0;
-        if(root.left!=null) left = height25jul(root.left);
-        if(root.right!=null) left = height25jul(root.right);
-        return Math.max(left, right)+1;
-    }
 
     void spiralPrintHelper(TreeNode node, Deque<TreeNode> list, int level, boolean ltor){
         while(list.size()!=0){
@@ -2236,6 +2242,93 @@ public class Tree {
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    
+
+    // VIEWS
+    // https://leetcode.com/problems/binary-tree-right-side-view/
+    /** WHAT IF THE LEFT SUBTREE IS LONGER?
+     * KEEP TRACK OF LENGTH TOO
+     */
+
+    //////////////TRAVERSALS
+    // https://leetcode.com/problems/binary-tree-inorder-traversal/
+    /** POINTS :
+     * 1 TWO WHILE LOOPS
+     * 2 STACK IS NOT EMPTY AND ROOT !=NULL
+     * 3 WHILE ROOT!=NULL, PUSH, ROOT = ROOT.LEFT
+     * 4 WHEN NULL, POP, ADD TO RESULT AND ROOT = ROOT.RIGHT
+    */
+    public List<Integer> inorderTraversal(TreeNode root) {
+        Deque<TreeNode> q = new LinkedList<>();
+        ArrayList<Integer> list = new ArrayList<>();
+        if(root == null) return list;
+        
+        while(q.size()!=0 || root!=null){
+            while(root!=null){
+                q.addLast(root);
+                root = root.left;
+            }
+            root = q.removeLast();
+            list.add(root.val);
+            root = root.right;
+            
+        }
+        return list;
+        
+    }
+    // https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+    /** used a Queue, added null for demarcation
+     * 1 add null whenever curr == null and q size is >1 and removeFirst
+     * if size is 1 (only null iis present)
+     */
+    class RightNode {
+        public int val;
+        public RightNode left;
+        public RightNode right;
+        public RightNode next;
+    
+        public RightNode() {}
+        
+        public RightNode(int _val) {
+            val = _val;
+        }
+    
+        public RightNode(int _val, RightNode _left, RightNode _right, RightNode _next) {
+            val = _val;
+            left = _left;
+            right = _right;
+            next = _next;
+        }
+    };
+    
+    public RightNode connectRight(RightNode root) {
+        if(root == null) return null;
+        Deque<RightNode> q = new LinkedList<>();
+        root.next = null;
+        q.addLast(root); q.addLast(null);
+        while(q.size()!=0){
+            RightNode curr = q.removeFirst();
+            if(curr == null && q.size() >1 ) q.addLast(null);
+            else if(curr == null && q.size() ==1 ) q.removeFirst();
+            else if(curr!=null){
+                curr.next = q.getFirst();
+                if(curr.left!=null) q.addLast(curr.left);
+                if(curr.right!=null) q.addLast(curr.right);    
+            }
+        }
+        
+        return root;
+        
+    }
+
+    // https://leetcode.com/problems/binary-tree-inorder-traversal/
+    // https://leetcode.com/problems/balance-a-binary-search-tree/
+
+
     // https://leetcode.com/problems/most-frequent-subtree-sum/
     int sumFrequent;
     HashMap<Integer, Integer> listFrequent = new HashMap<>();
@@ -2243,7 +2336,7 @@ public class Tree {
     public int[] findFrequentTreeSum(TreeNode root) {
 
         postOrder(root);
-        int max = 0; int countMax =0;
+        int max = 0;
         for (Integer value : listFrequent.values()) {
             // ...
             if(max<value) max = value;
@@ -2304,6 +2397,36 @@ public class Tree {
         else return false;
     }
 
+    // https://leetcode.com/problems/same-tree/
+    // SIMPLE PREORDER FOR BOTH SIMULTANEOUSLY
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if(p == null && q == null) return true;
+        if(p == null || q == null) return false;
+        if(p.val == q.val) return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+        return false;
+    }
+
+    // https://leetcode.com/problems/minimum-distance-between-bst-nodes/
+    int min = Integer.MAX_VALUE; 
+    ArrayList<Integer> listBst = new ArrayList<>();
+    
+    public int minDiffInBST(TreeNode root) {
+        dfsBST(root, listBst);
+        System.out.println(list);
+        for (int i=0; i<list.size()-1; i++){
+            min = Math.min(min, Math.abs(listBst.get(i+1)-listBst.get(i)));
+        }
+        return min;
+    }
+    
+    void dfsBST(TreeNode root, ArrayList<Integer>list){
+        if(root == null) return;
+        dfsBST(root.left, list);
+        list.add(root.val);
+        dfsBST(root.right, list);    
+    }
+    
+
     // https://leetcode.com/problems/validate-binary-search-tree/
     // long maxGlobal = Long.MAX_VALUE; long minGlobal = Long.MIN_VALUE;
     /** doing a postorder traversal, 
@@ -2313,27 +2436,237 @@ public class Tree {
      * 
      * keeping a global var and making it false if BST property
      * is violated and returning it at the end.
+     * POSTORDER TARVERSAL f(left); f(right); statements for root
      * 
+     * 
+     * PREORDER WITH TAIL RECURSION
+     * return f(left) && f(right)
+     * 
+     * THERE ARE 2 WAYS FOR BST
+     * EITHER WE GO BOTTOM UP, FETCH LEFT AND RIGHT AND CHECK
+     * IF ROOT LIES WITHIN RANGE OR 
+     * WE GO TOP DOWN AND ADD RANGES FOR THE CHILD NODES
+     * PREORDER GOING TOP DOWN TAKES O(n^2) time
      * */
-    boolean isBST= true;
     public boolean isValidBST(TreeNode root) {
         // if(root == null) return true;
-        bstHelper(root, Long.MAX_VALUE, Long.MIN_VALUE);        
+        return bstHelper(root, Long.MAX_VALUE, Long.MIN_VALUE);        
+    }
+    
+    boolean bstHelper(TreeNode root, long max, long min){
+        if(root == null) return true;
+        // maxGlobal = max; minGlobal = min;
+        // if(!(maxGlobal > root.val && root.val > minGlobal)) {
+        if(!(max > root.val && root.val > min)) return false;
+        return bstHelper(root.left, root.val, min) && bstHelper(root.right, max, root.val);
+    }
+
+    /** found a way to do validBST in postorder similar to max sum in BST 
+     * have a global var and set it to false if conds don't match
+     * 
+     * IMP : WHENEVER A BST, ALWAYS ENSURE ROOT IS GREATER THAN MAX OF
+     * ALL IN LEFT SUBTREE AND SMALLER THAN MIN IN RIGHT SUBTREE
+     * 
+     * POINTS:
+     * 1 POSTORDER TRAVERSAL TAKES O(N) TIME
+     * 
+     * 2 IF ROOT>LEFT.MAX AND ROOT<RIGHT.MIN
+     * RETURN MAX(ROOT, RIGHT.MAX) AND MIN(LEFT.MIN, ROOT)
+     * ---> COULD HAVE ONLY RETURNED ROOT BUT IT HELPS TO HANDLE CASES
+     * OF NULL ROOT AND WHEN BST CONDN IS VIOLATED
+     * 
+     * 3 CREATE A CUSTOM CLASS TO SEND PROCESSED DATA
+     * IF CONDN IS VIOLATED, RETURN (MAX_VAL, MIN_VAL); OPP OF
+     * WHEN ROOT == NULL
+     * 
+    */
+    class validBST{
+        long max; long min; long sum;
+        validBST(long m1, long m2, long s){
+            this.max = m1; this.min = m2; this.sum =s;
+        }
+    }
+    
+    boolean isBST = true;
+    public boolean isValidBSTPost(TreeNode root) {
+        postBST(root);
         return isBST;
     }
     
-    void bstHelper(TreeNode root, long max, long min){
-        if(root == null) return;
-        bstHelper(root.left, root.val, min);
-        bstHelper(root.right, max, root.val);
-        // maxGlobal = max; minGlobal = min;
-        // if(!(maxGlobal > root.val && root.val > minGlobal)) {
-        if(!(max > root.val && root.val > min)) {
-            isBST = false;
+    public validBST postBST(TreeNode root) {
+            if (root == null) return new validBST(Long.MIN_VALUE, Long.MAX_VALUE, 0);
+            validBST left = postBST(root.left);
+            validBST right = postBST(root.right);
+        
+            if (root.val > left.max && root.val < right.min) {//valid BST
+                validBST res = new validBST(
+                    Math.max(right.max, root.val),//update max
+                    Math.min(left.min, root.val), 0);//update min
+                return res;
+            } else isBST = false;
+            //invalid BST so MAX is sent in place of min
+            return new validBST(Long.MAX_VALUE, Long.MIN_VALUE, 0);
+          
+    }
+
+    // https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/
+    // Learn-one-iterative-inorder-traversal-apply-it-to-multiple-tree-questions-(Java-Solution)
+
+
+    // https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/
+    /** 
+     * PREORDER APPROACH IS NOT EFFICIENT, WORKS ON EVERY NODE TWICE
+     *  TAKES 0(n^2) 
+     *  PROOF - https://www.youtube.com/watch?v=TSEeSXNfl04
+     * 
+     * USE POSTORDER O(n)
+     * SEE VALIDBST ABOVE
+     */
+
+    class maxSum{
+        int max; int min; int sum;
+        maxSum(int m1, int m2, int s){
+            this.max = m1; this.min = m2; this.sum =s;
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+    int max = 0;
+    public int maxSumBST(TreeNode root) {
+        post(root);
+        return max;
+    }
+    public maxSum post(TreeNode root) {
+        if (root == null) return new maxSum(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
+        maxSum left = post(root.left);
+        maxSum right = post(root.right);
+        
+        if (root.val > left.max && root.val < right.min) {//valid BST
+            maxSum res = new maxSum(
+                Math.max(right.max, root.val),//update max
+                Math.min(left.min, root.val),//update min
+                root.val + left.sum + right.sum);
+
+            max = Math.max(max, res.sum);
+            return res;
+        }
+        //not a valid BST, can't let result be part of greater bst, so apply min/max
+        return new maxSum(Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
+    }
+
+    // https://leetcode.com/problems/binary-tree-maximum-path-sum/
+    
+    /** 
+
+    https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+
+    https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/143798/
+    1ms-beat-100-simple-Java-dfs-with(without)-hashmap-including-explanation
+
+     * 1 we do a tarversal till we find target node, once we find we make an entry 
+     * and return 0, for all nodes in the path from root till target, 
+     * an entry is made in hashmap with dist from target
+     * 
+     * 2 left = find; if(left !=-1) map.put(root, left+1)
+     * same for right
+     * if left = -1 and right = -1, return -1; not found 
+     * 
+     * 3 now in dfs, we fetch the dist from map, and 
+     * if found, start dfs from this length
+     * else start with the initial length (map.get(root))
+     * 
+     * 4 how this works once the dist till root is found, say x
+     * the subtree not containing the target is traversed till a depth of
+     * dist - x, as we fetch the length from map
+     * and the subtree containing the target is traversed by fetching the dist at 
+     * each node, so when dist = k, it is added.
+     * 
+     * 7 points to remember
+     * 
+     */
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        ArrayList<Integer> res = new ArrayList<>();
+        HashMap<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
+
+        findK(root, target, map);//1
+       
+        dfsK(root, target, map, k, map.get(root), res);//2
+        return (List<Integer>)res;
+    }
+
+    int findK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map){
+        if(root == null) return -1;//3
+        if(root == target) {
+            map.put(root, 0);//4
+            return 0;
+        }
+        int left = findK(root, target, map);
+        if(left!=-1) {
+            map.put(root, left+1);//5
+            return left+1;
+        }
+        int right = findK(root, target, map);
+        if(right!=-1) {
+            map.put(root, right+1);
+            return right+1;
+        }
+
+        return -1;
+    }
+    
+    void dfsK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map, int k, 
+        int dist, ArrayList<Integer> res){
+        if(root == null) return;
+        if(map.containsKey(root)) dist = map.get(root);//6
+        if(dist == k) res.add(root.val);//7
+        dfsK(root.left, target, map, k, dist+1, res);
+        dfsK(root.right, target, map, k, dist+1, res);
+
+    }
+
+    // https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
+  
+
+    // SIMILAR TO HEIGHT, LEFT, RIGHT AND THEN ROOT
+    // https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null ) return null;
+        if(root == p || root == q) return root;
+        
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        
+        if(left != null && right !=null) return root;
+        else if(left != null)return left;
+        else return right;
+    }
+
+    // https://leetcode.com/problems/balance-a-binary-search-tree/
+    /** basically two pointers are needed which will store the start and end indexes
+     * and use 3rd style of function root.left = f(left) and root.right  = f(right)
+     */
+    public TreeNode balanceBST(TreeNode root) {
+        ArrayList<Integer> list = new ArrayList();
+        dfs(root, list);
+        return build(list, 0, list.size()-1);
+    }
+    
+    void dfs(TreeNode root, ArrayList<Integer> list){
+        if(root == null) return;
+        dfs(root.left, list);
+        list.add(root.val);
+        dfs(root.right, list);
+    }
+    
+    TreeNode build(ArrayList<Integer> list, int start, int end){
+        if(start>end) return null;
+        TreeNode curr = new TreeNode(0) ;
+        int mid = start+(end-start)/2;
+        curr.val = list.get(mid);
+        curr.left = build(list, start, mid-1);
+        curr.right = build(list, mid+1, end);
+        return curr;
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
         tree.root = new TreeNode(4);
@@ -2492,13 +2825,10 @@ public class Tree {
 
         // tree.printHashVertical();
 
-        // System.out.println("height is " + tree.heightnew(tree.root));
         // tree.diameter(tree.root);
 
         // tree.InorderSuccessor(tree.root);
         // tree.InorderSuccessor1(tree.root);
-        // int h = tree.heightofTree(tree.root);
-        // System.out.println(h);
 
         // tree.levelLast(tree.root);
         // tree.levelLastRecursion(tree.root,1);

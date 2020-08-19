@@ -1474,7 +1474,7 @@ public class DP {
     }
 
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
-    
+    // https://leetcode.com/problems/minimum-cost-to-cut-a-stick/
     public static void main(String[] args) {
         DP dp = new DP();
 

@@ -214,6 +214,8 @@ class Graph {
 	// https://leetcode.com/problems/redundant-connection-ii/ BFS CAN BE USED?
 	// https://leetcode.com/problems/critical-connections-in-a-network/
 	// https://leetcode.com/problems/minimum-height-trees/
+	// https://leetcode.com/problems/time-needed-to-inform-all-employees/
+	// https://leetcode.com/problems/rotting-oranges/
 
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
