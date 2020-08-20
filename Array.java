@@ -48,6 +48,50 @@ class Array {
         }
     }
 
+    // https://leetcode.com/problems/three-consecutive-odds/
+    /** 
+     * FOR QUES LIKE THESE WHERE WE HAVE TO CHECK FOR SOME
+     * SERIES SATRTING FROM AN INDEX
+     * USE 2 LOOPS. HERE AS WE HAVE TO LOOK FOR 2 
+     * WE CAN USE NESTED IF TWICE
+     * 
+     * else for values >3
+        for(int i =0; i<n-1; i++){
+            if(arr[i]%2!=0){
+                int j =0;
+                while(j<2){
+                    if((++i)==n || arr[i]%2==0) break;
+                    j++;
+                }
+                if(j==2) return true;                
+            }
+        }
+     * 
+     * 
+     * THE TRICK IS TO INCEREMNT i IN THE INNER LOOP SO THAT 
+     * WE DON'T LOOP AGAIN OVER SAME ELEMENT.
+     * 
+     * 
+     * optimizations: run till n-1
+     * replace nested if with &&
+     * if (arr[i]%2 != 0) && (++i)!= n && arr[i]%2 != 0) &&
+                (++i) != n && arr[i]% 2 != 0)
+                        return true;
+     * 
+     */
+    public boolean threeConsecutiveOdds(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] % 2 != 0) {
+                if ((++i) != n && arr[i] % 2 != 0) {
+                    if ((++i) != n && arr[i] % 2 != 0)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
     void reArrange(int[] arr) {
         // int[] arr = new int[]{1,2,3,4,5,6,7,8};
         int mid = (arr.length / 2) - 1;

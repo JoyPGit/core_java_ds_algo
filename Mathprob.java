@@ -42,4 +42,21 @@ public class Mathprob {
         }
         return true;
     }
+
+    // https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/
+    public List<Integer> numOfBurgers(int tomatoSlices, int cheeseSlices) {
+        float a = 0; float b = 0; 
+        float c= tomatoSlices, d = cheeseSlices;
+        // 4*a+2*(cheeseSlices - a) = tomatoSlices;
+        a = (c/2 - d); b = d - a;
+        
+        ArrayList<Integer> res= new ArrayList<>();
+        if(a!=(int)a || b!=(int)b || (a*b)<0) return res;
+        res.add((int)a); res.add((int)b);
+        return (List<Integer>) res;
+    }
+
+    // https://leetcode.com/problems/water-and-jug-problem/
+    // https://leetcode.com/problems/gas-station/
+
 }

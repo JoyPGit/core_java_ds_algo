@@ -22,6 +22,7 @@ class Greedy{
      * 1 PAIRS DIV BY K
      * 2 ORGANIZE STRING
      * 3 TASK SCHEDULER
+     * 4 MAX PERF OF TEAM
      */
 
      /**
@@ -135,6 +136,24 @@ class Greedy{
 
     // https://leetcode.com/problems/course-schedule-iii/
 
+    // https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/
+    /** soove two linear equations
+     * 1 convert all to float
+     * 2 check for integer a = (int)a 
+     * 3 check for negative (a*b)<0
+     */
+    public List<Integer> numOfBurgers(int tomatoSlices, int cheeseSlices) {
+        float a = 0; float b = 0; 
+        float c= tomatoSlices, d = cheeseSlices;
+        // 4*a+2*(cheeseSlices - a) = tomatoSlices;
+        a = (c/2 - d); b = d - a;
+        
+        ArrayList<Integer> res= new ArrayList<>();
+        if(a!=(int)a || b!=(int)b || (a*b)<0) return res;
+        res.add((int)a); res.add((int)b);
+        return (List<Integer>) res;
+    }
+
     // https://leetcode.com/problems/delete-columns-to-make-sorted/
     /** points:
      * 1 string -> length()
@@ -160,6 +179,35 @@ class Greedy{
             index++;
         }
         return count;
+    }
+
+    // https://leetcode.com/problems/lemonade-change/submissions/
+    /** greedy approach is to remove 10 notes first and then 5 ones
+     * if we see 20.
+     * else remove 5 notes thrice.
+     * return false if we can't make change of 5
+     * maintain 2 counters
+     */
+    public boolean lemonadeChange(int[] bills) {
+        int n = bills.length;
+        
+        int c5 = 0; int c10 =0; 
+        for(int i :bills){
+            if(i==5) c5++;
+            else if(i == 10) {
+                c10++;
+                if(c5>=1) c5--; 
+                else return false;
+            }
+            else {
+                if(c5>=1 && c10>=1){
+                    c5--; c10--;
+                } else if(c5>=3) c5-=3;
+                else return false;
+            }
+            // System.out.println("c5 "+c5 + " c10 "+c10);
+        }
+        return true;
     }
 
     // https://leetcode.com/problems/water-bottles/
@@ -301,12 +349,7 @@ class Greedy{
             index--;
         }
     }
-    // public List<Integer> partitionLabels(String S) {
-        //trick is to use hashmap and hint: contiguous so shrink
-        
-    // }
-    // https://leetcode.com/problems/maximum-performance-of-a-team/
-
+   
 
     // https://leetcode.com/problems/queue-reconstruction-by-height/
     class People{
@@ -354,10 +397,12 @@ class Greedy{
      * 
      * 
      * had to add 45 as 10^7 was limit(saw in soln)
+     * 
+     * while(true) breaks with return count statement
      */
     // https://leetcode.com/problems/find-the-minimum-number-of-
-    // fibonacci-numbers-whose-sum-is-k/(truly greedy approach)
-
+    // fibonacci-numbers-whose-sum-is-k/
+    
     public int findMinFibonacciNumbers(int k) {
         PriorityQueue<Integer> heap = new PriorityQueue<>((x,y)->y-x);
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -383,9 +428,6 @@ class Greedy{
             if(curr==0) return count;
             else if(heap.peek()>curr) heap.remove();
         }
-
-        // System.out.println("min fib count "+count);
-        // return count;
     }
 
     
@@ -514,7 +556,68 @@ class Greedy{
         printListArray(result);
 		return result.toArray(new int[result.size()][]);
     }
+
+    // https://leetcode.com/problems/non-overlapping-intervals/
+
+    
     // https://leetcode.com/problems/insert-interval/
+
+    // https://leetcode.com/problems/maximum-performance-of-a-team/
+    /** 
+     * perf = (sum of speeds)*(min eff of the grp)
+     * 
+     * THE REASON FOR SORTING EFF IN DESC ORDER IS THAT THE CURR EFF WILL
+     * BE THE LOWEST OF ALL PREVIOUS EFFS
+     * 
+     * GREEDY APPROACH, FOR A K SIZED GROUP, REMOVE THE MIN SPEED EL.
+     * 
+     * 
+     * 1 we maintain 2 heaps a min heap and a max heap
+     * 2 we sort eff in desc order in max heap
+     * 3 we keep track of sum of speeds and min eff 
+     * while popping from max heap 
+     * HolderPerf curr = q.remove(); e = curr.eff; sum+=curr.speed; 
+     * 
+     * 4 we add into the min heap
+     * 5 if min heap size>k then we pop and remove the speed from the sum
+     * and calc perf
+     * 
+     */
+    
+    class HolderPerf{
+        int speed; int eff;
+        HolderPerf(int s, int e){
+            this.speed =s; this.eff = e;
+        }
+    }
+    
+    private long MOD = (long)(1e9 + 7);
+        
+    public int maxPerformance(int n, int[] speed, int[] efficiency, int k) {
+        
+        PriorityQueue<HolderPerf> q = new PriorityQueue<>((x,y)->y.eff - x.eff);
+        for(int i =0; i<n; i++){
+            q.add(new HolderPerf(speed[i], efficiency[i]));
+        }
+        
+        PriorityQueue<HolderPerf> res = new PriorityQueue<>((x,y)->x.speed-y.speed);
+        
+        int sum = 0; int e = 0;
+        long max = 0;
+        while (q.size()!=0){
+            HolderPerf curr = q.remove();
+            e = curr.eff;
+            sum+=curr.speed; 
+            res.add(new HolderPerf(curr.speed, curr.eff));
+            
+            if(res.size()>k){
+                HolderPerf rem = res.remove();
+                sum-=rem.speed;
+            }
+            max = Math.max(max, sum*e);
+        }
+        return (int) (max%MOD);
+    }
 
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();

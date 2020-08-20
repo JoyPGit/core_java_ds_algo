@@ -215,6 +215,7 @@ class Graph {
 	// https://leetcode.com/problems/critical-connections-in-a-network/
 	// https://leetcode.com/problems/minimum-height-trees/
 	// https://leetcode.com/problems/time-needed-to-inform-all-employees/
+
 	// https://leetcode.com/problems/rotting-oranges/
 
 	public static void main(String args[]) {
@@ -233,7 +234,7 @@ class Graph {
 		// g.addEdge(3, 1);
 		// g.addEdge(3, 5);
 
-		System.out.println("Following is a Topological " + "sort of the given graph");
+		// System.out.println("Following is a Topological " + "sort of the given graph");
 		// g.topologicalSort();
 
 		// g.detectLoopInGraph();
@@ -245,7 +246,11 @@ class Graph {
 			{0,0,0,0}
 		};
 
-		g.topoSort(g);
+		// g.topoSort(g);
+
+		// int n = 7, headID = 6; int[] manager = {1,2,3,4,5,6,-1}, informTime = {0,6,5,4,3,2,1};
+		int n = 6, headID = 2; int[] manager = {2,2,-1,2,2,2}, informTime = {0,0,1,0,0,0};
+		// g.numOfMinutes(n, headID, manager, informTime);
 	}
 }
 
