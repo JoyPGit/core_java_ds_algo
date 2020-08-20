@@ -299,18 +299,17 @@ public class Heap {
         return res;
     }
 
-    // IF ALL K DIFF FREQ WORDS HAD TO PRINTED
+    // IF ALL K DIFF FREQ WORDS HAD TO BE PRINTED
 
     /**
-     * ["the", "day", "is", "bun" , bun ", ""sunny", "the", "the", "the", "sunny",
-     * "is", "is"], k = 3 the - 4, day - 1, is - 3, bun - 2, sunny -2 WE HAVE TO
-     * PRINT the-is-bun-sun bun and sun have same freq so both need to be printed
+     * ["the", "day", "is", "bun" , bun ", ""sun", "the", "the", "the", "sun",
+     * "is", "is"], k = 3 (TOP 3 FREQUENT) 
+     * the - 4, day - 1, is - 3, bun - 2, sun -2 WE HAVE TO
+     * PRINT the-is-bun-sun
+     * bun and sun have same freq so both need to be printed
      * 
-     * 
-     * MAINTAIN A COUNTER AND PREVFREQ != CURRFREQ, INCREMENT COUNTER
-     * 
+     * MAINTAIN A COUNTER AND PREVFREQ != CURRFREQ, INCREMENT COUNTER     * 
      * INITIALIZE PREVFREQ BY POPPING ONCE KFREQ CURR
-     * 
      * THEN RUN WHILE LOOP
      */
     public ArrayList<String> topKFrequentDiff(String[] words, int k) {
@@ -350,6 +349,82 @@ public class Heap {
 
         System.out.println(res);
         return res;
+    }
+
+    // https://www.geeksforgeeks.org/find-smallest-range-containing-elements-from-k-lists/
+    // https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/
+    /** 
+     * 1 create a custom class to hold index, row and val
+     * 2 row and index are needed so that when we pop an element,
+     *  we can find the next el in the corresponding row easily
+     *  new KListNode(curr.index+1, nums.get(curr.row).get(curr.index+1), curr.row);
+     * 
+     *  NEXT EL'S VAL OF CURR ROW -> nums.get(curr.row).get(curr.index+1)
+     * 
+     * 3 use a minheap, with comparator
+     * 4 add first els of each row
+     * 5 use 4 vars max, start, end, range
+     * 
+     * 6 while q == nums.size makes the loop run till we have atleast 1 el
+     * from each row
+     * 7 flow -> pop an el, compare with max to get range,
+     *  add another from same row
+     * 8 if we already have lesser diff, move on
+     *  else udpate start, end and range
+     * 
+     * 9 if current el is not the last in its row
+     *  curr.index+1<nums.get(curr.row).size()
+     *  add one, else continue
+     *   
+     * {{4,10,15,24,26}, {0,9,12,20}, {5,18,22,30}};
+     * suppose we have 20, 22 and 24 in heap
+     * once 20 is popped we update range, start, end
+     * but its the last and IF WE DON'T HAVE ELS OF ALL K ROWS
+     * we can't compare, while loop breaks and we return;
+     * 
+     */
+    class KListNode{
+        int index, val, row;
+        KListNode(int i, int v, int r){
+            this.index = i;
+            this.val = v;
+            this.row = r;
+        }
+    }
+
+    public int[] smallestRange(ArrayList<ArrayList<Integer>> nums) {
+        PriorityQueue<KListNode> q = new PriorityQueue<>((x,y)->x.val- y.val);
+        int max = Integer.MIN_VALUE;
+
+        for(int i =0; i<nums.size(); i++){
+            q.add(new KListNode(0, nums.get(i).get(0) ,i));
+            max = Math.max(max, nums.get(i).get(0));
+        }
+        int start = -1;
+        int end = -1;
+        int range = Integer.MAX_VALUE;
+
+        while(q.size() == nums.size()){
+            
+            KListNode curr =q.remove();
+            if(max-curr.val < range){
+                start = curr.val;
+                end = max;
+                range = max - curr.val;
+            }
+            
+            //el removed so add el of the same row
+            if(curr.index+1<nums.get(curr.row).size()){
+                KListNode currNew = new KListNode(curr.index+1, 
+                            nums.get(curr.row).get(curr.index+1), curr.row);
+                q.add(currNew);
+                max= Math.max(max, currNew.val);
+            }
+        }
+
+        // int[] x = {start,end};
+        // print1DMatrix(x);
+        return new int[]{start, end};
     }
 
     public static void main(String[] args) {
@@ -393,7 +468,18 @@ public class Heap {
         int k = 1;
         // newHeap.topKFrequent(topk, k);
 
-        newHeap.topKFrequentDiff(topk, k);
+        // newHeap.topKFrequentDiff(topk, k);
+        int[][] nums = {{4,10,15,24,26}, {0,9,12,20}, {5,18,22,30}};
+        ArrayList<ArrayList<Integer>> numsKList = new ArrayList<ArrayList<Integer>>();
+        for(int i =0; i<nums.length; i++){
+            ArrayList<Integer> newRow = new ArrayList<>();
+            for(int j : nums[i]){
+                newRow.add(j);
+            }
+            numsKList.add(newRow);
+        }
+        System.out.println(numsKList);
+        newHeap.smallestRange(numsKList);
 
     }
 }

@@ -46,6 +46,14 @@ public class Utility {
         int value = (int) n;
     }
 
+    /** 
+     * ARRAY
+     * 
+     * no need to create a new array
+     *  int[] x = {start,end};
+        return new int[]{start, end};
+     *
+     */
     /**
      * Java char to int using Integer.parseInt() method Here we are using
      * Integer.parseInt(String) method to convert the given char to int. Since this
@@ -171,6 +179,19 @@ public class Utility {
      * void printListArray(ArrayList<int[]> list){
      *  for(int[]i : list) System.out.print("["+i[0]+","+i[1]+"], ");
      * }
+     * 
+     * 
+     * 2D ARRAY TO MULTILEVEL ARRAYLIST
+        * int[][] nums = {{4,10,15,24,26}, {0,9,12,20}, {5,18,22,30}};
+        ArrayList<ArrayList<Integer>> numsKList = new ArrayList<ArrayList<Integer>>();
+        for(int i =0; i<nums.length; i++){
+            ArrayList<Integer> newRow = new ArrayList<>();
+            for(int j : nums[i]){
+                newRow.add(j);
+            }
+            numsKList.add(newRow);
+        }
+        System.out.println(numsKList);
      */
     
 

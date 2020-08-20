@@ -234,8 +234,8 @@ public class HashPractice{
 
     //IMP
     // https://www.geeksforgeeks.org/print-triplets-sorted-array-form-ap/
-    // https://www.geeksforgeeks.org/find-smallest-range-containing-elements-from-k-lists/
-
+    // https://www.geeksforgeeks.org/count-number-triplets-product-equal-given-number/
+        
    
     //RABIN KARP ALGO
 
@@ -392,8 +392,9 @@ public class HashPractice{
     /** elements are NOT stored in hashmap in the order they 
      * are inserted, sort the uncommon elements and add
      * 
-     * add elements of a to map, for el of,
-     * add in res 'count' number of times
+     * add elements of a to map, 
+     * add els of b in result list 'count' number of times, remove it from map
+     * so that it's not added at last when adding uncommon els
      * add remaining from map
     */
     // AMAZON
@@ -425,43 +426,50 @@ public class HashPractice{
         System.out.println(res);
     }
 
-    class Relative{
-
-    }
-
-    void relativeSorting11Aug(int[] a, int[] b){
-        ArrayList<Integer> res = new ArrayList<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        for(int i =0; i<b.length; i++){
-            map.put(b[i],1);
-        }
-
-        System.out.println(map);
-        for(int i =0; i<a.length; i++){
-            if(map.containsKey(a[i])){
-                if(map.get(a[i])==1) continue;
-                else map.put(a[i], map.get(a[i])+1);
-            } else 
-            map.put(a[i], 1);
-        }
-
-        
-
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer key = entry.getKey();
-            Integer value = entry.getValue();
-            for(int i =0; i<value; i++){
-                res.add(key);
-            }
-            
-        }
-
-        System.out.println(res);
-    }
-
+    
     //https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
     // https://leetcode.com/problems/top-k-frequent-words/
+    /** if same freq check for lexicographically smaller x.compareTo(y) */
+    class KFreq {
+        int freq;
+        String str;
+
+        KFreq(int f, String s) {
+            this.freq = f;
+            this.str = s;
+        }
+    }
+
+    public ArrayList<String> topKFrequent(String[] words, int k) {
+        int n = words.length;
+        ArrayList<String> res = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            map.put(words[i], map.getOrDefault(words[i], 0) + 1);
+        }
+
+        PriorityQueue<KFreq> heap = new PriorityQueue<KFreq>((x, y) -> {
+            if (x.freq == y.freq)
+                return x.str.compareTo(y.str);
+            // y.str.charAt(0) - x.str.charAt(0);
+            return y.freq - x.freq;
+        });
+
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            String s = e.getKey();
+            int freq = e.getValue();
+            heap.add(new KFreq(freq, s));
+        }
+        int counter = 0;
+
+        while (heap.size() != 0 && counter<k) {
+            System.out.println((heap.remove().str));
+            counter++;
+        }
+
+        return res;
+    }
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();
