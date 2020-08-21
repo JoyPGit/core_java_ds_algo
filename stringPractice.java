@@ -270,37 +270,6 @@ class StringPractice {
     //     return new ArrayList<>(map.values());
     // }
 
-    public String removeKdigits(String num, int k) {
-        String str = num;
-        char[] ch = str.toCharArray();
-
-        while (k != 0) {
-            int maxIndex = ch[0] > ch[1] ? 0 : 1;
-            move(ch, maxIndex, ch.length - 1);
-            k--;
-        }
-
-        String ans = String.valueOf(ch);
-        String ans1 = ans.substring(0, ans.indexOf(" "));
-        // System.out.println(ans1);
-        // System.out.println(String.valueOf(ch));
-
-        System.out.println(ans.indexOf(" "));
-        return ans1;
-        // return String.valueOf(ch);
-    }
-
-    void move(char[] ch, int start, int end) {
-        for (int i = start; i < end; i++) {
-            ch[i] = ch[i + 1];
-        }
-        ch[end] = ' ';
-    }
-
-    // unsolved solve using hash and shrinking technique
-    // ababcbacadefegdehijhklij
-    // https://leetcode.com/problems/partition-labels/
-    // public ArrayList<
 
     void keyPadPrint(String str) {
         if (str == "1") {
@@ -840,9 +809,33 @@ class StringPractice {
         }
         return 0;
     }
+    // https://leetcode.com/problems/next-closest-time/
+    // https://leetcode.com/problems/minimum-time-difference/
     // https://leetcode.com/problems/reformat-date/
     // https://leetcode.com/problems/integer-to-english-words/
 
+    // https://leetcode.com/problems/remove-k-digits/
+    public String removeKdigits(String num, int k) {
+        Deque<Character> s = new LinkedList<>();
+        s.addLast(num.charAt(0));
+        
+        for(int i =1; i<num.length(); i++){
+            while(s.size()!=0 && num.charAt(i)<s.getLast() && k>0) {
+                s.removeLast();k--;
+            }
+            
+            s.addLast(num.charAt(i));
+        }
+        
+        while(k>0 && s.size()!=0) {
+            s.removeLast(); k--;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while(!s.isEmpty()) sb.append(s.removeFirst());
+        while(sb.length()>1 && sb.charAt(0)=='0') sb.deleteCharAt(0);
+        return sb.length()!=0?sb.toString():"0";
+    }
     // https://leetcode.com/problems/next-closest-time/
     // https://www.codertrain.co/next-closest-time
 

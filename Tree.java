@@ -103,6 +103,29 @@ public class Tree {
             if(root.left== null && root.right ==null && root.val ==0) return null;
             return root;
          }
+    ---------------------------------------------------------------------------
+     * DFS IN A TREE USING LIST
+     * 
+     * 1 List<List<Integer>> doesn't need a multi ArrayList
+     *   only use new ArrayList when adding to final list
+     * 
+     * 2 REMOVING FROM LIST TWICE, ONCE FOR EACH NODE
+     *    
+     * void dfs(TreeNode node, List<List<Integer>> parentList, List<Integer> currentList) {
+        // if(node!=null){
+        if(node == null) return;
+        if (node.left == null && node.right == null) {
+            currentList.add(node.key);
+            parentList.add(new ArrayList<>(currentList));
+            return;
+        }
+        currentList.add(node.key);
+        dfs(node.left, parentList, currentList);
+        currentList.remove(currentList.size() - 1);
+        dfs(node.right, parentList, currentList);
+        currentList.remove(currentList.size() - 1);
+     }
+
      */ 
     
 
@@ -1106,37 +1129,37 @@ public class Tree {
         // return path1;
     }
 
-    void printAllPathsUsingListsList(TreeNode node) {
-        ArrayList<ArrayList<Integer>> parentList = new ArrayList<ArrayList<Integer>>();
-        ArrayList<Integer> currenttList = new ArrayList<Integer>();
-        // useLists(node, parentList, new ArrayList<Integer>());
-        useLists(node, parentList, currenttList);
-        // System.out.println(parentList.size());
-        printAllLists(parentList);
+    // CHECK GRAPH DFS 
+    void printAllPathsUsingList(TreeNode node) {
+        List<List<Integer>> parentList = new ArrayList<>();
+        List<Integer> currenttList = new ArrayList<>();
+
+        dfs(node, parentList, currenttList);
+        System.out.println("paths using List<List<Integer>> --> " + parentList.size());
+        System.out.println(parentList);
+
     }
 
-    void useLists(TreeNode node, ArrayList<ArrayList<Integer>> parentList, ArrayList<Integer> currentList) {
+    void dfs(TreeNode node, List<List<Integer>> parentList, List<Integer> currentList) {
         // if(node!=null){
-        currentList.add(node.key);
-        System.out.println("line 1073 " + node.key);
+        if(node == null) return;
         if (node.left == null && node.right == null) {
             // parentList.add(new ArrayList<>(currentList));
-            parentList.add(currentList);
+            currentList.add(node.key);
+            parentList.add(new ArrayList<>(currentList));
+            return;
         }
-
-        if (node.left != null) {
-            useLists(node.left, parentList, currentList);
-        }
-        if (node.right != null) {
-            useLists(node.right, parentList, currentList);
-        }
+        currentList.add(node.key);
+        dfs(node.left, parentList, currentList);
+        currentList.remove(currentList.size() - 1);
+        dfs(node.right, parentList, currentList);
         currentList.remove(currentList.size() - 1);
         // }
     }
 
     // https://stackoverflow.com/questions/20750746/how-to-do-a-for-loop-over-a-nested-arraylist
-    void printAllLists(ArrayList<ArrayList<Integer>> list) {
-        for (ArrayList<Integer> outerlist : list) {
+    void printAllLists(List<List<Integer>> list) {
+        for (List<Integer> outerlist : list) {
             for (Integer innerlist : outerlist) {
                 System.out.println(innerlist);
             }
@@ -2676,12 +2699,12 @@ public class Tree {
         tree.root.left.right = new TreeNode(3);
         tree.root.right.left = new TreeNode(5);
         tree.root.right.right = new TreeNode(8);
-        // tree.root.right.right.right = new TreeNode(9);
-        // tree.root.right.right.left = new TreeNode(7);
+        tree.root.right.right.right = new TreeNode(9);
+        tree.root.right.right.left = new TreeNode(7);
         // tree.root.right.right.right.right = new TreeNode(11);
 
         // tree.spiralPrint(tree.root, 0);
-        tree.findFrequentTreeSum(tree.root);
+        // tree.findFrequentTreeSum(tree.root);
         // tree.extremeAlternate(tree.root);
         // tree.treetoCDLL(tree.root);
 
@@ -2728,7 +2751,7 @@ public class Tree {
         // tree.leftViewOfTree(tree.root, 0);
         // tree.printHashMap();
 
-        // tree.printAllPathsUsingListsList(tree.root);
+        tree.printAllPathsUsingList(tree.root);
         // System.out.println(tree.root.right.left.key);
         // tree.lowestCommonAncestor(tree.root, tree.root.right.left,
         // tree.root.right.right);

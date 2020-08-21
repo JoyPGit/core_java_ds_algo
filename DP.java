@@ -1035,9 +1035,8 @@ public class DP {
         dp[index] = 0;
         subsetSumHelper(arr, dp, sum , index+1);
     }
-
     //IMP
-    //2 subset problrms for practice
+    //2 subset problems for practice
     
     // https://www.geeksforgeeks.org/partition-a-set-into-two-subsets
     //-such-that-the-difference-of-subset-sums-is-minimum/
@@ -1045,7 +1044,7 @@ public class DP {
     // https://www.youtube.com/watch?v=7BynUy5ml0I
     // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
 
-
+    // https://leetcode.com/problems/maximal-rectangle/
 
 
     // https://www.geeksforgeeks.org/perfect-sum-problem-print-subsets-given-sum/

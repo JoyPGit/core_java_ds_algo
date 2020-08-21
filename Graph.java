@@ -32,6 +32,36 @@ class Graph {
 		}
 		System.out.println();
 	}
+	/** 
+	 * TEMPLATE FOR GRAPH QUES (DFS)
+	 * 
+	 * List<List<Integer>> doesn't need a multi ArrayList
+     * only use new ArrayList when adding to final list
+	 * 
+	 * public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        
+        temp.add(0);
+        dfs(res, temp, graph, 0);
+        return res;
+     }
+	
+     * void dfs(List<List<Integer>> res, List<Integer> temp, int[][] graph, int curr){
+        if(curr == graph.length-1){
+            // temp.add(curr); already added
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        for( int j:graph[curr]){
+            temp.add(j);
+            dfs(res, temp, graph, j);
+            temp.remove(temp.size()-1);
+        }
+	 }
+	 *
+	 */
 
 	/** Steps
 	 * 1 call util for each vertex if not visited
@@ -218,6 +248,48 @@ class Graph {
 
 	// https://leetcode.com/problems/rotting-oranges/
 
+	// DFS EXAMPLE
+
+	// https://leetcode.com/problems/all-paths-from-source-to-target/
+	/** 
+	 * 1 the indexes are the vertices, int j :graph[curr] curr is int
+	 *   and references to the particular row index
+	 * 
+	 * 2 use a helper
+	 * 3 MOST IMP : ALWAYS USE 
+	 *   List<List<Integer>> res = new ArrayList<>();
+		 List<Integer> temp = new ArrayList<>();
+		 
+	 *	AND PASS THIS temp IN dfs;
+	 *  dfs (res, temp, graph, 0);
+	 *  
+	 * 4 while adding the result clone it into a new ArrayList
+	 * 
+
+        
+	 */
+	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        
+        temp.add(0);
+        dfs(res, temp, graph, 0);
+        return res;
+    }
+	
+    void dfs(List<List<Integer>> res, List<Integer> temp, int[][] graph, int curr){
+        if(curr == graph.length-1){
+            // temp.add(curr);
+            res.add(new ArrayList<>(temp));
+            return;
+        }
+        for( int j:graph[curr]){
+            temp.add(j);
+            dfs(res, temp, graph, j);
+            temp.remove(temp.size()-1);
+        }
+    }
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
 		Graph g = new Graph(7);
