@@ -245,7 +245,119 @@ class Graph {
 	// https://leetcode.com/problems/critical-connections-in-a-network/
 	// https://leetcode.com/problems/minimum-height-trees/
 	// https://leetcode.com/problems/time-needed-to-inform-all-employees/
+	/**
+	 * TECHNIQUE : 
+	 * 1 CREATE A GRAPH USING HASHMAP
+	 * 2 DFS
+	 * 3 FOR TIME THERE ARE 2 WAYS, 
+	 * 3.1 ADD TIME BEFORE ENTERING CHILD, IF THE CHILD DOESN'T HAVE ANY FURTHER
+	 * 	CHILDREN IT JUST RETURN THE TIME.
+	 *  IT WORKS BECAUSE ONLY NODES HAVING CHIDREN ARE IN MAP, SO IF NODE IS 
+	 *  IN MAP, THEN IT MUST HAVE CHILD NODE(S), HENCE ADDING INFORM TIME 
+	 *  BEFORE HAND IS OK.
+	 * 
+	 * 3.2 USE F(ROOT) = INFORMTIME[ROOT] + F(CHILD);
+	 * SET FLAG TO ZERO IN EACH ITERATION AND RETURN MAX
+	 * MAX(MINUTES, INFORMTIME[ROOT]+DFS(CHILD))
+	 * 
+	 * 4 USE DP TO STORE VALUE IN ANOTHER MAP (TIMEHOLDER)
+	 * 
+	 */
+	// AMAZON
+	int minutes = Integer.MIN_VALUE;
+	HashMap<Integer, Integer> timeHolder = new HashMap<>();
+	public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
 
+		for(int i =0; i< manager.length; i++){
+			if(manager[i] == -1) continue;
+			else if(map.containsKey(manager[i])){
+				ArrayList<Integer> c = map.get(manager[i]);
+				c.add(i);
+				map.put(manager[i], c);
+			} else{
+				ArrayList<Integer> c= new ArrayList<>();
+				c.add(i);
+				map.put(manager[i], c);
+			}
+		}
+
+        // System.out.println(map);
+		dfsNumMinutes(map, headID, informTime, 0);
+		// return dfsNumMinutes(map, headID, informTime, 0);
+		return minutes;
+	}
+    
+	// void dfsNumMinutes(HashMap<Integer, ArrayList<Integer>> map, int start, 
+	// 												int[] informTime, int time){
+	// 	if(!map.containsKey(start)) {
+	// 		minutes = Math.max(minutes, time);
+	// 		return;
+	// 	}
+	// 	time+=informTime[start];
+    //     // System.out.println(time);
+	// 	for(int i : map.get(start)){
+	// 		dfsNumMinutes(map, i, informTime, time);
+            
+	// 	}
+	// }
+
+	int dfsNumMinutes(HashMap<Integer, ArrayList<Integer>> map, int start, 
+													int[] informTime, int time){
+		int minutes =0;
+		if(!map.containsKey(start)) return 0;
+		// System.out.println(time);
+		for(int i : map.get(start)){
+			if(timeHolder.containsKey(i)) return timeHolder.get(i);
+			minutes = Math.max(minutes, informTime[start]+dfsNumMinutes(map, i, informTime, time));
+			timeHolder.put(i, minutes);
+		}
+		return minutes;
+	}
+
+	// https://leetcode.com/problems/course-schedule/
+	boolean notLoop = true; 
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length==0) return notLoop;
+        
+        int[] visited = new int[numCourses];
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        
+        for(int i=0; i< prerequisites.length; i++){
+            if(map.containsKey(prerequisites[i][1])){
+                ArrayList curr = map.get(prerequisites[i][1]);
+                curr.add(prerequisites[i][0]);
+                map.put(prerequisites[i][1], curr);
+            } else{
+                ArrayList<Integer> curr = new ArrayList<>();
+                curr.add(prerequisites[i][0]);
+                map.put(prerequisites[i][1], curr);
+            }
+        }
+        // System.out.println(map);
+        for(int i =0; i<prerequisites.length; i++){
+            dfs(map, prerequisites[i][1], visited);    
+        }
+        return notLoop;
+    }
+    
+    void dfs(HashMap<Integer, ArrayList<Integer>> map, int start, int[] visited){
+        if(notLoop){
+            if(!map.containsKey(start)) return;
+            // System.out.println(start);
+            visited[start] = 1;
+            for(int i: map.get(start)){
+                // System.out.println(i);
+                if(visited[i] == 1) {
+                    notLoop = false; return;
+                }
+                dfs(map, i, visited);
+            }    
+            visited[start] = 0;
+        }
+       
+    }
+	// https://leetcode.com/problems/path-with-maximum-probability/
 	// https://leetcode.com/problems/rotting-oranges/
 
 	// DFS EXAMPLE

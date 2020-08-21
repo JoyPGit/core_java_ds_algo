@@ -779,6 +779,9 @@ class Array {
 
     // CIRCULAR ARRAY 
     // https://leetcode.com/problems/next-greater-element-ii/
+
+    // https://leetcode.com/problems/subarray-product-less-than-k/
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     public static void main(String[] args) {
         // code
 
