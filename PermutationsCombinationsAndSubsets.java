@@ -162,11 +162,16 @@ public class PermutationsCombinationsAndSubsets {
     } 
 
     // Permutations : https://leetcode.com/problems/permutations/
-    /** what's the diff w.r.t combinations?
+    // Given a collection of distinct integers, return all possible permutations
+    /** 
+     * what's the diff w.r.t combinations?
      * 1 only add when size == nums.length, 
-     * 2 if present, continue
-     * IMP IF NO HASHMAP; LIST.CONTAINS WORKS
-     * use hashmap
+     * 2 start from 0th index always, AND THE CHECK IS NOT ON INDEX
+     *   RATHER ON THE PRESENCE OF THE EL, AS WE ITERATE FROM START
+     *   EVERY TIME
+     * 
+     * 3 IMP IF NO HASHMAP; LIST.CONTAINS WORKS
+     *   use hashmap
      *   (or) nums[i] == nums[i-1] && i>start
      */
     public List<List<Integer>> permute(int[] nums) {
@@ -186,27 +191,51 @@ public class PermutationsCombinationsAndSubsets {
         }
     } 
 
-    // Permutations II (contains duplicates) : https://leetcode.com/problems/permutations-ii/
-    
-    public ArrayList<ArrayList<Integer>> permuteUnique(int[] nums) {
-        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+    // Permutations II (contains duplicates) : return all possible unique permutations.
+    // https://leetcode.com/problems/permutations-ii/
+    /**  
+     * 1 if(used[i] || (i>0 && nums[i] == nums[i-1]) && !used[i - 1]) continue;
+     * https://ibb.co/Sw0fgk5
+     * 
+     * IN SHORT, IF PRECEDING VAL IS SAME AND IS UNUSED, WE CAN'T PROCEED
+     * AS THE PRECEDING VAL NEEDS TO BE SELECTED FIRST
+     * 
+     * The difficulty is to handle the duplicates.
+     * With input as [1a, 1b, 2a] (duplicate 1),
+     * If we don't handle the duplicates, the result will be: [1a, 1b, 2a], [1b, 1a, 2a]..,
+     * so we must make sure 1a goes before 1b to avoid duplicates
+     * 2 By using nums[i-1]==nums[i] && !used[i-1], 
+     * we can make sure that 1b is not chosen before 1a
+     * 
+     * 3 similar to subsets, extra operation of setting used[i] as true and false in the end
+     */
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        boolean[] used = new boolean[nums.length];
         Arrays.sort(nums);
-        backtrack4(list, new ArrayList<>(), nums, new boolean[nums.length]);
-        return list;
+        backtrack4(res, list, nums, used);
+        System.out.println(res);
+        return res;
     }
     
-    private void backtrack4(ArrayList<ArrayList<Integer>> list, ArrayList<Integer> tempList, 
+    private void backtrack4(List<List<Integer>> res, List<Integer> list, 
     int [] nums, boolean [] used){
-        if(tempList.size() == nums.length){
-            list.add(new ArrayList<>(tempList));
+        // System.out.println(list);
+        if(list.size() == nums.length){
+            res.add(new ArrayList<>(list));
         } else{
             for(int i = 0; i < nums.length; i++){
-                if(used[i] || i > 0 && nums[i] == nums[i-1] && !used[i - 1]) continue;
+                if(used[i] || (i>0 && nums[i] == nums[i-1]) && !used[i - 1]) continue;
+                // set, add
                 used[i] = true; 
-                tempList.add(nums[i]);
-                backtrack4(list, tempList, nums, used);
+                list.add(nums[i]);
+
+                backtrack4(res, list, nums, used);
+
+                // unset, remove
                 used[i] = false; 
-                tempList.remove(tempList.size() - 1);
+                list.remove(list.size() - 1);
             }
         }
     }
@@ -289,22 +318,26 @@ public class PermutationsCombinationsAndSubsets {
      * to be made to make the string a collection of palindromes,
      * BUT HERE WE HAVE TO RETURN A LIST OF ALL PALINDROMIC 
      * SUBSTRINGS AFTER SPLITTING
+     * 
+     * start changes every time
      */
-    public ArrayList<ArrayList<String>> partition(String s) {
-        ArrayList<ArrayList<String>> list = new ArrayList<>();
-        backtrack7(list, new ArrayList<>(), s, 0);
-        return list;
+    public List<List<String>> palindromePartition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        backtrack7(res, list, s, 0);
+        System.out.println(res);
+        return res;
     }
     
-    public void backtrack7(ArrayList<ArrayList<String>> list, ArrayList<String> tempList, String s, int start){
+    public void backtrack7(List<List<String>> res, List<String> list, String s, int start){
        if(start == s.length())
-          list.add(new ArrayList<>(tempList));
+          res.add(new ArrayList<>(list));
        else{
           for(int i = start; i < s.length(); i++){
              if(isPalindrome(s, start, i)){
-                tempList.add(s.substring(start, i + 1));
-                backtrack7(list, tempList, s, i + 1);
-                tempList.remove(tempList.size() - 1);
+                list.add(s.substring(start, i + 1));
+                backtrack7(res, list, s, i + 1);
+                list.remove(list.size() - 1);
              }
           }
        }
@@ -321,6 +354,12 @@ public class PermutationsCombinationsAndSubsets {
     // https://leetcode.com/problems/letter-combinations-of-a-phone-number/
     public static void main(String[] args) {
         PermutationsCombinationsAndSubsets pcs = new PermutationsCombinationsAndSubsets();
+
+        int[] nums={1,1,2,3};
+        // pcs.permuteUnique(nums);
+
+        String palindromePart = "babac";
+        pcs.palindromePartition(palindromePart);
 
     }
 }

@@ -26,6 +26,12 @@ class DivideAndConquer{
         return -1;
     }
     
+    public boolean isPalindrome(String s, int low, int high){
+        while(low < high)
+           if(s.charAt(low++) != s.charAt(high--)) return false;
+        return true;
+    }
+
     /**TECHNIQUES
      * 1 DIVIDE AND CONQUER MOSTLY USES HEAPS
      * 2 OR ELSE SOME SORT OF SORTING, BE IT ARRAY OR HEAP
