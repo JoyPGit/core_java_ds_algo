@@ -21,15 +21,7 @@ class StringPractice {
         }
     }
 
-    void hashiterator(HashMap<Integer, Integer> list){
-        for (Map.Entry<Integer, Integer> entry : list.entrySet()) {
-            Integer key = entry.getKey();
-            Integer value = entry.getValue();
-            System.out.println("key "+key+" value " +value);
-        }
-    }
-
-    String sortString(String s){
+    String sortString(String s) {
         char[] ch = s.toCharArray();
         Arrays.sort(ch);
         // System.out.println(ch);
@@ -37,15 +29,26 @@ class StringPractice {
     }
 
     /**
-     * s.length() braces needed
+     * s.length() braces needed LOWERCASE TO UPPERCASE in[i] = (char) (in[i] - 'a' + 'A');
+     * 
+     * CHECKING FOR DIGITS (Character.isDigit(in[i])) 
+     * (Character.isSpace(in[i]))
+     * (Character.isLowercase(in[i])) 
+     * (Character.isLetter(in[i]))
+     * 
+     * FOR STRING TO CHAR[] : S.toCharArray() FOR CHAR[] TO STRING : new String(ch)
+     * (or) String s = ""; for(char c:ch)s+=c;
+     * (or) String s = String.valueOf(ch)
+     * 
      * 
      * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 
-     * 2 ALL PALINDROME QUES (use SUSBTRING TECHNIQUE FROM lexicographicSubConcat) 
+     * 2 ALL PALINDROME QUES (use SUSBTRING
+     * TECHNIQUE FROM lexicographicSubConcat) 
      * 3 PARTITION LABELS (HASHING) 
      * 4 MIN WINDOW CONTAINING K DISTINCT (HASHING, WINDOW SHRINKING) 
      * 5 SEARCH WORD IN GRID (DFS) 
-     * 6 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION)
-     * 7 VERSION COMPARE
+     * 6 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION) 
+     * 7 VERSION COMPARE 
      * 8 GROUP ANAGRAM
      */
 
@@ -61,7 +64,6 @@ class StringPractice {
     }
 
     void reverseRecursive(String word) {
-
     }
 
     // https://practice.geeksforgeeks.org/problems/reverse-words-in-a-given-string/0
@@ -101,7 +103,12 @@ class StringPractice {
         return String.valueOf(in);
     }
 
-    // using backtracking concept
+    // using include-exclude concept of recursion
+    /**
+     * using include-exclude concept of recursion if(i == length) sysout f(arr[i],
+     * i+1) arr[i] = 0 f(arr, i+1);
+     * 
+     */
     void generateBinPattern(String str) {
         char[] ch = str.toCharArray();
         int n = ch.length;
@@ -116,12 +123,10 @@ class StringPractice {
             // System.out.println(index+ " equals k");
             System.out.println("ch array " + String.valueOf(ch));
         } else {
-            int curIndex = index;
             if (ch[index] == '?') {
                 ch[index] = '0';
                 // curIndex = index + 1;
                 // System.out.println(index);
-                // System.out.println(curIndex);
                 // System.out.println("ch array if 0 " + String.valueOf(ch));
                 generateBinPatternUtil(ch, k, index + 1);
 
@@ -165,41 +170,17 @@ class StringPractice {
         }
     }
 
+    /**
+     * start a dfs whenever the ch[i][j] matches the starting char of string
+     */
     void findWordInGrid(char[][] grid, String str) {
         char[] ch = str.toCharArray();
-        // int index = 0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                // if (grid[i][j] == ch[index]) {
                 findWordInGridUtil(grid, ch, 0, i, j);
-                // }
             }
         }
     }
-
-    // void findWordInGridUtil(char[][] grid, char[] ch, int index, int rowIndex,
-    // int colIndex) {
-    // if (rowIndex >= grid.length && colIndex >= grid[0].length || rowIndex < 0 &&
-    // colIndex < 0)
-    // return;
-    // int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
-    // int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
-    // if (index == ch.length - 1) {
-    // System.out.println("found");
-    // return;
-    // }
-    // for (int k = 0; k < row.length; k++) {
-    // if ((rowIndex + row[k]) < grid.length && (colIndex + col[k]) < grid[0].length
-    // && (rowIndex + row[k]) > -1
-    // && (colIndex + col[k]) > -1 && (index + 1) < ch.length) {
-    // if (ch[index + 1] == grid[rowIndex + row[k]][colIndex + col[k]]) {
-    // // System.out.print(ch[index+1]+", ");
-    // findWordInGridUtil(grid, ch, index + 1, rowIndex + row[k], colIndex +
-    // col[k]);
-    // }
-    // }
-    // }
-    // }
 
     void findWordInGridUtil(char[][] grid, char[] ch, int index, int rowIndex, int colIndex) {
         if (rowIndex < grid.length && colIndex < grid[0].length && rowIndex >= 0 && colIndex >= 0
@@ -256,20 +237,53 @@ class StringPractice {
         return list.isEmpty();
     }
 
-    //works in leetcode
-    // public List<List<String>> groupAnagrams(String[] strs) {
-    //     if (strs == null || strs.length == 0) return new ArrayList<>();
-    //     Map<String, List<String>> map = new HashMap<>();
-    //     for (String s : strs) {
-    //         String keyStr = sortString(s);
-            
-    //         //optimization adding in both cases
-    //         if (!map.containsKey(keyStr)) map.put(keyStr, new ArrayList<>());
-    //         map.get(keyStr).add(s);
-    //     }
-    //     return new ArrayList<>(map.values());
-    // }
+    /**
+     * ch.toString converts ch to an object and not string add individual chars OR
+     * USE NEW STRING(CH)
+     */
+    boolean isAnagramStringCompare(String str1, String str2) {
+        char[] ch1 = str1.toCharArray();
+        char[] ch2 = str2.toCharArray();
 
+        Arrays.sort(ch1);
+        Arrays.sort(ch2);
+        String s1 = "";
+        String s2 = "";
+        // for(char c:ch1) s1+=c;
+        // for(char c:ch2) s2+=c;
+        // System.out.println(s1.compareTo(s2));
+        // return s1.compareTo(s2)==0?true:false;
+        return new String(ch1).compareTo(new String(ch2)) == 0 ? true : false;
+    }
+
+    // https://leetcode.com/problems/group-anagrams/
+    /**
+     * ["eat","tea","tan","ate","nat","bat"] {aet=[eat, tea, ate], abt=[bat],
+     * ant=[tan, nat]}
+     * 
+     * POINTS: 1 SORT EACH STRING, CHECK IF PRESENT IN MAP 2 IF PRESENT ADD TO LIST,
+     * ELSE CREATE NEW ENTRY 3 BUT WHILE ADDING : map.put(keyStr, new
+     * ArrayList<>());
+     * 
+     * MAP TO KEYSTR(THE SORTED CHAR ARRAY), CHECK EX OF BAT ABOVE
+     * 
+     * 4 NEW ARRAYLIST<>(MAP.VALUES())
+     * 
+     */
+    public List<List<String>> groupAnagrams(String[] strs) {
+        if (strs == null || strs.length == 0)
+            return new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : strs) {
+            char[] ca = s.toCharArray();
+            Arrays.sort(ca);
+            String keyStr = String.valueOf(ca);
+            if (!map.containsKey(keyStr))
+                map.put(keyStr, new ArrayList<>());
+            map.get(keyStr).add(s);
+        }
+        return new ArrayList<>(map.values());
+    }
 
     void keyPadPrint(String str) {
         if (str == "1") {
@@ -437,26 +451,32 @@ class StringPractice {
             return "nineteen";
     }
 
-    // https://leetcode.com/problems/split-a-string-in-balanced-strings/
+    /**
+     * https://leetcode.com/problems/split-a-string-in-balanced-strings/
+     *
+     * Given a balanced string s split it in the maximum amount of balanced strings.
+     * which have equal quantity of 'L' and 'R' characters.
+     */
+
     // "RLLLLRRRLR"
     public int balancedStringSplit(String s) {
         Deque<Character> list = new LinkedList<>();
         list.addLast(s.charAt(0));
-        
-        int count =0;
-        for(int i =1; i<s.length(); i++){
-            if(!list.isEmpty() && list.getLast()==s.charAt(i)){
+
+        int count = 0;
+        for (int i = 1; i < s.length(); i++) {
+            if (!list.isEmpty() && list.getLast() == s.charAt(i)) {
                 list.addLast(s.charAt(i));
-                System.out.println(list +" line add");
-            }
-            else if(list.size()!=0 && list.getLast()!=s.charAt(i)){
+                System.out.println(list + " line add");
+            } else if (list.size() != 0 && list.getLast() != s.charAt(i)) {
                 list.removeLast();
-            }
-            else if(list.size()==0) list.addLast(s.charAt(i));
+            } else if (list.size() == 0)
+                list.addLast(s.charAt(i));
             System.out.println(list);
-            if(list.size()==0)count++;
+            if (list.size() == 0)
+                count++;
         }
-        System.out.println("count "+count);
+        System.out.println("count " + count);
         return count;
     }
 
@@ -466,6 +486,9 @@ class StringPractice {
     // works without duplicates,
     // leetcode prob statement seems inconsistent
     // https://leetcode.com/problems/minimum-window-substring/
+    // https://leetcode.com/problems/minimum-window-substring/discuss/26808/
+    // Here-is-a-10-line-template-that-can-solve-most-'substring'-problems
+    
     class minWindowString {
         int start;
         int end;
@@ -536,7 +559,7 @@ class StringPractice {
     /**
      * IMP TECHNIQUE TO GENERATE SUBSTRINGS 1 i = 0 till n-1 2 j = 0 till n
      * substring takes start and end ptr, includes start but excludes end ex.
-     * ("abc").subsring(2,3) = "c" index 2 = 2 till index 3 Out of bounds error
+     * ("abc").subsring(2,3) = "c" index 2 = 2 till index 3. Out of bounds error
      * doesn't occur
      */
 
@@ -547,12 +570,18 @@ class StringPractice {
         int sub_count = n * (n + 1) / 2;
         String[] arr = new String[sub_count];
 
+        char[] ch = s.toCharArray();
+        Arrays.sort(ch);
+        String str = "";
+        for (char c : ch)
+            str += c;
+        System.out.println("sorted : " + str);
         // finding all substrings of string
         int index = 0;
         for (int i = 0; i < n; i++) {
             for (int len = i + 1; len <= n; len++) {
-                System.out.println(s.substring(i, len));
-                arr[index++] = s.substring(i, len);
+                System.out.println(str.substring(i, len));
+                arr[index++] = str.substring(i, len);
             }
         }
         // Sort all substrings in lexicographic order
@@ -587,17 +616,19 @@ class StringPractice {
     // ALL PALINDROMIC SUBSTRINGS
 
     /**
+     * UPPER TRIANGULAR MATRIX
+     * 
      * points : 1 dp size [n][n] 2 l here denotes length of substring; goes till n;
      * starts from 1 3 i+l-1 denotes the ending index; goes till n-1
      * 
      * aaa; l= 3; i=0; j = 2; l= 2; i=0; j = 1; i=1; j = 3;
      * 
      * 4 if l==1; dp[i][j] = 1; each char is a palindrome 5 if l==2 check only if
-     * s(i) == s(j); no need to check internal substrings 6 l>=3 check s(i) == s(j)
-     * and also internal substrings(dp[i+1][j-1]) 7 increment count whenever
-     * dp[i][j] =1;
+     * s(i) == s(j); no need to check internal substrings
      * 
-     * UPPER TRIANGULAR MATRIX
+     * 6 l>=3 check s(i) == s(j) and also internal substrings(dp[i+1][j-1]) 7
+     * increment count whenever dp[i][j] =1;
+     *
      */
     int countPalindromicSubstrings(String s) {
         int n = s.length();
@@ -630,14 +661,18 @@ class StringPractice {
      * https://www.youtube.com/watch?v=y2BD4MJqV20&t=768s
      */
 
-    // technique 1 using upper triangular matrix
     /**
-     * points : similar to all palindromic substrings' count 1 if the whole string
-     * is a palindrome and if it's allowed l<=n; else l<n l is imp; denotes
-     * substring length; starts from 1
+     * technique 1 using upper triangular matrix
      * 
-     * 2 maxlen is 1 as every char is a palindrome; it keeps track of longest length
-     * 3 start index is updated everytime 4 substring start, start+maxlen
+     * points : 1 l IN FOR LOOP DENOTES LENGTH OF WORD IN EVERY PALINDROME QUES
+     * 
+     * 2 similar to all palindromic substrings' count 1 if the whole string is a
+     * palindrome and if it's allowed l<=n; else l<n l is imp; denotes substring
+     * length; starts from 1
+     * 
+     * 3 maxlen is initially 1 as every char is a palindrome; it keeps track of
+     * longest length 4 start index is updated everytime the chars match 5 substring
+     * start, start+maxlen
      */
     String longestPalindromicSubstring(String s) {
         int n = s.length();
@@ -666,144 +701,136 @@ class StringPractice {
                 }
             }
         }
-        System.out.println("longest palindromic substring : " + 
-                                s.substring(start, start + maxlen));
+        System.out.println("longest palindromic substring : " + s.substring(start, start + maxlen));
         return s.substring(start, start + maxlen);
     }
 
     // https://www.geeksforgeeks.org/count-palindrome-sub-strings-string/
     // all palindromes , string 'abaab'
 
-    // doesn't work now
-    int palinCount = 0;
-
-    int countAllPalindromes(String s) {
-        char[] ch = s.toCharArray();
-        for (int i = 0; i < ch.length; i++) {
-            palinCount++;
-            expand(ch, i, i + 1);
-            expand(ch, i, i);
-        }
-        System.out.println(palinCount);
-        return palinCount;
-    }
-
-    void expand(char[] ch, int start, int second) {
-        if (start < 0 || second >= ch.length)
-            return;
-        if (start == 0 || second == ch.length - 1) {
-            palinCount = (ch[start] == ch[second]) ? ++palinCount : palinCount;
-            System.out.println((ch.toString()).substring(start, second + 1));
-            System.out.println("count " + palinCount);
-            return;
-        }
-        if (ch[start] == ch[second])
-            expand(ch, --start, ++second);
-        else
-            return;
-    }
-
     // https://www.geeksforgeeks.org/longest-prefix-also-suffix/
     // https://www.geeksforgeeks.org/find-number-distinct-
     // palindromic-sub-strings-given-string/
     // https://leetcode.com/problems/longest-palindromic-subsequence/
+
     // aug leetcode valid palindrome
     // https://leetcode.com/problems/distinct-subsequences-ii/
-    
+
     // https://www.geeksforgeeks.org/find-excel-column-name-given-number/
-    
-    
+
     // https://leetcode.com/problems/partition-labels/
 
-    class partition{
-        int index; int group;
-        partition(int i, int g){
-        this.index = i;
-        this.group = g;
+    class partition {
+        int index;
+        int group;
+
+        partition(int i, int g) {
+            this.index = i;
+            this.group = g;
         }
     }
 
+    /* 
+     * 9 Aug
+     * Use hashmap and hint: contiguous so shrink
+     * 
+     * POINTS:
+     * 1 USE A HASHMAP TP STORE OCCURENCES OF ALL CHARS
+     * 2 IF ALREADY FOUND ITERATE OVER MAP AND CHANGE BUCKET 
+     * OF ALL CHARS TO CURRENT BUCKET, WHICH IS THE BUCKET OF
+     * THIS CHAR IN THE MAP (shrinkGroup)
+     * 
+     * 3 KEEP TRACK OF CURRBUCKET AND PREVIOUS BUCKET
+     * IF THESE DIFFER ADD THE DIFF OF INDEX AND CURRSTART
+     * 
+     * 4 ADD A BOUNDARY CONDN AT LAST res.add(i - currStart + 1);
+     * 
+     */
+    public List<Integer> partitionLabels(String S) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        char[] ch = S.toCharArray();
+        int group = 0;
 
-    // 9 Aug 
-    //IMCOMPLETE
-    int[] partitionLabels(String s){
-        HashMap<Character, partition> map = new HashMap<>();
-        int[] ans;
-        int group = 1;
-        map.put(s.charAt(0), new partition(0, group++));
-        for(int i =1; i<s.length(); i++){
-            if(map.containsKey(s.charAt(i))){
-                shrinkMap(map, s, i, group);
+        for (int i = 0; i < ch.length; i++) {
+            if (map.containsKey(ch[i])) {
+                group = map.get(ch[i]);
+                shrinkGroup(map, ch, ch[i], i - 1, group);
+            } else
+                map.put(ch[i], ++group);
+        }
+
+        List<Integer> res = new ArrayList<>();
+
+        int currBucket = map.get(S.charAt(0));
+        int currStart = 0;
+        for (int i = 1; i < ch.length; i++) {
+
+            int bucket = map.get(ch[i]);
+            if(bucket == currBucket)// do nothing
+            if (bucket != currBucket) {
+                res.add(i - currStart);
+                currStart = i;
+                currBucket = bucket;
             }
-            else map.put(s.charAt(i), new partition(i, group++));
+
+            if (i == ch.length - 1) {
+                res.add(i - currStart + 1);
+            }
         }
-
-        ans= new int[group];
-        //iterate over map and count
-        // System.out.println(map);
-        hashiterator1(map);
-
-        return ans;
+        System.out.println(res);
+        // return (List<Integer>) res;
+        return res;
     }
 
-    void shrinkMap(HashMap<Character, partition> map, String s,
-    int index, int group){
-        int i = index-1; int curr = map.get(s.charAt(index)).group;
-        while(s.charAt(i)!= s.charAt(index)){
-            map.put(s.charAt(i), 
-            new partition(map.get(s.charAt(i)).index, curr));
+    void shrinkGroup(HashMap<Character, Integer> map, char[] ch, char c, int index, int currGroup) {
+        while (ch[index] != c) {
+            map.put(ch[index], currGroup);
+            index--;
+        }
+    }
+
+    void shrinkMap(HashMap<Character, partition> map, String s, int index, int group) {
+        int i = index - 1;
+        int curr = map.get(s.charAt(index)).group;
+        while (s.charAt(i) != s.charAt(index)) {
+            map.put(s.charAt(i), new partition(map.get(s.charAt(i)).index, curr));
             i--;
         }
     }
 
-    void hashiterator1(HashMap<Character, partition> map) {
-        for (Map.Entry<Character, partition> entry : map.entrySet()) {
-            Character key = entry.getKey();
-            Integer value = entry.getValue().group;
-            System.out.println("key "+key+" value " +value);
-        }
-    }
+    // void hashiterator1(HashMap<Character, partition> map) {
+    // for (Map.Entry<Character, partition> entry : map.entrySet()) {
+    // Character key = entry.getKey();
+    // Integer value = entry.getValue().group;
+    // System.out.println("key "+key+" value " +value);
+    // }
+    // }
 
-    // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
-    // https://leetcode.com/problems/compare-version-numbers/
-    // "0.1.2", "0.01.2"
-    /**  
-     * mapping between integer and char
-     * 
-     * 1 create an int for every substring b/w dots and compare
-     * 2 two while loops 
-     * 3 p1, p2 are incremented once when dot is encountered, p1++ takes it till '.'
-     * 4 char value of '0' is 0
-     * 5 for chars use single quotes and double for strings
-     * 
-     * can be done using Integer.parseInt too
-     * one base case for str = "" when no dot is present
-     * then add a check
-     */
+    public int compareVersion(String version1, String version2) {
+        int p1 = 0, p2 = 0;
+        while (p1 < version1.length() || p2 < version2.length()) {
+            int num1 = 0, num2 = 0;
 
-     public int compareVersion(String version1, String version2) {
-        int p1=0,p2=0;
-        while(p1<version1.length() || p2<version2.length()){
-            int num1=0,num2=0;
-
-            String str1 = ""; String str2 =""; 
-            while(p1<version1.length() && version1.charAt(p1)!='.'){
+            String str1 = "";
+            String str2 = "";
+            while (p1 < version1.length() && version1.charAt(p1) != '.') {
                 // System.out.println("char val of 0 "+'0');
                 // System.out.print("char val of '1'-'0' ");
                 // System.out.println('1'-'0');
-                // num1 = num1*10 + (version1.charAt(p1++) - '0'); 
-                str1+=version1.charAt(p1++);
-                System.out.println("str1 "+str1);
+                // num1 = num1*10 + (version1.charAt(p1++) - '0');
+                str1 += version1.charAt(p1++);
+                System.out.println("str1 " + str1);
             }
-            while(p2<version2.length() && version2.charAt(p2)!='.') {
+            while (p2 < version2.length() && version2.charAt(p2) != '.') {
                 // num2 = num2*10 + (version2.charAt(p2++) - '0');
-                str2+=version2.charAt(p2++);
-                System.out.println("str2 "+str2);
+                str2 += version2.charAt(p2++);
+                System.out.println("str2 " + str2);
             }
 
-            num1 = Integer.parseInt(str1); 
+            num1 = Integer.parseInt(str1);
             num2 = Integer.parseInt(str2);
-            if(num1 != num2) return num1>num2 ? 1:-1;
+            if (num1 != num2)
+                return num1 > num2 ? 1 : -1;
             p1++;
             p2++;
         }
@@ -815,32 +842,64 @@ class StringPractice {
     // https://leetcode.com/problems/integer-to-english-words/
 
     // https://leetcode.com/problems/remove-k-digits/
+    /**
+     * NEW NO IS SMALLEST POSSIBLE
+     * 
+     * add the digits to stack, when the top(GETLAST) is smaller than current, pop
+     * till you find smaller or k==0
+     * 
+     * if k!=0 pop till k==0
+     * 
+     * ensure leading zeroes are removed.
+     */
     public String removeKdigits(String num, int k) {
         Deque<Character> s = new LinkedList<>();
         s.addLast(num.charAt(0));
-        
-        for(int i =1; i<num.length(); i++){
-            while(s.size()!=0 && num.charAt(i)<s.getLast() && k>0) {
-                s.removeLast();k--;
+
+        for (int i = 1; i < num.length(); i++) {
+            while (s.size() != 0 && num.charAt(i) < s.getLast() && k > 0) {
+                s.removeLast();
+                k--;
             }
-            
+
             s.addLast(num.charAt(i));
         }
-        
-        while(k>0 && s.size()!=0) {
-            s.removeLast(); k--;
+
+        while (k > 0 && s.size() != 0) {
+            s.removeLast();
+            k--;
         }
 
         StringBuilder sb = new StringBuilder();
-        while(!s.isEmpty()) sb.append(s.removeFirst());
-        while(sb.length()>1 && sb.charAt(0)=='0') sb.deleteCharAt(0);
-        return sb.length()!=0?sb.toString():"0";
+        while (!s.isEmpty())
+            sb.append(s.removeFirst());
+        while (sb.length() > 1 && sb.charAt(0) == '0')
+            sb.deleteCharAt(0);
+        return sb.length() != 0 ? sb.toString() : "0";
     }
+
+    // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
+    // https://leetcode.com/problems/compare-version-numbers/
+    // "0.1.2", "0.01.2"
+    /**
+     * mapping between integer and char
+     * 
+     * 1 create an int for every substring b/w dots and compare 2 two while loops 3
+     * p1, p2 are incremented once when dot is encountered, p1++ takes it till '.' 4
+     * char value of '0' is 0 5 for chars use single quotes and double for strings
+     * 
+     * can be done using Integer.parseInt too one base case for str = "" when no dot
+     * is present then add a check
+     */
+
     // https://leetcode.com/problems/next-closest-time/
     // https://www.codertrain.co/next-closest-time
 
     // IMP FILESYSTEM
     // https://leetcode.com/problems/remove-sub-folders-from-the-filesystem/
+
+    // https://leetcode.com/problems/boats-to-save-people/
+    // https://leetcode.com/problems/rearrange-string-k-distance-apart/
     public static void main(String[] args) {
         StringPractice string = new StringPractice();
         // System.out.println(string.reverse("word of"));
@@ -860,8 +919,7 @@ class StringPractice {
         // string.genBinPerm01s(4);
         // string.recPalindrome("abba");
 
-        char[][] grid = { { 'A', 'C', 'P', 'R', 'C' }, { 'X', 'S', 'O', 'P', 'C' }, 
-                { 'V', 'O', 'V', 'N', 'I' },
+        char[][] grid = { { 'A', 'C', 'P', 'R', 'C' }, { 'X', 'S', 'O', 'P', 'C' }, { 'V', 'O', 'V', 'N', 'I' },
                 { 'W', 'G', 'F', 'M', 'N' }, // 'F','O','R','G','E','E','K','S'},
                 // {'G','E','E','K','S','Q','U','I','Z','G','E','E','K'},
                 { 'Q', 'A', 'T', 'I', 'T' } };// ,'P','R','A','C','T','I','C','E'}};
@@ -870,8 +928,9 @@ class StringPractice {
         // string.findWordInGrid(grid, word);
 
         // System.out.println(string.isAnagram("str1", "str1"));
+        // System.out.println(string.isAnagramStringCompare("str1", "str2"));
 
-        String s = "hello";
+        String s = "othello";
         // System.out.println(s.substring(2,3));
         // System.out.println(string.lexicographicSubConcat(s));
 
@@ -902,8 +961,8 @@ class StringPractice {
 
         // System.out.println(string.compareVersion("0.1.2", "0.01.2"));
 
-        String balanceLR ="RLLLLRRRLR";
-        string.balancedStringSplit(balanceLR); 
+        String balanceLR = "RLLLLRRRLR";
+        // string.balancedStringSplit(balanceLR);
 
     }
 }
