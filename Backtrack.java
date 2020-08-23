@@ -1,4 +1,3 @@
-import java.net.Inet4Address;
 import java.util.*;
 
 class Backtrack {
@@ -327,6 +326,40 @@ class Backtrack {
         return true;
     }
 
+
+    // https://www.geeksforgeeks.org/the-knights-tour-problem-backtracking-1/
+    int knightMoveCount = 1;
+    void knightsTour(int[][] board, int startRow, int startCol){
+        int n = board.length;
+        int[][] visited = new int[n][n];
+        dfsKnight(board, visited, startRow, startCol);
+        System.out.println("knight's tour matrix : ");
+        printMatrix(visited);
+    }
+
+    void dfsKnight(int[][] board, int [][] visited, int r, int c){
+        if(isSafeKnight(board, visited, r, c)){
+            visited[r][c] = knightMoveCount++;
+            if(r== board.length-1 && c== board[0].length-1 && knightMoveCount == 64) return;
+            dfsKnight(board, visited, r+2, c+1);
+            dfsKnight(board, visited, r+2, c-1);
+            dfsKnight(board, visited, r-2, c+1);
+            dfsKnight(board, visited, r-2, c-1);
+            dfsKnight(board, visited, r+1, c-2);
+            dfsKnight(board, visited, r-1, c-2);
+            dfsKnight(board, visited, r+1, c+2);
+            dfsKnight(board, visited, r-1, c+2);
+        }
+    }
+
+    boolean isSafeKnight(int[][] board, int [][] visited, int r, int c){
+        if(r>=0 && r<board.length
+        && c>=0 && c<board[0].length
+        && visited[r][c]==0) return true;
+        return false;
+    }
+
+    // https://leetcode.com/problems/knight-probability-in-chessboard/discuss/113954/Evolve-from-recursive-to-dpbeats-94
     public static void main(String[] args) {
         Backtrack solbacktrack = new Backtrack();
         int[][] problemArr = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
@@ -334,7 +367,7 @@ class Backtrack {
         // solbacktrack.printMatrix(problemArr);
 
         // solbacktrack.nQueenProblem(problemArr, 0);
-        solbacktrack.nQueen4jul(8);
+        // solbacktrack.nQueen4jul(8);
 
         int maze[][] = { { 1, 1, 0, 0 }, { 0, 2, 0, 1 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 } };
         // solbacktrack.solveRatMaze(maze);
@@ -357,6 +390,9 @@ class Backtrack {
 
         int[] subset = { 1, 2, 3 };
         // solbacktrack.subsetsList(subset);
+
+        int[][] chessBoard = new int[8][8];
+        solbacktrack.knightsTour(chessBoard, 4, 6);
     }
 
 }

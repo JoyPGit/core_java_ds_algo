@@ -325,7 +325,7 @@ class Graph {
         
         for(int i=0; i< prerequisites.length; i++){
             if(map.containsKey(prerequisites[i][1])){
-                ArrayList curr = map.get(prerequisites[i][1]);
+                ArrayList<Integer> curr = map.get(prerequisites[i][1]);
                 curr.add(prerequisites[i][0]);
                 map.put(prerequisites[i][1], curr);
             } else{

@@ -6,7 +6,7 @@ class Matrix {
 
     // twoDimArr = {{1,2},{3,4}};
 
-    void showMatrix(final int[][] arr) {
+    void showMatrix(int[][] arr) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
                 System.out.print(arr[i][j] + ", ");
@@ -15,14 +15,14 @@ class Matrix {
         }
     }
 
-    void rotateMatrix(int m, final int n, final int[][] arr) {
+    void rotateMatrix(int m, int n, int[][] arr) {
 
-        final int row = 0;
-        final int column = 0;
+        int row = 0;
+        int column = 0;
         int prev, curr;
 
-        final int rowMax = arr.length;
-        final int colMax = arr[0].length;
+        int rowMax = arr.length;
+        int colMax = arr[0].length;
 
         prev = arr[row + 1][column];
 
@@ -45,13 +45,13 @@ class Matrix {
         }
     }
 
-    void printInSnakeFormat(final int[][] arr) {
+    void printInSnakeFormat(int[][] arr) {
         int row = 0;
         int column = 0;
         boolean ltor = true;
-        final int rowMax = arr.length;
-        final int colMax = arr[0].length;
-        final int track = 0;
+        int rowMax = arr.length;
+        int colMax = arr[0].length;
+        int track = 0;
         System.out.println("rowmax " + rowMax);
         System.out.println("colmax " + colMax);
         /**
@@ -84,11 +84,11 @@ class Matrix {
         }
     }
 
-    void printSpiral(final int[][] arr) {
+    void printSpiral(int[][] arr) {
         int currentCol = 0;
         int currentRow = 0;
-        final int colEnd = arr[0].length;
-        final int rowEnd = arr.length;
+        int colEnd = arr[0].length;
+        int rowEnd = arr.length;
         int rowStartCounter = 0;
         int colStartCounter = 0;
         int rowEndCounter = rowEnd;
@@ -132,13 +132,13 @@ class Matrix {
         }
     }
 
-    void rotateByKElements(final int[][] arr, final int k) {
+    void rotateByKElements(int[][] arr, int k) {
         for (int i = 0; i < k; i++) {
             rotateByOne(arr);
         }
     }
 
-    void rotateByOne(final int[][] arr) {
+    void rotateByOne(int[][] arr) {
         int rowStart = 0;
         int colStart = 0;
         int rowEnd = arr.length;
@@ -153,7 +153,7 @@ class Matrix {
                 swap(arr, currentRow, currentCol + 1, currentRow, currentCol);
                 currentCol++;
                 System.out.println("1 while done");
-                final int temp = arr[currentRow][currentCol];
+                int temp = arr[currentRow][currentCol];
             }
             while (currentRow < rowEnd - 1) {
                 // swap(arr, currentRow, currentCol, currentRow+1, currentCol);
@@ -178,16 +178,16 @@ class Matrix {
         }
     }
 
-    int swap(final int[][] arr, final int row1, final int col1, final int row2, final int col2) {
-        final int temp = arr[row1][col1];
+    int swap(int[][] arr, int row1, int col1, int row2, int col2) {
+        int temp = arr[row1][col1];
         arr[row2][col2] = temp;
         System.out.println("swapped " + arr[row1][col1] + " " + arr[row2][col2]);
         return arr[row2][col2];
     }
 
-    void maxPathSum(final int[][] arr) {
-        final int rowMax = arr.length;
-        final int colMax = arr[0].length;
+    void maxPathSum(int[][] arr) {
+        int rowMax = arr.length;
+        int colMax = arr[0].length;
 
         for (int i = 0; i < rowMax; i++) {
             for (int j = 0; j < colMax; j++) {
@@ -196,7 +196,7 @@ class Matrix {
         }
     }
 
-    int maximumPathSum(final int i, final int j, final int[][] matrix) {
+    int maximumPathSum(int i, int j, int[][] matrix) {
         int down = 0;
         int right = 0;
         if (isSafe(i, j + 1, matrix)) {
@@ -209,19 +209,19 @@ class Matrix {
         return max(right, down) + matrix[i][j];
     }
 
-    boolean isSafe(final int i, final int j, final int[][] matrix) {
+    boolean isSafe(int i, int j, int[][] matrix) {
         if (i <= matrix.length - 1 && j <= matrix[0].length - 1 && i >= 0 && j >= 0)
             return true;
         return false;
     }
 
-    int max(final int a, final int b) {
+    int max(int a, int b) {
         return a > b ? a : b;
     }
 
     ////////////////////////////// WITH DP
 
-    int[][] fill2DArray(final int[][] arr, final int numRows, final int numCols) {
+    int[][] fill2DArray(int[][] arr, int numRows, int numCols) {
 
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
@@ -231,7 +231,7 @@ class Matrix {
         return arr;
     }
 
-    int maxPathSumWithDP(final int[][] arr, final int i, final int j, final int[][] dp) {
+    int maxPathSumWithDP(int[][] arr, int i, int j, int[][] dp) {
         if (dp[i][j] == -1) {
             int right = 0;
             int down = 0;
@@ -249,7 +249,7 @@ class Matrix {
 
     }
 
-    int findMaxIn2DArray(final int[][] arr) {
+    int findMaxIn2DArray(int[][] arr) {
         int max = 0;
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
@@ -265,10 +265,11 @@ class Matrix {
 
     }
 
-    void longestPathFromAnyIndex(final int[][] arr, final int rowStart, final int colStart) {
-        final int rowLength = arr.length;
-        final int columnLength = arr[0].length;
-        final int dp[][] = new int[rowLength][columnLength];
+
+    void longestPathFromAnyIndex(int[][] arr, int rowStart, int colStart) {
+        int rowLength = arr.length;
+        int columnLength = arr[0].length;
+        int dp[][] = new int[rowLength][columnLength];
         int max = -9;
         int i;
         int j;
@@ -295,7 +296,7 @@ class Matrix {
 
     }
 
-    int longestPathHelper(final int[][] arr, final int[][] dp, final int row, final int col) {
+    int longestPathHelper(int[][] arr, int[][] dp, int row, int col) {
         // System.out.println(col);
 
         if (row < 0 || row > arr.length - 1 || col < 0 || col > arr[0].length - 1) {
@@ -371,7 +372,7 @@ class Matrix {
         return dp[row][col];
     }
 
-    boolean isSafeLongestPath(final int[][] arr, final int rowIndex, final int colIndex, final int prev) {
+    boolean isSafeLongestPath(int[][] arr, int rowIndex, int colIndex, int prev) {
         // if(rowIndex<0 || rowIndex>arr.length-1 || colIndex<0 || colIndex
         // >arr[0].length-1){
         // if(arr[rowIndex][colIndex]<prev) return false;
@@ -383,15 +384,15 @@ class Matrix {
         return false;
     }
 
-    public int longestIncreasingPath(final int[][] matrix) {
+    public int longestIncreasingPath(int[][] matrix) {
         int result = 0;
-        final int m = matrix.length;
-        final int n = matrix[0].length;
+        int m = matrix.length;
+        int n = matrix[0].length;
 
-        final int[][] mem = new int[m][n];
+        int[][] mem = new int[m][n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                final int t = LIPhelper(matrix, mem, i, j);
+                int t = LIPhelper(matrix, mem, i, j);
                 result = Math.max(result, t);
             }
         }
@@ -399,17 +400,17 @@ class Matrix {
         return result;
     }
 
-    private int LIPhelper(final int[][] matrix, final int[][] mem, final int i, final int j) {
+    private int LIPhelper(int[][] matrix, int[][] mem, int i, int j) {
         if (mem[i][j] > 0) {
             return mem[i][j];
         }
 
-        final int[] dx = { -1, 0, 1, 0 };
-        final int[] dy = { 0, 1, 0, -1 };
+        int[] dx = { -1, 0, 1, 0 };
+        int[] dy = { 0, 1, 0, -1 };
 
         for (int k = 0; k < 4; k++) {
-            final int x = i + dx[k];
-            final int y = j + dy[k];
+            int x = i + dx[k];
+            int y = j + dy[k];
 
             if (x >= 0 && y >= 0 && x < matrix.length && y < matrix[0].length && matrix[x][y] > matrix[i][j]) {
                 mem[i][j] = Math.max(mem[i][j], LIPhelper(matrix, mem, x, y));
@@ -419,7 +420,7 @@ class Matrix {
         return ++mem[i][j];
     }
 
-    int numberOfIslands(final int[][] arr) {
+    int numberOfIslands(int[][] arr) {
         int i = 0;
         int j = 0;
         int count = 0;
@@ -434,9 +435,9 @@ class Matrix {
         return count;
     }
 
-    void dfsIslandHelper(final int[][] arr, final int rowIndex, final int colIndex) {
-        final int[] row = { 0, 0, -1, 1, -1, -1, 1, 1 };
-        final int[] col = { -1, 1, 0, 0, -1, 1, -1, 1 };
+    void dfsIslandHelper(int[][] arr, int rowIndex, int colIndex) {
+        int[] row = { 0, 0, -1, 1, -1, -1, 1, 1 };
+        int[] col = { -1, 1, 0, 0, -1, 1, -1, 1 };
         if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length) {
             if (arr[rowIndex][colIndex] == 1) {
                 arr[rowIndex][colIndex] = 2;
@@ -455,7 +456,7 @@ class Matrix {
     int maxCount = 0;
     int count = 0;
 
-    int findMaxOnesRegion(final int[][] arr) {
+    int findMaxOnesRegion(int[][] arr) {
 
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
@@ -470,19 +471,19 @@ class Matrix {
         return maxCount;
     }
 
-    void findMaxOnesRegionHelper(final int[][] arr, final int rowIndex, final int colIndex) {
+    void findMaxOnesRegionHelper(int[][] arr, int rowIndex, int colIndex) {
         if (isSafe(arr, rowIndex, colIndex)) {
             count++;
             arr[rowIndex][colIndex] = 2;
-            final int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
-            final int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
+            int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
+            int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
             for (int k = 0; k < row.length; k++) {
                 findMaxOnesRegionHelper(arr, rowIndex + row[k], colIndex + col[k]);
             }
         }
     }
 
-    boolean isSafe(final int[][] arr, final int rowIndex, final int colIndex) {
+    boolean isSafe(int[][] arr, int rowIndex, int colIndex) {
         if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
                 && arr[rowIndex][colIndex] == 1)
             return true;
@@ -533,7 +534,7 @@ class Matrix {
      */
     // }
 
-    void printSpiral29Apr(final int[][] arr) {
+    void printSpiral29Apr(int[][] arr) {
         int rowEnd = arr.length - 1;
         int colEnd = arr[0].length - 1;
 
@@ -585,10 +586,10 @@ class Matrix {
 
     // Function to find the index of first index
     // of 1 in a boolean row-wise sorted array arr[]
-    int first(final int arr[], final int low, final int high) {
+    int first(int arr[], int low, int high) {
         if (high >= low) {
             // Get the middle index
-            final int mid = low + (high - low) / 2;
+            int mid = low + (high - low) / 2;
 
             // Check if the element at middle index is first 1 or the mid index has reached
             // 0
@@ -608,7 +609,7 @@ class Matrix {
 
     // Function that returns index of row
     // with maximum number of 1s.
-    int rowWithMax1s(final int mat[][]) {
+    int rowWithMax1s(int mat[][]) {
         // Initialize max values
         int max_row_index = 0, max = -1;
 
@@ -628,9 +629,9 @@ class Matrix {
     }
 
     /** all 0s surrounded by 1s will be marked 1 */
-    void floodFill(final int[][] arr) {
+    void floodFill(int[][] arr) {
 
-        final int[][] visited = new int[arr.length][arr[0].length];
+        int[][] visited = new int[arr.length][arr[0].length];
 
         int i, j;
         for (i = 0; i < arr.length; i++) {
@@ -646,7 +647,7 @@ class Matrix {
         }
     }
 
-    void floodFillUtil(final int[][] arr, final int[][] visited, final int rowIndex, final int colIndex) {
+    void floodFillUtil(int[][] arr, int[][] visited, int rowIndex, int colIndex) {
         if (isSafe29Apr(arr, rowIndex, colIndex)) {
             if (visited[rowIndex][colIndex] != 1) {
                 arr[rowIndex][colIndex] = 1;
@@ -659,7 +660,7 @@ class Matrix {
         }
     }
 
-    boolean isSafe29Apr(final int[][] arr, final int rowIndex, final int colIndex) {
+    boolean isSafe29Apr(int[][] arr, int rowIndex, int colIndex) {
         if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
                 && arr[rowIndex][colIndex] == 0) {
             return true;
@@ -667,11 +668,11 @@ class Matrix {
             return false;
     }
 
-    public int orangesRotting(final int[][] grid) {
+    public int orangesRotting(int[][] grid) {
 
-        final int R = grid.length;
-        final int C = grid[0].length;
-        final int[][] tracker = new int[R][C];
+        int R = grid.length;
+        int C = grid[0].length;
+        int[][] tracker = new int[R][C];
         int i, j;
 
         for (i = 0; i < R; i++) {
@@ -702,7 +703,7 @@ class Matrix {
 
     }
 
-    void orangesRottingHelper(final int[][] arr, final int[][] tracker, final int rowIndex, final int colIndex, int time) {
+    void orangesRottingHelper(int[][] arr, int[][] tracker, int rowIndex, int colIndex, int time) {
 
         if (isSafeOranges(arr, rowIndex, colIndex) == 1) {
             arr[rowIndex][colIndex] = 2;
@@ -731,7 +732,7 @@ class Matrix {
         }
     }
 
-    int isSafeOranges(final int[][] arr, final int rowIndex, final int colIndex) {
+    int isSafeOranges(int[][] arr, int rowIndex, int colIndex) {
         if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
                 && arr[rowIndex][colIndex] == 2) {
             return 2;
@@ -747,11 +748,11 @@ class Matrix {
             return -1;
     }
 
-    void diagonalPrintMatrix(final int[][] matrix) {
-        final int R = matrix.length - 1; // 2
-        final int C = matrix[0].length - 1; // 2
+    void diagonalPrintMatrix(int[][] matrix) {
+        int R = matrix.length - 1; // 2
+        int C = matrix[0].length - 1; // 2
         int sum = 0;
-        final int i = 0, j = 0;
+        int i = 0, j = 0;
         while (sum <= R * C) {
             findAndPrint(matrix, sum);
             sum++;
@@ -770,7 +771,7 @@ class Matrix {
         // }
     }
 
-    void findAndPrint(final int[][] matrix, final int sum) {
+    void findAndPrint(int[][] matrix, int sum) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 if (i + j == sum)
@@ -786,7 +787,7 @@ class Matrix {
         int time;
         boolean visited = false;
 
-        holder(final int rowIndex, final int colIndex, final int value, final int time, final boolean visited) {
+        holder(int rowIndex, int colIndex, int value, int time, boolean visited) {
             this.row = rowIndex;
             this.col = colIndex;
             this.value = value;
@@ -803,11 +804,11 @@ class Matrix {
         }
     }
 
-    void orangesRotting1May(final int[][] arr) {
+    void orangesRotting1May(int[][] arr) {
 
-        final Queue<holder> hold = new LinkedList<Matrix.holder>();
+        Queue<holder> hold = new LinkedList<Matrix.holder>();
 
-        final holder[][] finalTimeArray = new holder[arr.length][arr[0].length];
+        holder[][] finalTimeArray = new holder[arr.length][arr[0].length];
 
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
@@ -830,7 +831,7 @@ class Matrix {
         // System.out.println(hold.size());
 
         while (!hold.isEmpty()) {
-            final holder current = hold.poll();
+            holder current = hold.poll();
             // holder current = hold.remove();
             // System.out.print("index row:"+current.row+", index col"+current.col+",
             // visited "+ current.visited+", ");
@@ -845,7 +846,7 @@ class Matrix {
         }
     }
 
-    void orangesRotting1MayHelper(final int[][] arr, final Queue hold, final holder current, final holder[][] finalTimeArray) {
+    void orangesRotting1MayHelper(int[][] arr, Queue hold, holder current, holder[][] finalTimeArray) {
         if (isSafeOranges1May(finalTimeArray, current.row + 1, current.col)) {// into visited method
             if (isVisitedOranges1May(finalTimeArray, current.row + 1, current.col)) {
                 if ((finalTimeArray[current.row + 1][current.col]).time > current.time + 1) {
@@ -924,7 +925,7 @@ class Matrix {
 
     }
 
-    boolean isSafeOranges1May(final holder[][] arr, final int rowIndex, final int colIndex) {
+    boolean isSafeOranges1May(holder[][] arr, int rowIndex, int colIndex) {
         if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
                 && (arr[rowIndex][colIndex]).value != -1) {
             return true;
@@ -932,7 +933,7 @@ class Matrix {
         return false;
     }
 
-    boolean isVisitedOranges1May(final holder[][] arr, final int rowIndex, final int colIndex) {
+    boolean isVisitedOranges1May(holder[][] arr, int rowIndex, int colIndex) {
         if ((arr[rowIndex][colIndex]).visited == true)
             return true;
         return false;
@@ -943,7 +944,7 @@ class Matrix {
         int colIndex;
         int value;
 
-        BFSNode(final int rowIndex, final int colIndex, final int value) {
+        BFSNode(int rowIndex, int colIndex, int value) {
             this.rowIndex = rowIndex;
             this.colIndex = colIndex;
             this.value = value;
@@ -951,28 +952,28 @@ class Matrix {
 
     }
 
-    void BFSMatrix(final int[][] arr) {
+    void BFSMatrix(int[][] arr) {
 
-        final int i, j;
-        final int[][] visited = new int[arr.length][arr[0].length];
+        int i, j;
+        int[][] visited = new int[arr.length][arr[0].length];
 
-        final BFSNode node = new BFSNode(0, 0, arr[0][0]);
+        BFSNode node = new BFSNode(0, 0, arr[0][0]);
 
-        final Queue<BFSNode> bfsQueue = new LinkedList<>();
+        Queue<BFSNode> bfsQueue = new LinkedList<>();
         bfsQueue.add(node);
         visited[0][0] = 1;
 
         while (!bfsQueue.isEmpty()) {
-            final BFSNode x = bfsQueue.remove();
+            BFSNode x = bfsQueue.remove();
             System.out.print(x.value + ", ");
             // visited[x.rowIndex][x.colIndex] = 1;
             BFSMatrixHelper(arr, visited, x, bfsQueue);
         }
     }
 
-    void BFSMatrixHelper(final int[][] arr, final int[][] visited, final BFSNode node, final Queue bfsQueue) {
-        final int row = node.rowIndex;
-        final int col = node.colIndex;
+    void BFSMatrixHelper(int[][] arr, int[][] visited, BFSNode node, Queue bfsQueue) {
+        int row = node.rowIndex;
+        int col = node.colIndex;
 
         if (isSafeBFS(row + 1, col, arr)) {
             if (visited[row + 1][col] != 1) {
@@ -1007,7 +1008,7 @@ class Matrix {
         }
     }
 
-    boolean isSafeBFS(final int row, final int col, final int[][] arr) {
+    boolean isSafeBFS(int row, int col, int[][] arr) {
         if (row >= 0 && row < arr.length && col >= 0 && col < arr[0].length) {
             return true;
         }
@@ -1020,8 +1021,8 @@ class Matrix {
      */
     int countPathLength = 0;
 
-    void maxPathLength(final int[][] arr) {
-        final int[][] holder = new int[arr.length][arr[0].length];
+    void maxPathLength(int[][] arr) {
+        int[][] holder = new int[arr.length][arr[0].length];
         int max7jun = -1;
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
@@ -1042,7 +1043,7 @@ class Matrix {
      * be recurring for adjacent psns indefinitely dp is used to check if value
      * exists or not.
      */
-    int maxPathLengthHelper(final int[][] arr, final int i, final int j, final int[][] holder, final int curr) {
+    int maxPathLengthHelper(int[][] arr, int i, int j, int[][] holder, int curr) {
         /** should i put the check now or wait for the next func call with (i+1,j)? */
 
         // 1 check is put first
@@ -1050,15 +1051,15 @@ class Matrix {
         // for
         // left , right, up and down
         if (isSafePathLength(i, j, arr, curr)) {
-            final int value = arr[i][j];
+            int value = arr[i][j];
             // this line caused all problems
             if (holder[i][j] != 0) {
                 return holder[i][j];
             }
-            final int down = maxPathLengthHelper(arr, i + 1, j, holder, value);
-            final int up = maxPathLengthHelper(arr, i - 1, j, holder, value);
-            final int left = maxPathLengthHelper(arr, i, j - 1, holder, value);
-            final int right = maxPathLengthHelper(arr, i, j + 1, holder, value);
+            int down = maxPathLengthHelper(arr, i + 1, j, holder, value);
+            int up = maxPathLengthHelper(arr, i - 1, j, holder, value);
+            int left = maxPathLengthHelper(arr, i, j - 1, holder, value);
+            int right = maxPathLengthHelper(arr, i, j + 1, holder, value);
             // }
             // if(isSafePathLength(i+1, j, arr, value)){
             // // this.countPathLength++;
@@ -1082,7 +1083,7 @@ class Matrix {
             return 0;
     }
 
-    boolean isSafePathLength(final int row, final int col, final int[][] arr, final int curr) {
+    boolean isSafePathLength(int row, int col, int[][] arr, int curr) {
         if (row >= 0 && row < arr.length && col >= 0 && col < arr[0].length && arr[row][col] - curr >= 1) {
             return true;
         }
@@ -1092,9 +1093,9 @@ class Matrix {
     public int sumGold = 0;
     public int currSumGold = 0;
 
-    public int getMaximumGold(final int[][] grid) {
+    public int getMaximumGold(int[][] grid) {
 
-        final int[][] visited = new int[grid.length][grid[0].length];
+        int[][] visited = new int[grid.length][grid[0].length];
         int i, j;
         for (i = 0; i < grid.length; i++) {
             for (j = 0; j < grid[0].length; j++) {
@@ -1108,7 +1109,7 @@ class Matrix {
         return sumGold;
     }
 
-    void getMaxHelper(final int[][] grid, final int rowIndex, final int colIndex, final int sum, final int[][] visited) {
+    void getMaxHelper(int[][] grid, int rowIndex, int colIndex, int sum, int[][] visited) {
         if (rowIndex >= 0 && colIndex >= 0 && rowIndex < grid.length && colIndex < grid[0].length
                 && grid[rowIndex][colIndex] != 0 && visited[rowIndex][colIndex] == 0) {
 
@@ -1116,8 +1117,8 @@ class Matrix {
             System.out.println("currSumGold " + currSumGold);
             System.out.println("value " + grid[rowIndex][colIndex]);
             visited[rowIndex][colIndex] = 1;
-            final int[] row = { -1, 0, 0, 1 };
-            final int[] col = { 0, -1, 1, 0 };
+            int[] row = { -1, 0, 0, 1 };
+            int[] col = { 0, -1, 1, 0 };
 
             currSumGold = sum;
             for (int k = 0; k < row.length; k++) {
@@ -1126,7 +1127,7 @@ class Matrix {
         }
     }
 
-    void initializeToZero(final int[][] arr) {
+    void initializeToZero(int[][] arr) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
                 arr[i][j] = 0;
@@ -1138,9 +1139,9 @@ class Matrix {
     /**
      * 1 pass -9999 2 pass current value for subsequent 3 math.max for max
      */
-    void goldMine(final int[][] grid) {
+    void goldMine(int[][] grid) {
         int max = -1;
-        final int[][] dp = new int[grid.length][grid[0].length];
+        int[][] dp = new int[grid.length][grid[0].length];
         int j, i;
         for (i = 0; i < grid.length; i++) {
             for (j = 0; j < grid[0].length; j++) {
@@ -1150,19 +1151,19 @@ class Matrix {
         System.out.println("max gold is " + max);
     }
 
-    int goldMineHelper(final int[][] grid, final int rowIndex, final int colIndex, final int[][] dp, final int prev) {
+    int goldMineHelper(int[][] grid, int rowIndex, int colIndex, int[][] dp, int prev) {
 
         if (rowIndex >= 0 && rowIndex < grid.length && colIndex >= 0 && colIndex < grid[0].length
                 && prev < grid[rowIndex][colIndex] && grid[rowIndex][colIndex] != 0) {
             if (dp[rowIndex][colIndex] != 0)
                 return dp[rowIndex][colIndex];
 
-            final int curr = grid[rowIndex][colIndex];
+            int curr = grid[rowIndex][colIndex];
 
-            final int left = goldMineHelper(grid, rowIndex, colIndex - 1, dp, curr);
-            final int right = goldMineHelper(grid, rowIndex, colIndex + 1, dp, curr);
-            final int up = goldMineHelper(grid, rowIndex - 1, colIndex, dp, curr);
-            final int down = goldMineHelper(grid, rowIndex + 1, colIndex, dp, curr);
+            int left = goldMineHelper(grid, rowIndex, colIndex - 1, dp, curr);
+            int right = goldMineHelper(grid, rowIndex, colIndex + 1, dp, curr);
+            int up = goldMineHelper(grid, rowIndex - 1, colIndex, dp, curr);
+            int down = goldMineHelper(grid, rowIndex + 1, colIndex, dp, curr);
 
             dp[rowIndex][colIndex] = Math.max(left, Math.max(right, Math.max(up, down))) + curr;
             System.out.println("dp[" + rowIndex + "][" + colIndex + "] " + dp[rowIndex][colIndex]);
@@ -1172,9 +1173,9 @@ class Matrix {
     }
 
     // https://www.includehelp.com/icp/gold-mine-problem.aspx
-    int GoldMine7Jun(final int[][] arr, final int n, final int m) {
+    int GoldMine7Jun(int[][] arr, int n, int m) {
         // DP table
-        final int[][] DP = new int[n][m];
+        int[][] DP = new int[n][m];
 
         for (int i = 0; i < n; i++)
             DP[i][0] = arr[i][0];
@@ -1217,9 +1218,9 @@ class Matrix {
 
     /** the -1s are inaccessible; reduce 99 to lowest dist from 0 */
 
-    void wallsAndGates(final int[][] grid) {
-        final int[][] dp = new int[grid.length][grid[0].length];
-        final int[][] visited = new int[grid.length][grid[0].length];
+    void wallsAndGates(int[][] grid) {
+        int[][] dp = new int[grid.length][grid[0].length];
+        int[][] visited = new int[grid.length][grid[0].length];
 
         int i, j;
 
@@ -1254,7 +1255,7 @@ class Matrix {
      * visited!=1, and assign to dp outside the helper
      */
 
-    int wallsAndGatesHelper(final int[][] grid, final int row, final int col, final int[][] dp, final int[][] visited) {
+    int wallsAndGatesHelper(int[][] grid, int row, int col, int[][] dp, int[][] visited) {
         if (row > -1 && row < grid.length && col > -1 && col < grid[0].length && grid[row][col] != -1
                 && visited[row][col] != 1) {
             if (dp[row][col] != 0)
@@ -1265,16 +1266,16 @@ class Matrix {
             visited[row][col] = 1;
 
             // if(grid[row][col]==-1) return 99;
-            final int left = wallsAndGatesHelper(grid, row, col - 1, dp, visited);
-            final int right = wallsAndGatesHelper(grid, row, col + 1, dp, visited);
-            final int up = wallsAndGatesHelper(grid, row - 1, col, dp, visited);
-            final int down = wallsAndGatesHelper(grid, row + 1, col, dp, visited);
+            int left = wallsAndGatesHelper(grid, row, col - 1, dp, visited);
+            int right = wallsAndGatesHelper(grid, row, col + 1, dp, visited);
+            int up = wallsAndGatesHelper(grid, row - 1, col, dp, visited);
+            int down = wallsAndGatesHelper(grid, row + 1, col, dp, visited);
 
             System.out.println("left " + left + ", right " + right + ", up " + up + ", down " + down);
             // dp[row][col] = Math.min(left, Math.min(right, Math.min(up, down)))+1;
             // System.out.println("dp[" +row+"]["+col+"] "+ dp[row][col]);
             System.out.println("visited[" + row + "][" + col + "] " + visited[row][col]);
-            final int val = Math.min(left, Math.min(right, Math.min(up, down))) + 1;
+            int val = Math.min(left, Math.min(right, Math.min(up, down))) + 1;
             System.out.println("val " + val);
             return val;
 
@@ -1286,10 +1287,10 @@ class Matrix {
      * we are starting from each zero and keeping a counter, if the grid[i][j] >
      * counter, we update it
      */
-    void wallsAndGatesKevin(final int[][] matrix) {
+    void wallsAndGatesKevin(int[][] matrix) {
         int i, j;
 
-        final int[][] dp = new int[matrix.length][matrix[0].length];
+        int[][] dp = new int[matrix.length][matrix[0].length];
 
         for (i = 0; i < matrix.length; i++) {
             for (j = 0; j < matrix[0].length; j++) {
@@ -1316,7 +1317,7 @@ class Matrix {
      */
 
     // try using BFS
-    void wallsAndGatesHelperKevin(final int[][] grid, final int row, final int col, final int[][] dp, final int count) {
+    void wallsAndGatesHelperKevin(int[][] grid, int row, int col, int[][] dp, int count) {
         if (row > -1 && row < grid.length && col > -1 && col < grid[0].length && grid[row][col] != -1 && count >= 0 // &&
                                                                                                                     // count<99
                 && grid[row][col] >= count) {
@@ -1328,7 +1329,7 @@ class Matrix {
         }
     }
 
-    void antiDiaPrint(final int[][] arr) {
+    void antiDiaPrint(int[][] arr) {
         int sum = 0;
         while (sum <= (arr.length - 1 + arr[0].length - 1)) {
             for (int i = 0; i < arr.length; i++) {
@@ -1342,7 +1343,7 @@ class Matrix {
         }
     }
 
-    boolean searchRowColSortedMatrix(final int[][] arr, final int num) {
+    boolean searchRowColSortedMatrix(int[][] arr, int num) {
         int row = -1;
         for (int i = 0; i < arr.length - 1; i++) {
             if (arr[i + 1][0] > num && arr[i][0] < num)
@@ -1358,7 +1359,7 @@ class Matrix {
         return binsearch(arr, row, num, 0, arr[0].length - 1);
     }
 
-    boolean binsearch(final int[][] arr, final int row, final int num, final int start, final int end) {
+    boolean binsearch(int[][] arr, int row, int num, int start, int end) {
         if (start > end)
             return false;
         int mid = -1;
@@ -1373,9 +1374,9 @@ class Matrix {
             return binsearch(arr, row, num, mid + 1, end);
     }
 
-    void dfs(final int[][] arr){
-        final int n = arr.length; final int m = arr[0].length;
-        final int[][] visited = new int[n][m];
+    void dfs(int[][] arr){
+        int n = arr.length; int m = arr[0].length;
+        int[][] visited = new int[n][m];
 
         for(int i =0; i<n; i++){
             for(int j = 0; j<m; j++){
@@ -1384,7 +1385,7 @@ class Matrix {
         }
     }
 
-    void dfsUtil(final int[][] arr, final int row, final int col, final int[][] visited){
+    void dfsUtil(int[][] arr, int row, int col, int[][] visited){
         if(isSafedfs(arr, row, col)) {
             if(visited[row][col]==0){
                 visited[row][col] = 1;
@@ -1397,25 +1398,57 @@ class Matrix {
         }
     }
 
-    boolean isSafedfs(final int[][] arr,final int row, final int col){
+    boolean isSafedfs(int[][] arr,int row, int col){
         if(row>=0 && row<arr.length
         && col>=0 && col<arr[0].length) return true;
         return false;
     }
     
     int countPath;
+
+
+    // public int maximalRectangle(char[][] matrix) {
+    //     int n = matrix.length; int m = matrix[0].length;
+    //     int[][] dp = new int[n][m];
+    //     int max = 0;
+        
+    //     for(int i =0; i<n; i++){
+    //         for(int j =0; j<m ;j++){
+    //             if(matrix[i][j] == '0') dp[i][j] = 0;
+    //             else dp[i][j] =1;
+    //         }
+    //     }
+        
+    //     for(int i =1; i<n; i++){
+    //         for(int j =1; j<m ;j++){
+    //             if(matrix[i-1][j] !='0' && matrix[i][j]!='0'  
+    //             && matrix[i][j-1]!='0' && matrix[i-1][j-1]!='0'){
+    //                 dp[i][j] = Math.max(dp[i-1][j-1], 
+    //                 Math.max(dp[i-1][j], dp[i][j-1]+1))+1;
+    //             }
+    //         }
+    //     }
+        
+    //     utilCustom.Utility.printMatrix(dp);
+    //     for(int i =1; i<n; i++){
+    //         for(int j =1; j<m ;j++){
+    //             max =Math.max(max, dp[i][j]);
+    //         }
+    //     }
+    //     return max;
+    // }
     
    //all paths from a to b 
    //https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/
 
     // https://leetcode.com/problems/island-perimeter/
-
+    
     // https://leetcode.com/problems/pacific-atlantic-water-flow/
-    public static void main(final String[] args) {
-        final Matrix matrix = new Matrix();
-        final int[][] twoDimArr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, 
+    public static void main(String[] args) {
+        Matrix matrix = new Matrix();
+        int[][] twoDimArr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, 
         { 13, 14, 15, 16 } };// new int[2][2];
-        final int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
+        int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
         // matrix.printInSnakeFormat(twoDimArr);
 
         // matrix.rotateByKElements(twoDimArr, 1);
@@ -1426,7 +1459,7 @@ class Matrix {
         // matrix.maxPathSumWithDP(arr, 0, 0, matrix.fill2DArray(dp, 3, 3));
         // System.out.println(matrix.findMaxIn2DArray(dp));
 
-        final int[][] arr1 = { { 9, 9, 4 }, { 6, 6, 8 }, { 2, 1, 1 } };
+        int[][] arr1 = { { 9, 9, 4 }, { 6, 6, 8 }, { 2, 1, 1 } };
         // matrix.longestPathFromAnyIndex(arr1, 0, 0);
         // System.out.println(matrix.longestIncreasingPath(arr1));
 
@@ -1437,8 +1470,8 @@ class Matrix {
         // matrix.numberOfIslands(islandMatrix));
         // System.out.println("the max 1s are "+matrix.findMaxOnesRegion(islandMatrix));
 
-        final int[][] arr28Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
-        final int[][] arr29Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
+        int[][] arr28Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
+        int[][] arr29Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
         // matrix.printSpiral29Apr(arr29Apr);
         // int[][] onesArray =
         // {{0,0,0,1,1},{0,1,1,1,1},{0,0,1,1,1},{1,1,1,1,1},{0,0,0,0,0}};
@@ -1448,11 +1481,11 @@ class Matrix {
         // matrix.floodFill(floodFillArray);
         // matrix.showMatrix(floodFillArray);
 
-        final int[][] orangesArray = { { 2, 1, 1 }, { 0, 1, 1 }, { 1, 0, 1 } };
-        final int v[][] = { { 2, 1, 0, 2, 1 }, { 1, 0, 1, 2, 1 }, { 1, 0, 0, 2, 1 } };
+        int[][] orangesArray = { { 2, 1, 1 }, { 0, 1, 1 }, { 1, 0, 1 } };
+        int v[][] = { { 2, 1, 0, 2, 1 }, { 1, 0, 1, 2, 1 }, { 1, 0, 0, 2, 1 } };
 
         // int[][] pathArray = {{9,9,4},{6,6,8},{2,1,1}};
-        final int[][] pathArray = { { 7, 7, 5 }, { 2, 4, 6 }, { 8, 2, 0 } };
+        int[][] pathArray = { { 7, 7, 5 }, { 2, 4, 6 }, { 8, 2, 0 } };
         // matrix.orangesRotting(orangesArray);
 
         // matrix.diagonalPrintMatrix(orangesArray);
@@ -1461,25 +1494,33 @@ class Matrix {
         // matrix.BFSMatrix(arr28Apr);
         // matrix.maxPathLength(arr1);
 
-        final int[][] goldArray = { { 0, 6, 0 }, { 5, 8, 7 }, { 0, 9, 0 } };
+        int[][] goldArray = { { 0, 6, 0 }, { 5, 8, 7 }, { 0, 9, 0 } };
         // matrix.goldMine(goldArray);
 
         // System.out.println("max gold is "+matrix.GoldMine7Jun(goldArray, 3, 3));
 
-        final int[][] wallsAndGates = { { 99, -1, 0, 99 }, { 99, 99, 99, -1 }, { 99, -1, 99, -1 }, { 0, -1, 99, 99 } };
+        int[][] wallsAndGates = { { 99, -1, 0, 99 }, { 99, 99, 99, -1 }, { 99, -1, 99, -1 }, { 0, -1, 99, 99 } };
         // matrix.wallsAndGates(wallsAndGates);
         // matrix.wallsAndGatesKevin(wallsAndGates);
         // matrix.antiDiaPrint(twoDimArr);
 
-        final int[][] matRowColSorted = { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 }, { 32, 33, 39, 50 } };
-        final int num = 100;
+        int[][] matRowColSorted = { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 }, { 32, 33, 39, 50 } };
+        int num = 100;
 
         // System.out.println(matrix.searchRowColSortedMatrix(matRowColSorted, num));
 
         // matrix.dfs(twoDimArr);
 
-        final int[][] path = {{0,1,1,1},{0,0,0,1},{1,1,0,0}, {0,0,0,0}};
+        int[][] path = {{0,1,1,1},{0,0,0,1},{1,1,0,0}, {0,0,0,0}};
         // matrix.allPathsFromAtoB(path, 2,  3);
+
+        char[][] maximalRectangle = {{'1','0','1','0','0'},
+                     {'1','0','1','1','1'},{'1','1','1','1','1'},
+                     {'1','0','0','1','0'}};
+
+        // matrix.maximalRectangle(maximalRectangle);
+
+
 
     }
 
