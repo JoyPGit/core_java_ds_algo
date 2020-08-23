@@ -1416,6 +1416,11 @@ public class DP {
     // discuss/766002/Java-DP-without-recursion
 
     // https://leetcode.com/problems/wiggle-subsequence/
+    /** 
+     * similar to ap sequence, if diff>0 look for -ve and if
+     * diff<0 look for +ve
+     * compare and update if greater
+     * */
     class Wiggle{
         int pos; int neg;
         Wiggle(int p , int n){

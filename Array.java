@@ -712,26 +712,6 @@ class Array {
         return sum;
     }
 
-    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
-    public ArrayList<Integer> findDuplicates(int[] nums) {
-        int n = nums.length;
-        Arrays.sort(nums);
-        ArrayList<Integer> list = new ArrayList<>();
-        
-        for(int i =0; i<n-1; i++){
-            while((i<n-1) && (nums[i]^nums[i+1]) == 0){
-                list.add(nums[i]);
-                i++;//to get rid of similar elements
-            } 
-            // val = val^nums[i];
-        }
-        
-        System.out.println(3^3);
-        // System.out.println(4^3);
-        System.out.println("list is "+list);
-        return list;
-    }
-
     // https://leetcode.com/problems/first-missing-positive/
     // inaccurate soln but works for tougher ques
     public int firstMissingPositive(int[] nums) {
@@ -781,6 +761,20 @@ class Array {
     // https://leetcode.com/problems/next-greater-element-ii/
 
     // https://leetcode.com/problems/subarray-product-less-than-k/
+    // https://leetcode.com/problems/find-all-duplicates-in-an-array/
+    /**  use the concept of mapping indexes to values */
+    public List<Integer> findDuplicates(int[] nums) {
+        int n = nums.length;
+        ArrayList<Integer> list = new ArrayList<>();
+        
+        for(int i =0; i<n; i++){
+           if(nums[Math.abs(nums[i])-1]>0) nums[Math.abs(nums[i])-1]*=(-1);
+           else if(nums[Math.abs(nums[i])-1]<0) list.add(Math.abs(nums[i])); 
+        }
+        
+        return list;
+    }
+
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     public static void main(String[] args) {
         // code
