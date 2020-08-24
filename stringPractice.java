@@ -900,6 +900,8 @@ class StringPractice {
 
     // https://leetcode.com/problems/boats-to-save-people/
     // https://leetcode.com/problems/rearrange-string-k-distance-apart/
+
+    // https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/
     public static void main(String[] args) {
         StringPractice string = new StringPractice();
         // System.out.println(string.reverse("word of"));

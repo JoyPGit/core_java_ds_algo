@@ -2689,6 +2689,9 @@ public class Tree {
         curr.right = build(list, mid+1, end);
         return curr;
     }
+
+    // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
+    // #:~:text=Given%20a%20binary%20tree%2C%20we,7%2C%209%2C%2010).
     /////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();

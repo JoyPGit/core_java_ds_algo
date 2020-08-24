@@ -349,6 +349,7 @@ public class PermutationsCombinationsAndSubsets {
        return true;
     }    
 
+    // https://www.geeksforgeeks.org/palindrome-partitioning-dp-17/
     // https://leetcode.com/problems/letter-case-permutation/
     // https://leetcode.com/problems/next-permutation/
     // https://leetcode.com/problems/letter-combinations-of-a-phone-number/

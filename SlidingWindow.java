@@ -8,18 +8,24 @@ public class SlidingWindow {
         }
     }
 
-    // BY DEFAULT, RUN 2 LOOPS, ONE FOR THE FIRST WINDOW AND OTHER TILL N;
+    /** 
+     * 
+     * BY DEFAULT, RUN 2 LOOPS, ONE FOR THE FIRST WINDOW AND OTHER TILL N;
+     * 
+     * SHRINK TILL IT'S LESSER BUT ADD IN EACH ITERATION
+     * (check subarray-product-less-than-k)
+     * 
+     * 3 techniques
+     * 
+     * 1 IMP FOR LOOP AND THEN SHRINK USING WHILE LOOP 
+        minSubArrayLenWithSumGreaterThanOrEqualK
+        
+     * 2 USING DEQUE, LINE 152, INCLUDE AND EXCLUDE, CHECK OUTGOING WITH INCOMING
+        findFirstNegative
 
-    // 3 techniques
-    // 1 IMP LINE 126, FOR LOOP AND THEN SHRINK USING WHILE LOOP 
-    // minSubArrayLenWithSumGreaterThanOrEqualK
-    //  
-    
-    // 2 USING DEQUE, LINE 152, INCLUDE AND EXCLUDE, CHECK OUTGOING WITH INCOMING
-    // findFirstNegative
-
-    // 3 USING DEQUE, LINE 84, WHILE ADDING POP TILL LARGER 
-    // maxSlidingWindowStack
+     * 3 USING DEQUE, LINE 84, WHILE ADDING POP TILL LARGER 
+        maxSlidingWindowStack
+    */
 
     /**mostly we use deque, sometimes hashmap 
      * deque properties;
@@ -77,7 +83,8 @@ public class SlidingWindow {
         return res;
     }
 
-    /**max els in every window, use deque, 
+    /**
+     * max els in every window, use deque, 
      * run 2 loops, pop till el is larger
      * 
      * same technique is used often
@@ -118,6 +125,38 @@ public class SlidingWindow {
         }
         print1DMatrix(res);
         return res;
+    }
+
+
+    
+    // https://leetcode.com/problems/subarray-product-less-than-k/
+    /**  
+        https://leetcode.com/problems/subarray-product-less-than-k/discuss/
+        741191/JAVA-Simple-Solution%3A-Sliding-Window
+        nums = [10, 5, 2, 6], k = 100; Output: 8
+
+     * SIMILAR SHRINKING TECHNIQUE
+     * 1 BOUNDARY CONDITION IS IMP if(k<=1) return 0;
+     * 2 COUNT IS UPDATED THROUGHOUT
+     * 3 WHEN PROD>K, IT'S BROUGHT UNDER K
+     * 4 (i - start+1) ADDS ALL THE ELS AND 1 EXTRA FOR THE SUBARRAY 
+     *   FROM start+1 TILL i AS A WHOLE
+
+    */
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if(k<=1) return 0;
+        int n = nums.length;
+        
+        int prod = 1; int count = 0; int start =0;
+        for(int i =0; i<n; i++){
+            prod*=nums[i];
+            while(prod>=k){
+                prod/=nums[start];
+                start++;
+            }
+            count+=i-start+1;
+        }
+        return count;
     }
 
 
