@@ -85,28 +85,27 @@ public class Recursion {
 
     }
 
-    void printWithoutLoop(int num){
+    void printWithoutLoop(int num) {
         printWithoutLoopSubtract(num);
         printWithoutLoopAdd(num);
     }
 
-    void printWithoutLoopSubtract(int num){
-        if(num>0){
-            System.out.print(num+", ");
-            printWithoutLoopSubtract(num-5);    
+    void printWithoutLoopSubtract(int num) {
+        if (num > 0) {
+            System.out.print(num + ", ");
+            printWithoutLoopSubtract(num - 5);
         }
         return;
     }
 
-    void printWithoutLoopAdd(int num){
-        if(num!=16){
-            System.out.print(num+", ");
-            printWithoutLoopAdd(num+5);    
+    void printWithoutLoopAdd(int num) {
+        if (num != 16) {
+            System.out.print(num + ", ");
+            printWithoutLoopAdd(num + 5);
         }
-        System.out.print(num+", ");
+        System.out.print(num + ", ");
         return;
     }
-
 
     boolean subsetSum(int[] arr, int sum, int index) {
         if (index >= arr.length)
@@ -116,42 +115,6 @@ public class Recursion {
         return subsetSum(arr, sum - arr[index], index + 1) || subsetSum(arr, sum, index + 1);
     }
 
-    // void divideInKSubsets(int[] arr , int k){
-    // int sum =0;
-    // for(int i =0; i<arr.length; i++){
-    // sum+=arr[i];
-    // }
-
-    // if(sum%k!=0) return;
-    // ArrayList<ArrayList<Integer>> listHolder = new
-    // ArrayList<ArrayList<Integer>>();
-
-    // for(int i=0; i<k; i++){
-    // listHolder.add(new ArrayList<Integer>());
-    // }
-
-    // divideInKSubsetsHelper(arr, k, listHolder, sum/k, 0);
-    // }
-
-    // boolean proceed = true;
-    // void divideInKSubsetsHelper(int[] arr, int k, ArrayList<ArrayList<Integer>>
-    // holder,
-    // int sum, int index){
-    // if(sum == 0) {
-    // System.out.println("found"); this.proceed = false;
-    // printListOflists(holder);
-    // return;
-    // }
-
-    // if(index==arr.length) return;
-    // for(int i =0; i<k; i++){
-    // if(this.proceed){
-    // divideInKSubsetsHelper(arr, k, holder, sum, index+1);
-    // holder.get(i).add(arr[index]);
-    // divideInKSubsetsHelper(arr, k, holder, sum-arr[index], index+1);
-    // }
-    // }
-    // }
 
     void divideInKSubsetsArray(int[] arr, int k) {
         int sum = 0;
@@ -213,7 +176,7 @@ public class Recursion {
                 startToDestination(start + 2, end);
             }
         } catch (Exception e) {
-            // TODO : handle exception 
+            // handle exception
             System.out.println(e);
             e.printStackTrace();
             throw new Exception(e);
@@ -271,8 +234,116 @@ public class Recursion {
         allSubsetHelper(arr, subset, index + 1);
     }
 
-    /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
-    int lcs(char[] X, char[] Y, int m, int n) {
+
+    /**
+     * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
+     * use BACKTRACKING FORMAT 
+     * 
+     * 1 dfs(){ res.add; for(){ add(i) //ADD dfs(i+1)
+     * remove(list.size()-1) //REMOVE } }
+     * 
+     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE COUNTED
+     * SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7 
+     * 
+     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
+     * 4 START WITH i = start AND USE i NOT start 
+     * 5 FOR NO DUPLICATES -> !res.contains(list)
+     */
+
+    int uniqueCombinationsSumK(int[] arr, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        // Arrays.sort(arr);
+        int start = 0;
+        int sum = 0;
+        dfs(res, list, arr, k, start, sum);
+        System.out.println(res);
+        return res.size();
+    }
+
+    void dfs(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
+        if (sum > k)
+            return;
+
+        if (k == sum && !res.contains(list))
+            res.add(new ArrayList<>(list));
+        else {
+            for (int i = start; i < arr.length; i++) {
+                list.add(arr[i]);
+                dfs(res, list, arr, k, i + 1, sum + arr[i]);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+
+    // https://www.geeksforgeeks.org/
+    // partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum/
+    /*
+     * return the min diff {1, 6, 11, 5} ; diff = 1 (12-11)
+     * 
+     * Using the same technique of backtracking as in combinations 
+     * for dividing in 2, set target of sum/2 add a check for target == 0
+     */
+    void partitionIn2(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        int sum = 0;
+        for (int i : nums) sum += i;
+        int target = sum / 2;
+        partitionIn2Util(nums, target, 0, res, list);
+    }
+
+    
+    void partitionIn2Util(int[] nums, int target, int start, List<List<Integer>> res, List<Integer> list) {
+        if (target < 0)
+            return;
+        else if (target == 0)
+            System.out.println(list);
+        else {
+            for (int i = start; i < nums.length; i++) {
+                list.add(nums[i]);
+                partitionIn2Util(nums, target - nums[i], i + 1, res, list);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
+    // discuss/795846/Java-Easy-to-understand-DFS-or-Faster-than-98
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+
+        int t = 0;
+        for (int i = 0; i < nums.length; i++) t += nums[i];
+        if (t % k != 0) return false;
+        int target = t / k;
+        boolean[] visited = new boolean[nums.length];
+
+        return partition(0, visited, nums, k, target, 0);
+    }
+
+    public boolean partition(int index, boolean[] visited, int[] nums, int k, int target, int sum) {
+        if (k == 0) {
+            return true;
+        }
+        if (target == sum) {
+            return partition(0, visited, nums, k - 1, target, 0);
+        }
+
+        for (int i = index; i < nums.length; i++) {
+            if (!visited[i] && sum + nums[i] <= target) {
+                visited[i] = true;
+                if (partition(i + 1, visited, nums, k, target, sum + nums[i])) {
+                    return true;
+                }
+                visited[i] = false;
+            }
+        }
+        return false;
+    }
+
+     /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
+     int lcs(char[] X, char[] Y, int m, int n) {
         System.out.println("m " + m + " n " + n);
         if (m == 0 || n == 0)
             return 0;
@@ -285,92 +356,30 @@ public class Recursion {
         }
     }
 
+    // https://www.geeksforgeeks.org/sort-a-stack-using-recursion/
+    // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
+    // https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/
+
+    // https://www.geeksforgeeks.org/count-number-ways-reach-given-score-game/
     // https://leetcode.com/problems/different-ways-to-add-parentheses/
     // discuss/66328/A-recursive-Java-solution-(284-ms)
 
-    // https://practice.geeksforgeeks.org/problems/reach-a-given-score/0
-    // int reachScore(int score){
-
-    // reachScoreHelper(score, )
-    // }
-
-    /**
-     *  https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
-     *  use BACKTRACKING FORMAT
-     * 1 dfs(){
-     *   res.add;
-     *   for(){
-     *    add(i)                   //ADD
-     *    dfs(i+1)
-     *    remove(list.size()-1)    //REMOVE
-     *   }
-     *  }
-     * 
-     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE 
-     *   COUNTED SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7
-     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
-     * 4 START WITH i = start AND USE i NOT start
-     * 5 FOR NO DUPLICATES -> !res.contains(list)
-     */
-
-    int uniqueCombinations(int[] arr, int k){
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        // Arrays.sort(arr);
-        int start = 0; int sum =0;
-        dfs(res, list, arr, k, start, sum);
-        System.out.println(res);
-        return res.size();
-    }
-
-    void dfs(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum){
-        if(sum>k) return;
-
-        if(k == sum && !res.contains(list)) res.add(new ArrayList<>(list));
-        else{
-            for(int i = start; i<arr.length; i++){
-                list.add(arr[i]);
-                dfs(res, list, arr, k, i+1, sum+arr[i]);
-                list.remove(list.size()-1);
-            }
-        }
-    }
-    // https://www.geeksforgeeks.org/sort-a-stack-using-recursion/
-    // incomplete
-    // void sortStack(int[] arr){
-    // Deque<Integer> stack = new LinkedList<>();
-    // for(int i =0; i<arr.length; i++){
-    // stack.addLast(arr[i]);
-    // }
-
-    // sortStackUtil(stack);
-    // }
-    // //incomplete
-    // void sortStackUtil(Deque<Integer> stack){
-    // int top = stack.removeLast();
-    // while(stack.getLast()>top){
-
-    // }
-    // }
-
-    // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
-    // https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/
-    
-    // https://www.geeksforgeeks.org/count-number-ways-reach-given-score-game/
     // https://www.geeksforgeeks.org/recursively-break-number-3-parts-get-maximum-sum/
+    // https://leetcode.com/problems/all-possible-full-binary-trees/
+    // discuss/216853/Java%3A-Easy-with-Examples
+
     public static void main(String[] args) throws Exception {
         Recursion recur = new Recursion();
-        
+
         int[] stones =
                 // {0,1,2,3};
                 // {0,1,2,7};
                 // {0,1,3,5,6,8,12,17};
                 // {0,1,2,3,4,8,9,11};
-                {0,1,2,3,4,5,6,12};
+                { 0, 1, 2, 3, 4, 5, 6, 12 };
         // recur.canCross(stones);
 
         // recur.printWithoutLoop(16);
-
 
         int set[] = { 3, 34, 4, 12, 5, 2 }, sum = 30;
         // {3, 34, 4, 12, 5, 2}, sum = 9;
@@ -385,14 +394,20 @@ public class Recursion {
         int end = 92;
         // recur.startToDestination(start, end);
 
-        int[] nums = {3,6,5,1,8};
+        int[] nums = { 3, 6, 5, 1, 8 };
         // System.out.println("max sum div by 3 "+recur.maxSumDivThree(nums));
 
         int[] subsets = { 1, 2 };
         // recur.allSubsets(subsets);
 
-        int[] uniqueComb = { 10, 1, 2, 7, 6, 1, 5 }; 
+        int[] uniqueComb = { 10, 1, 2, 7, 6, 1, 5 };
         // { 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5 };
-        recur.uniqueCombinations(uniqueComb, 8);
+        recur.uniqueCombinationsSumK(uniqueComb, 8);
+
+        int[] partition = { 1, 2, 3, 1 };
+        // { 5, 6, 1, 11 };
+        // System.out.println(recur.partition(partition));
+        System.out.println("------------------");
+        recur.partitionIn2(uniqueComb);
     }
 }

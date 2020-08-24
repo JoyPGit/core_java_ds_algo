@@ -42,16 +42,19 @@ public class PermutationsCombinationsAndSubsets {
      *  }
      * 
      * ADDITION AND REMOVAL INSIDE FOR LOOP, 
-     * START WITH i = start AND USE i NOT start
+     * IF NO REUSE, START WITH i = start AND USE i NOT start
+     * ELSE START WITH i
      * -----------------------------------------
      * WHENEVER UNIQUE,
      * ARRAYS.SORT(NUMS) && !RES.CONTAINS(LIST) 
      * -----------------------------------------
      * Arrays.sort(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE 
      *  COUNTED SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7
-     *  NOT USED IN NORMAL PERMUTATION
-     * -----------------------------------------
+     *  NOT USED IN PERMUTATION
+     * -----------------------------------------------------
      * 
+     * if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
+     * -----------------------------------------------------
      * 1 List<ArrayList<Integer>> res = new ArrayList<>();
      *  List<Integer> list = new ArrayList<>();
      *  dfs(res, list, nums, 0);
@@ -59,14 +62,17 @@ public class PermutationsCombinationsAndSubsets {
      * 
      
      * 
-     * 2 ALWAYS PASS A NEW ARRAYLIST AS AN ARG AFTER INITIALIZATION (list here)
+     * 2 ALWAYS PASS A NEW ARRAYLIST AS AN ARG AFTER INITIALIZATION 
      * 
      * 3 add new ArrayList<>(list) to res
      * 
      * 4 subsets without duplicates, use hashmap
      *   (or) nums[i] == nums[i-1] && i>start
      * 5 for permutations, use list.size() == length
+     * 
      * 6 for reusing the same element; just loop with i instead of i+1, 
+     *   IN PERMUTATIONS, ALWAYS START WITH i
+     * 
      * 7 while checking for target value, add 2 checks for sum<0 and sum == 0
      * 
      * 
@@ -279,7 +285,7 @@ public class PermutationsCombinationsAndSubsets {
     public List<List<Integer>> combinationSum(int[] nums, int target) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
-        Arrays.sort(nums);
+        // Arrays.sort(nums); not reqd
         dfs(res, list, nums, target, 0);
         return res;
     }
