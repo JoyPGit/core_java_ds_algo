@@ -31,15 +31,26 @@ public class PermutationsCombinationsAndSubsets {
      * POINTS : 
      * -------------------------------------
      * use BACKTRACKING FORMAT
+     * Arrays.sort(NUMS)
      *  dfs(){
      *   res.add;
      *   for(){
      *    add(i)                   //ADD
-     *    dfs(i)
+     *    dfs(i+1)
      *    remove(list.size()-1)    //REMOVE
      *   }
      *  }
-     * -------------------------------------
+     * 
+     * ADDITION AND REMOVAL INSIDE FOR LOOP, 
+     * START WITH i = start AND USE i NOT start
+     * -----------------------------------------
+     * WHENEVER UNIQUE,
+     * ARRAYS.SORT(NUMS) && !RES.CONTAINS(LIST) 
+     * -----------------------------------------
+     * Arrays.sort(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE 
+     *  COUNTED SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7
+     *  NOT USED IN NORMAL PERMUTATION
+     * -----------------------------------------
      * 
      * 1 List<ArrayList<Integer>> res = new ArrayList<>();
      *  List<Integer> list = new ArrayList<>();
@@ -165,12 +176,14 @@ public class PermutationsCombinationsAndSubsets {
     // Given a collection of distinct integers, return all possible permutations
     /** 
      * what's the diff w.r.t combinations?
-     * 1 only add when size == nums.length, 
-     * 2 start from 0th index always, AND THE CHECK IS NOT ON INDEX
+     * 1 Arrays.sort(nums) is not used
+     * 
+     * 2 only add when size == nums.length, 
+     * 3 start from 0th index always, AND THE CHECK IS NOT ON INDEX
      *   RATHER ON THE PRESENCE OF THE EL, AS WE ITERATE FROM START
      *   EVERY TIME
      * 
-     * 3 IMP IF NO HASHMAP; LIST.CONTAINS WORKS
+     * 4 IMP IF NO HASHMAP; LIST.CONTAINS WORKS
      *   use hashmap
      *   (or) nums[i] == nums[i-1] && i>start
      */
@@ -242,7 +255,7 @@ public class PermutationsCombinationsAndSubsets {
 
     
     // https://leetcode.com/problems/combinations/
-    // for all combinations of size k; add a check for list.size
+    // if all combinations of size k are reqd; add a check for list.size
     public List<List<Integer>> combine(int n, int k) {
         int[] nums = new int[n];
         for(int i=0; i<n; i++) nums[i] = i+1;

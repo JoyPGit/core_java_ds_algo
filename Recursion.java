@@ -213,7 +213,7 @@ public class Recursion {
                 startToDestination(start + 2, end);
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            // TODO : handle exception 
             System.out.println(e);
             e.printStackTrace();
             throw new Exception(e);
@@ -294,18 +294,47 @@ public class Recursion {
     // reachScoreHelper(score, )
     // }
 
-    // https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
-    // int uniqueCombinations(int[] arr, int k){
-    // ArrayList<Integer> list = new ArrayList<>();
+    /**
+     *  https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
+     *  use BACKTRACKING FORMAT
+     * 1 dfs(){
+     *   res.add;
+     *   for(){
+     *    add(i)                   //ADD
+     *    dfs(i+1)
+     *    remove(list.size()-1)    //REMOVE
+     *   }
+     *  }
+     * 
+     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE 
+     *   COUNTED SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7
+     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
+     * 4 START WITH i = start AND USE i NOT start
+     * 5 FOR NO DUPLICATES -> !res.contains(list)
+     */
 
-    // for(int i =0; i<arr.length; i++){
-    // list.add(arr[i]);
-    // while(i+1<arr.length && arr[i] == arr[i+1]) i++;
-    // }
-    // System.out.println(list);
-    // return 1;
-    // }
+    int uniqueCombinations(int[] arr, int k){
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        // Arrays.sort(arr);
+        int start = 0; int sum =0;
+        dfs(res, list, arr, k, start, sum);
+        System.out.println(res);
+        return res.size();
+    }
 
+    void dfs(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum){
+        if(sum>k) return;
+
+        if(k == sum && !res.contains(list)) res.add(new ArrayList<>(list));
+        else{
+            for(int i = start; i<arr.length; i++){
+                list.add(arr[i]);
+                dfs(res, list, arr, k, i+1, sum+arr[i]);
+                list.remove(list.size()-1);
+            }
+        }
+    }
     // https://www.geeksforgeeks.org/sort-a-stack-using-recursion/
     // incomplete
     // void sortStack(int[] arr){
@@ -362,7 +391,8 @@ public class Recursion {
         int[] subsets = { 1, 2 };
         // recur.allSubsets(subsets);
 
-        int[] uniqueComb = { 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5 };
-        // recur.uniqueCombinations(uniqueComb, k);
+        int[] uniqueComb = { 10, 1, 2, 7, 6, 1, 5 }; 
+        // { 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5 };
+        recur.uniqueCombinations(uniqueComb, 8);
     }
 }
