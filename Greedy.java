@@ -557,6 +557,8 @@ class Greedy{
 		return result.toArray(new int[result.size()][]);
     }
 
+    // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
+    // EVENT SCHEDULER
     
     // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
     // MICROSOFT

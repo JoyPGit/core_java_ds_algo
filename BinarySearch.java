@@ -131,6 +131,7 @@ public class BinarySearch {
             return binsearch(arr, row, num, mid + 1, end);
     }
 
+    // https://jackygao.wordpress.com/2014/09/04/the-painters-partition-problem-part-ii/
 
       public static void main(String[] args) {
         BinarySearch binSear = new BinarySearch();
