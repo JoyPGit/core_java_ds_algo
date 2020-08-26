@@ -181,7 +181,7 @@ public class SlidingWindow {
 
     /** the above works for non negative integers, this one for both */
     // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
-
+    // https://leetcode.com/problems/subarray-sum-equals-k/submissions/
 
 
     /** tricky thing here is to check for the list size and add the incoming el

@@ -1406,6 +1406,8 @@ public class DP {
 
 
     ////////////////////////STRING DP
+    // https://leetcode.com/problems/decode-ways/discuss/
+    // 30358/Java-clean-DP-solution-with-explanation
 
     boolean wildcardMatch(String text, String pattern){
       

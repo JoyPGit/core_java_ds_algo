@@ -63,6 +63,28 @@ class Graph {
 	 *
 	 */
 
+	void dfs(Graph g){
+		boolean[] visited= new boolean[g.V];
+		for(int i =0; i<g.V; i++){
+			dfsHelper(g.adj, i, visited);
+		}
+	} 
+
+	void dfsHelper(ArrayList<ArrayList<Integer>> list, int parent, boolean[] visited){
+		System.out.println("dfs "+parent);
+		if(!list.contains(adj.get(parent))) return;
+		ArrayList<Integer> curr = adj.get(parent);
+		for(int i =0; i<curr.size(); i++){
+			if(!visited[i]) {
+				visited[i] = true;
+				dfsHelper(adj, i, visited);
+			}
+		}
+	}
+
+	// dfsMatrix(int[][] matrix){
+
+	// }
 	/** Steps
 	 * 1 call util for each vertex if not visited
 	 * 2 iterator->hasNext-> mark visited
@@ -287,20 +309,23 @@ class Graph {
 		// return dfsNumMinutes(map, headID, informTime, 0);
 		return minutes;
 	}
-    
-	// void dfsNumMinutes(HashMap<Integer, ArrayList<Integer>> map, int start, 
-	// 												int[] informTime, int time){
-	// 	if(!map.containsKey(start)) {
-	// 		minutes = Math.max(minutes, time);
-	// 		return;
-	// 	}
-	// 	time+=informTime[start];
-    //     // System.out.println(time);
-	// 	for(int i : map.get(start)){
-	// 		dfsNumMinutes(map, i, informTime, time);
+	
+	/** 
+	 * works but added informtime beforehand
+	void dfsNumMinutes(HashMap<Integer, ArrayList<Integer>> map, int start, 
+													int[] informTime, int time){
+		if(!map.containsKey(start)) {
+			minutes = Math.max(minutes, time);
+			return;
+		}
+		time+=informTime[start];
+        // System.out.println(time);
+		for(int i : map.get(start)){
+			dfsNumMinutes(map, i, informTime, time);
             
-	// 	}
-	// }
+		}
+	}
+	*/
 
 	int dfsNumMinutes(HashMap<Integer, ArrayList<Integer>> map, int start, 
 													int[] informTime, int time){
@@ -355,8 +380,63 @@ class Graph {
             }    
             visited[start] = 0;
         }
-       
-    }
+	}
+	
+	// BFS
+	// https://leetcode.com/problems/rotting-oranges/
+	/** POINTS :
+	 * 1 USE A CUSTOM CLASS
+	 * 2 USE A QUEUE AND ADD ALL 2s
+	 * 3 THE TRICKY THING IS TO KEEP TRACK OF VISITED INDEXES, CAN BE
+	 *   HANDLED VIA IS SAFE CHECKER AND MARKING THE GRID INDEX AS 2.
+	 * 
+	 * WE ADD ONLY 2, WE CHECK FOR SURROUNDING INDEXES, IF SAFE
+	 * MARK THEM AS 2 AND INCREMENT TIME;
+	 * 
+	 */
+	class Orange{
+		int row, col, val, time; 
+		Orange(int r, int c, int v, int t){
+			this.row = r; this.col =c; this.val = v; this.time = t;
+		}
+	}
+    public int orangesRotting(int[][] grid) {
+		Deque<Orange> q = new LinkedList<>();
+		int maxTime =0; 
+		for(int i =0; i<grid.length; i++){
+			for(int j=0; j<grid[0].length; j++){
+				if(grid[i][j] == 2) q.add(new Orange(i, j, 2, 0));
+			}
+		}
+		
+		int[] rows = {-1,0,0,1}; int[] cols = {0,-1,1,0};
+		while(q.size()!=0){
+			Orange curr = q.removeFirst();
+          
+			for(int i =0;i<rows.length; i++){
+				if(isSafeOrange(grid, curr.row+rows[i], curr.col+cols[i])){
+                    grid[curr.row+rows[i]][curr.col + cols[i]] =2;
+					q.addLast(new Orange(curr.row+rows[i], curr.col + cols[i], 2, curr.time+1));
+					maxTime = curr.time+1;
+				}
+			}
+		}
+    
+        for(int i =0; i<grid.length; i++){
+			for(int j=0; j<grid[0].length; j++){
+				if(grid[i][j] == 1) return -1;
+			}
+		}
+		return maxTime;
+	}
+
+	boolean isSafeOrange(int[][] grid, int row, int col){
+		if(row>=0 && row<grid.length
+		&& col>=0 && col<grid[0].length
+		&& grid[row][col]==1) return true;
+		return false;
+	}
+
 	// https://leetcode.com/problems/path-with-maximum-probability/
 	// https://leetcode.com/problems/rotting-oranges/
 
@@ -404,7 +484,7 @@ class Graph {
     }
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
-		Graph g = new Graph(7);
+		Graph g = new Graph(8);
 		g.addEdge(5, 2);
 		g.addEdge(5, 6);
 		g.addEdge(6, 0);
@@ -414,10 +494,11 @@ class Graph {
 		g.addEdge(0, 1); 
 		g.addEdge(4, 1);
 		g.addEdge(1, 3); 
-		// g.addEdge(2, 3);
+		g.addEdge(2, 7);
 		// g.addEdge(3, 1);
 		// g.addEdge(3, 5);
 
+		// g.dfs(g);
 		// System.out.println("Following is a Topological " + "sort of the given graph");
 		// g.topologicalSort();
 
@@ -435,6 +516,9 @@ class Graph {
 		// int n = 7, headID = 6; int[] manager = {1,2,3,4,5,6,-1}, informTime = {0,6,5,4,3,2,1};
 		int n = 6, headID = 2; int[] manager = {2,2,-1,2,2,2}, informTime = {0,0,1,0,0,0};
 		// g.numOfMinutes(n, headID, manager, informTime);
+
+		int[][] oranges = {{2,1,1},{1,1,0},{0,1,1}};
+		g.orangesRotting(oranges);
 	}
 }
 
