@@ -25,9 +25,11 @@ import java.util.*;
    */
 
    /** 
-    * TECHNIQUES
-    1 USE A CUSTOM CLASS FOR STORING VALUE PER KEY
-    2 USE FOR AND THEN WHILE FOR SHRINKING
+    * TECHNIQUES 
+    * 1 USE A CUSTOM CLASS FOR STORING VALUE PER KEY
+    * 2 USE FOR AND THEN WHILE FOR SHRINKING
+    * 3 WHENEVER CONTIGUOUS SUBARRAY WITH SUM = K IS REQD, USE HASHMAP
+    *
     */
 public class HashPractice{
 
@@ -59,7 +61,6 @@ public class HashPractice{
 
     int minSubsets(int[] arr){
         HashMap<Integer, Integer> minsubmap = new HashMap<Integer, Integer>();
-
         for(int i =0; i<arr.length; i++){
             minsubmap.put(arr[i],minsubmap.get(arr[i]) == null?1:minsubmap.get(arr[i])+1);
         }
@@ -470,6 +471,9 @@ public class HashPractice{
 
         return res;
     }
+
+    // https://leetcode.com/problems/subarray-sum-equals-k/
+    // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();

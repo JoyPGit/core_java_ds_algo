@@ -103,6 +103,15 @@ class StringPractice {
         return String.valueOf(in);
     }
 
+    // https://leetcode.com/problems/excel-sheet-column-title/
+    public String convertToTitle(int n) {
+        System.out.println('A');
+        System.out.println('a');
+        return "a";
+    }
+
+    // https://leetcode.com/problems/detect-capital/
+    
     // using include-exclude concept of recursion
     /**
      * using include-exclude concept of recursion if(i == length) sysout f(arr[i],
@@ -907,8 +916,10 @@ class StringPractice {
         // System.out.println(string.reverse("word of"));
         // System.out.println(string.reverseWordOrderInAString("I love Java
         // Programming"));
+        string.convertToTitle(3);
 
         String x = "123";
+
         // System.out.println(Integer.parseInt(x)+1);//4
         String str = "GeeksForGeeks12";
         // char[] in = str.toCharArray();

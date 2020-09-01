@@ -140,15 +140,15 @@ public class PermutationsCombinationsAndSubsets {
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
-        dfs(res, list, nums, 0);
+        backtrack(res, list, nums, 0);
         return res;
     }
     
-    private void dfs(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
+    private void backtrack(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
         res.add(new ArrayList<>(list));
         for(int i = start; i < nums.length; i++){
             list.add(nums[i]);
-            dfs(res, list, nums, i + 1);
+            backtrack(res, list, nums, i + 1);
             list.remove(list.size() - 1);
         }
     }
@@ -178,6 +178,7 @@ public class PermutationsCombinationsAndSubsets {
         }
     } 
 
+    
     // Permutations : https://leetcode.com/problems/permutations/
     // Given a collection of distinct integers, return all possible permutations
     /** 
@@ -196,16 +197,16 @@ public class PermutationsCombinationsAndSubsets {
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
-        dfs(res, list, nums);
+        backtrack(res, list, nums);
         return res;
     }
     
-    private void dfs(List<List<Integer>> res, List<Integer> list, int [] nums){
+    private void backtrack(List<List<Integer>> res, List<Integer> list, int [] nums){
         if(list.size() == nums.length) res.add(new ArrayList<>(list));
         for(int i = 0; i < nums.length; i++){
             if(list.contains(nums[i])) continue; //no duplicates, if present don't add
             list.add(nums[i]);
-            dfs(res, list, nums);
+            backtrack(res, list, nums);
             list.remove(list.size() - 1);
         }
     } 
@@ -267,15 +268,15 @@ public class PermutationsCombinationsAndSubsets {
         for(int i=0; i<n; i++) nums[i] = i+1;
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
-        dfsComb(res, list, nums, k, 0);
+        backtrack5(res, list, nums, k, 0);
         return res;
     }
     
-    private void dfsComb(List<List<Integer>> res, List<Integer> list, int [] nums, int k, int start){
+    private void backtrack5(List<List<Integer>> res, List<Integer> list, int [] nums, int k, int start){
         if(list.size() == k) res.add(new ArrayList<>(list));
         for(int i = start; i < nums.length; i++){
             list.add(nums[i]);
-            dfsComb(res, list, nums, k, i+1);
+            backtrack5(res, list, nums, k, i+1);
             list.remove(list.size() - 1);
         } 
     }
@@ -286,18 +287,18 @@ public class PermutationsCombinationsAndSubsets {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         // Arrays.sort(nums); not reqd
-        dfs(res, list, nums, target, 0);
+        backtrack(res, list, nums, target, 0);
         return res;
     }
     
-    private void dfs(List<List<Integer>> res, List<Integer> list, 
+    private void backtrack(List<List<Integer>> res, List<Integer> list, 
     int [] nums, int remain, int start){
         if(remain < 0) return;
         else if(remain == 0) res.add(new ArrayList<>(list));
         else{ 
             for(int i = start; i < nums.length; i++){
                 list.add(nums[i]);
-                dfs(res, list, nums, remain - nums[i], i); 
+                backtrack(res, list, nums, remain - nums[i], i); 
                 // not i + 1 because we can reuse same elements
                 list.remove(list.size() - 1);
             }
@@ -311,12 +312,12 @@ public class PermutationsCombinationsAndSubsets {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         Arrays.sort(nums);
-        dfsComb2(res, list, nums, target, 0);
+        backtrack2(res, list, nums, target, 0);
         return res;
         
     }
     
-    private void dfsComb2(List<List<Integer>> res, List<Integer> list, 
+    private void backtrack2(List<List<Integer>> res, List<Integer> list, 
     int [] nums, int remain, int start){
         if(remain < 0) return;
         else if(remain == 0) res.add(new ArrayList<>(list));
@@ -324,7 +325,7 @@ public class PermutationsCombinationsAndSubsets {
             for(int i = start; i < nums.length; i++){
                 if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
                 list.add(nums[i]);
-                dfsComb2(res, list, nums, remain - nums[i], i + 1);
+                backtrack2(res, list, nums, remain - nums[i], i + 1);
                 list.remove(list.size() - 1); 
             }
         }
@@ -372,6 +373,38 @@ public class PermutationsCombinationsAndSubsets {
     // https://leetcode.com/problems/letter-case-permutation/
     // https://leetcode.com/problems/next-permutation/
     // https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+
+    public int numMatchingSubseq(String S, String[] words) {
+        HashSet<String> set = new HashSet<>();
+        List<Character> list = new ArrayList<>();
+        int count = 0;
+        char[] ch = S.toCharArray();
+        dfs(set, list, ch, 0);
+        // System.out.println(set);
+        for(String s: words){
+            if(set.contains(s))count++;
+        }
+        System.out.println("count is "+ count);
+        return count;
+    }
+    
+    void dfs(HashSet<String> set, List<Character> list, char[] ch, int index){
+        set.add(stringConvert(new ArrayList<>(list)));
+        
+        for(int i = index; i<ch.length; i++){
+            list.add(ch[i]);
+            dfs(set, list, ch, i+1);
+            list.remove(list.size()-1);
+        }
+    }
+    
+    String stringConvert(List<Character> list){
+        String s = "";
+        for(int i =0; i<list.size(); i++) s+=list.get(i);
+        // System.out.println(s);
+        return s;
+    }
+
     public static void main(String[] args) {
         PermutationsCombinationsAndSubsets pcs = new PermutationsCombinationsAndSubsets();
 
@@ -379,7 +412,10 @@ public class PermutationsCombinationsAndSubsets {
         // pcs.permuteUnique(nums);
 
         String palindromePart = "babac";
-        pcs.palindromePartition(palindromePart);
+        // pcs.palindromePartition(palindromePart);
 
+        String S = "abcde";
+        String[] words = {"a", "bb", "acd", "ace"};
+        pcs.numMatchingSubseq(S, words);
     }
 }

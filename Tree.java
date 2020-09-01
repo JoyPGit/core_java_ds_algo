@@ -316,6 +316,9 @@ public class Tree {
         ;
     }
 
+
+    // https://www.geeksforgeeks.org/sum-leaf-nodes-binary-tree/
+
     // void sumOfLeafNodes(TreeNode node){
     // if(node!= null && (node.left!= null && node.right!=null)){
     // sumOfLeafNodes(node.left);
@@ -634,6 +637,23 @@ public class Tree {
     // }
     // }
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        dfs(map, root, 0);
+        System.out.println(map);
+        
+        return new ArrayList<>(map.values());
+    }
+    
+    void dfs(HashMap<Integer, ArrayList<Integer>> map, TreeNode root, int dist){
+        if(root == null) return;
+        dfs(map, root.left, dist-1);
+        if(!map.containsKey(dist)) map.put(dist, new ArrayList<>());
+        map.get(dist).add(root.val);
+        System.out.println(map);
+        dfs(map, root.right, dist+1);
+    }
 
     public Queue<TreeNode> queueVertical = new LinkedList<TreeNode>();
 
@@ -1234,9 +1254,27 @@ public class Tree {
 
     ////////////////////////////////////////////////////
 
+    // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+    public void flatten(TreeNode root) {
+        // helper(root);
+        if(root == null) return;
+        flatten(root.left);
+        flatten(root.right);
+        TreeNode y = null;
+        if(root.left!=null) {
+            y = root.left;
+            while(y.right!=null) y = y.right;
+            y.right = root.right;
+            root.right = root.left;
+            root.left = null;
+            // return;
+        }
+        // return;
+    }
+
     // flatten a binary tree to linked list
 
-    void flatten(TreeNode node) {
+    void flatten1(TreeNode node) {
         TreeNode currentRight = null;
         TreeNode currentRightButOne = null;
         TreeNode current = null;
@@ -1279,29 +1317,6 @@ public class Tree {
 
         findMirrorNode(node1.left, node2.right, data);
         findMirrorNode(node1.right, node2.left, data);
-    }
-
-    HashMap<Integer, Integer> leftHashMap = new HashMap<Integer, Integer>();
-
-    void leftViewOfTree(TreeNode node, int depth) {
-        if (!leftHashMap.containsKey(depth)) {
-            leftHashMap.put(depth, node.key);
-            depth++;
-            if (node.left != null)
-                leftViewOfTree(node.left, depth);
-            if (node.right != null)
-                leftViewOfTree(node.right, depth);
-        } else {
-            depth++;
-            if (node.left != null)
-                leftViewOfTree(node.left, depth);
-            if (node.right != null)
-                leftViewOfTree(node.right, depth);
-        }
-
-        /**
-         * using ++depth causes the depth variable value to increase in function call
-         */
     }
 
     // void printHashMap() {
@@ -1492,6 +1507,33 @@ public class Tree {
         if (node.left != null && node.right != null)
             System.out.print(node.key + ", ");
 
+    }
+
+    // https://leetcode.com/discuss/interview-question/275467/
+    // uber-phone-screen-boundary-of-the-perfect-binary-tree
+    // https://stackoverflow.com/questions/30275735/to-print-the-boundary-of-binary-tree
+    void boundaryOfTree(TreeNode root){
+        if(root == null) return;
+        Deque<TreeNode>q= new LinkedList<>();
+        q.add(root);
+        q.add(null);
+
+        while(q.size()!=0){
+            TreeNode curr = q.removeFirst();
+            if(curr == null) {
+                q.add(null); continue;
+            }
+            System.out.println(curr.val);
+            if(curr.left!=null) q.addLast(curr.left);
+            if(curr.right!=null) q.addLast(curr.right);
+            if(curr.left == null && curr.right == null){
+                while(q.size()!=0){
+                    TreeNode ptr = q.removeFirst();
+                    if(ptr!=null) System.out.println(ptr.val);
+                }
+                break;
+            }
+        }
     }
 
     // void addGreaterBST(TreeNode node){
@@ -2271,11 +2313,29 @@ public class Tree {
     ////////////////////////////////////////////////////////////////////////////
     
 
-    // VIEWS
+    /** 
+     * VIEWS
+     * FOR RIGHT VIEW DO REVERSE PREORDER TRAVERSAL
+     * FOR LEFT, DO NORMAL PREORDER
+    */
     // https://leetcode.com/problems/binary-tree-right-side-view/
-    /** WHAT IF THE LEFT SUBTREE IS LONGER?
-     * KEEP TRACK OF LENGTH TOO
+    /** 
+     * DO A REVERSE PREORDER TRAVERSAL, ADD RIGHT FIRST AND THEN LEFT
+     * IF DIST DOESN'T EXIST IN MAP ADD
+     * TO CONVERT TO ARRAYLIST RETURN NEW ARRAYLIST(MAP.VALUES())
      */
+    public List<Integer> rightSideView(TreeNode root) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        dfs(root, map, 0);    
+        return new ArrayList<>(map.values()); 
+    }
+    
+    void dfs(TreeNode root, HashMap<Integer, Integer> map, int dist){
+        if(root == null) return;
+        if(!map.containsKey(dist)) map.put(dist, root.val);
+        dfs(root.right, map, dist+1);
+        dfs(root.left, map, dist+1);
+    }
 
     //////////////TRAVERSALS
     // https://leetcode.com/problems/binary-tree-inorder-traversal/
@@ -2690,6 +2750,8 @@ public class Tree {
         return curr;
     }
 
+    // https://leetcode.com/problems/sum-of-left-leaves/
+    // discuss/88951/3-line-recursive-c%2B%2B-solution-no-need-to-explain
     // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
     // #:~:text=Given%20a%20binary%20tree%2C%20we,7%2C%209%2C%2010).
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -2702,8 +2764,8 @@ public class Tree {
         tree.root.left.right = new TreeNode(3);
         tree.root.right.left = new TreeNode(5);
         tree.root.right.right = new TreeNode(8);
-        tree.root.right.right.right = new TreeNode(9);
-        tree.root.right.right.left = new TreeNode(7);
+        tree.root.left.left.right = new TreeNode(9);
+        tree.root.left.left.left = new TreeNode(7);
         // tree.root.right.right.right.right = new TreeNode(11);
 
         // tree.spiralPrint(tree.root, 0);
@@ -2754,7 +2816,7 @@ public class Tree {
         // tree.leftViewOfTree(tree.root, 0);
         // tree.printHashMap();
 
-        tree.printAllPathsUsingList(tree.root);
+        // tree.printAllPathsUsingList(tree.root);
         // System.out.println(tree.root.right.left.key);
         // tree.lowestCommonAncestor(tree.root, tree.root.right.left,
         // tree.root.right.right);
@@ -2848,7 +2910,7 @@ public class Tree {
         // tree.levelOrderTraversal(tree.root);
 
         // tree.printVerticalOrder(tree.root, 0);
-
+        // tree.verticalTraversal(tree.root);
         // tree.printHashVertical();
 
         // tree.diameter(tree.root);
@@ -2889,6 +2951,7 @@ public class Tree {
         // tree.forestFire(tree.root.left);
         // tree.spiralTraversal(tree.root);
         // tree.boundaryTraversal21Apr(tree.root);
+        tree.boundaryOfTree(tree.root);
         // tree.kthLargestElementBST(tree.root, 3);
         // tree.hasPathSum(tree.root, 9);
         // tree.printAncestorsUsingStack(tree.root, 1);

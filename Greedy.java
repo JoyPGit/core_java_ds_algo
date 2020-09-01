@@ -626,6 +626,7 @@ class Greedy{
         return (int) (max%MOD);
     }
 
+    // https://leetcode.com/discuss/interview-question/350233/Google-or-Summer-Intern-OA-2019-or-Decreasing-Subsequences
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();
         int[] mice = new int[]{-10, -79, -79, 67, 93, -85, -28, -94 };

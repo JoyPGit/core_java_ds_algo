@@ -901,98 +901,28 @@ public class DP {
 
 
     //https://leetcode.com/problems/minimum-cost-for-tickets/
-
-    int trainticketDP(int[] days, int[] costs){
-
-        int[] newDays = new int[days[days.length-1]+1];
-
-
-        int n2 = days.length;
-        int n1 = costs.length;
-        int[] day = {1,7,30};
-            
-        int[][] dp = new int[n1][n2+1];
-        
-        int i;
-        for(i = 0; i<n1;i++){
-            dp[i][0] = 0;
-        }
-        
-        for(i=1; i<=n2; i++){
-            dp[0][i] = 2*i;//Integer.MAX_VALUE;
-        }
-        
-        for(i = 1; i<n1;i++){
-            for(int j=1;j<=n2; j++){
-                if(day[i-1]>j) dp[i][j] = dp[i-1][j];
-                else {
-                    int excl = dp[i-1][j];
-                    int incl = costs[i-1] + dp[i][j-day[i-1]];
-                    dp[i][j] = Math.min(incl, excl); 
-                }
-            }
-        }
-        printMatrix(dp);
-        return dp[n1-1][n2];
-    }
-
-    //doesn't work
     public int mincostTickets(int[] days, int[] costs) {
-        // int n2 = days.length;
-        int n = costs.length;
-        int[] day = {1,7,30};
-            
-        int[][] dp = new int[n][366];
-        
-        int i;
-        HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
-        for(i = 0; i<days.length;i++){
-            h.put(days[i], 1);
-        }
-        
-        int count = 1;
-        for(i=1; i<366; i++){
-            if(h.containsKey(i)){
-                dp[0][i] = costs[0]*(count);
-                count++;
-            }else{
-                dp[0][i] = dp[0][i-1];
-            }
-        }
-        
-        for(i=0; i<n; i++){
-            dp[i][0] = 0;
-        }
-        
-        for(i = 1; i<2;i++){
-            if( i==2){
-                System.out.println("incl " + " excl ");
-            }
-            for(int j=1;j<366; j++){
-                if(h.containsKey(j)){
-                   if(day[i]>j) dp[i][j] = dp[i-1][j];
-                    else {
-                        int excl = dp[i-1][j];
-                        int incl = costs[i] + dp[i-1][j-day[i]];
-                        dp[i][j] = Math.min(excl, incl); 
-                        // if( i==2){
-                        //     System.out.println("incl "+ incl + " excl "+excl);
-                        // }
-                        // int a = 
-                        // dp[i][j]= Math.min(dp[i][j-day[i]]+costs[1],
-                        //             dp[i-1][j-day[i]]+costs[0]);
-                        //             // Math.min(dp[i-1][j-day[i]]+costs[1],
-                        //             // dp[i-2][j-day[i]]+costs[0]));
-                    } 
-                }
-                else dp[i][j] = dp[i][j-1]; 
-                
-            }
-        }
-        printMatrix(dp);
-        return dp[n-1][365];
-    }
+        Set<Integer> set = new HashSet<>();
+        for (int day : days) set.add(day);
 
+        int lastDay = days[days.length-1], dp[] = new int[lastDay+1];
+        for (int i = 1; i <= lastDay; i++) {
+            if (!set.contains(i)) {
+                dp[i] = dp[i-1];
+            }
+            else {
+                dp[i] = dp[i-1]+costs[0];
+
+                int j = (i >= 7) ? i-7 : 0;
+                dp[i] = Math.min(dp[i], dp[j] + costs[1]);
+
+                j = (i >= 30) ? i-30 : 0;
+                dp[i] = Math.min(dp[i], dp[j] + costs[2]);
+            }
+        }
+
+    return dp[lastDay];
+    }
     
 
     //21 June
@@ -1609,10 +1539,10 @@ public class DP {
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
     // https://leetcode.com/problems/minimum-cost-to-cut-a-stick/
 
-    
+    // https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
 
 
-    
+    // https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/
 
     // https://leetcode.com/problems/count-square-submatrices-with-all-ones/
     public static void main(String[] args) {
@@ -1712,11 +1642,12 @@ public class DP {
         // int[] days = {1,2,3,4,5,6,7,8,20};
         // int[] costs = {2, 7, 15};
         // System.out.println(" min train ticket cost : "+dp.trainticketDP(days, costs));
+        // dp.mincostTickets(days, costs);
 
 
         int[] days = {1,4,6,7,8,20};
         int[] costs = {2,7,15};
-        // dp.mincostTickets(days, costs);
+        dp.mincostTickets(days, costs);
 
         int val[] = new int[] { 60, 100, 120 }; 
         int wt[] = new int[] { 1, 2, 3 }; 
@@ -1778,7 +1709,7 @@ public class DP {
         // dp.matrixMultiplication(matrixMul);
 
         int[] boards = { 10, 20, 60, 50, 30, 40 }; int painters = 4; 
-        dp.paintersPartition(boards, boards.length, painters);
+        // dp.paintersPartition(boards, boards.length, painters);
 
     }
 }
