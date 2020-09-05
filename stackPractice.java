@@ -368,6 +368,35 @@ public class StackPractice {
         return sb.toString();
     }
 
+    // https://leetcode.com/problems/longest-valid-parentheses/submissions/
+    /**  
+     * DEL ER(PEEK) : DEL ERP
+     * EMPTY, LEFT, ELSE REMOVE, ELSE, PEEK 
+     * left= 0; max = 0;
+     * if ( add index
+     * if ) -> if empty left = j+1;
+     *      -> else pop -> empty : max, j-left+1     
+     *                  -> not : max j-getLast
+    */                  
+    public int longestValidParentheses(String s) {
+        Deque<Integer> q = new LinkedList<Integer>();
+        int max=0;
+        int left = 0;
+        for(int j=0;j<s.length();j++){
+            if(s.charAt(j)=='(') q.addLast(j);            
+            else {
+                if (q.isEmpty()) left=j+1;
+                else{
+                    q.removeLast();
+                    if(q.isEmpty()) max=Math.max(max,j-left+1);
+                    else max=Math.max(max,j-q.getLast());
+                }
+            }
+        }
+        return max;
+    }
+
+
     // https://leetcode.com/problems/reorganize-string/
     public String decodeString(String s) {
         int n = s.length();

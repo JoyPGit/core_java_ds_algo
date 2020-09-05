@@ -474,6 +474,26 @@ class Linkedprac {
         return res.next;
     }
 
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode first = new ListNode(0); boolean dup = false;
+        ListNode p = first;
+        first.next = head;
+        while(first.next!=null) {
+            ListNode tracker = first.next;
+            
+            while(tracker!=null && tracker.next!=null && tracker.val == tracker.next.val){
+                dup = true;
+                tracker = tracker.next;
+            }
+            if(dup) first.next = tracker.next;
+            else first = first.next;
+            dup = false;
+        }   
+        // printList(p.next);
+        return p.next;
+    }
+
     // https://leetcode.com/problems/swap-nodes-in-pairs/
     public ListNode swapPairs(ListNode head) {
         if (head == null || head.next == null)
@@ -584,20 +604,21 @@ class Linkedprac {
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     public static void main(String[] args) {
         Linkedprac linked = new Linkedprac();
-        linked.addNode(1);
+        linked.addNode(1);linked.addNode(1);
         linked.addNode(2);
-        linked.addNode(3);
-        linked.addNode(4);
+        linked.addNode(3);linked.addNode(3);
+        linked.addNode(4);linked.addNode(4);
         linked.addNode(5);
-        linked.addNode(6);
-        linked.addNode(7);
-        linked.addNode(8);
-        linked.addNode(9);
+        // linked.addNode(6);
+        // linked.addNode(7);
+        // linked.addNode(8);
+        // linked.addNode(9);
 
+        linked.deleteDuplicates(linked.head);
         // System.out.println(linked.josephusCircle(linked.head));
         // linked.reverseListWithoutPointer( linked.head,linked.head, linked.head.next);
         // linked.printList(linked.head);
-        linked.reverseKGroup(linked.head, 3);
+        // linked.reverseKGroup(linked.head, 3);
 
         // Node looper = linked.head;
         // looper = looper.next.next;//5

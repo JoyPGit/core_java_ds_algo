@@ -3,6 +3,7 @@ package utilCustom;
 import java.util.*;
 
 public class Utility {
+    // HASHMAP
     // Map iterator
     void hashiterator(HashMap<Integer, Integer> map) {
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
@@ -14,6 +15,11 @@ public class Utility {
 
     // MAP.PUT(C, MAP.GETORDEFAULT(C,0)+1);
     // for(char c: tasks) map.put(c, map.getOrDefault(c, 0)+1);
+
+    // HASHSET
+    // https://stackoverflow.com/questions/38578995/how-to-cast-object-to-int-java
+    HashSet<Integer> set = new HashSet<>();
+    int[] resCourse = Arrays.stream(set.toArray()).mapToInt(o -> (int)o).toArray();
 
     // coverting min heap to max heap
     void maxheap() {
