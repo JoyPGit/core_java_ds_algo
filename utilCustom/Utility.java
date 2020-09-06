@@ -97,7 +97,7 @@ public class Utility {
         System.out.println(num);
     }
 
-    void print1DMatrix(int[] arr) {
+    public static void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             if (i == arr.length - 1) {
                 System.out.println(arr[i] + ";");
@@ -120,7 +120,7 @@ public class Utility {
         }
     }
 
-    void printMatrixBool(boolean[][] arr) {
+    public static void printMatrixBool(boolean[][] arr) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[0].length; j++) {
                 if (i == arr.length - 1 && j == arr[0].length - 1) {
