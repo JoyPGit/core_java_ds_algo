@@ -32,11 +32,11 @@ public class PermutationsCombinationsAndSubsets {
      * -------------------------------------
      * use BACKTRACKING FORMAT
      * Arrays.sort(NUMS)
-     *  dfs(){
+     *  btk(){
      *   res.add;
      *   for(){
      *    add(i)                   //ADD
-     *    dfs(i+1)
+     *    btk(i+1)
      *    remove(list.size()-1)    //REMOVE
      *   }
      *  }
@@ -57,7 +57,7 @@ public class PermutationsCombinationsAndSubsets {
      * -----------------------------------------------------
      * 1 List<ArrayList<Integer>> res = new ArrayList<>();
      *  List<Integer> list = new ArrayList<>();
-     *  dfs(res, list, nums, 0);
+     *  btk(res, list, nums, 0);
      *  return res;
      * 
      
@@ -120,11 +120,11 @@ public class PermutationsCombinationsAndSubsets {
     // Subsets : https://leetcode.com/problems/subsets/
     /** 
      * use BACKTRACKING FORMAT
-     * dfs(){
+     * btk(){
      *  add;
      *  for(){
      *   add
-     *   dfs
+     *   btk
      *   remove   
      *  }
      * }
@@ -136,6 +136,10 @@ public class PermutationsCombinationsAndSubsets {
      * which copies the state and adds the new cloned ArrayList
      * all operations are done on the original list, 
      * we add different states of it to res
+     * 
+     * IF SUBSETS OF SIZE K ARE NEEDED, ADD CHECK
+     * IF(SIZE == K) RES.ADD(LIST)
+     * IF(I = ARR.LENGTH-1) RES.ADD(LIST)
     */
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
@@ -164,16 +168,16 @@ public class PermutationsCombinationsAndSubsets {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         Arrays.sort(nums);
-        backtrack2(res, list, nums, 0);
+        btk2(res, list, nums, 0);
         return res;
     }
     
-    private void backtrack2(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
+    private void btk2(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
         res.add(new ArrayList<>(list));
         for(int i = start; i < nums.length; i++){
             if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
             list.add(nums[i]);
-            backtrack2(res, list, nums, i + 1);
+            btk2(res, list, nums, i + 1);
             list.remove(list.size() - 1);
         }
     } 
@@ -282,7 +286,7 @@ public class PermutationsCombinationsAndSubsets {
     }
 
     // Combination Sum : https://leetcode.com/problems/combination-sum/
-    // can reuse the same element, start with i again in dfs
+    // can reuse the same element, start with i again in BTK
     public List<List<Integer>> combinationSum(int[] nums, int target) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
@@ -379,7 +383,7 @@ public class PermutationsCombinationsAndSubsets {
         List<Character> list = new ArrayList<>();
         int count = 0;
         char[] ch = S.toCharArray();
-        dfs(set, list, ch, 0);
+        btk(set, list, ch, 0);
         // System.out.println(set);
         for(String s: words){
             if(set.contains(s))count++;
@@ -388,12 +392,12 @@ public class PermutationsCombinationsAndSubsets {
         return count;
     }
     
-    void dfs(HashSet<String> set, List<Character> list, char[] ch, int index){
+    void btk(HashSet<String> set, List<Character> list, char[] ch, int index){
         set.add(stringConvert(new ArrayList<>(list)));
         
         for(int i = index; i<ch.length; i++){
             list.add(ch[i]);
-            dfs(set, list, ch, i+1);
+            btk(set, list, ch, i+1);
             list.remove(list.size()-1);
         }
     }
@@ -405,6 +409,8 @@ public class PermutationsCombinationsAndSubsets {
         return s;
     }
 
+
+    // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/551/week-3-august-15th-august-21st/3428/
     public static void main(String[] args) {
         PermutationsCombinationsAndSubsets pcs = new PermutationsCombinationsAndSubsets();
 

@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - PermutationsCombinationsAndSubsets",
+            "request": "launch",
+            "mainClass": "PermutationsCombinationsAndSubsets",
+            "projectName": "javaGFG_5e57e9f9"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Linkedprac",
             "request": "launch",
             "mainClass": "Linkedprac",

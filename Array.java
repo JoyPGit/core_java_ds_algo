@@ -755,6 +755,42 @@ class Array {
         }
         return -1;
     }
+    // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
+    // Given an array, find all the subarrays (contiguous) of even length which 
+    // have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
+    // answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
+    /** similar to dp ques, use l and i+l-1 =j; palindrome type */
+    int equalLeftAndRightSum(int[] arr){
+        int count = 0;
+        int n = arr.length;
+        for(int l=2; l<n; l++){
+            for(int i = 0; l+i-1<n; i++){
+                int j = i+l-1;
+                if(l==2 && arr[i] == arr[j]) count++;
+                else if(l%2==0){
+                    int sum = sum(arr,i,j);
+                    for(int k = i;k<j; k++){
+                        if(sum(arr,i, k) == sum/2){
+                            System.out.println("i "+i+" k "+k);
+                            // System.out.println("in here "+sum(arr, i, k));
+                            count++;
+                        }
+                    }
+                }                
+            }
+        }
+        System.out.println("count of equal left and right sums' partition "+count);
+        return count;
+    }
+
+    int sum(int[] arr, int start, int end){
+        int sum =0;
+        for(int i =start; i<=end; i++){
+            sum+=arr[i];
+        }
+        return sum;
+    }
+
     // https://leetcode.com/problems/subarray-sum-equals-k/
 
     // CIRCULAR ARRAY 
@@ -774,6 +810,11 @@ class Array {
         
         return list;
     }
+
+    // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
+    // Given an array, find all the subarrays (contiguous) of even length which 
+    // have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
+    // answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
 
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     public static void main(String[] args) {
@@ -849,7 +890,10 @@ class Array {
         // test.dutchNational(dutch);
 
         int[] dup = {1,3,4,5,6,2,3,4,5,6,8,8,9,11,1,11};
-        test.findDuplicates(dup);
+        // test.findDuplicates(dup);
+
+        int[] equalLeftAndRight = {2,4,6,6,4,2,10};
+        test.equalLeftAndRightSum(equalLeftAndRight);
     }
 
 }

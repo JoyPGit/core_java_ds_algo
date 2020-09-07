@@ -5,6 +5,12 @@ import java.util.*;
 public class Utility {
     // HASHMAP
     // Map iterator
+    /**
+     * 2 POINTS:
+     * 1 Map.Entry<> 
+     * 2 of type : map.entrySet()
+     * 3 Integer i = entry.getValue();
+     */
     void hashiterator(HashMap<Integer, Integer> map) {
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer key = entry.getKey();

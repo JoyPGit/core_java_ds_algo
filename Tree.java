@@ -2750,6 +2750,27 @@ public class Tree {
         return curr;
     }
 
+    // https://leetcode.com/problems/binary-tree-maximum-path-sum
+    //still confusing as per the examples..basic idea is of postorder traversal
+    // return Math.max(left, right)+a;
+    // POSTORDER TRAVERSAL
+    int maxSum = Integer.MIN_VALUE;    
+    public int maxPathSum(TreeNode root) {
+        maxHelper(root);
+        return max;
+    }
+    
+    int maxHelper(TreeNode root){
+        if(root == null) return 0;
+        int left = maxHelper(root.left); left= Math.max(left,0);
+        int right = maxHelper(root.right); right= Math.max(right,0);
+        // System.out.print("left "+left+" ");
+        // System.out.print("right "+right+" ");
+        int a = root.val; 
+        maxSum = Math.max(maxSum, left+right+a);
+        return Math.max(left,right)+a;
+    }
+
     // https://leetcode.com/problems/sum-of-left-leaves/
     // discuss/88951/3-line-recursive-c%2B%2B-solution-no-need-to-explain
     // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
