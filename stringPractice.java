@@ -713,10 +713,11 @@ class StringPractice {
         System.out.println("longest palindromic substring : " + s.substring(start, start + maxlen));
         return s.substring(start, start + maxlen);
     }
-
+    
     // https://www.geeksforgeeks.org/count-palindrome-sub-strings-string/
     // all palindromes , string 'abaab'
 
+    // https://leetcode.com/problems/longest-common-prefix/
     // https://www.geeksforgeeks.org/longest-prefix-also-suffix/
     // https://www.geeksforgeeks.org/find-number-distinct-
     // palindromic-sub-strings-given-string/

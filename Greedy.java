@@ -307,6 +307,7 @@ class Greedy{
         return cycles;
     }
 
+
     // https://leetcode.com/problems/partition-labels/
     public List<Integer> partitionLabels(String S) {
         //trick is to use hashmap and hint: contiguous so shrink
@@ -385,8 +386,7 @@ class Greedy{
         return people;
         // return list.toArray();
     }
-    // https://leetcode.com/problems/largest-values-from-labels/
-    // https://leetcode.com/problems/candy/
+   
 
     /**use map for memoization of fibonacci series
      * add to heap
@@ -500,10 +500,7 @@ class Greedy{
         }
         return true;
     }
-    // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
-
-    // https://leetcode.com/problems/car-pooling/
-    // https://leetcode.com/problems/construct-target-array-with-multiple-sums/
+   
 
     /**Similar compare prev end and next start
      * https://leetcode.com/problems/merge-intervals/discuss/21222/A-simple-Java-solution
@@ -556,18 +553,6 @@ class Greedy{
         printListArray(result);
 		return result.toArray(new int[result.size()][]);
     }
-
-    // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
-    // EVENT SCHEDULER
-    
-    // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
-    // MICROSOFT
-    // https://leetcode.com/discuss/interview-question/447448/
-
-    // https://leetcode.com/problems/non-overlapping-intervals/
-
-    
-    // https://leetcode.com/problems/insert-interval/
 
     // https://leetcode.com/problems/maximum-performance-of-a-team/
     /** 
@@ -626,6 +611,23 @@ class Greedy{
         return (int) (max%MOD);
     }
 
+     // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
+
+    // https://leetcode.com/problems/car-pooling/
+    // https://leetcode.com/problems/construct-target-array-with-multiple-sums/
+    // https://leetcode.com/problems/largest-values-from-labels/
+    // https://leetcode.com/problems/candy/
+    // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
+    // EVENT SCHEDULER
+    
+    // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
+    // MICROSOFT
+    // https://leetcode.com/discuss/interview-question/447448/
+
+    // https://leetcode.com/problems/non-overlapping-intervals/
+
+    
+    // https://leetcode.com/problems/insert-interval/
     // https://leetcode.com/discuss/interview-question/350233/Google-or-Summer-Intern-OA-2019-or-Decreasing-Subsequences
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();

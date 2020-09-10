@@ -59,6 +59,36 @@ public class StackPractice {
         return res;
             
     }
+
+    // https://leetcode.com/problems/next-greater-element-i/
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        int n1 = nums1.length; int n2 = nums2.length;
+        if(n1==0) return new int[]{};
+        
+        int[] res = new int[n1];
+        HashMap<Integer, Integer> map = new HashMap<>();
+        Deque<Integer> q = new LinkedList<>();
+        
+        int curr;
+        q.addLast(nums2[0]);
+        for(int i =1; i<n2; i++){
+            while(q.size()!=0 && q.getLast()<nums2[i]){
+                curr = q.removeLast();
+                map.put(curr, nums2[i]);
+            }
+            q.addLast(nums2[i]);
+        }
+        
+        while(q.size()!=0) map.put(q.removeLast(), -1);
+        
+        for(int i =0; i<nums1.length; i++){
+            res[i] = map.get(nums1[i]);
+        }
+        
+        return res;
+    }
+    // https://leetcode.com/problems/next-greater-element-ii/
+
     // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
     // https://leetcode.com/problems/remove-k-digits/
     void stockSpan(int[] arr){
@@ -389,7 +419,7 @@ public class StackPractice {
                 else{
                     q.removeLast();
                     if(q.isEmpty()) max=Math.max(max,j-left+1);
-                    else max=Math.max(max,j-q.getLast());
+                    else max = Math.max(max,j-q.getLast());
                 }
             }
         }

@@ -57,6 +57,5 @@ public class Mathprob {
     }
 
     // https://leetcode.com/problems/water-and-jug-problem/
-    // https://leetcode.com/problems/gas-station/
 
 }

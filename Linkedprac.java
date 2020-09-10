@@ -15,8 +15,24 @@ class ListNode {
         this.next = null;
         this.val = this.key;
     }
-
 }
+
+/** 
+ * POINTS :
+ * TRICKS : (USE DUMMY NODE, DIVIDE INTO LISTS AND MERGE)
+ * 1 P!= NULL OR P.NEXT != NULL
+ * 2 FAST, SLOW PTR TO FIND MID
+ * 3 REVERSE LIST
+ * 4 CYCLE, JOSEPHUS
+ * 5 INTERSECTION POINT
+ * 6 UNION, INTERSECTION
+ * 7 PALINDROME
+ * 8 MERGE LISTS (RECURSIVE, ITERATIVE)
+ * 9 PARTITION LIST 
+ * 10 ADD TWO NUMBERS
+ * 11 REVERSE LIST IN PAIRS (RECURSIVE, ITERATIVE)
+ * 12 MERGE SORT ON LIST
+*/
 
 class Linkedprac {
     ListNode head = null;
@@ -62,46 +78,101 @@ class Linkedprac {
         // HashMap h =
     }
 
-    void sortList(Linkedprac list) {
-        ListNode head = list.head;
-        ListNode currentMax = head;
-        ListNode current = head.next;
-        ListNode prev = head;
-        while (current.next != null) {
-            // if(current.key<current.next.key){
-            // currentMax = current.next;
-            // } else currentMax = current;
-            System.out.println("prev " + prev.key);
-            System.out.println("curr " + current.key);
-            if (prev.key > current.key) {
-                prev.next = current.next;
-                current.next = prev;
+    // https://leetcode.com/problems/merge-two-sorted-lists/
+    public ListNode mergeTwoListsRec(ListNode l1, ListNode l2){
+		if(l1 == null) return l2;
+		if(l2 == null) return l1;
+		if(l1.val < l2.val){
+			l1.next = mergeTwoLists(l1.next, l2);
+			return l1;
+		} else{
+			l2.next = mergeTwoLists(l1, l2.next);
+			return l2;
+		}
+    }
+
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode s = null;
+        if(l1== null) return l2;
+        if(l2== null) return l1;
+        if(l1.val<l2.val) {
+            s = l1; l1= l1.next;
+        }
+        else {
+            s = l2; l2 = l2.next;
+        }
+        ListNode head = s;
+        while(l1!=null && l2!=null){
+            if(l1.val<=l2.val){
+                s.next = l1; l1 = l1.next;
             }
-            prev = current;
-            current = current.next;
-
+            else{
+                s.next = l2; l2 = l2.next;
+            }
+            s= s.next;
         }
-
-    }
-
-    void mergeSort(Linkedprac list) {
-        ListNode middle = getMiddle(list);// finding middle is tricky
-        ListNode nextOfMiddle = middle.next;
-
-        mergeSort(list);
-        System.out.println("middle" + middle.key);
-    }
-
-    ListNode getMiddle(Linkedprac list) {
-        ListNode current = list.head;
-        ListNode middle = list.head;
-
-        while (current.next != null && current.next.next != null) {
-            current = current.next.next;
-            middle = middle.next;
+        
+        while(l1!=null) {
+            s.next  = l1; s = s.next; l1= l1.next;
         }
-        return middle;
+        
+        while(l2!=null) {
+            s.next  = l2; s = s.next; l2= l2.next;
+        }
+        return head;
     }
+
+    // https://leetcode.com/problems/sort-list/submissions/
+    /** POINTS : 
+     * 1 FAST!=NULL AND FAST.NEXT!=NULL
+     * 2 TEMP = SLOW
+     * 3 TEMP.NEXT = NULL
+     * 
+     * 4 f(){
+     * l = f(); r = f(); merge(l,r);
+     * // f take sonly starting node
+     * }
+     * 
+     * 5 WHILE MERGING DON'T FORGET IF(a!=null) AT THE END
+     * 
+     * WHY DO WE NEED TEMP?
+     * SLOW GOES BEYOND MID, I.E IF THERE ARE 4 ELS, SLOW GOES TILL 2ND INDEX
+     * SO TEMP HOLDS 1ST INDEX AND BREAKS THE LINK. SO THAT THE DIVISION IS MADE.
+    */
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head;
+        ListNode fast = head; ListNode slow = head;
+        ListNode temp = null;
+        while(fast!=null && fast.next != null){
+            temp = slow;
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        
+        temp.next = null;
+        ListNode a = sortList(head);
+        ListNode b = sortList(slow);
+        return merge(a, b);
+    }
+    
+    ListNode merge(ListNode a, ListNode b){
+        ListNode dummy = new ListNode(0);
+        ListNode p = dummy;
+        while(a!=null && b!=null){
+            if(a.val<b.val) {
+                dummy.next = a; a = a.next;
+            }else{
+                dummy.next = b; b = b.next;
+            }
+            dummy = dummy.next;
+        }
+        
+        if(a!=null) dummy.next = a;
+        if(b!=null) dummy.next = b;
+        
+        return p.next;
+    }
+    
 
     void oddEvenSort(ListNode node) {
         ListNode prev = node;
@@ -586,6 +657,58 @@ class Linkedprac {
         return last;
     }
 
+    /** A VARIATION OF REVERSE LIST, 1->2->3->4->5->6->7->8->9->10 
+     * TO 1->10->3->8->5->6->7->4->9->2
+     * POINTS TO REMEMBER : 
+     * 1 FOR FAST SLOW, P.NEXT!=NULL
+     * 2 E = E.NEXT AND THEN
+     * 3 INSIDE USE IF(P.NEXT==NULL) BREAK;
+     * 4 ENSURE LAST NODE IS NULL E.NEXT = NULL
+     * 5 IN REVERSE IF(C!=NULL) C= C.NEXT;
+    */
+    public void reorderList(ListNode head) {
+        if(head == null) return;
+        ListNode p = head; 
+        ListNode e = new ListNode(0); ListNode b = e;
+        
+        while(p.next!=null){//1
+            System.out.println("p "+p.val);
+            
+            e.next = p.next; p.next = p.next.next; 
+            e = e.next;    
+            if(p.next==null) break;//2
+            p = p.next;
+        }
+        
+        // System.out.println(p.val);
+        e.next = null;//3
+        b = b.next; p = head;
+            
+        ListNode q = reverse(b); 
+        ListNode t = q;
+        while(t!=null) {
+            System.out.print(t.val+", ");t = t.next;
+        }
+        while(p!=null && q!=null){
+            ListNode s = q.next; ListNode r = p.next;
+            // System.out.println("s "+s.val);
+            
+            p.next = q; q.next = r; p = r; q = s;
+        }
+    }
+    
+    ListNode reverse(ListNode curr){
+        ListNode a = null; ListNode b = curr; ListNode c= curr.next;
+        if(c==null) return b;
+        while(b!=null){
+            b.next = a;
+            a = b; b= c;
+            // System.out.println("a "+a.val);
+            if(c!=null) c = c.next;//2
+        }
+        return a;
+    }
+
     /*
      * public ListNode reverseKGroup(ListNode head, int k) { ListNode begin; if
      * (head==null || head.next ==null || k==1) return head; ListNode dummyhead =
@@ -604,17 +727,18 @@ class Linkedprac {
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     public static void main(String[] args) {
         Linkedprac linked = new Linkedprac();
-        linked.addNode(1);linked.addNode(1);
+        linked.addNode(1);
         linked.addNode(2);
-        linked.addNode(3);linked.addNode(3);
-        linked.addNode(4);linked.addNode(4);
+        linked.addNode(3);
+        linked.addNode(4);
         linked.addNode(5);
         // linked.addNode(6);
         // linked.addNode(7);
         // linked.addNode(8);
         // linked.addNode(9);
 
-        linked.deleteDuplicates(linked.head);
+        // linked.deleteDuplicates(linked.head);
+        linked.reorderList(linked.head);
         // System.out.println(linked.josephusCircle(linked.head));
         // linked.reverseListWithoutPointer( linked.head,linked.head, linked.head.next);
         // linked.printList(linked.head);

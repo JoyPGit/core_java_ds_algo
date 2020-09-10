@@ -1,5 +1,4 @@
 import java.util.*;
-import utilCustom.*;
 
 /**
  * QUES 1 DFS (TIME TO INFORM) 2 DIJKSTRA -> BFS (BIPARTITE, WORD LADDER, N/W
@@ -544,6 +543,32 @@ class Graph {
 		return minutes;
 	}
 
+	// USED BFS, MEMORY LIMIT EXCEEDED
+	public int numOfMinutesBFS(int n, int headID, int[] manager, int[] informTime) {
+		
+		int[] visited = new int[n]; int[][] g = new int[n][n];
+		Deque<Integer> q = new LinkedList<>();
+		
+		visited[headID] = 0; q.add(headID);
+		for(int i =0; i<manager.length; i++) {
+			if(i!=headID) g[manager[i]][i] = informTime[manager[i]];
+		}
+		
+		while(q.size()!=0){
+			int curr = q.removeFirst();
+			
+			for(int i =0; i<n; i++){
+				if(curr!=i && visited[i]==0 && g[curr][i]!=0) {
+					visited[i] = visited[curr] + g[curr][i];
+					q.add(i);
+				}
+			}
+		}
+		
+		int max = -1;
+		for(int i =0; i<n; i++) max = Math.max(max, visited[i]);
+		return max;
+	}
 	// https://leetcode.com/problems/path-with-maximum-probability/
 
 	// DFS EXAMPLE
@@ -945,31 +970,40 @@ class Graph {
 	}
 
 	// https://leetcode.com/problems/cheapest-flights-within-k-stops/
-	public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
-		int[][] g = new int[n][n];
-
-		for (int i = 0; i < n; i++) {
-			g[flights[i][0]][flights[i][1]] = flights[i][2];
-			g[flights[i][1]][flights[i][0]] = flights[i][2];
-		}
-
-		HashSet<Integer> set = new HashSet<>();
-		set.add(src);
-		int min = Integer.MAX_VALUE;
-		dfsFlight(set, g, src, min, dst, 0, K + 1);
-		return min;
+	class Holder{
+		int val, dist, stops;
+		Holder(int v, int d, int k){ this.val = v; this.dist = d; this.stops = k;}
 	}
 
-	void dfsFlight(HashSet<Integer> set, int[][] g, int src, int min, int dst, int dist, int k) {
-		for (int i = 0; i < g.length; i++) {
-			if (i != src && g[i][src] != 0) {
+	public int findCheapestPrice(int n, int[][] flights, int src, int dest, int k) {
+		int[] visited = new int[n];
+		int[][] g = new int[n][n];
+		
+		for(int i =0; i < flights.length; i++){
+			g[flights[i][0]][flights[i][1]] = flights[i][2];//1
+		}
+		
+		Arrays.fill(visited, Integer.MAX_VALUE); visited[src] = 0;//2
+		
+		Deque<Holder> q = new LinkedList<>();//3
+		q.addLast(new Holder(src, 0, 0)); visited[src] = 0;//4
+		
+		while(q.size()!=0){
+			Holder c = q.removeFirst();
+			for(int i =0; i < n; i++){
+				if(g[c.val][i] != 0 && c.stops <= k && visited[i] > c.dist + g[c.val][i]){
+					visited[i] = c.dist+g[c.val][i];
+					q.addLast(new Holder(i, visited[i], c.stops+1));//5
+				}
 			}
 		}
+		return visited[dest]==Integer.MAX_VALUE?-1:visited[dest];//6
 	}
+
 
 	// https://leetcode.com/problems/course-schedule/discuss/463067/Simple-dfs-faster-than-99.81
 
-	public static void main(String args[]) {
+	public void main(String args[]) {
 		// Create a graph given in the above diagram
 		Graph g = new Graph(8);
 		// g.addEdge(5, 2);
@@ -1048,4 +1082,5 @@ class Graph {
 		int[][] servers = { { 0, 1, 1 }, { 1, 2, 4 }, { 1, 3, 6 }, { 3, 4, 5 }, { 1, 4, 1 } };
 		// g.primServer(servers);
 	}
+
 }
