@@ -916,7 +916,7 @@ public class Tree {
     }
 
     /**
-     * inorder to achieve zig zag level, we need level, then we need to keep track
+     * in order to achieve zig zag level, we need level, then we need to keep track
      * of dirn
      */
     boolean booleanEvenLevel = true;
@@ -996,6 +996,20 @@ public class Tree {
             }
 
         }
+    }
+
+    // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return helper(nums, 0, nums.length-1);
+    }
+    
+    TreeNode helper(int[] arr,int low, int high){
+        if(low>high) return null;
+        int mid = low + (high-low)/2;
+        TreeNode root = new TreeNode(arr[mid]);
+        root.left = helper(arr, low, mid-1);
+        root.right = helper(arr, mid+1, high);
+        return root;
     }
 
     TreeNode treeToLinkedList(TreeNode node) {
@@ -2771,6 +2785,7 @@ public class Tree {
         return Math.max(left,right)+a;
     }
 
+    // https://leetcode.com/problems/find-largest-value-in-each-tree-row/
     // https://leetcode.com/problems/binary-tree-postorder-traversal/
     // https://leetcode.com/problems/sum-of-left-leaves/
     // discuss/88951/3-line-recursive-c%2B%2B-solution-no-need-to-explain

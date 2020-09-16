@@ -403,12 +403,7 @@ public class HashPractice{
         ArrayList<Integer> res = new ArrayList<>();
         HashMap<Integer, Integer> map = new HashMap<>();
 
-        for(int i =0; i<a.length; i++){
-            if(map.containsKey(a[i])){
-                map.put(a[i], map.get(a[i])+1);
-            } else 
-            map.put(a[i], 1);
-        }
+        for(int i =0; i<a.length; i++) map.put(a[i], map.getOrDefault(a[i], 0)+1);
 
         for(int i =0; i<b.length; i++){
             int count = map.get(b[i]);

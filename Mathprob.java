@@ -58,4 +58,25 @@ public class Mathprob {
 
     // https://leetcode.com/problems/water-and-jug-problem/
 
+    // Find power(a, n) iteratively without extra space 
+    // https://practice.geeksforgeeks.org/problems/abset-25327/1
+    long power(int a, long b){
+        //complete the function here
+        if(a==0 || b==0) return a;
+        if(b==1) return a;
+        int base = a; int mul = a;
+        int k =1;
+        while(k<b){
+            base*=mul;
+            k++;
+        }
+        System.out.println("base "+base);
+        return Long.valueOf((base)%(10^9+7));
+    }
+
+    public static void main(String[] args) {
+        Mathprob math = new Mathprob();
+        math.power(99, 9);
+    }
+
 }

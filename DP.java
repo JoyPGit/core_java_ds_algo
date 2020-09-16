@@ -1535,8 +1535,43 @@ public class DP {
     } 
 
 
-    // https://leetcode.com/problems/maximal-rectangle/
+    /** 
+     * POINTS : 
+     * 1 USED A HASHSET TO ADD WORDS IN DICT
+     * 2 ALWAYS USE l<=n
+     * 3 FOR l=1, use continue IF MATCHES.
+     * 4 SUBSTRING WORKS WITH 2 ARGS, FOR PRINTING SINGLE CHAR, USE i, i+1
+     * 5 k goes from i till j; dp[i][k] && dp[k+1][j] 
+    */
     // https://leetcode.com/problems/word-break/
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+        if(n == 0) return false;
+        HashSet<String> set = new HashSet<>();
+        
+        for(int i =0; i<wordDict.size(); i++) set.add(wordDict.get(i));
+        if(set.contains(s)) return true;
+        
+        boolean[][] dp = new boolean[n][n];
+        
+        for(int l=1; l<=n; l++){//2
+            for(int i =0; l+i-1<n; i++){
+                if(l==1 && set.contains(s.substring(i,i+1))){ dp[i][i] = true; continue; }//3
+                int j = i+l-1;
+                if(set.contains(s.substring(i,j+1))) {//4
+                    System.out.println("in here "+s.substring(i, j+1));
+                    dp[i][j] =true; continue;// continue
+                }
+                for(int k = i;k<j; k++){//5
+                    if(dp[i][k] == true && dp[k+1][j] == true) dp[i][j] = true;
+                }
+            }
+        }
+        utilCustom.Utility.printMatrixBool(dp);
+        return dp[0][n-1];
+    }
+
+    // https://leetcode.com/problems/maximal-rectangle/
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
     // https://leetcode.com/problems/minimum-cost-to-cut-a-stick/
 
@@ -1711,6 +1746,10 @@ public class DP {
 
         int[] boards = { 10, 20, 60, 50, 30, 40 }; int painters = 4; 
         // dp.paintersPartition(boards, boards.length, painters);
+
+        String s= "iam"; List<String> wordDict = new ArrayList<>();
+        wordDict.add("i");  wordDict.add("a"); wordDict.add("am"); wordDict.add("ace");
+        dp.wordBreak(s, wordDict);
 
     }
 }

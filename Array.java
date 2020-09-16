@@ -7,11 +7,14 @@ class Array {
     * IF LENGTH=6 MID = 2, NOT 3
     */
     /**TECHNIQUES
-     * 1 TWO TRAVERSALS
-     * 2 WIGGLE SORT
-     * 3 USING STACK/DEQUE
-     * 4 USING XOR
-     * 5 CIRCULAR ARRAY 
+     * 1 REMOVE DUPLICATES  USE WHILE LOOP AND BOUNDARY (j<n)
+     * 2 SORTED -> BIDIRECTIONAL SEARCH 
+     * 3 UNSORTED -> HASHMAP
+     * 4 TWO TRAVERSALS
+     * 5 WIGGLE SORT
+     * 6 USING STACK/DEQUE
+     * 7 USING XOR
+     * 8 CIRCULAR ARRAY 
      */
     void print1DMatrix(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
@@ -46,6 +49,155 @@ class Array {
 
             }
         }
+    }
+
+    /**
+     * It is somewhat similar to QUICKSORT partition, 
+     * the way we do partition(i++, swap(a[i], a[j]). 
+     * j holds the index of the first occurrence of the previous element. 
+     * (1,1,2,2,3) : j is 0,
+     * i =1; arr[j] == arr[i]; continue; //j=0, i=0; 1==1
+     * 
+     * i =2; arr[j] != arr[i]; j++, arr[j] = arr[i]; //j=0, i=2; 1 != 2
+     * so j is incremented and index 1's value is replaced with index 2's value. 
+     * //arr = [1,2,2,2,3]; j=1; j now holds first occurrence of 2
+     * 
+     * i = 3; arr[j] == arr[i]; continue; //j=1, i =3; 2==2
+     * i = 4; arr[j] != arr[i]
+     * j++, change val //arr= [1,2,3,2,3] j now holds first occurrence of 3.
+     * https://leetcode.com/problems/remove-duplicates-from-sorted-array/ 
+     * discuss/11769/5-lines-Java-solution
+    */
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    public int removeDuplicates(int[] nums) {
+        int n = nums.length;
+        if (n == 0) return 0;
+        int j=0;
+        for (int i=0; i<n; i++){
+            if (nums[i]!=nums[j]){
+                j++; 
+                nums[j]=nums[i];
+            }
+        }
+        print1DMatrix(nums);
+        return ++j;
+    }
+
+
+    /** POINTS :
+     * 1 USE WHILE LOOP, AS FOR DUPLICATES
+     * 2 j = i+1, TO FIND CONSECUTIVES, USE THIS TRICK
+     * nums[j]-nums[i] == j-i
+     * 3 USUAL BOUNDARY CONDNS j<n
+     * 4 DON'T FORGET i = j
+    */
+    // https://leetcode.com/problems/summary-ranges/
+    public List<String> summaryRanges(int[] nums) {
+        int n = nums.length;
+        if(n==0) return new ArrayList<>();
+        List<String> res = new ArrayList<>(); String curr = "";
+        
+        int i =0;
+        while(i<n){
+            int j = i+1;
+            while(j<n && nums[j]-nums[i] == j-i) j++; //only j++ will do
+            if(j==i+1) curr = nums[i]+"";  //single el
+            else curr = nums[i]+"->"+nums[j-1];
+            res.add(curr);
+            i = j;
+        }
+        return res;
+    }
+    
+
+    /**  
+     * IF REPEATED AND NOT SORTED, USE HASHMAP
+    */
+    // https://leetcode.com/problems/two-sum/
+    public int[] twoSumUnsorted(int[] nums, int target) {
+        ArrayList<Integer> list = new ArrayList<>();
+        int[] res = new int[2];
+        int n = nums.length;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i =0; i<nums.length; i++){
+            if(map.containsKey(target - nums[i])) {
+                res[0] = i; res[1] = map.get(target - nums[i]);
+                break;
+            }     
+            else map.put(nums[i], i);
+        }
+        
+        return res;
+    }
+    
+    /**  
+     * IF SORTED, USE BIDIRECTIONAL SEARCH
+    */
+    // https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+    public int[] twoSumSorted(int[] nums, int target) {
+        ArrayList<Integer> list = new ArrayList<>();
+        int[] res = new int[2];
+        int n = nums.length;
+        
+        int low = 0; int high = n-1;
+        
+        while(low<high){
+            if(nums[low]+nums[high] == target){
+                res[0] = low+1; res[1] = high+1; break;
+            }
+            else if(nums[low]+nums[high]>target) high--;
+            else if(nums[low]+nums[high]<target) low++;
+            
+        }
+        
+        return res;
+    }
+
+
+    /** IMP 
+     * POINTS : 
+     * 1 USE BIDIRECTIONAL SEARCH (WORKS ON SORTED)
+     * 2 low = i+1; high = n
+     * DUPLICATE HANDLING : 
+     * 3 if (i > 0 && nums[i] == nums[i - 1]) continue;
+     * 4 while (low < high && nums[low] == nums[low+1]) low++;
+     * 
+     * 5 AND AT THE END low++; high--;
+     * TO CONTINUE THE LOOP AND NOT STOP;
+     * WE COULD HAVE BROKEN IF WE HAD TO FIND A SINGLE SET
+     *  
+     * 
+    */
+    public List<List<Integer>> threeSum(int[] nums) {
+        int n = nums.length;
+        if(n<3) return new ArrayList<>();
+        Arrays.sort(nums);
+        
+        List<List<Integer>> res = new ArrayList<>();
+        
+        for(int i =0; i<n; i++){
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            int low = i+1; int high = n-1;
+            while(low<high){
+                int sum = nums[i]+nums[low]+nums[high];
+                if(sum == 0){
+                    // List<Integer> curr = new ArrayList<>();
+                    // curr.add(nums[i]); curr.add(nums[low]); curr.add(nums[high]);
+                    // res.add(curr);
+                    
+                    res.add(Arrays.asList(nums[i], nums[low], nums[high]));
+                    
+                    while (low < high && nums[low] == nums[low+1]) low++;
+                    while (low < high && nums[high] == nums[high-1]) high--;
+                    low++; high--;
+                    // break;
+                }
+                else if(sum>0) high--;
+                else low++;
+            }
+        }
+        return res;
     }
 
     // https://leetcode.com/problems/three-consecutive-odds/
@@ -309,28 +461,9 @@ class Array {
 
     }
 
-    void sortByFrequency(int[] arr) {
-        int[] indexArr = new int[arr.length];
-        quickSortArray24Apr(arr, 0, arr.length - 1);
+    //USE HASHMAP AND PRIORITYQUEUE
+    void sortByFrequency(int[] arr) {}
 
-        indexCountMapper(arr, indexArr);
-
-    }
-
-    void indexCountMapper(int[] arr, int[] indexArr) {
-        int counter = 0;
-        int prevValue = arr[0];
-        for (int i = 1; i < arr.length; i++) {
-            if (prevValue == arr[i]) {
-                prevValue = arr[i];
-                counter++;
-            } else {
-                indexArr[i - 1] = ++counter;
-                prevValue = arr[i];
-                counter = 0;
-            }
-        }
-    }
 
     void quickSortArray24Apr(int[] arr, int low, int high) {
         if (low < high) {
@@ -369,6 +502,27 @@ class Array {
         // return -1;
     }
 
+    // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree
+    /** SIMILARITIES WITH QUICKSORT
+     * 1 BOUNDARY CONDN (low<=high) 
+     * 2 USE MID
+     * 3 f(low, mid-1); f(mid+1, high); NOT 0 AND n, USE LOW AND HIGH
+     * 
+    */
+    // public TreeNode sortedArrayToBST(int[] nums) {
+    //     return helper(nums, 0, nums.length-1);
+    // }
+    
+    // TreeNode helper(int[] arr,int low, int high){
+    //     if(low>high) return null;
+    //     int mid = low + (high-low)/2;
+    //     TreeNode root = new TreeNode(arr[mid]);
+    //     root.left = helper(arr, low, mid-1);
+    //     root.right = helper(arr, mid+1, high);
+    //     return root;
+    // }
+
+    //////////////////////////////////////////////
     void heapSort25Apr(int[] arr) {
         int n = arr.length;
         int mid = arr.length / 2 - 1;
@@ -476,52 +630,6 @@ class Array {
     // return left+1;
     // }
 
-    public int[] asteroidCollision(int[] asteroids) {
-        if (asteroids.length == 0)
-            return new int[0];
-        if (asteroids.length == 1)
-            return asteroids;
-
-        int leftptr = 0;
-        int rightptr = -1;
-
-        for (int i = 0; i < asteroids.length - 1; i++) {
-            if ((asteroids[i] * asteroids[i + 1]) < 0) {
-                System.out.println(asteroids[i] * asteroids[i + 1]);
-                leftptr = i;
-                rightptr = i + 1;
-                break;
-            }
-        }
-
-        System.out.println("left " + leftptr + " right " + rightptr);
-
-        while (leftptr >= 0 && rightptr < asteroids.length) {
-            if (Math.abs(asteroids[leftptr]) > Math.abs(asteroids[rightptr])) {
-                asteroids[rightptr++] = 0;
-            } else if (Math.abs(asteroids[leftptr]) == Math.abs(asteroids[rightptr])) {
-                asteroids[leftptr--] = 0;
-                asteroids[rightptr++] = 0;
-            } else {
-                asteroids[leftptr--] = 0;
-            }
-        }
-
-        int count = 0;
-        for (int i = 0; i < asteroids.length; i++) {
-            if (asteroids[i] != 0)
-                count++;
-        }
-
-        int[] arr = new int[count];
-        int index = 0;
-        for (int i = 0; i < asteroids.length; i++) {
-            if (asteroids[i] != 0)
-                arr[index++] = asteroids[i];
-        }
-        showArray(arr);
-        return arr;
-    }
 
     int maxIndex(int[] arr) {
         int maxDiff = 0;
@@ -798,7 +906,10 @@ class Array {
 
     // https://leetcode.com/problems/subarray-product-less-than-k/
     // https://leetcode.com/problems/find-all-duplicates-in-an-array/
-    /**  use the concept of mapping indexes to values */
+
+    /**
+     * the size is greater than the values, so indices can be mapped  
+     */
     public List<Integer> findDuplicates(int[] nums) {
         int n = nums.length;
         ArrayList<Integer> list = new ArrayList<>();
@@ -821,6 +932,8 @@ class Array {
         // code
 
         Array test = new Array();
+        int[] duplicates = {1,1,2,2,2,3};
+        test.removeDuplicates(duplicates);
         int[] arr = new int[] { 1, 2, 5, 4, 3 };
         int[] arr2 = new int[] { 9, 7, 1, 3, 5, 6 };
         // test.findMissingAndRepeated(arr);
@@ -838,9 +951,10 @@ class Array {
         // System.out.println("---");
         // test.showArray(arr2);
         // test.findKthMax(arr2, 3);
-        int[] zeroArr = { 1, 9, 8, 4, 2, 7 };
+        int[] zeroArr = { 1, 9, 8, 4, 2, 7, 0, 0 };
         // test.moveAllZeroesToEnd(zeroArr);
         // test.quickSortArray24Apr(zeroArr, 0, zeroArr.length-1);
+        // test.print1DMatrix(zeroArr);
         // System.out.println();
         // test.showArray(zeroArr);
 
@@ -893,7 +1007,7 @@ class Array {
         // test.findDuplicates(dup);
 
         int[] equalLeftAndRight = {2,4,6,6,4,2,10};
-        test.equalLeftAndRightSum(equalLeftAndRight);
+        // test.equalLeftAndRightSum(equalLeftAndRight);
     }
 
 }

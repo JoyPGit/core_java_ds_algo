@@ -130,7 +130,7 @@ class Linkedprac {
      * 
      * 4 f(){
      * l = f(); r = f(); merge(l,r);
-     * // f take sonly starting node
+     * // f takes only starting node
      * }
      * 
      * 5 WHILE MERGING DON'T FORGET IF(a!=null) AT THE END
@@ -172,7 +172,10 @@ class Linkedprac {
         
         return p.next;
     }
+
     
+    
+    // https://leetcode.com/problems/insertion-sort-list/
 
     void oddEvenSort(ListNode node) {
         ListNode prev = node;
@@ -316,6 +319,31 @@ class Linkedprac {
         reverseListWithoutPointer(head, next, next.next);
         next.next = node;
         node.next = null;// not adding this creates a loop between 1 and 2
+    }
+
+    // https://leetcode.com/problems/reverse-linked-list-ii
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        ListNode start = head; ListNode end = head; ListNode left = head;
+        if(m==n) return head;
+        for(int i =0; i<n-1; i++){
+            if(i==m-2) left = end;
+            if(i==m-1) start = end;
+            end = end.next;
+        }
+        // System.out.println(start.val);
+        // System.out.println(end.val);
+        // if(start == end) return head;
+        ListNode right = end.next;
+        ListNode a = null; ListNode b = start; ListNode c = b.next;
+        while(a!=end){
+            b.next = a;
+            a= b; b=c;
+            if(c!=null) c = c.next;
+        }
+        if(left!=start) left.next = a; 
+        else head = a;
+        start.next = right;
+        return head;
     }
 
     // https://leetcode.com/problems/add-two-numbers-ii/submissions/
@@ -657,6 +685,39 @@ class Linkedprac {
         return last;
     }
 
+
+    /**
+     * 2 WAYS TO FIND MIDDLE
+     * ONE IS FAST!=NULL && FAST.NEXT != NULL
+     * OTHER IS FAST.NEXT!=NULL && FAST.NEXT.NEXT!=NULL
+     * 
+     * THE DIFF IS IN THE FIRST CASE, SLOW GOES ONE STEP AHEAD OF MIDDLE 
+     * IN CASE OF EVEN NO OF NODES
+     */
+    // https://leetcode.com/problems/reorder-list/submissions/
+    public void reorderList(ListNode head) {
+        if(head == null || head.next ==null || head.next.next == null) return;
+
+        ListNode m = head; ListNode n = null;
+        ListNode fast = head; ListNode slow = head; ListNode temp = null;
+        while(fast!=null && fast.next!=null){
+            temp = slow;
+            slow = slow.next; fast = fast.next.next;
+        }
+        
+        if(fast==null) { temp.next = null; n = reverse(slow); }    
+        else if(fast.next==null) { n = reverse(slow.next); slow.next = null; }
+        // System.out.println(n.val);
+
+        ListNode s = n.next;
+        if(s==null) {n.next = m.next; m.next = n;}
+        
+        while(s!=null){
+            s = n.next; ListNode r = m.next;
+            m.next = n; n.next = r; m = r; n = s; 
+        }
+    }
+
     /** A VARIATION OF REVERSE LIST, 1->2->3->4->5->6->7->8->9->10 
      * TO 1->10->3->8->5->6->7->4->9->2
      * POINTS TO REMEMBER : 
@@ -665,8 +726,10 @@ class Linkedprac {
      * 3 INSIDE USE IF(P.NEXT==NULL) BREAK;
      * 4 ENSURE LAST NODE IS NULL E.NEXT = NULL
      * 5 IN REVERSE IF(C!=NULL) C= C.NEXT;
+     * 
+     * REMEMBER TO SET NULL
     */
-    public void reorderList(ListNode head) {
+    public void reorderListCustom(ListNode head) {
         if(head == null) return;
         ListNode p = head; 
         ListNode e = new ListNode(0); ListNode b = e;
@@ -708,6 +771,7 @@ class Linkedprac {
         }
         return a;
     }
+    
 
     /*
      * public ListNode reverseKGroup(ListNode head, int k) { ListNode begin; if
@@ -724,6 +788,8 @@ class Linkedprac {
      * prev; first.next = curr; return first; }
      */
 
+    // https://stackoverflow.com/questions/21528422/storing-a-doubly-linked-list-using-just-a-single-pointer-field
+    // https://github.com/mission-peace/interview/blob/master/src/com/interview/linklist/SortedLLToBalancedBST.java
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     public static void main(String[] args) {
         Linkedprac linked = new Linkedprac();

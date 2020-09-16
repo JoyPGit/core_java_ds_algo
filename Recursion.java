@@ -357,6 +357,13 @@ public class Recursion {
         }
     }
 
+    
+
+    // https://leetcode.com/problems/generate-parentheses/discuss/
+    // 10442/Java-recursion-solution-with-comments-hope-it-helps!
+
+    // https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
+    
     // https://www.geeksforgeeks.org/sort-a-stack-using-recursion/
     // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
     // https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/
@@ -369,6 +376,7 @@ public class Recursion {
     // https://leetcode.com/problems/all-possible-full-binary-trees/
     // discuss/216853/Java%3A-Easy-with-Examples
 
+    // valid parenthesis combination, linked list flatten
     public static void main(String[] args) throws Exception {
         Recursion recur = new Recursion();
 

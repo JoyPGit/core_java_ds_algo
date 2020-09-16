@@ -1408,36 +1408,98 @@ class Matrix {
     int countPath;
 
 
-    // public int maximalRectangle(char[][] matrix) {
-    //     int n = matrix.length; int m = matrix[0].length;
-    //     int[][] dp = new int[n][m];
-    //     int max = 0;
+    // https://leetcode.com/problems/unique-paths-ii/
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
         
-    //     for(int i =0; i<n; i++){
-    //         for(int j =0; j<m ;j++){
-    //             if(matrix[i][j] == '0') dp[i][j] = 0;
-    //             else dp[i][j] =1;
-    //         }
-    //     }
+        if(m==0 || n==0) return 1;
+        if(m==1 && n==1) {
+            if(obstacleGrid[m-1][n-1] == 0) return 1;
+            if(obstacleGrid[m-1][n-1] == 1) return 0;
+        }
+        if(obstacleGrid[0][0] == 1) return 0; //1
+        int[][] dp = new int[m][n];
+        dp[0][0] = 1; //2
         
-    //     for(int i =1; i<n; i++){
-    //         for(int j =1; j<m ;j++){
-    //             if(matrix[i-1][j] !='0' && matrix[i][j]!='0'  
-    //             && matrix[i][j-1]!='0' && matrix[i-1][j-1]!='0'){
-    //                 dp[i][j] = Math.max(dp[i-1][j-1], 
-    //                 Math.max(dp[i-1][j], dp[i][j-1]+1))+1;
-    //             }
-    //         }
-    //     }
+        for(int i = 1; i<m; i++){
+            if(obstacleGrid[i][0] == 1) dp[i][0] =0; //3
+            else dp[i][0] = dp[i-1][0]; //4
+        }
         
-    //     utilCustom.Utility.printMatrix(dp);
-    //     for(int i =1; i<n; i++){
-    //         for(int j =1; j<m ;j++){
-    //             max =Math.max(max, dp[i][j]);
-    //         }
-    //     }
-    //     return max;
-    // }
+        for(int i =1; i<n; i++){
+            if(obstacleGrid[0][i] == 1) dp[0][i] =0;
+            else dp[0][i] = dp[0][i-1];
+        }
+        
+        for(int i =1; i<m; i++){
+            for(int j=1; j<n; j++){
+                if(obstacleGrid[i][j] == 1) dp[i][j] = 0; //5
+                else {
+                    // if(i==0 || j==0) dp[i][j] =1;
+                    // else 
+                        dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                }
+            }
+        }
+        // System.out.println(dp[1][2]);
+        return dp[m-1][n-1];
+    }
+    // https://leetcode.com/problems/unique-paths-iii/
+
+    /**
+     * POINTS : 
+     * 1 start a dfs whenever the ch[i][j] matches the starting char of string
+     * 2 USE THE WORD, DON'T USE CHAR ARRAY
+     * 3 NO NEED TO MAINTAIN VISITED ARRAY, USE BACKTRACKING
+     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE CHECKS
+     * FOR ALL POSSIBLE STARTS AND DOESN'T RETURN TRUE TILL ALL POSSIBILITIES
+     * ARE EXHAUSTED, WHICH RESULTS IN TLE
+     * 5 
+     * 
+     */
+    // https://leetcode.com/problems/word-search/submissions/
+    public boolean exist(char[][] board, String word) {
+        // char[] ch = word.toCharArray();
+        // boolean[][] visited = new boolean[board.length][board[0].length];
+        
+        for(int i =0; i<board.length; i++){
+            for(int j =0; j<board[0].length; j++){
+                if(board[i][j] == word.charAt(0) && dfs(board, i, j, word, 0)) return true;
+            }
+        }
+        return false;
+    }
+    
+    boolean dfs(char[][] board, int row, int col, String word, int index){
+        if(isSafe(board, row, col, word, index)){
+            if(index == word.length()-1 && word.charAt(index) == board[row][col]) {
+                // System.out.println("in here"); 
+                return true;
+            }
+            char temp = board[row][col];
+            board[row][col] = ' '; // 4 not using visited array
+            boolean found =  dfs(board, row-1, col, word, index+1) 
+            || dfs(board, row+1, col, word, index+1) 
+            || dfs(board, row, col-1, word, index+1)
+            || dfs(board, row, col+1, word, index+1);
+            
+            board[row][col] = temp; // 3 backtracking
+            return found;
+        }
+        return false;
+    }
+    
+    
+    boolean isSafe(char[][] board, int row, int col, String word, int index){
+        if(row>=0 && row<board.length
+          && col>=0 && col<board[0].length
+          && board[row][col] == word.charAt(index)) return true;
+        return false;
+    }
+    
+
+    
     
    //all paths from a to b 
    //https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/

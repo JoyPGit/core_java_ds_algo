@@ -139,6 +139,12 @@ public class Utility {
         }
     }
 
+    public static void swap(int[] arr, int index1, int index2){
+        int temp = arr[index1];
+        arr[index1] = arr[index2];
+        arr[index2] = temp;
+    }
+
     /**
      * for k smallest or largest, when we use heap techniques : 1 sort the array and
      * return kth index nums[n-k]

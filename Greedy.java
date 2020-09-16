@@ -273,40 +273,71 @@ class Greedy{
      *    ONLY A-> THEN WE ADD +1(TEMP SIZE)
      * 
      */
-    public int schdeuleTasks(char[] tasks, int k) {
+    public int scheduleTasks(char[] tasks, int k) {
         HashMap<Character, Integer> map = new HashMap<>();
-        int n = tasks.length; 
-        // for(int i=0; i< n; i++){
-        //     // optimization
-        //     map.put(tasks[i], map.getOrDefault(tasks[i], 0)+1);
-        //     // if(map.containsKey(tasks[i])){
-        //     //     map.put(tasks[i], map.get(tasks[i])+1);
-        //     // } else map.put(tasks[i], 1);
-        // }
-        // optimization
         for(char c: tasks) map.put(c, map.getOrDefault(c, 0)+1);
 
-        PriorityQueue<Integer> list = new PriorityQueue<>((x,y)->y-x);
-        list.addAll(map.values());
+        PriorityQueue<Integer> q = new PriorityQueue<>((x,y)->y-x);
+        q.addAll(map.values());
         int cycles = 0;
-        while(list.size()!=0){
+        while(q.size()!=0){
             ArrayList<Integer> temp = new ArrayList<>();
-            for(int i =0; i<list.size(); i++){
-                if(list.size()!=0) temp.add(list.remove());
+            for(int i =0; i<q.size(); i++){
+                if(q.size()!=0) temp.add(q.remove());
             }
 
-            // for(int i =0; i<k+1; i++){
-            //     if(temp.get(i)-1 > 0) list.add(temp.get(i)-1);
-            // }
-            // optimization
             for(int i : temp){
-                if(--i > 0) list.add(--i);
+                if(--i > 0) q.add(i);
             }
-            cycles+= list.size()==0?temp.size():k+1;
+            cycles+= q.size()==0?temp.size():k+1;
         }
         return cycles;
     }
 
+    // https://leetcode.com/problems/reorganize-string/
+    class Reorg{
+        char c; int freq;
+        Reorg(char ch, int f){
+            this.c = ch;
+            this.freq = f;
+        }
+    }
+    public String reorganizeString(String s) {
+        char[] ch = s.toCharArray();
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        for(int i =0; i<ch.length; i++){
+            if(map.containsKey(ch[i])){
+                map.put(ch[i], map.get(ch[i])+1);
+            }
+            else map.put(ch[i], 1);
+        }
+        
+        PriorityQueue<Reorg> q = new PriorityQueue<>((x,y)-> y.freq-x.freq);
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) 
+            q.add(new Reorg(entry.getKey(), entry.getValue()));
+        
+        int k = 2;
+        String res ="";
+        ArrayList<Reorg> temp = new ArrayList<>();
+        
+        while(q.size()!=0){
+            Reorg curr = q.remove();
+            res+=curr.c;
+            // System.out.println(res);
+            temp.add(new Reorg(curr.c, curr.freq-1));    
+            
+            if(temp.size()<k) continue;
+            Reorg pushBack = temp.remove(0);
+            // System.out.println("pushBack "+pushBack.c+" "+pushBack.freq);
+            if(pushBack.freq>0) q.add(pushBack);
+            
+        }
+        
+        return res.length() == s.length()?res:"";
+    }
+
+    
 
     // https://leetcode.com/problems/partition-labels/
     public List<Integer> partitionLabels(String S) {
@@ -323,7 +354,6 @@ class Greedy{
         }
 
         ArrayList<Integer> res = new ArrayList<>();
-
         System.out.println(map);
         int currBucket = map.get(S.charAt(0)); int currStart = 0;
         for(int i = 1; i<ch.length; i++){
@@ -554,6 +584,27 @@ class Greedy{
 		return result.toArray(new int[result.size()][]);
     }
 
+    /** SORT ON THE BASIS OF END POINTS, IF CURR<START OF ANY POINT, COUNT++
+     * IMP : ASSIGN CURR AFTER SORTING
+     */
+    // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
+    public int findMinArrowShots(int[][] points) {
+        int n = points.length;
+        if(n==0) return 0;
+        // if(n==1) return 1;
+        Arrays.sort(points, (a, b) -> a[1] - b[1]);
+        int count = 1;
+        int curr = points[0][1];
+        
+        for(int i =1; i<n; i++){
+            if(curr>=points[i][0]) continue;
+            curr = points[i][1];
+            count++;
+        }
+        
+        return count;
+    }
+
     // https://leetcode.com/problems/maximum-performance-of-a-team/
     /** 
      * perf = (sum of speeds)*(min eff of the grp)
@@ -619,14 +670,15 @@ class Greedy{
     // https://leetcode.com/problems/candy/
     // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
     // EVENT SCHEDULER
-    
+    // MEETING ROOM LEETCODE
+    // https://www.youtube.com/watch?v=i2bBG7CaVxs
     // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
     // MICROSOFT
     // https://leetcode.com/discuss/interview-question/447448/
 
     // https://leetcode.com/problems/non-overlapping-intervals/
 
-    
+    // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
     // https://leetcode.com/problems/insert-interval/
     // https://leetcode.com/discuss/interview-question/350233/Google-or-Summer-Intern-OA-2019-or-Decreasing-Subsequences
     public static void main(String[] args) {
