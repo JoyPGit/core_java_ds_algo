@@ -672,43 +672,58 @@ class Graph {
 		return false;
 	}
 
-	// https://leetcode.com/problems/word-ladder/
-	/** can use vertex array for holding color */
-	public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-		if (!wordList.contains(endWord))
-			return 0;
+	/** 
+	 * POINTS : 
+	 * 1 HERE BFS IS USED, BUT FOR ALL STRINGS IN THE QUEUE AT A TIME, 
+	 * THE NEXT STRING IS FOUND AND STORED. SO MIN DIST CAN BE FOUND
+	 * WHENEVER THE END WORD COMES AS WE INCREMENTING BY UNIT DIST FOR ALL 
+	 * TRANSFORMATIONS.
+	 * 
+	 * 2 for(char c ='a'; c<='z'; c++) curr[i] == c
+	 * create a new string and check if it exist in the set
+	 * 
+	 * 3 CHANGE BACK THE STRING char holder = curr[i]; curr[i] = holder;
+	 * 
+	 * 4 ONCE AN ITERATION IS DONE, distance++;
+	 * 
+	 */	
 
-		HashSet<String> unused = new HashSet<>();
-		ArrayList<String> list = new ArrayList<>();
-
-		int index = 0;
-		list.add(beginWord);
-		for (String s : wordList)
-			unused.add(s);
-
-		while (!list.contains(endWord)) {
-			// check for 26 chars, add to list, update index, add to used, remove from
-			// unused
-			for (int i = 0; i < list.get(index).length(); i++) {
-				char[] ch = list.get(index).toCharArray();
-				for (char j = 'a'; j < 'z'; j++) {
-					ch[i] = j;
-					String curr = new String(ch);
-					if (curr == endWord)
-						return list.size();
-					if (unused.contains(curr)) {
-						list.add(curr);
-						unused.remove(curr);
-						index++;
-						// break;
-					}
-				}
-			}
-		}
-		System.out.println(list);
-		return list.size() - 1;
+	// https://leetcode.com/problems/word-ladder
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if(!set.contains(endWord)) return 0;
+        int distance = 1;
+        
+        Deque<String> q = new LinkedList<>();
+        q.addLast(beginWord);
+        while(q.size()!=0){
+            int size = q.size();            
+            // all words in the same go, helps maintain smallest dist
+            for(int k =0; k<size; k++){//1
+                char[] curr = (q.removeFirst()).toCharArray();
+                
+                for(int i =0; i<curr.length; i++){
+                    char holder = curr[i];//2
+                    
+                    for(char c ='a'; c<='z'; c++){
+                        if(c==holder) continue;//3
+                        curr[i] = c;
+                        String after = String.valueOf(curr);
+                        if(after.equals(endWord)) return distance+1;
+                        if(set.contains(after)) {
+                            // System.out.print(after+", ");
+                            q.addLast(after); set.remove(after);//4
+                        }
+                    }
+                    curr[i] = holder;//5
+                }   
+            }
+            distance++;//6
+        }
+        return 0;
 	}
-
+	
+	
 	/**
 	 * basically same as backtracking.. a vertex is continually assigned colors from
 	 * 1 till n, and we check if it's safe, then we recur, else we go back to

@@ -266,6 +266,7 @@ public class PermutationsCombinationsAndSubsets {
 
     
     // https://leetcode.com/problems/combinations/
+    //this ques is quiite silly start with combination sum 2
     // if all combinations of size k are reqd; add a check for list.size
     public List<List<Integer>> combine(int n, int k) {
         int[] nums = new int[n];
@@ -285,8 +286,9 @@ public class PermutationsCombinationsAndSubsets {
         } 
     }
 
+   
     // Combination Sum : https://leetcode.com/problems/combination-sum/
-    // can reuse the same element, start with i again in BTK
+    // can reuse the same element, start with i again in btk()
     public List<List<Integer>> combinationSum(int[] nums, int target) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
@@ -310,6 +312,13 @@ public class PermutationsCombinationsAndSubsets {
     }
 
 
+     /** POINTS : 
+     * 1 FOR REMOVING DUPLICATES, SORT THE ARRAY AND USE CHECK 
+     * if(i > start && nums[i] == nums[i-1]) continue;
+     * 
+     * 2 i = start
+     * 
+    */
     // Combination Sum II (can't reuse same element) : 
     // https://leetcode.com/problems/combination-sum-ii/
     public List<List<Integer>> combinationSum2(int[] nums, int target) {
@@ -322,16 +331,14 @@ public class PermutationsCombinationsAndSubsets {
     }
     
     private void backtrack2(List<List<Integer>> res, List<Integer> list, 
-    int [] nums, int remain, int start){
-        if(remain < 0) return;
-        else if(remain == 0) res.add(new ArrayList<>(list));
-        else{
-            for(int i = start; i < nums.length; i++){
-                if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
-                list.add(nums[i]);
-                backtrack2(res, list, nums, remain - nums[i], i + 1);
-                list.remove(list.size() - 1); 
-            }
+    int [] nums, int target, int start){
+        if(target < 0) return;
+        if(target == 0) res.add(new ArrayList<>(list));
+        for(int i = start; i < nums.length; i++){
+            if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
+            list.add(nums[i]);
+            backtrack2(res, list, nums, target - nums[i], i + 1);
+            list.remove(list.size() - 1); 
         }
     } 
 
@@ -339,9 +346,9 @@ public class PermutationsCombinationsAndSubsets {
     // Palindrome Partitioning : https://leetcode.com/problems/palindrome-partitioning/
     /**
      * in dp palindrome partition we have to find the no of splits
-     * to be made to make the string a collection of palindromes,
-     * BUT HERE WE HAVE TO RETURN A LIST OF ALL PALINDROMIC 
-     * SUBSTRINGS AFTER SPLITTING
+     * to be made, to make the string a collection of palindromes,
+     * BUT HERE WE HAVE TO RETURN A LIST OF ALL PALINDROMIC SUBSTRINGS 
+     * AFTER SPLITTING
      * 
      * start changes every time
      */
@@ -376,7 +383,6 @@ public class PermutationsCombinationsAndSubsets {
     // https://www.geeksforgeeks.org/palindrome-partitioning-dp-17/
     // https://leetcode.com/problems/letter-case-permutation/
     // https://leetcode.com/problems/next-permutation/
-    // https://leetcode.com/problems/letter-combinations-of-a-phone-number/
 
     public int numMatchingSubseq(String S, String[] words) {
         HashSet<String> set = new HashSet<>();

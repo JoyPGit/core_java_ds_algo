@@ -11,8 +11,11 @@ import java.util.*;
 
 
  /** important things
-  * 1. diff b/w hashmap and hashset
-  * 2. how to iterate over a hashmap line 58 similar to tree  
+ * 1. diff b/w hashmap and hashset
+ * 2. how to iterate over a hashmap line 58 similar to tree
+ * IMP HOW TO CONVERT HASMAP TO ARRAY  
+ * Object[] res = map.values().toArray();
+ * Arrays.sort(res, Collections.reverseOrder());
 
     https://www.geeksforgeeks.org/traverse-through-a-hashmap-in-java/
 
@@ -32,6 +35,77 @@ import java.util.*;
     *
     */
 public class HashPractice{
+
+    /** POINTS : 
+     * 1 CREATE AN ARRAY TO SERVE AS A PRIMARY MAP(OR DICTIONARY)
+     * WHICH WILL STORE THE COMMON ELEMENTS
+     * 2 CREATE A NEW ARRAY FOR EACH SUBSEQUENT STRING AND STORE THE FREQ
+     * 3 UPDATE THE PRIMARY ARAY TO STORE COMMON OF BOTH PRIMARY ABND CURR
+     * 
+     * SIMILAR TO INTERSECTION OF 2 ARRAYS
+     */
+    // https://leetcode.com/problems/find-common-characters/
+    public List<String> commonChars(String[] A) {
+        int[] primary = new int[26];
+        
+        for(char c : (A[0]).toCharArray()) primary[c-'a']++;
+        
+        for(int i =1; i<A.length; i++){
+            int[] curr = new int[26];
+            for(char c : (A[i]).toCharArray()){
+                curr[c-'a']++;
+            }
+            update(primary, curr);
+        }
+        
+        List<String> res = new ArrayList<>();
+        for(int i =0; i<primary.length; i++){
+            if(primary[i]!=0) {
+                int freq = primary[i];
+                for(int j =0; j<freq; j++) res.add(""+(char)(i+'a'));
+            }
+        }
+        return res;
+    }
+
+    void update(int[] a, int[] b){
+        for(int i =0; i<a.length; i++) a[i] = Math.min(a[i], b[i]);
+    }
+
+    /** POINTS :
+     * 1 MAINTAIN A HASHMAP
+     * 2 WHEN ITERATING OVER SECOND MAP, IF PRESENT, ADD TO RESULT
+     * 3 MOST IMP REDUCE THE COUNT, AND IF FREQ = 0, REMOVE FROM MAP
+     * 
+     * AN ELEMENT OF ARR2 IF NOT PRESENT IN MAP, THAT MEANS, FIRST ARRAY 
+     * DOESN'T HAVE THAT MANY OCCURENCES OF THAT EL.
+     * 
+     * 2,3,3 {2 =1, 3 =2}
+     * 1,2,2,3 
+     * 2 prresent, remove {2=0}
+     * for second 2, no entry hence not added to result
+     * 
+     *   
+     */
+    // https://leetcode.com/problems/intersection-of-two-arrays-ii
+    public int[] intersect(int[] arr1, int[] arr2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        List<Integer> res= new ArrayList<>();
+        
+        for(int i : arr1) map.put(i, map.getOrDefault(i, 0)+1);
+        
+        for(int i :arr2){
+            if(map.containsKey(i)){
+                res.add(i); map.put(i, map.get(i)-1);
+                if(map.get(i)==0) map.remove(i);
+            }
+        }
+        
+        int[] result = new int[res.size()];
+        for(int i =0; i<res.size(); i++) result[i] = res.get(i);
+        return result;
+    }
+
 
     void findSubArrayWithSumZero(int[] arr){
         int sum = 0;
@@ -386,40 +460,29 @@ public class HashPractice{
         return max + 1;
     }
 
-    // https://www.geeksforgeeks.org/sort-array-according-order-defined-another-array/
-    // sort 'a' accdng to 'b'
-    // similar to sort by frequency
 
-    /** elements are NOT stored in hashmap in the order they 
-     * are inserted, sort the uncommon elements and add
-     * 
-     * add elements of a to map, 
-     * add els of b in result list 'count' number of times, remove it from map
-     * so that it's not added at last when adding uncommon els
-     * add remaining from map
-    */
-    // AMAZON
-    void relativeSorting(int[] a, int[] b){
-        ArrayList<Integer> res = new ArrayList<>();
+    // https://leetcode.com/problems/relative-sort-array/
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
         HashMap<Integer, Integer> map = new HashMap<>();
+        for(int x : arr1) map.put(x, map.getOrDefault(x,0)+1);
 
-        for(int i =0; i<a.length; i++) map.put(a[i], map.getOrDefault(a[i], 0)+1);
-
-        for(int i =0; i<b.length; i++){
-            int count = map.get(b[i]);
-            for(int j =0; j<count; j++){
-                res.add(b[i]);
-            }
-            map.remove(b[i]);
+        int index = 0;
+        for(int i=0; i<arr2.length; i++){
+            int freq = map.get(arr2[i]); 
+            for(int j=0; j<freq; j++) arr1[index++] = arr2[i];
+            map.remove(arr2[i]);
         }
-
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer key = entry.getKey();
-            Integer value = entry.getValue();
-            res.add(key);
+        
+        // now add remaining to list to be sorted
+        List<Integer> remaining = new ArrayList<>();
+        for(Map.Entry <Integer, Integer> entry : map.entrySet()){
+            for(int i=0; i<entry.getValue(); i++) remaining.add(entry.getKey());
         }
-
-        System.out.println(res);
+        
+        Collections.sort(remaining);
+        for(int i =0; i<remaining.size(); i++) arr1[index++] = remaining.get(i);
+        
+        return arr1;
     }
 
     
@@ -467,7 +530,210 @@ public class HashPractice{
         return res;
     }
 
-    // https://leetcode.com/problems/subarray-sum-equals-k/
+    /** 
+     * POINTS : 
+     * WE CREATE INDIVUDUAL SCORECARD FOR EACH PLAYER, FOR THIS WE MAP
+     * CHARACTER TO AN INT ARRAY
+     * THE SCORE CARD IS OF SIZE  = THE NO OF PLAYERS
+     * 
+     * IMP : 
+     * ABCD -> 4 PLAYERS, SO SCORECARD FOR EACH PLAYER WILL HAVE ONLY 4 PLACES
+     * AND WE WILL INCREMENT THE RANKS BY 1.
+     * AEBCD, ACBDE, 
+     * A [2,0,0,0,0]
+     * B [0,0,2,0,0]
+     * C [0,1,0,1,0]
+     * D [0,0,0,2,0]
+     * E [0,1,0,0,1]
+     * 
+     * ACEBD
+     * 
+     * SORT BY RANKS, IF RANKS ARE SAME LEXICOGRAPHICALLY SMALLEST 
+     * 
+     * WHY DIDN'T WE ADD ALL POINTS USING (n-i) BECAUSE HERE RANK MATTERS, 
+     * EVEN IF E SCORES MORE THAN B WITH 2 3rd places, 
+     * E IS PREFERRED BECAUSE OF BETTER RANK (2)
+     * 
+     * RANK OFFSET WITH ARRAY INDEX
+     * 
+     * 1 CREATE AN ARRAY OF SIZE votes[0], THIS IS MAPPED TO CHAR
+     * 2 INCREMENT RANK map.get(s.charAt(i))[i]++
+     * 3 COMPARATOR IN Q IS IMP
+     * 4 ADD TO Q AND REMOVE TO RESULT
+    */
+    // https://leetcode.com/problems/rank-teams-by-votes/
+    public String rankTeams(String[] votes) {
+        HashMap<Character, int[]> map = new HashMap<>();
+        
+        int places = votes[0].length();
+        
+        for(String s : votes){
+            for(int i =0; i<s.length(); i++){
+                if(map.containsKey(s.charAt(i))) map.get(s.charAt(i))[i]++;
+                else {
+                    int[] curr = new int[places];
+                    curr[i]++;
+                    map.put(s.charAt(i), curr);
+                }
+            }
+        }
+        
+        PriorityQueue<Character> q = new PriorityQueue<>((x,y)->{
+            int[] a = map.get(x); int[] b = map.get(y);
+            for(int i =0; i<a.length; i++){
+                if(a[i]!=b[i]) return b[i]-a[i]; //max heap
+            }
+            return x-y;
+        });
+        
+        
+        for(Map.Entry<Character, int[]> entry : map.entrySet()){
+            q.add(entry.getKey());
+        }
+        
+        String result = "";
+        while(q.size()!=0) result+=(q.remove());
+            
+        return result;
+    }
+
+    /** 
+     * 
+     * A = ["amazon","apple","facebook","google","leetcode"], 
+     * B = ["lo","eo"]
+     * Output: ["google","leetcode"]
+     *
+     * IDEA IS TO STORE ALL FREQS OF ALL ELS OF B AND THEN COMPARE WITH
+     * FREQ OF EACH WORD OF A.
+     * IF FREQ OF WORD OF A IS LESSER, MEANS IF WORD DOESN'T
+     * HAVE ENOUGH CHARS, IT CAN'T BE ADDED.
+     * 
+     * leetcode has 3 e and 1 o.
+     * if we don't maintain max of all freqs of B and simply add to existing,
+     * o will have freq of 2 in maxFreq.
+     * THIS ENSURES THAT EACH PATTERN'S CHAR FREQ IS NOT PILED UP, ELSE WE WILL
+     * COMPARE TWO o with leetcode, but the patterns have at max one o (lo, eo).
+     *  
+     * POINTS : 
+     * 1 CREATE 3 ARRAYS
+     * ONE BASE TO KEEP TRACK OF THE MAX FREQS OF ALL PATTERNS OF B
+     * ONE TEMP IS RETURNED WHICH CONTAINS FREQ OF CURR EL OF B
+     * AND ANOTHER TEMP TO KEEP TRACK OF FREQ OF WORD OF A
+     * 
+     * 2 A NEW ARRAY CURR IS RETURNED FOR EACH WORD IN A
+     * 3 IF FREQ OF BASE  > CURR, THEN BREAK AND DON'T ADD.
+     * WORD DOESN'T HAVE ENOUGH CHARS, IT CAN'T BE ADDED.
+     * 
+     * 4 FLAG IS USED TO KEEP TRACK. 
+     * 
+     * 
+    */
+    // https://leetcode.com/problems/word-subsets/
+    public List<String> wordSubsets(String[] A, String[] B) {
+        int[] base = new int[26];
+
+        for (String s : B) {
+            int[] temp = getFreq(s);
+            for (int i = 0; i < 26; i++) {
+                base[i] = Math.max(base[i], temp[i]);
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        for (String str : A) {
+            boolean flag = true;
+            int[] curr = getFreq(str);
+
+            for (int i = 0; i < 26; i++) {
+                if (base[i] > curr[i]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) result.add(str);
+        }
+        return result;
+    }
+
+    public int[] getFreq(String s) {
+        int[] result = new int[26];
+        for (char c : s.toCharArray()) {
+            result[c - 'a']++;
+        }
+        return result;
+    }
+
+    // https://leetcode.com/problems/longest-consecutive-sequence/
+    // discuss/41290/Simple-Java-Solution-Using-HashMap
+
+    /** 
+     * POINTS : 
+     * MOST IMP WE STORE CUMULATIVE SUM AS IT HELPS US SELECT CONTIGUOUS SUBARRAYS
+     * 1 STORE SUM IN MAP ALONG WITH FREQ
+     * 2 NO NEED TO CHECK FOR INDIVIDUAL ELS
+     * 3 NO NEED TO KEEP TRACK OF 0, THE FREQ COUNT OF 0 WILL DO THE TRICK
+     * 4 MAKE AN ENTRY IF DOES NOT EXIST
+     * 
+     * [1,-1,2,1] ; k = 1
+     * put sum not sum-k
+     * el----sum----sum-k-------count---------map{0=1}
+     * 1 -----1-------0----------1(0)-------{0=1, 1=1}
+     * -1-----0------(-1)--------1+1(0)------{0=2, 1=1}
+     * 2 -----3-------2----------2-----------{0,2, 1=1, 3=1}
+     * 1 -----4-------3----------2+1(3)------{0,2, 1=2}
+     * 
+     * count = 3 [1],[-1,2],[1]
+     * 
+     * sum + x - k = sum => x=k
+     * Existence of (sum-k) means from a previos index till this index
+     * there is k sum subarray. 
+     * 
+     */
+    // https://leetcode.com/problems/subarray-sum-equals-k
+    public int subarraySum(int[] nums, int k) {
+        int n = nums.length;
+        if(n==0) return 0;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0,1);
+
+        int sum = 0; int count = 0;
+        
+        for(int i : nums){
+            sum+=i;
+            if(map.containsKey(sum-k)) count+=map.get(sum-k);
+            
+            map.put(sum, map.getOrDefault(sum, 0)+1);
+        }
+        return count;
+    }
+
+    /** POINTS :
+     * 1 STORE REMAINDER INSTEAD OF SUM
+     * 2 NO NEED TO CHECK IF INDIVIDUAL EL IS DIV BY K
+     * COUNT+=MAP.GET(REM) DOES THE TRICK
+     * 3 IF REM<0 REM+=K TO MAKE IT GREATER THAN 0
+     */
+    // https://leetcode.com/problems/subarray-sums-divisible-by-k/
+    public int subarraysDivByK(int[] nums, int k) {
+        int n = nums.length;
+        if(n==0) return 0;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        int sum = 0; int rem = 0; int count = 0; 
+        map.put(rem,1);
+        
+        for(int i : nums){
+            sum+=i; rem = sum%k;
+            if(rem<0) rem+=k;
+            if(map.containsKey(rem)) count+=map.get(rem);
+            // System.out.println("i "+i+" "+count);
+            map.put(rem, map.getOrDefault(rem, 0)+1);
+        }
+        return count;
+    }
+
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
@@ -536,8 +802,7 @@ public class HashPractice{
         int A1[] = {2, 1, 2, 5, 7, 1, 9, 3, 6, 8, 8};
         int A2[] = {2, 1, 8, 3};
         // ans = {2, 2, 1, 1, 8, 8, 3, 5, 6, 7, 9}    
-        h.relativeSorting(A1, A2);
-        // h.relativeSorting11Aug(A1, A2);
+        h.relativeSortArray(A1, A2);
 
     }
 }

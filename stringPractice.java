@@ -2,25 +2,6 @@ import java.util.*;
 
 class StringPractice {
 
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + ", ");
-        }
-    }
-
-    void printMatrix(int[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (i == arr.length - 1 && j == arr[0].length - 1) {
-                    System.out.println(arr[i][j] + ";");
-                    System.out.println();
-                } else
-                    System.out.print(arr[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
-
     String sortString(String s) {
         char[] ch = s.toCharArray();
         Arrays.sort(ch);
@@ -29,47 +10,99 @@ class StringPractice {
     }
 
     /**
-     * imp methods : startsWith, contains, StringBuilder
-     * s.length() braces needed LOWERCASE TO UPPERCASE in[i] = (char) (in[i] - 'a' + 'A');
+     * imp methods : startsWith, contains, split, replace, StringBuilder
+     * s.length() braces needed 
+     * split removes trailing spaces
+     * 
+     * LOWERCASE TO UPPERCASE in[i] = (char) (in[i] - 'a' + 'A');
      * 
      * IMP ALSO LEARN ch - '0' gives int
+     * 
+     * BIDIRECTIONAL SEARCH, DUPLICATES
      * 
      * CHECKING FOR DIGITS (Character.isDigit(in[i])) 
      * (Character.isSpace(in[i]))
      * (Character.isLowercase(in[i])) 
      * (Character.isLetter(in[i]))
      * 
-     * FOR STRING TO CHAR[] : S.toCharArray() FOR CHAR[] TO STRING : new String(ch)
+     * FOR STRING TO CHAR[] : S.toCharArray() 
+     * 
+     * FOR CHAR[] TO STRING : 
+     * String s = String.valueOf(ch)
+     * (or) new String(ch)
      * (or) String s = ""; for(char c:ch)s+=c;
-     * (or) String s = String.valueOf(ch)
+     * 
+     * FOR KEEPING COUNT PREFER A CHAR ARRAY OVER HASHMAP
+     * AS ARRAYS CAN BE COMPARED USING ARRAYS.EQUALS
+     * KEEP A BASE ARRAY AND A CURR ARRAY AND COMPARE BOTH
+     * 
+     * * WHENEVER SUSBTRING COMES, SLIDING WINDOW
+     * * FOR SUBSEQUENCE HASHMAP CAN BE USED
+     * 
+     * boolean isSubsequence(String a, String b){
+        int i = 0; int j = 0;
+        
+        while(i<a.length() && j<b.length()){
+            if(a.charAt(i) == b.charAt(j)){
+                i++; j++;
+            }else i++;
+        }
+        
+        return j==b.length();
+     * }
+     * 
      * 
      * 
      * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 
-     * 2 ALL PALINDROME QUES (use SUSBTRING
-     * TECHNIQUE FROM lexicographicSubConcat) 
-     * 3 PARTITION LABELS (HASHING) 
-     * 4 MIN WINDOW CONTAINING K DISTINCT (HASHING, WINDOW SHRINKING) 
-     * 5 SEARCH WORD IN GRID (DFS) 
-     * 6 INCLUDE OR EXCLUDE TYPE : GEN BINARY PATTERN (RECURSION) 
-     * 7 VERSION COMPARE 
-     * 8 GROUP ANAGRAM
-     * 9 FILE SYSTEM
-     * 10 TIME COMPARE
-     * 11 NO OF CONSECUTIVE 1s, MOD(10^9+7)
-     * 12 SUBSTRINGS (REPEATED SUBSTRING, LONGEST HAPPY) USE KMP
-     * 13 GCD
-     * 14 DUPLICATES USE WHILE LOOP AND BOUNDARY (j<n)
+     * https://leetcode.com/problems/find-all-anagrams-in-a-string/
+     * discuss/92007/Sliding-Window-algorithm-template-to-solve-all-
+     * the-Leetcode-substring-search-problem.
+     * 
+     * 2 WORDS IN A STRING USE SPLIT 
+     * 3 ALL PALINDROME QUES (DP, use SUSBTRING TECHNIQUE FROM lexicographicSubConcat) 
+     * 4 DUPLICATES USE WHILE LOOP AND BOUNDARY (j<n)
+     * 5 PATTERN : REPEATED SUBSTRING PATTERN(MATHS), GEN BINARY PATTERN(RECURSION), 
+     *   CAMELCASE, WILDCARD, REGEX, LONGEST HAPPY, 
+     * 
+     * 6 PARTITION LABELS (HASHING) 
+     * 7 MIN WINDOW CONTAINING K DISTINCT (HASHING, WINDOW SHRINKING) 
+     * 8 SEARCH WORD IN GRID (DFS) 
+     * 9 VERSION COMPARE 
+     * 10 GROUP ANAGRAM
+     * 11 FILE SYSTEM
+     * 12 TIME COMPARE, NEXT CLOSEST
+     * 13 NO OF CONSECUTIVE 1s, MOD(10^9+7)
+     * 14 GCD
+     * 15 DP - DECODE, PATTERN
+     * 16 ALL ANAGRAMS(SLIDING WINDOW)
+     * 17 RANK TEAMS (CUSTOM COMPARATOR)
+     * https://leetcode.com/problems/longest-substring-without-repeating-characters/
      */
 
-    String reverse(String word) {
-        char[] ch = word.toCharArray(); // 1 tocharArray
-        int n = ch.length;
-        for (int i = 0; i < n / 2; i++) {
-            char temp = ch[n - i - 1];
-            ch[n - i - 1] = ch[i];
-            ch[i] = temp;
-        }
-        return new String(ch); // 2 new String to convert char array to string
+     
+    // https://leetcode.com/problems/length-of-last-word
+    public int lengthOfLastWord(String s) {
+        // if(s.length() == 0) return 0; // handled using words.length
+        String[] words = s.split(" ");
+        // System.out.println(words.length);
+        if(words.length == 0) return 0;
+        // for(String strs : words) System.out.println(strs+"; ");
+        return (words[words.length-1]).length();
+    }
+
+    // GO TILL n-i-1
+    // https://leetcode.com/problems/reverse-string/
+    public void reverseString(char[] s) {
+        int n = s.length;
+        
+        for(int i =0; i<n/2; i++) swap(s, i, n-i-1);
+    }
+    
+    void swap(char[] ch, int a, int b){
+        if(a==b) return;
+        char temp = ch[a];
+        ch[a] = ch[b];
+        ch[b] = temp;
     }
 
     void reverseRecursive(String word) {
@@ -84,37 +117,73 @@ class StringPractice {
         }
         return output;
     }
+    
 
-    // https://leetcode.com/problems/reverse-words-in-a-string/
+    /** POINTS : 
+     * 1 BREAK USING SPLIT
+     * 2 ADD TO A Q AND REVERSE ADD TO RESULT
+     * 3 IMP TO COMPARE WITH SPACE OR BLANK USE str.isBlank()
+    */
+    // https://leetcode.com/problems/reverse-words-in-a-string
     public String reverseWords(String s) {
-        int start = 0; int end = 0; 
-        String res = ""; String curr ="";
-        for(int i =0; i<s.length(); i++){
-            if(s.charAt(i)==' ') continue;
-            start = i; 
-            if(s.charAt(i+1)!=' '){
-                end = start+1; curr = ""+s.charAt(i); 
-                while(s.charAt(end++)!=' '){
-                System.out.println("in here");
-                    
-                    curr+=s.charAt(end);
+        String[] words = s.split(" ");
+        String res = "";
+                
+        Deque<String> q = new LinkedList<>();
+        
+        for(String str : words) if(!str.isBlank()) q.addLast(str);
+        
+        if(q.size()==0) return res;
+        while(q.size()!=0) res = res + q.removeLast() + " ";
+        
+        return res.substring(0, res.length()-1);
+    }
 
-                }
-                res = res + reverse(s, start, end)+" ";
-            }
-            else res = res + s.charAt(i)+" ";
-            System.out.println("in here res "+res);
-            i = end+1;
+    // SPLIT AND CHECK FOR ISBLANK
+    // https://leetcode.com/problems/reverse-words-in-a-string-iii/
+    public String reverseWordsIII(String s) {
+        String res = "";
+        String[] words = s.split(" ");
+        for(String str : words){
+            if(!str.isBlank()) res+=reverse(str.toCharArray());
+            res+=" ";
         }
-        return res.substring(0, res.length()-1); //trailing space at end
+        return res.substring(0, res.length()-1);
     }
     
-    String reverse(String str, int start, int end){
-        String res = "";
-        while(end!=start) res+=str.charAt(end--);
-        res+=str.charAt(start);
+    String reverse(char[] s) {
+        int n = s.length;
+        for(int i =0; i<n/2; i++) swap(s, i, n-i-1);
+        return String.valueOf(s);
+    }
+
+    /** POINTS:
+     * 1 HOW TO CONVERT TO UPPER AND LOWER CASE(-'a'+'A')
+     * 2 USE SPLIT TO CONVERT TO ARRAY AND THE SORT
+     * STRING ARRAUY VS STRING
+     * 3 A LOT OF CODE HAS GONE INTO HANDLING BULLSHIT TESTCASE,
+     * ESPECIALLY THE textNew
+     */
+    // https://leetcode.com/problems/rearrange-words-in-a-sentence
+    public String arrangeWords(String text) {
+        char c = (char)(text.charAt(0)-'A'+'a');
+        String textNew = ""+c+text.substring(1, text.length());
+        
+        String[] words = textNew.split(" ");
+        Arrays.sort(words, (x,y)->x.length() - y.length());
+        
+        char first = (char)((words[0]).charAt(0)-'a'+'A');
+        String res = ""+first;
+        res+=(words[0]).substring(1, words[0].length());
+        // res[0] = first;
+        // System.out.println("first "+first);
+        
+        for(int i =1; i<words.length; i++){
+            res= res+" "+ words[i];
+        }
         return res;
     }
+
 
     // incomplete
     String sumOf2LargeNos(String str1, String str2) {
@@ -217,6 +286,53 @@ class StringPractice {
                 ch[index] = '?';
             }
         }
+    }
+
+    
+    /** 
+     * POINTS:
+     * 1 SIMILAR TO GCD, MATHEMATICAL CALCULATOIN OF LENGTH
+     * 2 START FROM N/2, IF N%L == 0
+     * 3 REPEATEDLY ADD THE SUBSTRING(0,l) m TIMES
+     * AND CHECK WITH STRING
+     * 
+     * 
+    */
+    // https://leetcode.com/problems/repeated-substring-pattern
+    public boolean repeatedSubstringPattern(String s) {
+        int n = s.length();         
+        if(n==0) return false;
+        
+        for(int l = n/2; l>0; l--){
+            if(n%l==0){
+                int m = n/l;
+                String curr = s.substring(0,l);
+                String holder ="";
+                for(int i =0; i<m; i++) holder+=curr;
+                if(holder.equals(s)) return true;
+            }
+        }
+        return false;
+    }
+
+    /** POINTS:
+     * TRICK : if (!(str1+str2).equals(str2+str1))  return "";
+     * IF COMMON STRING (GCD) EXISTS, THEN THE STRINGS WILL BE EQUAL 
+     * WHEN ADDED IN ANY ORDER, ABABAB & ABAB -> ABABABABAB;
+     * BUT IF NOT, E.G. ABCDEF AND ABC, WHEN ADDED -> ABCDEFABC, ABCABCDEF : NOT SAME
+     * 2 FIND GCD
+     * 3 RETURN OFFSET
+     */
+    // https://leetcode.com/problems/greatest-common-divisor-of-strings/
+    public String gcdOfStrings(String str1, String str2) {
+        if (!(str1+str2).equals(str2+str1))  return "";
+        int offset = gcd(str1.length(), str2.length());
+        return str1.substring(0, offset);
+    }
+    
+    int gcd(int a, int b){
+        if(a%b == 0) return b;
+        return gcd(b, a%b);
     }
 
 
@@ -322,30 +438,21 @@ class StringPractice {
         }
     }
 
-    boolean isAnagram(String str1, String str2) {
-        HashMap<Character, Integer> list = new HashMap<>();
 
-        for (char c : str1.toCharArray()) {
-            if (list.containsKey(c)) {
-                list.put(c, list.get(c) + 1);
-            } else
-                list.put(c, 1);
+    public boolean isAnagram(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        for(char c : s.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : t.toCharArray()) {
+            if(map.containsKey(c)) {
+                map.put(c, map.get(c)-1); 
+                if(map.get(c) == 0) map.remove(c);
+            }
+            else return false;
         }
-
-        System.out.println(list);
-
-        for (char c : str2.toCharArray()) {
-            if (list.containsKey(c)) {
-                list.put(c, list.get(c) - 1);
-                // System.out.println(list.get(c));// returns the value
-                if (list.get(c) == 0)
-                    list.remove(c);
-            } else
-                return false;
-        }
-
-        System.out.println("final " + list);
-        return list.isEmpty();
+        
+        return map.size()==0;
     }
 
     /**
@@ -396,7 +503,49 @@ class StringPractice {
         return new ArrayList<>(map.values());
     }
 
+    /** 
+     * POINTS : 
+     * 1 HOW TO CHECK FOR SUBSEQEUNCE 
+     * if(charAt(i)==charAt(j)) i++; j++; 
+     * else i++;
+     * return j == b.length() if it reaches end or not
+     * 
+     * 2 A HASHMAP IS MAINTAINED FOR DUPLICATE SUBSEQUENCES,
+     * IF FOUND AND TRUE COUNT++;
+     * 
+     * 3 IF NOT CHECK AND IF TRUE COUNT++;
+     * 
+     */
+    // https://leetcode.com/problems/number-of-matching-subsequences
+    public int numMatchingSubseq(String S, String[] words) {
+        int n = S.length(); int count=0;
+        if(n == 0) return count;
+        
+        HashMap<String, Boolean> map = new HashMap<>();
+        
+        for(int i =0; i<words.length; i++){
+            if(map.containsKey(words[i])){
+                if(map.get(words[i])) count++;
+            }else{
+                boolean val = isSubsequence(S, words[i]);
+                if(val) count++;
+                map.put(words[i], val);
+            }
+        }
+        return count;
+    }
     
+    boolean isSubsequence(String a, String b){
+        int i = 0; int j = 0;
+        
+        while(i<a.length() && j<b.length()){
+            if(a.charAt(i) == b.charAt(j)){
+                i++; j++;
+            }else i++;
+        }
+        
+        return j==b.length();
+    }
 
     // https://www.youtube.com/watch?v=qBbZ3tS0McI
     // void generateParentheses(int n){
@@ -590,61 +739,134 @@ class StringPractice {
         }
     }
 
+    // public String minWindow(String s, String t) {
+    //     if (s.length() < t.length())
+    //         return "";
+    //     if (s.length() == t.length()) {
+    //         System.out.println("in here");
+    //         // System.out.println(s.equals(t)==false);
+    //         if (!s.equals(t))
+    //             return "";
+    //     }
+
+    //     String result = "";
+    //     HashMap<Character, Integer> map = new HashMap<>();
+    //     char[] ch = s.toCharArray();
+
+    //     for (int i = 0; i < s.length(); i++) {
+    //         if (t.contains(s.charAt(i) + "")) {
+    //             map.put(ch[i], i);
+
+    //             if (map.size() == t.length()) {
+    //                 int min = getMin(map);
+    //                 int max = getMax(map);
+    //                 // substring is inclusive of lower index only and not higher
+    //                 String str = s.substring(min, max + 1);
+
+    //                 if (result.length() == 0) {
+    //                     result = str;
+    //                     System.out.println("str first " + str);
+    //                 } else
+    //                     result = result.length() < str.length() ? result : str;
+    //             }
+
+    //         }
+    //     }
+    //     System.out.println("Result " + result);
+    //     return result;
+    // }
+
+    // int getMin(HashMap<Character, Integer> map) {
+    //     int min = Integer.MAX_VALUE;
+    //     for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+    //         Integer value = entry.getValue();
+    //         min = Math.min(min, value);
+    //     }
+    //     // System.out.println("min "+ min);
+    //     return min;
+    // }
+
+    // int getMax(HashMap<Character, Integer> map) {
+    //     int max = Integer.MIN_VALUE;
+    //     for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+    //         Integer value = entry.getValue();
+    //         max = Math.max(max, value);
+    //     }
+    //     // System.out.println("max "+ max);
+    //     return max;
+    // }
+
+     /** POINTS : 
+     * MOST IMP ANAGRAM SO WINDOW SIZE WILL REMAIN SAME
+     * 1 CREATE AN ARRAY TO SERVE AS A PRIMARY MAP(OR DICTIONARY)
+     * WHICH WILL STORE THE COMMON ELEMENTS
+     * 2 CREATE A NEW ARRAY FOR EACH SUBSEQUENT STRING AND STORE THE FREQ
+     * 3 UPDATE THE PRIMARY ARAY TO STORE COMMON OF BOTH PRIMARY ABND CURR
+     * 
+     * SIMILAR TO INTERSECTION OF 2 ARRAYS
+     */
+    // https://leetcode.com/problems/minimum-window-substring/
     public String minWindow(String s, String t) {
-        if (s.length() < t.length())
-            return "";
-        if (s.length() == t.length()) {
-            System.out.println("in here");
-            // System.out.println(s.equals(t)==false);
-            if (!s.equals(t))
-                return "";
+        int n = t.length();
+        String res = "";
+        if(n>s.length()) return res;
+        
+        int[] base = new int[26];
+        for(int i =0; i<n; i++) base[t.charAt(i)-'A']++;
+        utilCustom.Utility.print1DMatrix(base);
+        
+        int[] curr = new int[26];
+        for(int i =0; i<n; i++) {
+            if(t.contains(""+s.charAt(i))) curr[s.charAt(i)-'A']++;
         }
+        utilCustom.Utility.print1DMatrix(curr);
 
-        String result = "";
+        if(Arrays.equals(base, curr)) res = findBest(res, s.substring(0, n));
+        
+        for(int i = n; i<s.length(); i++){
+            int prev = i-n;
+            if(curr[s.charAt(prev)-'A']!=0) curr[s.charAt(prev) - 'A']--;
+            if(t.contains(""+s.charAt(i))) curr[s.charAt(i) - 'A']++;
+            
+            if(Arrays.equals(base, curr)) 
+                res = findBest(res, s.substring(prev+1, i+1));
+        }
+        return res;
+    }
+    
+    String findBest(String a, String b){
+        System.out.println("b "+b);
+        if(a != "" && a.length()<=b.length()) return a;
+        return b;
+    }
+
+    // https://leetcode.com/problems/word-subsets/
+
+    /** 
+     * POINTS : 
+     * 1 FOR EACH CHAR, IF NOT PRESENT IN MAP, FIND LENGTH
+     * 2 IF PRESENT, UPDATE LEFT
+     * 3 PUT IN MAP
+     * 
+     * handle aab, pwwke, dvdf
+     * 
+    */
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        if(n == 0) return n;
         HashMap<Character, Integer> map = new HashMap<>();
-        char[] ch = s.toCharArray();
-
-        for (int i = 0; i < s.length(); i++) {
-            if (t.contains(s.charAt(i) + "")) {
-                map.put(ch[i], i);
-
-                if (map.size() == t.length()) {
-                    int min = getMin(map);
-                    int max = getMax(map);
-                    // substring is inclusive of lower index only and not higher
-                    String str = s.substring(min, max + 1);
-
-                    if (result.length() == 0) {
-                        result = str;
-                        System.out.println("str first " + str);
-                    } else
-                        result = result.length() < str.length() ? result : str;
-                }
-
+        int len = 0; 
+        int left = 0;
+        
+        for(int i =0; i<n; i++){
+            if(map.containsKey(s.charAt(i))) {
+                left = Math.max(left, map.get(s.charAt(i))+1);
             }
+            len = Math.max(len, i-left+1);   
+            map.put(s.charAt(i), i);
         }
-        System.out.println("Result " + result);
-        return result;
-    }
-
-    int getMin(HashMap<Character, Integer> map) {
-        int min = Integer.MAX_VALUE;
-        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-            Integer value = entry.getValue();
-            min = Math.min(min, value);
-        }
-        // System.out.println("min "+ min);
-        return min;
-    }
-
-    int getMax(HashMap<Character, Integer> map) {
-        int max = Integer.MIN_VALUE;
-        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-            Integer value = entry.getValue();
-            max = Math.max(max, value);
-        }
-        // System.out.println("max "+ max);
-        return max;
+        return len;
     }
 
     /**
@@ -670,9 +892,9 @@ class StringPractice {
         // finding all substrings of string
         int index = 0;
         for (int i = 0; i < n; i++) {
-            for (int len = i + 1; len <= n; len++) {
-                System.out.println(str.substring(i, len));
-                arr[index++] = str.substring(i, len);
+            for (int j = i + 1; j <= n; j++) {
+                System.out.println(str.substring(i, j));
+                arr[index++] = str.substring(i, j);
             }
         }
         // Sort all substrings in lexicographic order
@@ -741,7 +963,7 @@ class StringPractice {
                 }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         System.out.println("all palindromic substrings' count : " + count);
         return count;
     }
@@ -799,6 +1021,61 @@ class StringPractice {
     // https://www.geeksforgeeks.org/count-palindrome-sub-strings-string/
     // all palindromes , string 'abaab'
 
+    /** 
+     * BASICALLY MIN IS STORED FOR ALL OCCURENCES OF EACH WORD
+     * FIRST WORD IS USED TO CREATE A BASE
+     * POINTS : 
+     * 
+     * 1 CREATE AN ARRAY TO SERVE AS A PRIMARY MAP(OR DICTIONARY)
+     * WHICH WILL STORE THE COMMON ELEMENTS
+     * 2 CREATE A NEW ARRAY FOR EACH SUBSEQUENT STRING AND STORE THE FREQ
+     * 3 UPDATE THE PRIMARY ARAY TO STORE COMMON OF BOTH PRIMARY ABND CURR
+     * 
+     * SIMILAR TO INTERSECTION O F 2 ARRAYS
+     */
+    // https://leetcode.com/problems/find-common-characters/
+    public List<String> commonChars(String[] A) {
+        int[] primary = new int[26];
+        
+        for(char c : (A[0]).toCharArray()) primary[c-'a']++;
+        
+        for(int i =1; i<A.length; i++){
+            int[] curr = new int[26];
+            for(char c : (A[i]).toCharArray()){
+                curr[c-'a']++;
+            }
+            update(primary, curr);
+        }
+        
+        List<String> res = new ArrayList<>();
+        for(int i =0; i<primary.length; i++){
+            if(primary[i]!=0) {
+                int freq = primary[i];
+                for(int j =0; j<freq; j++) res.add(""+(char)(i+'a'));
+            }
+        }
+        return res;
+    }
+
+    void update(int[] a, int[] b){
+        for(int i =0; i<a.length; i++) a[i] = Math.min(a[i], b[i]);
+    }
+
+
+    // SPLIT AND THEN USE STARTSWITH
+    // https://leetcode.com/problems/check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence/
+    public int isPrefixOfWord(String sentence, String searchWord) {
+        String[] words = sentence.split(" ");
+        int n = words.length;
+        
+        for(int i =0; i<n; i++){
+            if(words[i].startsWith(searchWord)) return i+1;
+        }
+        return -1;
+    }
+
+
+    // COMPARE WITH ABOVE QUES COMMON CHARS
     // https://leetcode.com/problems/longest-common-prefix/
     public String longestCommonPrefix(String[] strs) {
         int n = strs.length;
@@ -847,17 +1124,37 @@ class StringPractice {
         return prev;
     }
 
+      /** 
+     * if j==0; check for match
+     * if j>0; check for no match j= lps[j-1]
+     * if match j++; lps[i] = j
+     * https://www.geeksforgeeks.org/longest-prefix-also-suffix/
+    */
+    // https://leetcode.com/problems/longest-happy-prefix
+    public String longestPrefix(String s) {
+        int n = s.length(); int j = 0;
+        int[] lps = new int[n];
+
+        for (int i = 1; i < n; i++) {
+            while (j > 0 && s.charAt(i) != s.charAt(j)) j = lps[j-1];
+            if (s.charAt(i) == s.charAt(j)) lps[i] = ++j;
+        }
+        return s.substring(0, lps[n-1]);
+    }
+    
+
     // INCOMPLETE
     /** ISSUES :
      * COUNTING FREQ TEMPLATE
-     * 1 USE WHILE, ASSIGNING i = j no doubt makes i point 
-     * to teh index of next dissimalr char, but the for
+     * 1 USE WHILE LOOP, ASSIGNING i = j no doubt makes i point 
+     * to the index of next dissimilar char, but the for
      * loop increments it further by 1
-     * SO FOR DUPLICATES WHILE IS BETTER
+     * SO FOR DUPLICATES WHILE LOOP IS BETTER
      * 
      * 2 BOUNDARY CONDN(j<n)
      * 3 COUNT j-i
-     * 
+     *   // https://leetcode.com/problems/string-compression/discuss/92559/
+    // similar to remove duplicates from array
      */
     // https://leetcode.com/problems/string-compression/
     public int compress(char[] chars) {
@@ -879,7 +1176,6 @@ class StringPractice {
     // https://leetcode.com/problems/summary-ranges/
     // discuss/63219/Accepted-JAVA-solution-easy-to-understand
 
-    // https://www.geeksforgeeks.org/longest-prefix-also-suffix/
     // https://www.geeksforgeeks.org/find-number-distinct-
     // palindromic-sub-strings-given-string/
     // https://leetcode.com/problems/longest-palindromic-subsequence/
@@ -889,7 +1185,6 @@ class StringPractice {
 
     // https://www.geeksforgeeks.org/find-excel-column-name-given-number/
 
-    // https://leetcode.com/problems/partition-labels/
 
     class partition {
         int index;
@@ -1031,7 +1326,7 @@ class StringPractice {
     /** POINTS:
      * 1 EXISTING -> 01 COUNT = 1
      * IF NEXT COMES 1, THEN SUBSTRINGS WITH ALL CHARACTERS 1 ARE
-     * 1, 1, 11 (DUPLCATES INCLUDED)
+     * 1, 1, 11 (IDUPLCATES INCLUDED)
      * 
      * 2 WE CALCULATE ON THE BASIS OF CONSECUTOVE ONES
      * count++
@@ -1056,9 +1351,9 @@ class StringPractice {
         }
         return res;
     }
+    // SIMILAR : MICROSOFT https://leetcode.com/discuss/interview-question/364618/
 
-    // https://leetcode.com/problems/string-compression/discuss/92559/
-    // similar to remove duplicates from array
+  
 
     // https://leetcode.com/problems/multiply-strings/
 
@@ -1221,51 +1516,6 @@ class StringPractice {
         // System.out.println("letter "+letter);
     }
 
-    /** 
-     * POINTS:
-     * 1 SIMILAR TO GCD, MATHEMATICAL CALCULATOIN OF LENGTH
-     * 2 START FROM N/2, IF N%L == 0
-     * 3 REPEATEDLY ADD THE SUBSTRING(0,l) m TIMES
-     * AND CHECK WITH STRING
-     * 
-     * 
-    */
-    // https://leetcode.com/problems/repeated-substring-pattern
-    public boolean repeatedSubstringPattern(String s) {
-        int n = s.length();         
-        if(n==0) return false;
-        
-        for(int l = n/2; l>0; l--){
-            if(n%l==0){
-                int m = n/l;
-                String curr = s.substring(0,l);
-                String holder ="";
-                for(int i =0; i<m; i++) holder+=curr;
-                if(holder.equals(s)) return true;
-            }
-        }
-        return false;
-    }
-
-    /** POINTS:
-     * TRICK : if (!(str1+str2).equals(str2+str1))  return "";
-     * IF COMMON STRING (GCD) EXISTS, THEN THE STRINGS WILL BE EQUAL 
-     * WHEN ADDED IN ANY ORDER, ABABAB & ABAB -> ABABABABAB;
-     * BUT IF NOT, E.G. ABCDEF AND ABC, WHEN ADDED -> ABCDEFABC, ABCABCDEF : NOT SAME
-     * 2 FIND GCD
-     * 3 RETURN OFFSET
-     */
-    // https://leetcode.com/problems/greatest-common-divisor-of-strings/
-    public String gcdOfStrings(String str1, String str2) {
-        if (!(str1+str2).equals(str2+str1))  return "";
-        int offset = gcd(str1.length(), str2.length());
-        return str1.substring(0, offset);
-    }
-    
-    int gcd(int a, int b){
-        if(a%b == 0) return b;
-        return gcd(b, a%b);
-    }
 
     /** 
      * POINTS : 
@@ -1371,22 +1621,7 @@ class StringPractice {
     // LCS
     // https://leetcode.com/problems/delete-operation-for-two-strings/
 
-    /** 
-     * if j==0; check for match
-     * if j>0; check for no match j= lps[j-1]
-     * if match j++; lps[i] = j
-    */
-    // https://leetcode.com/problems/longest-happy-prefix
-    public String longestPrefix(String s) {
-        int n = s.length(); int j = 0;
-        int[] lps = new int[n];
-
-        for (int i = 1; i < n; i++) {
-            while (j > 0 && s.charAt(i) != s.charAt(j)) j = lps[j-1];
-            if (s.charAt(i) == s.charAt(j)) lps[i] = ++j;
-        }
-        return s.substring(0, lps[n-1]);
-    }
+  
 
     // https://leetcode.com/problems/minimum-number-of-steps-to-make-two-strings-anagram
     public int minSteps(String s, String t) {
@@ -1511,15 +1746,288 @@ class StringPractice {
         return dp[n];
     }
 
-     // https://leetcode.com/problems/longest-duplicate-substring/
-    // https://leetcode.com/problems/greatest-common-divisor-of-strings/
+    // https://leetcode.com/problems/compare-strings-by-frequency-of-the-smallest-character/
+
+    // TAKE CARE TO ADD THE CURR ELEMENT TO THE NEW ARRAY IN ELSE 
+    // https://leetcode.com/problems/rank-teams-by-votes/
+    public String rankTeams(String[] votes) {
+        HashMap<Character, int[]> map = new HashMap<>();
+        
+        int places = votes[0].length();
+        
+        for(String s : votes){
+            for(int i =0; i<s.length(); i++){
+                if(map.containsKey(s.charAt(i))) map.get(s.charAt(i))[i]++;
+                else {
+                    int[] curr = new int[places];
+                    curr[i]++;
+                    map.put(s.charAt(i), curr);
+                }
+            }
+        }
+        
+        PriorityQueue<Character> q = new PriorityQueue<>((x,y)->{
+            int[] a = map.get(x); int[] b = map.get(y);
+            for(int i =0; i<a.length; i++){
+                if(a[i]!=b[i]) return b[i]-a[i]; //max heap
+            }
+            return x-y;
+        });
+        
+        
+        for(Map.Entry<Character, int[]> entry : map.entrySet()){
+            q.add(entry.getKey());
+        }
+        
+        String result = "";
+        while(q.size()!=0) result+=(q.remove());
+            
+        return result;
+    }
+
+    /** basically we keep a char array(base) to keep count of pattern
+    and use a new array(curr) while sliding over the string. 
+    Whenever the arrays match, we store the start index of the current window.
+
+    Fow sliding window, fill the first window and then subsequent windows.
+
+    if(Arrays.equals(base, curr)) res.add( i-pattern.length() + 1); 
+
+    POINTS : 
+     * 1 USE A CHAR ARRAY NOT A HASHMAP, IT'S EASIER TO COMPARE WITH ARRAYS.EQUALS
+     * 2 STORE PATTERN'S COUNT IN A CHAR ARRAY(NAMED 'BASE') OF SIZE 26
+     * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 2 STEPS : 
+     * FIRST WINDOW AND THEN ALL OTHER WINDOWS,
+
+     * TRAVERSE FROM i TILL n (PATTERN LENGTH) AND STORE IN A NEW ARRAY--> FIRST WINDOW
+     * AND THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
+
+     * 4 COMPARE IF ARRAYS ARE EQUAL 
+     * WE KEEP THE BASE ARRAY AS A REFERENCE AND THE CURR ARRAY HOLDS 
+     * THE STATE OF THE CURRENT SLIDING WINDOW
+
+     * 5 IF ARRAYS ARE EQUAL STORE START INDEX OF THIS WINDOW
+     * (i-window length) window length = pattern length;
+     * 
+     * TO MAP INDEX OF SLIDING WINDOW TO CHAR ARRAY USE 
+     * curr[s.charAt(prev) - 'a']
+    */	
+    // https://leetcode.com/problems/find-all-anagrams-in-a-string
+    public List<Integer> findAnagrams(String s, String t) {
+        char[] base = new char[26];
+        List<Integer> res = new ArrayList<>();
+        if (s.length() == 0)
+            return res;
+        int n = t.length();
+        if (n > s.length())//1
+            return res;
+
+        for (char c : t.toCharArray()) base[c - 'a']++; //2
+
+        char[] curr = new char[26];
+
+        for (int i = 0; i < n; i++) curr[s.charAt(i) - 'a']++;
+        if (Arrays.equals(base, curr)) res.add(0);
+
+        for (int i = n; i < s.length(); i++) {
+            int prev = i - n;
+            curr[s.charAt(prev) - 'a']--;
+            curr[s.charAt(i) - 'a']++;
+
+            if (Arrays.equals(base, curr)) res.add(prev + 1);
+        }
+        return res;
+    }
+
+    /** 
+     * 
+     * A = ["amazon","apple","facebook","google","leetcode"], 
+     * B = ["lo","eo"]
+     * Output: ["google","leetcode"]
+     *
+     * IDEA IS TO STORE ALL FREQS OF ALL ELS OF B AND THEN COMPARE WITH
+     * FREQ OF EACH WORD OF A.
+     * IF FREQ OF WORD OF A IS LESSER, MEANS IF WORD DOESN'T
+     * HAVE ENOUGH CHARS, IT CAN'T BE ADDED.
+     * 
+     * leetcode has 3 e and 1 o.
+     * if we don't maintain max of all freqs of B and simply add to existing,
+     * o will have freq of 2 in maxFreq.
+     * THIS ENSURES THAT EACH PATTERN'S CHAR FREQ IS NOT PILED UP, ELSE WE WILL
+     * COMPARE TWO o with leetcode, but the patterns have at max one o (lo, eo).
+     *  
+     * POINTS : 
+     * 1 CREATE 3 ARRAYS
+     * ONE BASE TO KEEP TRACK OF THE MAX FREQS OF ALL PATTERNS OF B
+     * ONE TEMP IS RETURNED WHICH CONTAINS FREQ OF CURR EL OF B
+     * AND ANOTHER TEMP TO KEEP TRACK OF FREQ OF WORD OF A
+     * 
+     * 2 A NEW ARRAY CURR IS RETURNED FOR EACH WORD IN A
+     * 3 IF FREQ OF BASE  > CURR, THEN BREAK AND DON'T ADD.
+     * WORD DOESN'T HAVE ENOUGH CHARS, IT CAN'T BE ADDED.
+     * 
+     * 4 FLAG IS USED TO KEEP TRACK. 
+     * 
+     */
+    // https://leetcode.com/problems/word-subsets/
+    public List<String> wordSubsets(String[] A, String[] B) {
+        int[] base = new int[26];
+
+        for (String s : B) {
+            int[] temp = getFreq(s);
+            for (int i = 0; i < 26; i++) {
+                base[i] = Math.max(base[i], temp[i]);
+            }
+        }
+
+        List<String> result = new ArrayList<>();
+        for (String str : A) {
+            boolean flag = true;
+            int[] curr = getFreq(str);
+
+            for (int i = 0; i < 26; i++) {
+                if (base[i] > curr[i]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) result.add(str);
+        }
+        return result;
+    }
+
+    public int[] getFreq(String s) {
+        int[] result = new int[26];
+        for (char c : s.toCharArray()) {
+            result[c - 'a']++;
+        }
+        return result;
+    }
+
+    /** POINTS :
+     * 1 KEEP LEFT AND RIGHT SUMS
+     * 2 RUN ADD FUNCTION WITH A FLAG
+     * 3 IF FLAG IS TRUE COUNT ZEROES
+     * 4 GO TILL n-1, AS PARTITION CAN'T BE OF 0 LENGTH
+     * 
+     * int left = add(s, 0, i, true); int right = add(s, i+1,n-1, false);
+     * 
+     */
+    // https://leetcode.com/problems/maximum-score-after-splitting-a-string/
+    public int maxScore(String s) {
+        int n = s.length();
+        if(n==0) return 0;
+        int sum = 0;
+        
+        for(int i =0; i<n-1; i++){
+            int left = add(s, 0, i, true); int right = add(s, i+1,n-1, false);
+            sum = Math.max(sum, left+right);
+        }
+        
+        return sum;
+    }
+    
+    int add(String str, int start, int end, boolean left){
+        char value = '1';
+        if(left) value = '0';
+        int currSum = 0;
+        for(int i =start; i<=end; i++){
+            if(str.charAt(i) == value) currSum+=1;
+        }
+        return currSum;
+    }
+
+
+    /**
+     * IT STRUCK ME THAT THE FIRST CHARACTER IS THE ONE CAUSING ALL PROBLEMS.
+     * SO DECIDED TO DO AN ADDITIONAL CHECK FOR word.charAt(1) AS WELL.
+     * 
+     * 1 THE IDEA IS TO KEEP 3 FLAGS, first, allUpper AND allLower.
+     * 2 ONCE DONE WITH FIRST 2 CHARS, FOR NEXT CHARS, 
+     * IF UPPERCASE CHAR COMES AND allLower is true, THEN RETURN FALSE;
+     * IF LOWERCASE AND allUpper is true, RETURN FALSE;
+     * 3 FOR FIRST 2 CHARS, IF UPPERCASE CHAR COMES AND FIRST IS FALSE RETURN FALSE 
+     * AS 'aA' will be false.
+     * 
+     * https://leetcode.com/problems/detect-capital/discuss/
+     * 860902/Java-3-Flags-simple-solution
+    */
+public boolean detectCapitalUse(String word) {
+        boolean first = false;
+        boolean allUpper = false;
+        boolean allLower = false;
+        
+        if(word.length() == 1) return true;
+        
+        if(Character.isUpperCase(word.charAt(0))) first = true;
+        else {first = false; allLower = true;}
+        
+        if(Character.isUpperCase(word.charAt(1))){
+            if(!first) return false;
+            allUpper = true;
+        }
+        else allLower = true;
+        
+        for(int i =2; i<word.length(); i++){
+            if(Character.isUpperCase(word.charAt(i)) ){
+                if(allLower) return false;
+            }else {
+                if(allUpper) return false;
+            }
+        }
+        return true;
+    }
+
+    // https://leetcode.com/problems/add-binary/
+    // public String addBinary(String a, String b) {
+    //     char[] ch = a.toCharArray();
+        
+    // }
+
+    // https://leetcode.com/problems/word-ladder
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if(!set.contains(endWord)) return 0;
+        int distance = 1;
+        
+        Deque<String> q = new LinkedList<>();
+        q.addLast(beginWord);
+        while(q.size()!=0){
+            int size = q.size();            
+            // all words in the same go, helps maintain smallest dist
+            for(int k =0; k<size; k++){//1
+                char[] curr = (q.removeFirst()).toCharArray();
+                
+                for(int i =0; i<curr.length; i++){
+                    char holder = curr[i];//2
+                    
+                    for(char c ='a'; c<='z'; c++){
+                        if(c==holder) continue;//3
+                        curr[i] = c;
+                        String after = String.valueOf(curr);
+                        if(after.equals(endWord)) return distance+1;
+                        if(set.contains(after)) {
+                            // System.out.print(after+", ");
+                            q.addLast(after); set.remove(after);//4
+                        }
+                    }
+                    curr[i] = holder;//5
+                }   
+            }
+            distance++;//6
+        }
+        return 0;
+    }
+    
+
+    // https://leetcode.com/problems/longest-duplicate-substring/
     // https://leetcode.com/problems/next-closest-time/
     // https://www.codertrain.co/next-closest-time
 
 
+    // https://leetcode.com/problems/multiply-strings/
     // https://leetcode.com/problems/boats-to-save-people/
-    // https://leetcode.com/problems/rearrange-string-k-distance-apart/
-
+    // https://leetcode.com/problems/shifting-letters/
     // https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/
     // https://leetcode.com/problems/camelcase-matching/
     // https://leetcode.com/problems/implement-trie-prefix-tree/
@@ -1572,10 +2080,10 @@ class StringPractice {
         // string.stringtoWords(number);
 
         String S = // "aa";
-                "ADOBECODEBANC";
+                "BANC";//"ADOBECODEBANC";
         String T = // "aa";
                 "ABC";
-        // string.minWindow(S, T);
+        string.minWindow(S, T);
 
         String palin = "ac";// "hellolle";
         // string.countAllPalindromes(palin);
@@ -1595,7 +2103,7 @@ class StringPractice {
         // string.letterCombinations(keyPad);
 
         char[] toCompress = new char[]{'a','a','b','b','c','c','c'};
-        string.compress(toCompress);
+        // string.compress(toCompress);
 
     }
 }

@@ -3,8 +3,18 @@ import java.util.*;
 class Array {
 
     /** 
-    * IMP: TO FIND MIDDLE ALWAYS USE (N-1)/2; NOT N/2
-    * IF LENGTH=6 MID = 2, NOT 3
+     * IMP: TO FIND MIDDLE ALWAYS USE (N-1)/2; NOT N/2
+     * IF LENGTH=6 MID = 2, NOT 3
+     * USE ARRAYS.EQUALS
+     * 
+     * IMP HOW TO CONVERT HASHMAP TO ARRAY  
+     * Object[] res = map.values().toArray();
+     * 
+     * REVERSE SORT AN ARRAY
+     * Arrays.sort(res, Collections.reverseOrder());
+     * 
+     * TO SORT FROM A SPECIFIC INDEX USE ARGS Arrays.sort(arr, i, j);
+
     */
     /**TECHNIQUES
      * 1 REMOVE DUPLICATES  USE WHILE LOOP AND BOUNDARY (j<n)
@@ -16,39 +26,37 @@ class Array {
      * 7 USING XOR
      * 8 CIRCULAR ARRAY 
      */
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if (i == arr.length - 1) {
-                System.out.println(arr[i] + ";");
-                System.out.println();
-            } else
-                System.out.print(arr[i] + ", ");
-        }
-    }
+   
 
-    void showArray(int[] arr) {
-        print1DMatrix(arr);
-    }
-
-    void printMatrix(int[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (i == arr.length - 1 && j == arr[0].length - 1) {
-                    System.out.println(arr[i] + ";");
-                    System.out.println();
-                } else
-                    System.out.print(arr[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
-
-    void findMountain(int[] a) {
-        for (int i = 1; i < a.length; i++) {
-            if (a[i] > a[i - 1] && a[i] > a[i + 1]) {
-
+    // { 9, 7, 1, 8, 5, 6 };
+    void findMountain(int[] arr) {
+        int n = arr.length;
+        if(n==0) return;
+        for (int i = 0; i < n; i++) {
+            if(i==0 && arr[i] > arr[i+1]) {System.out.println("mountain found "+arr[i]);continue;}
+            if(i==n-1 && arr[i] > arr[i-1]) {System.out.println("mountain found "+arr[i]);continue;}
+            
+            if (arr[i] > arr[i - 1] && arr[i] > arr[i + 1]) {
+                System.out.println("mountain found "+arr[i]);
             }
         }
+    }
+
+
+    /**
+     * MARKING VALUES OF VISITED INDICES AS -VE
+     */
+    // https://leetcode.com/problems/find-all-duplicates-in-an-array/
+    public List<Integer> findDuplicates(int[] nums) {
+        int n = nums.length;
+        ArrayList<Integer> list = new ArrayList<>();
+        
+        for(int i =0; i<n; i++){
+           if(nums[Math.abs(nums[i])-1]>0) nums[Math.abs(nums[i])-1]*=(-1);
+           else if(nums[Math.abs(nums[i])-1]<0) list.add(Math.abs(nums[i])); 
+        }
+        
+        return list;
     }
 
     /**
@@ -79,11 +87,12 @@ class Array {
                 nums[j]=nums[i];
             }
         }
-        print1DMatrix(nums);
+        utilCustom.Utility.print1DMatrix(nums);
         return ++j;
     }
 
-
+    // https://leetcode.com/discuss/interview-question/558379/
+    
     /** POINTS :
      * 1 USE WHILE LOOP, AS FOR DUPLICATES
      * 2 j = i+1, TO FIND CONSECUTIVES, USE THIS TRICK
@@ -169,6 +178,7 @@ class Array {
      *  
      * 
     */
+    // https://leetcode.com/problems/3sum/
     public List<List<Integer>> threeSum(int[] nums) {
         int n = nums.length;
         if(n<3) return new ArrayList<>();
@@ -220,7 +230,7 @@ class Array {
         }
      * 
      * 
-     * THE TRICK IS TO INCEREMNT i IN THE INNER LOOP SO THAT 
+     * THE TRICK IS TO INCREMENT i IN THE INNER LOOP SO THAT 
      * WE DON'T LOOP AGAIN OVER SAME ELEMENT.
      * 
      * 
@@ -244,26 +254,8 @@ class Array {
         return false;
     }
 
-    void reArrange(int[] arr) {
-        // int[] arr = new int[]{1,2,3,4,5,6,7,8};
-        int mid = (arr.length / 2) - 1;
-        int track = 2;
 
-        for (int i = 1; i < arr.length / 2; i++) {
-            while (arr[track] < arr[i]) {
-                track++;
-            }
-            if (arr[i] % 2 == 0 && i + 1 > arr.length - 1) {
-                swap(arr, i, track);
-            }
-        }
-    }
-
-    void swap(int[] arr, int a, int b) {
-        int temp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = temp;
-    }
+   
 
     PriorityQueue<Integer> pQueue = new PriorityQueue<Integer>();
     
@@ -297,37 +289,12 @@ class Array {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == 0) {
                 j++;
-                swap(arr, i, j);
+                utilCustom.Utility.swap(arr, i, j);
             }
             // System.out.println("j "+ arr[j]);
         }
 
-        swap(arr, j + 1, pivot);
-    }
-
-    void quickSortImplementation(int[] arr, int start, int end) {
-        if (start < end) {
-
-            int pivot = partition(arr, start, end);
-
-            quickSortImplementation(arr, start, pivot - 1);
-            quickSortImplementation(arr, pivot + 1, end);
-        }
-    }
-
-    int partition(int[] arr, int start, int end) {
-        int pivot = end;
-
-        int j = start - 1;
-        for (int i = start; i < end; i++) {
-            if (arr[i] < arr[pivot]) {
-                j++;
-                swap(arr, j, i);
-            }
-        }
-        j++;
-        swap(arr, j, pivot);
-        return pivot;
+        utilCustom.Utility.swap(arr, j + 1, pivot);
     }
 
     public void sort0s1s(int[] nums) {
@@ -335,7 +302,7 @@ class Array {
         for(int i =0; i<nums.length; i++){
             if(nums[i] != 0){
                 index++;
-                swap(nums, index, i);
+                utilCustom.Utility.swap(nums, index, i);
             }
         }
     }
@@ -353,11 +320,11 @@ class Array {
         int n = nums.length;
         int l = 0, h = n - 1, i = 0;
         while( i <= h ) {
-            if(nums[i] == 0 ) swap(nums, l++, i++);
-            else if(nums[i] == 2) swap(nums, h--, i);    
+            if(nums[i] == 0 ) utilCustom.Utility.swap(nums, l++, i++);
+            else if(nums[i] == 2) utilCustom.Utility.swap(nums, h--, i);    
             else i++;
         }
-        print1DMatrix(nums);
+        utilCustom.Utility.print1DMatrix(nums);
     }
 
     void insertionSort(int[] arr) {
@@ -365,7 +332,7 @@ class Array {
         for (int i = 0; i < arr.length; i++) {
             int j = i;
             while (j >= 1 && arr[j] < arr[j - 1]) {
-                swap(arr, j, j - 1);
+                utilCustom.Utility.swap(arr, j, j - 1);
                 j--;
             }
         }
@@ -492,10 +459,10 @@ class Array {
         for (j = start; j < end; j++) {
             if (arr[j] < key) {
                 i++;
-                swap(arr, i, j);
+                utilCustom.Utility.swap(arr, i, j);
             }
         }
-        swap(arr, i + 1, end);// 8,9 maintain position
+        utilCustom.Utility.swap(arr, i + 1, end);// 8,9 maintain position
         return i + 1;
         // }
         // if(start == end) return start;
@@ -530,11 +497,11 @@ class Array {
             heapify25Apr(arr, arr.length, i);
         }
 
-        showArray(arr);
+        utilCustom.Utility.print1DMatrix(arr);
         System.out.println();
 
         for (int i = n - 1; i > n - 2 - 1; i--) {
-            swap(arr, i, 0);
+            utilCustom.Utility.swap(arr, i, 0);
             // int temp =arr[0];
             // arr[0] = arr[i];
             // arr[i] = temp;
@@ -560,7 +527,7 @@ class Array {
         }
 
         if (max != index) {
-            swap(arr, index, max);
+            utilCustom.Utility.swap(arr, index, max);
             heapify25Apr(arr, n, max);
         }
     }
@@ -720,7 +687,7 @@ class Array {
 
         }
 
-        print1DMatrix(res);
+        utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 
@@ -750,20 +717,20 @@ class Array {
             left[i] = prod*nums[i-1]; 
             prod*=nums[i-1];
         }
-        print1DMatrix(left);
+        utilCustom.Utility.print1DMatrix(left);
 
         prod = nums[n-1]; right[n-1] = nums[n-1]; right[n-2] = nums[n-1];
         for(int i = n-3; i>=0; i--){
             right[i] = prod*nums[i+1]; 
             prod*=nums[i+1];
         }
-        print1DMatrix(right);
+        utilCustom.Utility. print1DMatrix(right);
         
         holder[0] = right[0]; holder[n-1] = left[n-1];
         for(int i = 1; i<n-1; i++){
             holder[i] = left[i]*right[i]; 
         }
-        print1DMatrix(holder);
+        utilCustom.Utility.print1DMatrix(holder);
         return holder;
     }
 
@@ -905,37 +872,23 @@ class Array {
     // https://leetcode.com/problems/next-greater-element-ii/
 
     // https://leetcode.com/problems/subarray-product-less-than-k/
-    // https://leetcode.com/problems/find-all-duplicates-in-an-array/
-
-    /**
-     * the size is greater than the values, so indices can be mapped  
-     */
-    public List<Integer> findDuplicates(int[] nums) {
-        int n = nums.length;
-        ArrayList<Integer> list = new ArrayList<>();
-        
-        for(int i =0; i<n; i++){
-           if(nums[Math.abs(nums[i])-1]>0) nums[Math.abs(nums[i])-1]*=(-1);
-           else if(nums[Math.abs(nums[i])-1]<0) list.add(Math.abs(nums[i])); 
-        }
-        
-        return list;
-    }
+    
 
     // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
     // Given an array, find all the subarrays (contiguous) of even length which 
     // have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
     // answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
 
-    // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    
     public static void main(String[] args) {
         // code
 
+        int[] arr2 = new int[] { 9, 7, 1, 8, 5, 6 };
         Array test = new Array();
         int[] duplicates = {1,1,2,2,2,3};
-        test.removeDuplicates(duplicates);
+        test.findMountain(arr2);
+        // test.removeDuplicates(duplicates);
         int[] arr = new int[] { 1, 2, 5, 4, 3 };
-        int[] arr2 = new int[] { 9, 7, 1, 3, 5, 6 };
         // test.findMissingAndRepeated(arr);
 
         // int[] arr = new int[]{1,0,1,0,0};

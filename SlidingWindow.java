@@ -2,29 +2,39 @@ import java.util.*;
 
 public class SlidingWindow {
 
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + ", ");
-        }
-    }
 
     /** 
      * 
+     * WHENEVER SUSBTRING COMES, SLIDING WINDOW
+     * IMP QUES MIN-WINDOW-SUBSTRING SEE SHRINKING PART
      * BY DEFAULT, RUN 2 LOOPS, ONE FOR THE FIRST WINDOW AND OTHER TILL N;
      * 
      * SHRINK TILL IT'S LESSER BUT ADD IN EACH ITERATION
      * (check subarray-product-less-than-k)
      * 
-     * 3 techniques
+     * some techniques
      * 
      * 1 IMP FOR LOOP AND THEN SHRINK USING WHILE LOOP 
-        minSubArrayLenWithSumGreaterThanOrEqualK
-        
-     * 2 USING DEQUE, LINE 152, INCLUDE AND EXCLUDE, CHECK OUTGOING WITH INCOMING
-        findFirstNegative
-
-     * 3 USING DEQUE, LINE 84, WHILE ADDING POP TILL LARGER 
-        maxSlidingWindowStack
+     * minSubArrayLenWithSumGreaterThanOrEqualK
+     *   
+     * 2 USING DEQUE, LINE 152, INCLUDE AND EXCLUDE, CHECK OUTGOING WITH INCOMING 
+     * findFirstNegative
+     * 
+     * 3 USING DEQUE, LINE 84, WHILE ADDING POP TILL LARGER maxSlidingWindowStack
+     *    
+     * 4 MIN SWAPS QUESTIONS TOO, KEEP TRACK OF THE NO NOT TO BE SWAPPED
+     * 
+     * 5 TO MAP INDEX OF SLIDING WINDOW TO CHAR ARRAY USE 
+     * curr[s.charAt(prev) - 'a']
+     * 
+     * 
+     * basically we keep a char array(base) to keep count of pattern
+     * and use a new array(curr) while sliding over the string. 
+     * Whenever the arrays match, we store the start index of the current window.
+     *
+     * if(Arrays.equals(base, curr)) res.add( i-pattern.length() + 1); 
+     * 
+     * 
     */
 
     /**mostly we use deque, sometimes hashmap 
@@ -107,7 +117,7 @@ public class SlidingWindow {
         res[index++] = list.getFirst();
     
         System.out.println("first k");
-        print1DMatrix(res);
+        utilCustom.Utility.print1DMatrix(res);
 
         for(int i =k; i<n; i++){
             if(list.getFirst()==nums[i-k]){
@@ -123,7 +133,7 @@ public class SlidingWindow {
             System.out.println(list);
             res[index++] = list.getFirst();
         }
-        print1DMatrix(res);
+        utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 
@@ -229,7 +239,7 @@ public class SlidingWindow {
     // elements-having-even-frequencies/?ref=rp
     // use XOR
 
-    // similar https://leetcode.com/problems/minimum-window-substring/
+    
     // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
     void smallestSubArrayWithKDistinct(int[] arr, int k){
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -305,6 +315,158 @@ public class SlidingWindow {
 		return (matrix[a][b] == 1) ? true : false; 
 	} 
 
+
+    /** POINTS :
+     * 1 WHENEVER A QUES OF MIN SWAPS AND THE DATA SET IS CONTIGOUS
+     * USE SLIDING WINDOW
+     * 2 HERE WE FIND THE NO OF 1s, THIS DETERMINES THE SIZE OF THE WINDOW
+     * 3 NOW COUNT NO OF 0s, THIS IS THE MIN NO OF SWAPS
+     * 4 KEEP TRACK OF MIN NO OF 0s
+     * 5 IF OUTGOING INDEX IS ZERO zero--; IF INCOMING IS ZERO zero++
+     * 6 IMP BOUNDARY CONDNS : j = count+1 till n-count
+     */
+    // https://leetcode.com/discuss/interview-question/414660/
+    // https://www.geeksforgeeks.org/minimum-swaps-required-group-1s-together/
+    // https://www.youtube.com/watch?v=VXi_-2CmitM
+    int minSwaps(int[] arr){
+        int n = arr.length;
+        int count = 0;
+        for(int i =0; i< arr.length; i++) if(arr[i]==1) count++;
+
+        int zero = 0; int min = Integer.MAX_VALUE;
+        for(int i = 0; i<count; i++){
+            if(arr[i]==0) zero++;
+        }
+        min = Math.min(min, zero);
+        System.out.println("min "+min);
+
+        for(int j = 1; j<n-count; j++){
+            if(arr[j-1]==0) zero--;
+            if(arr[j+count]==0) zero++;
+            min = Math.min(min, zero);
+        }
+        System.out.println("min no of swaps " + min);
+        return min;
+    }
+
+    /** 
+    POINTS : 
+     * MOST IMP ANAGRAM SO WINDOW SIZE WILL REMAIN SAME
+     * ARRAYS.EQUALS
+     * 
+     * 1 USE A CHAR ARRAY NOT A HASHMAP, IT'S EASIER TO COMPARE WITH ARRAYS.EQUALS
+     * 2 STORE PATTERN'S COUNT IN A CHAR ARRAY(NAMED 'BASE') OF SIZE 26
+     * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 2 STEPS : 
+     * FIRST WINDOW AND THEN ALL OTHER WINDOWS,
+
+     * TRAVERSE FROM i TILL n (PATTERN LENGTH) AND STORE IN A NEW ARRAY--> FIRST WINDOW
+     * AND THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
+
+     * 4 COMPARE IF ARRAYS ARE EQUAL 
+     * WE KEEP THE BASE ARRAY AS A REFERENCE AND THE CURR ARRAY HOLDS 
+     * THE STATE OF THE CURRENT SLIDING WINDOW
+
+     * 5 IF ARRAYS ARE EQUAL STORE START INDEX OF THIS WINDOW
+     * (i-window length) window length = pattern length;
+    */	
+    // https://leetcode.com/problems/find-all-anagrams-in-a-string
+    public List<Integer> findAnagrams(String s, String t) {
+        char[] base = new char[26];
+        List<Integer> res = new ArrayList<>();
+        if (s.length() == 0)
+            return res;
+        int n = t.length();
+        if (n > s.length())
+            return res;
+
+        for (char c : t.toCharArray())
+            base[c - 'a']++;
+
+        char[] ch = s.toCharArray();
+        char[] curr = new char[26];
+        for (int i = 0; i < n; i++)
+            curr[ch[i] - 'a']++;
+        if (Arrays.equals(base, curr))
+            res.add(0);
+
+        for (int i = n; i < s.length(); i++) {
+            int prev = i - n;
+            curr[s.charAt(prev) - 'a']--;
+            curr[s.charAt(i) - 'a']++;
+
+            if (Arrays.equals(base, curr))
+                res.add(prev + 1);
+        }
+        return res;
+    }
+
+    /** POINTS : 
+     * 1 left HOLDS THE INDEX OF A NON REPEATING CHAR
+     * left = Math.max(left, map.get(s.charAt(i))+1);
+     * handle aab, pwwke, dvdf
+     * 
+     * left IS INCREMNTED TO TH NEXT INDEX OF THE CHAR FOUND IN MAP
+     * 
+     */
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        if(n == 0) return n;
+        HashMap<Character, Integer> map = new HashMap<>();
+        int len = 0; 
+        int left = 0;
+        
+        for(int i =0; i<n; i++){
+            if(map.containsKey(s.charAt(i))) {
+                left = Math.max(left, map.get(s.charAt(i))+1);
+            }
+            len = Math.max(len, i-left+1);   
+            map.put(s.charAt(i), i);
+        }
+        return len;
+    }
+
+    /** 
+     * IMP QUES */
+    // https://leetcode.com/problems/minimum-window-substring
+    public String minWindow(String s, String t) {
+        if(s == null || s.length() < t.length() || s.length() == 0) return "";
+        HashMap<Character, Integer>map = new HashMap<>();
+        
+        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+        
+        for(int i =0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
+                if(map.get(s.charAt(i)) >= 0) count++;
+            }
+            
+            // System.out.println(map);
+            while(count == t.length()) {
+                if(i-left+1 < len){
+                    start = left;
+                    len = i-left+1;
+                }
+                // now increment the freq which was reduced
+                if(map.containsKey(s.charAt(left))){
+                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
+                    if(map.get(s.charAt(left))>0) count--;
+                }
+                left++;
+                // System.out.print("in here ");
+                // System.out.println(map);
+            }
+            // System.out.println("left "+left);
+        }
+        if(len>s.length()) return ""; 
+
+        return s.substring(start, start+len);
+    }
+
+    // https://leetcode.com/problems/permutation-in-string/
+
     // https://leetcode.com/problems/find-the-town-judge/
     public static void main(String[] args) {
         SlidingWindow slide = new SlidingWindow();
@@ -318,14 +480,18 @@ public class SlidingWindow {
 
         // int negArr[] = {12, -1, -7, 8, -15, 30, 16, 28} , negk = 3;
         int negArr[] = {-8, 2, 3, -6, 10}, negk = 2;
-        slide.findFirstNegative(negArr, negk);
+        // slide.findFirstNegative(negArr, negk);
         
         int[][] celebMatrix = 
         { {0, 0, 1, 0},
         {0, 0, 1, 0},
         {0, 0, 0, 0},
         {0, 0, 1, 0} };
-        slide.findCelebrity(celebMatrix);
+        // slide.findCelebrity(celebMatrix);
+
+        int[] minSwap1s = {1,0,1,0,1,0,0,1,1,1};
+        // int[] minSwap1s = {0,0,0,1,0};
+        slide.minSwaps(minSwap1s);
     }
     
 }

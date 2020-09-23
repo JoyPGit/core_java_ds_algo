@@ -74,6 +74,40 @@ public class Mathprob {
         return Long.valueOf((base)%(10^9+7));
     }
 
+    // For a >= b >= c, a,b,c can form a triangle if a < b + c.
+    // https://leetcode.com/problems/largest-perimeter-triangle/
+    public int largestPerimeter(int[] A) {
+        Arrays.sort(A);
+        int n = A.length;
+        if(n<3) return 0;
+        
+        for(int i=n-1; i>1; i--){
+            if (A[i] < A[i - 1] + A[i - 2]) return (A[i] + A[i - 1] + A[i - 2]);
+        }
+        return 0;
+    }
+
+    // https://leetcode.com/problems/path-crossing
+    public boolean isPathCrossing(String path) {
+        HashSet<String> set = new HashSet<>();
+        set.add("00");
+        int n = path.length(); 
+        int x =0; int y =0; 
+        
+        for(int i =0; i<n; i++){
+            String point = "";
+            if(path.charAt(i) == 'E') x = x+1;
+            if(path.charAt(i) == 'W') x = x-1;
+            if(path.charAt(i) == 'N') y = y+1;
+            if(path.charAt(i) == 'S') y = y-1;
+            point = x+""+y;
+            // System.out.println("point " + point);
+            // System.out.println("x " + x +" y "+y);
+            if(set.contains(point)) return true;
+            set.add(point);
+        }
+        return false;
+    }
     public static void main(String[] args) {
         Mathprob math = new Mathprob();
         math.power(99, 9);

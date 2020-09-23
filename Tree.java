@@ -2192,6 +2192,26 @@ public class Tree {
 
     }
 
+    // https://leetcode.com/problems/construct-string-from-binary-tree/
+    // discuss/103992/Java-Solution-Tree-Traversal
+    // https://leetcode.com/problems/construct-string-from-binary-tree
+    String res = "";
+    public String tree2str(TreeNode t) {
+        if(t == null) return res;
+        helper(t);
+        return res.substring(1, res.length()-1);
+    }
+    
+    void helper(TreeNode root){
+        if(root == null) return;
+        res = res+'('+root.val;
+        if(root.left == null && root.right == null) {res+=')';return;}
+        if(root.left == null ) res +="()";
+        if(root.left!=null)helper(root.left);
+        helper(root.right);
+        res+=')';
+    }
+
     TreeNode treeFromInorder(int[] arr, int start, int end){
         if(start>end) return null;
         int mid = (start+end)/2;
