@@ -108,6 +108,9 @@ public class Mathprob {
         }
         return false;
     }
+
+    // https://leetcode.com/problems/power-of-four
+    
     public static void main(String[] args) {
         Mathprob math = new Mathprob();
         math.power(99, 9);

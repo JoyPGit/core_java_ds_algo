@@ -2,18 +2,41 @@ import java.util.*;
 
 class Matrix {
 
+    // DFS TEMPLATE
+    void dfs(int[][] arr){
+        int n = arr.length; int m = arr[0].length;
+        int[][] visited = new int[n][m];
+
+        for(int i =0; i<n; i++){
+            for(int j = 0; j<m; j++){
+                dfsUtil(arr, i, j, visited);
+            }
+        }
+    }
+
+    void dfsUtil(int[][] arr, int row, int col, int[][] visited){
+        if(isSafedfs(arr, row, col)) {
+            if(visited[row][col]==0){
+                visited[row][col] = 1;
+                System.out.println(arr[row][col]);
+                dfsUtil(arr, row+1, col, visited);
+                dfsUtil(arr, row, col+1, visited);
+                dfsUtil(arr, row-1, col, visited);
+                dfsUtil(arr, row, col-1, visited);
+            }
+        }
+    }
+
+    boolean isSafedfs(int[][] arr,int row, int col){
+        if(row>=0 && row<arr.length
+        && col>=0 && col<arr[0].length) return true;
+        return false;
+    }
+
+
     int[][] twoDimArr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };// new int[2][2];
 
     // twoDimArr = {{1,2},{3,4}};
-
-    void showMatrix(int[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                System.out.print(arr[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
 
     void rotateMatrix(int m, int n, int[][] arr) {
 
@@ -266,158 +289,42 @@ class Matrix {
     }
 
 
-    void longestPathFromAnyIndex(int[][] arr, int rowStart, int colStart) {
-        int rowLength = arr.length;
-        int columnLength = arr[0].length;
-        int dp[][] = new int[rowLength][columnLength];
-        int max = -9;
-        int i;
-        int j;
-        for (i = 0; i < dp.length; i++) {
-            for (j = 0; j < dp[0].length; j++) {
-                dp[i][j] = -1;
-            }
-        }
-
-        for (i = 0; i < dp.length; i++) {
-            for (j = 0; j < dp[0].length; j++) {
-                this.longestPathHelper(arr, dp, i, j);
+    // https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
+    public int longestIncreasingPath(int[][] matrix) {
+        if(matrix.length==0) return 0;
+        int[][] dp = new int[matrix.length][matrix[0].length];
+        
+        int max = Integer.MIN_VALUE;
+        
+        for(int i = 0; i<matrix.length; i++){
+            for(int j = 0; j<matrix[0].length; j++){
+                if(dp[i][j] !=0) continue;//1
+                dfs(i, j, matrix, dp, Integer.MIN_VALUE);
                 max = Math.max(max, dp[i][j]);
             }
         }
-
-        // for (i=0; i<dp.length; i++){
-        // for(int l =0; l<dp[0].length; l++){
-        // if(dp[k][l]>max) max = dp[k][l];
-        // }
-        // }
-
-        System.out.println("max is " + max);
-
+        return max;
     }
-
-    int longestPathHelper(int[][] arr, int[][] dp, int row, int col) {
-        // System.out.println(col);
-
-        if (row < 0 || row > arr.length - 1 || col < 0 || col > arr[0].length - 1) {
-            return 0;
-        }
-        if (dp[row][col] == -1) {
-
-            int left = 0;
-            int right = 0;
-            int up = 0;
-            int down = 0;
-            // if(col-1>=0 && col-1<=arr[0].length-1){
-            if (isSafeLongestPath(arr, row, col - 1, arr[row][col])) {
-                // if(arr[row][col]<arr[row][col-1]){
-                System.out.println("in left");
-                left = longestPathHelper(arr, dp, row, col - 1);
-                // }
-            }
-            // if(col+1>=0 && col+1<=arr[0].length-1){
-            if (isSafeLongestPath(arr, row, col + 1, arr[row][col])) {
-                // if(arr[row][col]<arr[row][col+1]){
-                System.out.println("in right");
-                right = longestPathHelper(arr, dp, row, col + 1);
-                // }
-            }
-
-            // if(row+1>=0 && row+1<=arr.length-1){
-            if (isSafeLongestPath(arr, row + 1, col, arr[row][col])) {
-                // if(arr[row][col]<arr[row+1][col]){
-                System.out.println("in down");
-                down = longestPathHelper(arr, dp, row + 1, col);
-                // }
-            }
-
-            // if(row-1>=0 && row-1<=arr.length-1){
-            if (isSafeLongestPath(arr, row - 1, col, arr[row][col])) {
-                // if(arr[row][col]<arr[row-1][col]){
-                System.out.println("in up");
-                up = longestPathHelper(arr, dp, row - 1, col);
-                // }
-            }
-
-            /**
-             * Mistakes missing the base condition of arr[row][col]>prev adding excessive
-             * checks
-             * 
-             */
-
-            /**
-             * the tricky thing is the col-1 or col+1 might run out of bounds, use isSafe
-             * check. Also teh base condition needs to be checked, i.e. the value of the
-             * left or roght must be greater than the current element, Instead of using an
-             * additional check pass it as a param.
-             * 
-             * if(rowIndex<0 || rowIndex>arr.length-1 || colIndex<0 || colIndex
-             * >arr[0].length-1){ if(arr[rowIndex][colIndex]<prev) return false; }
-             * 
-             * see teh condition here ois to check if the index is within limits if we check
-             * if it's outside or not then it will be difficult to check if it is valid or
-             * not so the fucntion signature changes
-             * 
-             * AND THE CONDITION CHANGES FROM OR TO AND
-             * ---------------------------------------> if(rowIndex>=0 &&
-             * rowIndex<=arr.length-1 && colIndex>=0 && colIndex <= arr[0].length-1){
-             * if(arr[rowIndex][colIndex]>prev) return true; }
-             */
-            System.out.println("left " + left);
-            dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down))) + 1;
-            System.out.println("dp[i][j] " + dp[row][col]);
+    
+    int dfs(int row, int col, int[][] matrix, int[][] dp, int prev){
+        if(isSafe(row, col, matrix, prev)){
+            if(dp[row][col]!=0) return dp[row][col];
+            
+            int left = dfs(row, col-1, matrix, dp, matrix[row][col]);//2
+            int right = dfs(row, col+1, matrix, dp, matrix[row][col]);
+            int up = dfs(row-1, col, matrix, dp, matrix[row][col]);
+            int down = dfs(row+1, col, matrix, dp, matrix[row][col]);
+            dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down)))+1;
             return dp[row][col];
-
         }
-        return dp[row][col];
+        return 0;
     }
-
-    boolean isSafeLongestPath(int[][] arr, int rowIndex, int colIndex, int prev) {
-        // if(rowIndex<0 || rowIndex>arr.length-1 || colIndex<0 || colIndex
-        // >arr[0].length-1){
-        // if(arr[rowIndex][colIndex]<prev) return false;
-        // }
-        if (rowIndex >= 0 && rowIndex <= arr.length - 1 && colIndex >= 0 && colIndex <= arr[0].length - 1) {
-            if (arr[rowIndex][colIndex] > prev)
-                return true;
-        }
+    
+    boolean isSafe(int r, int c, int[][] matrix, int prev){
+        if(r>=0 && r<matrix.length
+          && c>=0 && c<matrix[0].length
+          && matrix[r][c]>prev) return true;//3
         return false;
-    }
-
-    public int longestIncreasingPath(int[][] matrix) {
-        int result = 0;
-        int m = matrix.length;
-        int n = matrix[0].length;
-
-        int[][] mem = new int[m][n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                int t = LIPhelper(matrix, mem, i, j);
-                result = Math.max(result, t);
-            }
-        }
-
-        return result;
-    }
-
-    private int LIPhelper(int[][] matrix, int[][] mem, int i, int j) {
-        if (mem[i][j] > 0) {
-            return mem[i][j];
-        }
-
-        int[] dx = { -1, 0, 1, 0 };
-        int[] dy = { 0, 1, 0, -1 };
-
-        for (int k = 0; k < 4; k++) {
-            int x = i + dx[k];
-            int y = j + dy[k];
-
-            if (x >= 0 && y >= 0 && x < matrix.length && y < matrix[0].length && matrix[x][y] > matrix[i][j]) {
-                mem[i][j] = Math.max(mem[i][j], LIPhelper(matrix, mem, x, y));
-            }
-        }
-
-        return ++mem[i][j];
     }
 
     int numberOfIslands(int[][] arr) {
@@ -490,41 +397,7 @@ class Matrix {
         return false;
     }
 
-    // void printSpiral28Apr(int[][] arr){
-    // int rowEnd = arr.length-1; int rowStart = 0;
-    // int colEnd = arr[0].length-1; int colStart = 0;
-
-    // int i;
-
-    // while(rowEnd>=0){
-
-    // for(i =rowStart; i<=rowEnd; i++){
-    // System.out.print(arr[i][colStart]+", ");
-    // }
-    // colStart++;
-    // System.out.println();
-
-    // for(i =colStart; i<=colEnd; i++){
-    // System.out.print(arr[rowEnd][i]+", ");
-    // }
-    // rowEnd--;
-    // System.out.println();
-
-    // for(i =rowEnd; i>=rowStart; i--){
-    // System.out.print(arr[i][colEnd]+", ");
-    // }
-    // colEnd--;
-    // System.out.println();
-
-    // for(i = colEnd; i>=colStart; i--){
-    // System.out.print(arr[rowStart][i]+", ");
-    // }
-
-    // rowStart++;
-    // System.out.println();
-
-    // }
-
+    
     // Java program to print a given matrix in spiral form
 
     // int i, k = 0, l = 0;
@@ -667,86 +540,7 @@ class Matrix {
         } else
             return false;
     }
-
-    public int orangesRotting(int[][] grid) {
-
-        int R = grid.length;
-        int C = grid[0].length;
-        int[][] tracker = new int[R][C];
-        int i, j;
-
-        for (i = 0; i < R; i++) {
-            for (j = 0; j < C; j++) {
-                orangesRottingHelper(grid, tracker, i, j, 0);
-            }
-        }
-
-        for (i = 0; i < R; i++) {
-            for (j = 0; j < C; j++) {
-                if (grid[i][j] == 1)
-                    return -1;
-            }
-        }
-
-        int max = 0;
-        for (i = 0; i < R; i++) {
-            for (j = 0; j < C; j++) {
-                System.out.print(tracker[i][j] + ", ");
-                if (tracker[i][j] > max)
-                    max = tracker[i][j];
-            }
-            System.out.println();
-        }
-        // System.out.println(tracker[R-1][C-2]);
-        // System.out.println(tracker[R-1][C-1]);
-        return max;
-
-    }
-
-    void orangesRottingHelper(int[][] arr, int[][] tracker, int rowIndex, int colIndex, int time) {
-
-        if (isSafeOranges(arr, rowIndex, colIndex) == 1) {
-            arr[rowIndex][colIndex] = 2;
-            if (tracker[rowIndex][colIndex] == 0) {
-                tracker[rowIndex][colIndex] = time;
-            }
-
-            if (tracker[rowIndex][colIndex] > time) {
-                tracker[rowIndex][colIndex] = time;
-            }
-
-            time = tracker[rowIndex][colIndex] + 1;
-            orangesRottingHelper(arr, tracker, rowIndex + 1, colIndex, time);
-            orangesRottingHelper(arr, tracker, rowIndex - 1, colIndex, time);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex + 1, time);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex - 1, time);
-        }
-
-        if (isSafeOranges(arr, rowIndex, colIndex) == 2) {
-            arr[rowIndex][colIndex] = 3;
-            tracker[rowIndex][colIndex] = 0;
-            orangesRottingHelper(arr, tracker, rowIndex + 1, colIndex, 1);
-            orangesRottingHelper(arr, tracker, rowIndex - 1, colIndex, 1);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex + 1, 1);
-            orangesRottingHelper(arr, tracker, rowIndex, colIndex - 1, 1);
-        }
-    }
-
-    int isSafeOranges(int[][] arr, int rowIndex, int colIndex) {
-        if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
-                && arr[rowIndex][colIndex] == 2) {
-            return 2;
-        }
-        if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
-                && arr[rowIndex][colIndex] == 1) {
-            return 1;
-        }
-        if (rowIndex < arr.length && rowIndex >= 0 && colIndex >= 0 && colIndex < arr[0].length
-                && arr[rowIndex][colIndex] == 1) {
-            return 3;
-        } else
-            return -1;
-    }
+   
 
     void diagonalPrintMatrix(int[][] matrix) {
         int R = matrix.length - 1; // 2
@@ -805,140 +599,6 @@ class Matrix {
         }
     }
 
-    void orangesRotting1May(int[][] arr) {
-
-        Queue<holder> hold = new LinkedList<Matrix.holder>();
-
-        holder[][] finalTimeArray = new holder[arr.length][arr[0].length];
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (arr[i][j] == 0)
-                    (finalTimeArray[i][j]) = new holder(i, j, arr[i][j], -1, false);
-                else
-                    (finalTimeArray[i][j]) = new holder(i, j, arr[i][j], 0, false);
-            }
-        }
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if ((finalTimeArray[i][j]).value == 2) {
-                    hold.add(new holder((finalTimeArray[i][j]).row, (finalTimeArray[i][j]).col,
-                            (finalTimeArray[i][j]).value, (finalTimeArray[i][j]).time, true));
-                }
-            }
-        }
-
-        // System.out.println(hold.size());
-
-        while (!hold.isEmpty()) {
-            holder current = hold.poll();
-            // holder current = hold.remove();
-            // System.out.print("index row:"+current.row+", index col"+current.col+",
-            // visited "+ current.visited+", ");
-            orangesRotting1MayHelper(arr, hold, current, finalTimeArray);
-        }
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                System.err.print((finalTimeArray[i][j]).time + ", ");
-            }
-            System.out.println();
-        }
-    }
-
-    void orangesRotting1MayHelper(int[][] arr, Queue hold, holder current, holder[][] finalTimeArray) {
-        if (isSafeOranges1May(finalTimeArray, current.row + 1, current.col)) {// into visited method
-            if (isVisitedOranges1May(finalTimeArray, current.row + 1, current.col)) {
-                if ((finalTimeArray[current.row + 1][current.col]).time > current.time + 1) {
-                    // (finalTimeArray[current.row+1][current.col]).time =current.time+1;
-                    finalTimeArray[current.row + 1][current.col] = new holder(current.row + 1, current.col,
-                            (finalTimeArray[current.row + 1][current.col]).value, current.time + 1, true);
-                    // hold.add(new holder(current.row+1, current.col, 2, current.time+1, true));
-                }
-            } else {
-                (finalTimeArray[current.row + 1][current.col]).setVisited();
-                finalTimeArray[current.row + 1][current.col].time = current.time + 1;
-                // System.out.println("visited "
-                // +(finalTimeArray[current.row+1][current.col]).visited);
-                hold.add(new holder(current.row + 1, current.col, 2, current.time + 1, true));
-            }
-
-        }
-
-        if (isSafeOranges1May(finalTimeArray, current.row, current.col + 1)) {
-            if (isVisitedOranges1May(finalTimeArray, current.row, current.col + 1)) {
-                if ((finalTimeArray[current.row][current.col + 1]).time > current.time + 1) {
-
-                    finalTimeArray[current.row][current.col + 1] = new holder(current.row, current.col + 1,
-                            (finalTimeArray[current.row + 1][current.col]).value, current.time + 1, true);
-                    // hold.add(new holder(current.row, current.col+1, 2, current.time+1, true));
-                }
-            } else {
-                (finalTimeArray[current.row][current.col + 1]).setVisited();
-                finalTimeArray[current.row][current.col + 1].time = current.time + 1;
-                hold.add(new holder(current.row, current.col + 1, 2, current.time + 1, true));
-            }
-            // finalTimeArray[current.row][current.col+1] =
-            // new holder(current.row, current.col+1,
-            // (finalTimeArray[current.row][current.col+1]).value,
-            // current.time+1, true);
-
-        }
-
-        if (isSafeOranges1May(finalTimeArray, current.row - 1, current.col)) {
-            if (isVisitedOranges1May(finalTimeArray, current.row - 1, current.col)) {
-                if (current.time > current.time + 1) {
-                    current.time = current.time + 1;
-                    finalTimeArray[current.row - 1][current.col] = new holder(current.row - 1, current.col,
-                            (finalTimeArray[current.row - 1][current.col]).value, current.time + 1, true);
-                    // hold.add(new holder(current.row-1, current.col, 2, current.time+1, true));
-                }
-            } else {
-                (finalTimeArray[current.row - 1][current.col]).setVisited();
-                hold.add(new holder(current.row - 1, current.col, 2, current.time + 1, true));
-            }
-            // finalTimeArray[current.row-1][current.col] =
-            // new holder(current.row-1, current.col,
-            // (finalTimeArray[current.row-1][current.col]).value,
-            // current.time+1, true);
-
-        }
-
-        if (isSafeOranges1May(finalTimeArray, current.row, current.col - 1)) {
-            if (isVisitedOranges1May(finalTimeArray, current.row, current.col - 1)) {
-                if (current.time > current.time + 1) {
-                    current.time = current.time + 1;
-                    finalTimeArray[current.row][current.col - 1] = new holder(current.row, current.col - 1,
-                            (finalTimeArray[current.row][current.col - 1]).value, current.time + 1, true);
-                    // hold.add(new holder(current.row, current.col-1, 2, current.time+1, true));
-                } else {
-                    (finalTimeArray[current.row][current.col - 1]).setVisited();
-                    hold.add(new holder(current.row, current.col - 1, 2, current.time + 1, true));
-                }
-                // finalTimeArray[current.row][current.col-1] =
-                // new holder(current.row, current.col-1,
-                // (finalTimeArray[current.row][current.col-1]).value,
-                // current.time+1, true);
-
-            }
-        }
-
-    }
-
-    boolean isSafeOranges1May(holder[][] arr, int rowIndex, int colIndex) {
-        if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
-                && (arr[rowIndex][colIndex]).value != -1) {
-            return true;
-        }
-        return false;
-    }
-
-    boolean isVisitedOranges1May(holder[][] arr, int rowIndex, int colIndex) {
-        if ((arr[rowIndex][colIndex]).visited == true)
-            return true;
-        return false;
-    }
 
     class BFSNode {
         int rowIndex;
@@ -1374,39 +1034,8 @@ class Matrix {
         else
             return binsearch(arr, row, num, mid + 1, end);
     }
-
-    void dfs(int[][] arr){
-        int n = arr.length; int m = arr[0].length;
-        int[][] visited = new int[n][m];
-
-        for(int i =0; i<n; i++){
-            for(int j = 0; j<m; j++){
-                dfsUtil(arr, i, j, visited);
-            }
-        }
-    }
-
-    void dfsUtil(int[][] arr, int row, int col, int[][] visited){
-        if(isSafedfs(arr, row, col)) {
-            if(visited[row][col]==0){
-                visited[row][col] = 1;
-                System.out.println(arr[row][col]);
-                dfsUtil(arr, row+1, col, visited);
-                dfsUtil(arr, row, col+1, visited);
-                dfsUtil(arr, row-1, col, visited);
-                dfsUtil(arr, row, col-1, visited);
-            }
-        }
-    }
-
-    boolean isSafedfs(int[][] arr,int row, int col){
-        if(row>=0 && row<arr.length
-        && col>=0 && col<arr[0].length) return true;
-        return false;
-    }
     
     int countPath;
-
 
     // https://leetcode.com/problems/unique-paths-ii/
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
@@ -1497,16 +1126,236 @@ class Matrix {
           && board[row][col] == word.charAt(index)) return true;
         return false;
     }
-    
 
+    /**
+     * THE BASIC TEMPLATE IS CHANGED A BIT,
+     * WE DON'T RECUR FOR ALL POINTS IN THE GRAPH ,RATHER ONLY FOR THE
+     * BOUNDARY POINTS.
+     * 
+     * ONLY IN THE isSafe method a diff condn "matrix[r][c]>=prev"
+     * IS USED. THIS CHECKS IF WATER CAN FLOW FROM THE BOUNDARY 
+     * TO ANY POINT.
+     * 
+     * WATER WILL FLOW FROM 5->2 (IF 2 IS BOUNDARY); 
+     * IF WE START FROM 2 THEN "prev<=matrix[r][c]" to reach 5.
+     * 
+     * POINTS : 
+     * 1 USED DFS, BUT HERE REVERSE IS DONE
+     * WE CHECK IF WATER CAN FLOW FROM THE BOUNDARY(OCEAN) INTO THE MATRIX
+     * 2 CHECK FOR PACIFIC OCEAN ONCE, CREATE A VISITED ARRAY(named PACIFIC) AND MARK 1
+     * 3 CHECK FOR ATLANTIC AGAIN
+     * 4 THE POINTS FROM WHERE PACIFIC AND ATLANTIC BOTH HAVE 1 IS
+     * ADDED TO RES.
+     * 
+     * */
+    // https://leetcode.com/problems/pacific-atlantic-water-flow/
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+        List<List<Integer>> res= new ArrayList<>();
+        
+        int m = matrix.length;
+        if(m==0) return res;
+        
+        int n = matrix[0].length;
+        
+        int pacific[][] = new int[m][n];
+        int atlantic[][] = new int[m][n];
+        
+        
+        for(int i=0;i<n;i++)
+        {
+            dfs(matrix,0,i,pacific,Integer.MIN_VALUE); //top
+            dfs(matrix,m-1,i,atlantic,Integer.MIN_VALUE); //bottom
+        }
+        
+        for(int i=0;i<m;i++)
+        {
+            dfs(matrix,i,0,pacific,Integer.MIN_VALUE); //left
+            dfs(matrix,i,n-1,atlantic,Integer.MIN_VALUE);
+        }
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+               if(pacific[i][j]==1 && atlantic[i][j]==1){
+                    List<Integer> curr = new ArrayList<>();
+                    curr.add(i);curr.add(j);
+                    res.add(curr);
+                }
+            }
+        }
+        return res;
+    }
     
+    void dfs(int[][] matrix, int row, int col, int[][] visited, int prev){
+        if(isSafe(matrix, row, col, visited, prev)){
+            visited[row][col] = 1;
+            dfs(matrix, row+1, col, visited, matrix[row][col]);
+            dfs(matrix, row-1, col, visited, matrix[row][col]);
+            dfs(matrix, row, col+1, visited, matrix[row][col]);
+            dfs(matrix, row, col-1, visited, matrix[row][col]);
+        }
+    }
     
-   //all paths from a to b 
-   //https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/
+    boolean isSafe(int[][] matrix, int r, int c, int[][] visited, int prev){
+        if(r>=0 && r<matrix.length
+          && c>=0 && c<matrix[0].length
+          && matrix[r][c]>=prev 
+          && visited[r][c]!=1) return true;
+        return false;
+    }
+    
+    //all paths from a to b 
+    //https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/
+
+    // https://leetcode.com/problems/number-of-islands
+    public int numIslands(char[][] grid) {
+        int count = 0;
+        
+        for(int i =0; i<grid.length; i++){
+            for(int j =0; j<grid[0].length; j++){
+                if(grid[i][j] == '1') {dfs(grid, i, j); count++;}
+            }
+        }
+        return count;
+    }
+    
+    void dfs(char[][] grid, int row, int col){
+        if(row>=0 && row<grid.length
+          && col>=0 && col<grid[0].length
+          && grid[row][col] == '1'){
+            grid[row][col] = '0';
+            dfs(grid, row+1, col);
+            dfs(grid, row-1, col);
+            dfs(grid, row, col+1);
+            dfs(grid, row, col-1);
+        }
+    }
+    // https://leetcode.com/problems/number-of-closed-islands
+    public int closedIsland(int[][] grid) {
+        int count = 0;
+        
+        for(int i =0; i<grid.length; i++){
+            for(int j=0; j<grid[0].length; j++){
+                if(i ==0 || i == grid.length-1 || j == 0 || j == grid[0].length-1){
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        
+    
+        for(int i =0; i<grid.length; i++){
+            for(int j=0; j<grid[0].length; j++){
+                if(grid[i][j]==0){
+                    dfs(grid, i, j); 
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    
+    void dfs(int[][] grid, int row, int col){
+        if(row>=0 && row<grid.length
+          && col>=0 && col<grid[0].length
+          && grid[row][col] == 0){
+            grid[row][col] = 1;
+            dfs(grid, row+1, col);
+            dfs(grid, row-1, col);
+            dfs(grid, row, col+1);
+            dfs(grid, row, col-1);
+        }
+    }
+    // https://leetcode.com/problems/surrounded-regions
+    public void solve(char[][] board) {
+
+        for(int i =0; i<board.length; i++){
+            for(int j=0; j<board[0].length; j++){
+                if(i ==0 || i == board.length-1 || j == 0 || j == board[0].length-1){
+                    dfsSurrounded(board, i, j);
+                }
+            }
+        }
+    
+        for(int i =0; i<board.length; i++){
+            for(int j=0; j<board[0].length; j++){
+                if(board[i][j]=='O') board[i][j] = 'X';
+            }
+        }
+        
+        for(int i =0; i<board.length; i++){
+            for(int j=0; j<board[0].length; j++){
+                if(board[i][j] == 'Y') board[i][j] = 'O';
+            }
+        }
+    }
+    
+    void dfsSurrounded(char[][] board, int row, int col){
+        if(row>=0 && row<board.length
+          && col>=0 && col<board[0].length
+          && board[row][col] == 'O'){
+            board[row][col] = 'Y';
+            dfs(board, row+1, col);
+            dfs(board, row-1, col);
+            dfs(board, row, col+1);
+            dfs(board, row, col-1);
+        }
+    }
 
     // https://leetcode.com/problems/island-perimeter/
+    int countPerimeter = 0; 
+    public int islandPerimeter(int[][] grid) {
+        int r = grid.length; int c = grid[0].length;
+        for(int i =0; i<r; i++){
+            for(int j=0; j<c; j++){
+                if(grid[i][j] == 1) dfsPerimeter(grid, i, j);
+            }
+        }
+        return countPerimeter;
+    }
     
-    // https://leetcode.com/problems/pacific-atlantic-water-flow/
+    void dfsPerimeter(int[][] grid, int row, int col){
+        if(row >= 0 && row<grid.length
+          && col>=0 && col<grid[0].length
+          && grid[row][col] == 1){
+            if(row+1 == grid.length || grid[row+1][col] == 0) countPerimeter++;
+            if(row-1 == -1 || grid[row-1][col] == 0) countPerimeter++;
+            if(col+1 == grid[0].length || grid[row][col+1] == 0) countPerimeter++;
+            if(col-1 == -1 || grid[row][col-1] == 0) countPerimeter++;
+        }
+    }
+
+    // https://leetcode.com/problems/max-area-of-island/
+    int countArea = 0;
+    public int maxAreaOfIsland(int[][] grid) {
+        int max = 0;
+        for(int i =0; i<grid.length; i++){
+            for(int j =0; j<grid[0].length; j++){
+                if(grid[i][j] == 1){
+                    dfsArea(grid, i, j);
+                    max = Math.max(count, max);
+                    countArea = 0;
+                }
+            }
+        }
+        return max;
+    }
+    
+    void dfsArea(int[][] grid, int r, int c){
+        if(r>=0 && r<grid.length
+          && c>=0 && c<grid[0].length
+          && grid[r][c] == 1){
+            countArea++;
+            grid[r][c] = 0;
+            dfs(grid, r+1, c);
+            dfs(grid, r-1, c);
+            dfs(grid, r, c+1);
+            dfs(grid, r, c-1);
+        }
+    }
+
+    
+    
+    // https://leetcode.com/problems/check-if-there-is-a-valid-path-in-a-grid/
+    // discuss/547633/Python-SUPER-EASY-Idea%3A-just-walk-the-maze-based-on-the-rule
     public static void main(String[] args) {
         Matrix matrix = new Matrix();
         int[][] twoDimArr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, 

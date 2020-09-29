@@ -139,6 +139,21 @@ public class Utility {
         }
     }
 
+    public static void printArrayList(ArrayList<Integer> holder){
+        for(int i =0; i<holder.size(); i++){
+            System.out.println(holder.get(i));
+        }
+    }
+
+    public static void printListOfLists(List<List<Integer>> list){
+        for(int j= 0; j<list.size(); j++){
+            for(int i =0; i<(list.get(j)).size(); i++){
+                if(i == (list.get(j)).size()-1) System.out.println((list.get(j)).get(i)+"--|");
+                else System.out.print((list.get(j)).get(i)+"->");
+            }
+        }
+    }
+
     public static void swap(int[] arr, int index1, int index2){
         int temp = arr[index1];
         arr[index1] = arr[index2];

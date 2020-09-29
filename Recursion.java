@@ -19,16 +19,6 @@ public class Recursion {
 
     }
 
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if (i == arr.length - 1)
-                System.out.print(arr[i]);
-            else
-                System.out.print(arr[i] + ", ");
-        }
-        System.out.println();
-    }
-
     boolean ans = false;
 
     public boolean canCross(int[] stones) {
@@ -138,9 +128,9 @@ public class Recursion {
         if (sum == 0) {
             System.out.println("found");
             this.proceedArray = false;
-            print1DMatrix(arr1);
-            print1DMatrix(arr2);
-            print1DMatrix(arr3);
+            utilCustom.Utility.print1DMatrix(arr1);
+            utilCustom.Utility.print1DMatrix(arr2);
+            utilCustom.Utility.print1DMatrix(arr3);
             return;
         }
 
@@ -225,7 +215,7 @@ public class Recursion {
      */
     void allSubsetHelper(int[] arr, int[] subset, int index) {
         if (index == arr.length) {
-            print1DMatrix(subset);
+            utilCustom.Utility.print1DMatrix(subset);
             return;
         }
         subset[index] = 0;
@@ -357,7 +347,35 @@ public class Recursion {
         }
     }
 
+    /**
+     * POINTS : 
+     * 1 INSTEAD OF GOING FOR INCLUSION EXCLUSION, HERE SUM IS RETURNED
+     */
+    // https://leetcode.com/problems/target-sum/
+    // https://leetcode.com/problems/path-sum-iii/discuss/780231/java-DFS-.-easy-to-understand-!!!
+
+
+    // https://leetcode.com/problems/jump-game-iii/
+    boolean foundZero = false;
+    public boolean canReach(int[] arr, int start) {
+        HashSet<Integer> set = new HashSet<>();
+        int n = arr.length;
+        if(n==0) return false;
+        
+        recur(arr, start, set);
+        return foundZero;
+    }
     
+    void recur(int[] arr, int index, HashSet<Integer> set){
+        if(index<0 || index >= arr.length || set.contains(index)) return;
+        int val = arr[index];
+        set.add(index);
+        if(val ==0) {foundZero = true; return;}
+        recur(arr, index+val, set);
+        recur(arr, index-val, set);
+    }
+    // https://leetcode.com/problems/jump-game-iv/
+
 
     // https://leetcode.com/problems/generate-parentheses/discuss/
     // 10442/Java-recursion-solution-with-comments-hope-it-helps!

@@ -13,6 +13,8 @@ class StringPractice {
      * imp methods : startsWith, contains, split, replace, StringBuilder
      * s.length() braces needed 
      * split removes trailing spaces
+     * str1.compareTo(str2) - lexicographically smaller word
+     * 
      * 
      * LOWERCASE TO UPPERCASE in[i] = (char) (in[i] - 'a' + 'A');
      * 
@@ -79,6 +81,25 @@ class StringPractice {
      * https://leetcode.com/problems/longest-substring-without-repeating-characters/
      */
 
+    /** 
+     * POINTS :
+     * 1 RUN 2 WHILE LOOPS
+     * 2 CONTINUE TILL charAt(i) == charAt(j), AT THE END KEEP COUNT
+     * 3 IT DOESN'T TAKE O(n^2) AS i = j IS ASSIGNED AT THE END, 
+     * WHICH SAVES FROM TRAVERSING THE SAME ELEMENTS TWICE
+     * 
+    */
+    // https://leetcode.com/problems/consecutive-characters/
+    public int maxPower(String s) {
+        int max = 1; int i = 0;
+        while(i<s.length()){
+            int j = i;
+            while(j<s.length() && s.charAt(j) == s.charAt(i)) j++;
+            max = Math.max(max, j-i); 
+            i = j+1;
+        }
+        return max;
+    }
      
     // https://leetcode.com/problems/length-of-last-word
     public int lengthOfLastWord(String s) {
@@ -1744,6 +1765,50 @@ class StringPractice {
             if(doubles>=10 && doubles<=26) dp[i] += dp[i-2];
         }
         return dp[n];
+    }
+
+    /**
+     * IMP : x.str.compareTo(y.str);
+     * 
+     * POINTS :
+     * 1 PUT FREQIN HASHMAP
+     * 2 CREATE A CUSTOM CLASS TO STORE STRING AND CORR FREQ
+     * 3 USE A PQUEUE TO SSORT STRINGS
+     * ((x,y)->{
+            if(x.freq == y.freq) return x.str.compareTo(y.str);
+            return y.freq - x.freq;
+        })
+     * 
+    */
+
+    // https://leetcode.com/problems/top-k-frequent-words
+    class Frequency{
+        String str; int freq;
+        Frequency(String s, int f){
+            this.str = s;
+            this.freq = f;
+        }
+    }
+    public List<String> topKFrequent(String[] words, int k) {
+        List<String> res = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        
+        for(int i =0; i<words.length; i++){
+            map.put(words[i], map.getOrDefault(words[i], 0)+1);
+        }
+        
+        PriorityQueue<Frequency> pq = new PriorityQueue<>((x,y)->{
+            if(x.freq == y.freq) return x.str.compareTo(y.str);
+            return y.freq - x.freq;
+        });
+        for(Map.Entry<String, Integer> entry : map.entrySet()){
+            pq.add(new Frequency(entry.getKey(), entry.getValue()));
+        }
+        
+        for(int i =0; i<k; i++){
+            res.add(pq.remove().str);
+        }
+        return res;
     }
 
     // https://leetcode.com/problems/compare-strings-by-frequency-of-the-smallest-character/

@@ -122,7 +122,7 @@ public class SearchSort {
     // https://leetcode.com/problems/relative-sort-array/
     public int[] relativeSortArray(int[] arr1, int[] arr2) {
         HashMap<Integer, Integer> map = new HashMap<>();
-        
+
         for(int x : arr1) map.put(x, map.getOrDefault(x,0)+1);
 
         int index = 0;
@@ -298,10 +298,56 @@ public class SearchSort {
         return result;
     }
 
+    // https://leetcode.com/problems/search-a-2d-matrix-ii/
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        if(m==0) return false;
+        int n = matrix[0].length;
+        if(m==1 && n==1 && matrix[0][0]!=target) return false;
+        
+        int i =0; int j = n-1;
+        // System.out.println("i "+i+" j "+j);
+        
+        while(i>=0 && i<m && j>=0 && j<n){
+            // System.out.println("i "+i+" j "+j);
+            if(matrix[i][j] == target) return true;
+            else if(matrix[i][j] > target) j--; //use else if
+            else if(matrix[i][j] < target) i++;
+        }
+        return false;
+    }
+
     // https://leetcode.com/problems/single-element-in-a-sorted-array/
     // https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
     // https://leetcode.com/problems/diagonal-traverse-ii/
-    // https://leetcode.com/problems/sort-colors/
+
+    /** 
+     * POINTS
+     * 1 a HOLDS INDEX OF FIRST 1
+     * 2 b HOLDS INDEX OF 2
+     * 3 CHECK QUICKSORT (A DIFF SOLN TO CLRS IF POSSIBLE)
+     * 4 IF 0, SWAP, i++, a++;
+     *   IF 1, i++
+     *   IF 2, SWAP, b--;
+     * */
+    // https://leetcode.com/problems/sort-colors
+    public void sortColors(int[] nums) {
+        int n = nums.length;
+        int a = 0, i = 0, b = nums.length-1;
+        while(i<=b){
+            if(nums[i] == 0) {
+                utilCustom.Utility.swap(nums, i, a);
+                i++;
+                a++;
+            }
+            else if(nums[i] == 1) i++;
+            else if(nums[i] == 2) {
+                utilCustom.Utility.swap(nums, i, b);
+                b--;
+            }
+        }
+        // System.out.println(a);
+    }
     // https://leetcode.com/problems/rank-teams-by-votes/
     // https://leetcode.com/problems/sort-the-matrix-diagonally/
     // https://leetcode.com/problems/sort-list/

@@ -28,6 +28,9 @@ public class PermutationsCombinationsAndSubsets {
     }
 
     /**  
+     * 
+     * IMP CHECK WHEN TO ADD AND REMOVE INSIDE FOR AND WHEN OUTSIDE
+     * 
      * POINTS : 
      * -------------------------------------
      * use BACKTRACKING FORMAT
@@ -145,6 +148,7 @@ public class PermutationsCombinationsAndSubsets {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         backtrack(res, list, nums, 0);
+        utilCustom.Utility.printListOfLists(res);
         return res;
     }
     
@@ -415,10 +419,54 @@ public class PermutationsCombinationsAndSubsets {
         return s;
     }
 
+    /** 
+     * POINTS :
+     * 1 BRUTE FORCE SOLUTION
+     * 2 PASSES 87 TEST CASES
+     * 3 
+     * O(n) stack solution exists, check if possible
+     * */
+    // https://leetcode.com/problems/sum-of-subarray-minimums/
+    public int sumSubarrayMins(int[] A) {
+        int n = A.length;
+        if(n==0) return 0;
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        int sum = 0;
+        
+        for(int l =1; l<=n; l++){
+            int min = Integer.MAX_VALUE;
+            for(int i = 0; i+l-1<n; i++){
+                int j = i+l-1;
+                System.out.println("i "+i+" j "+j);
+                sum+=findMin(A, i, j);
+            }
+            // sum+=min;
+            System.out.println("sum "+sum);
+
+        }
+        utilCustom.Utility.printListOfLists(res);
+        for(int i =0; i<res.size(); i++){
+            Collections.sort(res.get(i));
+            if((res.get(i)).size()==0) continue;
+            sum+=(res.get(i)).get(0);
+        }
+        return sum;
+    }
+
+    int findMin(int[] arr, int start, int end){
+        int min = Integer.MAX_VALUE;
+        for(int i = start; i<=end; i++){
+            min = Math.min(min, arr[i]);
+        }
+        return min;
+    }
+    
 
     // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/551/week-3-august-15th-august-21st/3428/
     public static void main(String[] args) {
         PermutationsCombinationsAndSubsets pcs = new PermutationsCombinationsAndSubsets();
+
 
         int[] nums={1,1,2,3};
         // pcs.permuteUnique(nums);
@@ -428,6 +476,12 @@ public class PermutationsCombinationsAndSubsets {
 
         String S = "abcde";
         String[] words = {"a", "bb", "acd", "ace"};
-        pcs.numMatchingSubseq(S, words);
+        // pcs.numMatchingSubseq(S, words);
+
+        int[] subArrayMin = {3,1,2,4};
+        pcs.sumSubarrayMins(subArrayMin);
+
+        // pcs.subsets(subArrayMin);
+
     }
 }

@@ -41,19 +41,6 @@ public class Tree {
                 System.out.print(arr[i] + ", ");
         }
     }
-
-    void printArrayList(ArrayList<Integer> holder){
-        for(int i =0; i<holder.size(); i++){
-            System.out.println(holder.get(i));
-        }
-    }
-
-    void printLinkedList(LinkedList<Integer> list){
-        for(int i =0; i<list.size(); i++){
-            if(i == list.size()-1) System.out.println(list.get(i)+"--|");
-            else System.out.print(list.get(i)+"->");
-        }
-    }
     
     /** POINTS : 
      * 1 USE ONE OF TWO DISTINCT FUNC DEFINITIONS
@@ -211,25 +198,309 @@ public class Tree {
       
       */
     
-    // now add functions
-    void Inorder(TreeNode x) {
-        if (x == null) {
-            return;
-        }
-        Inorder(x.left);
-        System.out.print(x.key+", ");
-        Inorder(x.right);
+    void inOrder(TreeNode root) {
+        if (root == null) return;
+        inOrder(root.left);
+        System.out.print(root.key+", ");
+        inOrder(root.right);
     }
 
-    void Preorder(TreeNode x) {
-        if (x == null) {
-            return;
-        }
+    void preOrder(TreeNode x) {
+        if (root == null) return;
         System.out.print(x.key+", ");
-        Preorder(x.left);
-        Preorder(x.right);
+        preOrder(x.left);
+        preOrder(x.right);
     }
 
+    void postOrder(TreeNode root) {
+        postOrder(root.left);
+        postOrder(root.right);
+        System.out.println("node key " + root.key);
+    }
+
+    /** 
+     * MOST IMP : KEEP TRACK OF SIZE OF QUEUE ALWAYS, THIS HELPS KEEP 
+     * TRACK OF ALL ELS IN THIS LEVEL
+     * 
+     * LEVEL ORDER 2 WAYS : USE QUEUE OR USE LEVEL
+     * USING RECURSION
+     * 1 MAINTAIN A HASHMAP
+     * 2 SEARCH FOR LEVEL IN MAP AND ADD TO IT
+     * 3 TRICKY PART IS TO ADD FROM HASHMAP TO RES AS MAP ISN'T 
+     * NECESSARILY SORTED
+     * 4 START FROM 0, FETCH i AND ADD
+     * for(int i =0; i<map.size(); i++) res.add(i, map.get(i));
+     * 
+     * 
+     * QUEUE:
+     * 1 ADD TO Q, 
+     * 2 KEEP TRACK OF SIZE, 
+     * 3 CREATE A NEW LIST
+     * 4 WHILE REMOVING THE CURR EL, KEEP ADDING TO LIST
+     * 5 ADD LIST TO RES
+     *
+     * */
+    // https://leetcode.com/problems/binary-tree-level-order-traversal
+    // RECURSIVE
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null) return res;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        preOrder(map, root, 0);
+        
+        for(int i =0; i<map.size(); i++) res.add(i, map.get(i));
+
+        return res;
+    }
+    
+    void preOrder(HashMap<Integer, List<Integer>> map, TreeNode root, int level){
+        if(root == null) return;
+        List<Integer> curr = new ArrayList<>();
+        if(map.containsKey(level)){
+            curr = map.get(level);
+        } 
+        curr.add(root.val);
+        map.put(level, curr);
+        
+        preOrder(map, root.left, level+1);
+        preOrder(map, root.right, level+1);
+    }
+
+    // ITERATIVE
+    public List<List<Integer>> levelOrderIterative(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null) return res;
+        
+        Deque<TreeNode> q = new LinkedList<>();
+        q.addLast(root);
+        
+        while(q.size()!=0){
+            int size = q.size();
+            List<Integer> curList = new ArrayList<>();
+
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.removeFirst();
+                curList.add(curr.val);
+                if(curr.left!=null) q.addLast(curr.left);
+                if(curr.right!=null) q.addLast(curr.right);
+            }
+
+            res.add(curList);
+        }
+        return res;
+    }
+
+
+    /**  
+     * POINTS :
+     * 1 KEEP TRACK OF DIRECTIO USING A BOOLEAN FLAG
+     * 2 SIMILAR TO LEVEL ORDER
+     * 3 WHEN DIR IS FALSE, REVERSE CURR LIST AND THEN ADD TO RES
+    */
+    // https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res= new ArrayList<>();
+        
+        if(root == null) return res;
+        boolean ltor = true;
+        Deque<TreeNode> q = new LinkedList<>();
+        q.addLast(root);
+        
+        while(q.size()!=0){
+            int size = q.size();
+            List<Integer> currList = new ArrayList<>();
+            
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.removeFirst();
+                currList.add(curr.val);
+                
+                if(curr.left!=null) q.addLast(curr.left);
+                if(curr.right!=null) q.addLast(curr.right);
+            }
+            if(!ltor) Collections.reverse(currList);
+                
+            res.add(currList);
+            
+            ltor=!ltor;
+            
+        }
+        return res;
+    }
+
+    /** 
+     * SIMILAR TO LEVEL ORDER
+     * KEEP TRACK OF MAX OF ALL ELS IN AN ITERATION
+     * ADD TO RES AT THE END
+     */
+    // https://leetcode.com/problems/find-largest-value-in-each-tree-row/
+    public List<Integer> largestValues(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;
+        
+        Deque<TreeNode> q = new LinkedList<>();
+        q.addLast(root);
+            
+        while(q.size()!=0){
+            int max = Integer.MIN_VALUE;
+            
+            int size = q.size();
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.removeFirst();
+                max = Math.max(max, curr.val);
+                if(curr.left!=null) q.addLast(curr.left);
+                if(curr.right!=null) q.addLast(curr.right);                
+            }
+            // System.out.println(max);
+            res.add(max);
+        }
+        return res;
+    }
+
+    /** POINTS : 
+     * SIMILAR TO LEVEL ORDER, JUST KEEP TRACK OF THE MAX LEVEL INSTEAD OF MAX SUM
+     * THE WHOLE FOR LOOP CORRSPONDS TO ONE LEVEL, 
+     * SO INCREMENT AFTRE IT, OT INSIDE IT
+    */
+    // https://leetcode.com/problems/maximum-level-sum-of-a-binary-tree/
+    public int maxLevelSum(TreeNode root) {
+        if(root == null) return 0;
+        int max = Integer.MIN_VALUE; int res = 0;
+        
+        Deque<TreeNode> q = new LinkedList<>();
+        q.addLast(root);
+        int level = 0;
+        
+        while(q.size()!=0){
+            int size = q.size();
+            int sum =0;
+            
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.removeFirst();
+                sum+=curr.val;
+                if(curr.left != null) q.addLast(curr.left);
+                if(curr.right != null) q.addLast(curr.right);
+            }
+            
+            level++;
+            if(max<sum) {
+                max = sum; res = level;
+            }
+        }
+        return res;
+    }
+
+    /** 
+     * X DIST IS USED TO KEEP TRACK
+     * POINTS : 
+     * 1 KEEP TRACK OF X DIST AS WELL AS Y DIST
+     * 2 INSERT INTO MAP ON THE BASIS OF X DIST
+     * 
+     * 3 SORT ON THE BASIS OF Y DIST, AS X DIST IS SAME FOR AN ENTRY
+     * IF Y DIST IS SAME, SORT BY VAL
+     *  Collections.sort(curr,(a, b)->{
+            if(a.y != b.y) return b.y - a.y;
+            else return a.val - b.val;
+        });
+     * 
+     * 4    
+     */
+    // https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/
+    class Order{
+        int x, y, val;
+        Order(int x, int y, int v){
+            this.x = x; this.y = y; this.val = v;
+        }
+    }
+    
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        HashMap<Integer, List<Order>> map = new HashMap<>();
+        PriorityQueue<Integer> q = new PriorityQueue<>();
+        List<List<Integer>> res = new ArrayList<>();
+        
+        dfs(map, q, root, 0, 0);
+        while(q.size()!=0){
+            List<Order> curr = map.get(q.remove());
+            Collections.sort(curr,(a, b)->{
+                if(a.y != b.y) return b.y - a.y;
+                else return a.val - b.val;
+            });
+            List<Integer> list = new ArrayList<>();
+            
+            for(int i =0; i<curr.size(); i++) list.add(curr.get(i).val);
+            res.add(list);
+        }
+        return res;
+    }
+    
+    void dfs(HashMap<Integer, List<Order>> map, PriorityQueue<Integer> q, 
+    TreeNode root, int x, int y){
+        if(root == null) return;
+        List<Order> curr = new ArrayList<>();
+        
+        if(map.containsKey(x)){
+            curr = map.get(x);
+            curr.add(new Order(x, y, root.val));
+        }else{
+            q.add(x);
+            curr.add(new Order(x,y,root.val));
+        }
+        map.put(x, curr);
+        
+        dfs(map, q, root.left, x-1, y-1);
+        dfs(map, q, root.right, x+1, y-1);
+    }
+
+    // https://leetcode.com/problems/path-sum/
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null) return false;
+        if(root.left == null && root.right== null && sum-root.val ==0) return true;
+
+        return hasPathSum(root.left, sum- root.val) || hasPathSum(root.right, sum- root.val);
+    }
+
+    /** 
+     * USE BACKTRACKING, 
+     * 1 a current List to store values
+     * 2 ADD TO RES USING new ArrayList
+     * 3 REMOVE AT END(dry run code to get an idea)
+     */
+    // https://leetcode.com/problems/path-sum-ii/
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        
+        dfs(root, sum, res, curr);
+        
+        return res;
+    }
+    
+    void dfs(TreeNode root, int sum, List<List<Integer>> res, List<Integer> curr){
+        if(root == null) return;
+        sum-=root.val;
+        curr.add(root.val);
+        if(sum == 0 && root.left == null && root.right == null) 
+            res.add(new ArrayList<>(curr));
+        dfs(root.left, sum, res, curr);
+        dfs(root.right, sum, res, curr);
+        curr.remove(curr.size()-1);
+    }
+
+    // https://leetcode.com/problems/sum-of-left-leaves/
+    int sumLeftLeaf = 0;
+    public int sumOfLeftLeaves(TreeNode root) {
+        preOrderLeftLeafSum(root);
+        return sumLeftLeaf;
+    }
+    
+    void preOrderLeftLeafSum(TreeNode root){
+        // System.out.println(sum);
+        if(root == null) return;
+        if(root.left!=null && (root.left.left == null && root.left.right == null)) 
+            sum+=root.left.val;
+        preOrder(root.left);
+        preOrder(root.right);
+    }
+    ///////////////////////////////////////////////////////////////////////////////
     TreeNode checkForPosition(int value, TreeNode node, TreeNode parent1) {
         TreeNode parent = node;
         // System.out.println("parent "+ parent);
@@ -315,90 +586,10 @@ public class Tree {
         // System.out.println(node.key);
         ;
     }
-
-
-    // https://www.geeksforgeeks.org/sum-leaf-nodes-binary-tree/
-
-    // void sumOfLeafNodes(TreeNode node){
-    // if(node!= null && (node.left!= null && node.right!=null)){
-    // sumOfLeafNodes(node.left);
-    // sumOfLeafNodes(node.right);
-    // } else System.out.println(node.key);
-    // }
-
-    void sumOfLeftLeafNodes(TreeNode node) {
-        // int sum = 0;
-        TreeNode track = node;
-        while (track != null) {
-            if (track.left != null) {
-                track = track.left;
-                System.out.println("track.key " + track.key);
-                if (track.left == null && track.right == null) {
-                    System.out.println(track.key);
-                    // sum += node.key;
-                } else
-                    return;
-            }
-        }
-    }
-
-    public Queue<Integer> queLevel = new LinkedList<Integer>();
-
-    // public Queue<TreeNode> queLevel = new Array<TreeNode>();
-    void levelOrderTraversal(TreeNode node) {
-        int height = this.height(node);
-        for (int i = 0; i < height; i++) {
-            printGivenLevel(node, i);
-            System.out.println("---");
-        }
-    }
-
-    void printGivenLevel(TreeNode node, int level) {
-        if (level == 0) {
-            System.out.println(node.key);
-        } else {
-            if (node.left != null) {
-                printGivenLevel(node.left, level - 1);
-            }
-            if (node.right != null) {
-                printGivenLevel(node.right, level - 1);
-            }
-        }
-    }
-
-    void printqueLevel() {
-        // int size = queLevel.size();
-        // // TreeNode track = queLevel.element();
-        // for(int i =0; i<size; i++){
-        // System.out.println(track.key);
-        // queLevel.get(i);
-        // }
-        System.out.println("queue " + queLevel);
-    }
-
-    public Queue<TreeNode> queueBFS = new LinkedList<TreeNode>();
-
-    void breadthFirst(TreeNode node) { // bfs is same as level order traversal
-        while (!queueBFS.isEmpty()) {
-            TreeNode current = queueBFS.remove();
-            System.out.println("removed element " + current.key);
-            // methods on Queue add, remove, peek, size
-            // while(node) how to set a condition for traversal?
-            if (current.left != null || current.right != null) {
-                if (current.left != null) {
-                    queueBFS.add(current.left);
-                }
-                if (current.right != null) {
-                    queueBFS.add(current.right);
-                }
-            }
-            // else return;
-        }
-    }
+    
 
     //////////////////////////////////////////////////////////////////////////////////////
     // Insertion in a Binary Tree in level order
-    // see usage of return to break out
     public Queue<TreeNode> queueLevelInsertion = new LinkedList<TreeNode>();
 
     int insertLevelOrder(int value) {
@@ -425,15 +616,9 @@ public class Tree {
         return 2;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////
-    void postorderTraversal(TreeNode node) {
-
-        if (node.left != null)
-            postorderTraversal(node.left);
-        if (node.right != null)
-            postorderTraversal(node.right);
-        System.out.println("node key " + node.key);
-    }
+    
+    
+    
 
     ///////////////////////////////////////////////////////////////////////////////////
     // find height of tree
@@ -478,29 +663,9 @@ public class Tree {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // public java.util.Stack<TreeNode> stackInorder = new
-    // java.util.Stack<TreeNode>();
-    public Queue<TreeNode> queueInorder = new LinkedList<TreeNode>();
-
-    void iterativeInorder() {
-        while (!queueInorder.isEmpty()) {
-            TreeNode right = queueInorder.remove();
-            TreeNode left = queueInorder.remove();
-            queueInorder.add(right);
-
-            System.out.println("left key" + left.key);
-            if (left.left != null) {
-                queueInorder.add(left.left);
-            }
-            if (left.right != null) {
-                queueInorder.add(left.right);
-            }
-        }
-    }
 
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // public Queue<TreeNode> queueMirror = new LinkedList<TreeNode>();
     void mirror(TreeNode node) {
@@ -636,74 +801,7 @@ public class Tree {
     // }
     // }
     // }
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public List<List<Integer>> verticalTraversal(TreeNode root) {
-        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
-        dfs(map, root, 0);
-        System.out.println(map);
-        
-        return new ArrayList<>(map.values());
-    }
-    
-    void dfs(HashMap<Integer, ArrayList<Integer>> map, TreeNode root, int dist){
-        if(root == null) return;
-        dfs(map, root.left, dist-1);
-        if(!map.containsKey(dist)) map.put(dist, new ArrayList<>());
-        map.get(dist).add(root.val);
-        System.out.println(map);
-        dfs(map, root.right, dist+1);
-    }
-
-    public Queue<TreeNode> queueVertical = new LinkedList<TreeNode>();
-
-    public HashMap<Integer, Vector<Integer>> hashVertical = new HashMap<>();
-
-    Vector<Integer> verticalVector = new Vector<>();
-
-    void printVerticalOrder(TreeNode node, int value) {
-
-        /**
-         * value is key and the hash is the the node key. a vector is implemented for
-         * chaining the node values vector fetches value, if present it is added to the
-         * list. else a new list is created
-         */
-        Vector<Integer> key = hashVertical.get(value);
-        if (key == null) {
-            verticalVector.add(value);
-        } else
-            verticalVector.add(value);
-        // hashVertical.put(value, verticalVector);
-        hashVertical.put(value, verticalVector);
-
-        if (node != null) {
-
-            if (node.left != null) {
-                System.out.print(node.left.key + "  --> ");
-                System.out.println(value - 1);
-                // verticalVector.get(node.left.key);
-
-                printVerticalOrder(node.left, value - 1);
-                // hashVertical.put(value - 1, node.left.key);
-                // hashVertical.put(node.left.key, value-1);
-            } // else return;
-            if (node.right != null) {
-                System.out.print(node.right.key + "  --> ");
-                System.out.println(value + 1);
-                printVerticalOrder(node.right, value + 1);
-                // hashVertical.put(value + 1, node.right.key);
-                // hashVertical.put(node.right.key, value+1);
-            } // else return;
-        }
-    }
-
-    void printHashVertical() {
-        System.out.println("hash values");
-        for (int i = 0; i < 11; i++) {
-            System.out.print(i + " --> >");
-            System.out.println(hashVertical.get(i));
-        }
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
 
     void printLeaf(TreeNode node) {
         // if (node!=null){
@@ -741,12 +839,6 @@ public class Tree {
     // }
     // }
 
-
-    int max(int a, int b) {
-        int maximum = a >= b ? a : b;
-        System.out.println("maximum " + maximum);
-        return maximum;
-    }
 
     void diameter(TreeNode node) {
         int dia = height(node.left) + height(node.right);
@@ -915,66 +1007,33 @@ public class Tree {
             return (node.key + root);
     }
 
-    /**
-     * in order to achieve zig zag level, we need level, then we need to keep track
-     * of dirn
-     */
-    boolean booleanEvenLevel = true;
+    
 
-    void zigzagTraversal(TreeNode node) {
-
-        int h = height(node);
-
-        for (int i = 0; i < h; i++) {
-            printLevelOrderInside(node, i);
-            booleanEvenLevel = !booleanEvenLevel;
-
-        }
-
-        // System.out.println("size "+zigzagQueue.size());
-        // zigzagQueue.add(limiterNode);
-    }
-
-    void printLevelOrderInside(TreeNode node, int level) {
-        if (level == 0)
-            System.out.println(node.key);
-        else {
-            if (booleanEvenLevel) {
-                if (node.left != null)
-                    printLevelOrderInside(node.left, level - 1);
-                if (node.right != null)
-                    printLevelOrderInside(node.right, level - 1);
-            } else {
-                if (node.right != null)
-                    printLevelOrderInside(node.right, level - 1);
-                if (node.left != null)
-                    printLevelOrderInside(node.left, level - 1);
-            }
-        }
-    }
-
-    void levelTraversal(TreeNode node) {
-        Queue<TreeNode> levelQueue2 = new LinkedList<TreeNode>();
-        levelQueue2.add(node);
-
-        while (!levelQueue2.isEmpty()) {
-            int size = levelQueue2.size();
-
-            for (int i = 0; i < size; i++) {
-                TreeNode popped = levelQueue2.remove();
-                System.out.println(popped.key);
-                if (popped.left != null)
-                    levelQueue2.add(popped.left);
-                if (popped.right != null)
-                    levelQueue2.add(popped.right);
-            }
-            System.out.println("new line ");
-        }
-    }
-
+    
     void mirrorTreeCheck(TreeNode node1, TreeNode node2) {
         // https://www.geeksforgeeks.org/check-if-two-trees-are-mirror/
 
+    }
+
+    // https://leetcode.com/problems/second-minimum-node-in-a-binary-tree
+    public int findSecondMinimumValue(TreeNode root) {
+        HashSet<Integer> set = new HashSet<>();
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        preOrder(root, set, pq);
+        pq.remove();
+        if(pq.size()==0) return -1;
+        return pq.remove();
+    }
+    
+    void preOrder(TreeNode root, HashSet<Integer> set, PriorityQueue<Integer> pq){
+        if(root == null) return;
+        if(!set.contains(root.val)) {
+            set.add(root.val); 
+            pq.add(root.val);
+        }
+            
+        preOrder(root.left, set, pq);
+        preOrder(root.right, set, pq);
     }
 
     void removeHalfNodes(TreeNode node, TreeNode nodeparent) {
@@ -1441,35 +1500,7 @@ public class Tree {
         }
     }
 
-    void spiralTraversal(TreeNode node) {
-        int height = height(node);
-        boolean ltor = false;
-        // System.out.println(height);
-        for (int i = 0; i < height; i++) {
-            if (ltor)
-                spiralHelper(node, i, ltor);
-            if (!ltor)
-                spiralHelper(node, height - i, ltor);
-            System.out.println();
-            ltor = !ltor;
-        }
-
-    }
-    void spiralHelper(TreeNode node, int count, boolean direction) {
-        if (count == 0)
-            System.out.print(node.key + ", ");
-        else if (direction) {
-            if (node.left != null)
-                spiralHelper(node.left, count - 1, direction);
-            if (node.right != null)
-                spiralHelper(node.right, count - 1, direction);
-        } else if (!direction) {
-            if (node.right != null)
-                spiralHelper(node.right, count - 1, direction);
-            if (node.left != null)
-                spiralHelper(node.left, count - 1, direction);
-        }
-    }
+    
 
     void boundaryTraversal21Apr(TreeNode node) {
         System.out.println(node.key);
@@ -1570,20 +1601,6 @@ public class Tree {
         if (node.right != null)
             kthLargestElementBSTHelper(node.right);
     }
-
-    /**
-     * List <List <Integer>> wasn't working so created ArrayList<Arraylist<Integer>>
-     * 
-     */
-
-     // https://leetcode.com/problems/path-sum/
-    public boolean hasPathSum(TreeNode root, int sum) {
-        if(root == null) return false;
-        if(root.left == null && root.right== null && sum-root.val ==0) return true;
-
-        return hasPathSum(root.left, sum- root.val) || hasPathSum(root.right, sum- root.val);
-    }
-
 
 
     public ArrayList<ArrayList<Integer>> hasPathSumList(TreeNode root, int sum) {
@@ -1917,6 +1934,51 @@ public class Tree {
 
         return node.key + sumOfAllNodesHelper(node.left) + sumOfAllNodesHelper(node.right);
 
+    }
+
+    /** 
+     * WE REPLACE THE KEY TO BE DELETED WITH PREDECESSOR'S VAL AND THEN 
+     * RECURSIVELY DELETE THE PREDECESSOR
+     * 
+     * IF NO CHILDREN, RETURN NULL
+     * IF ONE CHILD, RETURN THAT CHILD
+     * IF BOTH, GO FOR PREDECESSOR
+     * 
+     * POINTS : 
+     * 1 RETURN TYPE TREENODE, SO ASSIGN ROOT.LEFT OR RIGHT
+     * 2 IF MATCH FOUND, REPLACE NODE'S VALUE WITH VALUE OF PREDECESSOR
+     * 3 RUN DELETE IN LEFT SUB-TREE FOR PREDECSSOR'S VAL
+     * 4 FOR PREDECESSOR, USE WHILE NOT IF
+    */
+    // https://leetcode.com/problems/delete-node-in-a-bst
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null) return null;
+        if(key < root.val) root.left = deleteNode(root.left, key);//1
+        if(key > root.val) root.right = deleteNode(root.right, key);
+        
+        if(root.val == key){
+            // CHECK CAN BE FOR LEFT == NULL OR LEFT != NULL
+            // TIME IS SAME FOR BOTH 0ms
+            // if(root.left == null) return root.right;
+            // else if(root.right == null) return root.left;
+            // else {}
+
+            if(root.left != null)  {
+                TreeNode replacement = predecessor(root.left);//2
+                root.val = replacement.val;
+                root.left = deleteNode(root.left, replacement.val);//3
+            }
+            else if(root.right != null) {
+                return root.right;//3
+            }
+            else return null;
+        }
+        return root;
+    }
+    
+    TreeNode predecessor(TreeNode root){
+        while (root.right!=null) root = root.right;//4
+        return root;
     }
 
 
@@ -2260,36 +2322,7 @@ public class Tree {
         return sum;
     }
 
-    void spiralPrint(TreeNode root, int level){
-        int h = height(root);
-        Deque<TreeNode> list = new LinkedList<>();
-        list.add(root); 
-        boolean ltor = true;
-        //adding null delimiter
-        spiralPrintHelper(root, list, level, ltor);
-    }
-
-
-    void spiralPrintHelper(TreeNode node, Deque<TreeNode> list, int level, boolean ltor){
-        while(list.size()!=0){
-            TreeNode curr = list.removeFirst();
-            System.out.println(curr.key+"->");
-            count++;
-            if(count%2!=0){
-
-            }
-            ltor = !ltor;//true then left to right
-            if(ltor) {
-                if(curr.left!=null) list.add(curr.left);
-                if(curr.right!=null) list.add(curr.right);
-            } else{
-                if(curr.right!=null) list.add(curr.right);
-                if(curr.left!=null) list.add(curr.left);
-            }
-            
-        }
-    }
-
+    
     void extremeAlternate(TreeNode root){
         Deque<TreeNode> list = new LinkedList<>();
         ArrayList<Integer> holder = new ArrayList<>();
@@ -2327,12 +2360,12 @@ public class Tree {
         }
     }
 
-    LinkedList treetoCDLL(TreeNode root){
-        LinkedList<Integer> list = new LinkedList<>();
-        treetoCDLLHelper(root, list);
-        printLinkedList(list);
-        return list;
-    }
+    // LinkedList<Integer> treetoCDLL(TreeNode root){
+    //     LinkedList<Integer> list = new LinkedList<>();
+    //     treetoCDLLHelper(root, list);
+    //     utilCustom.Utility.printArrayList(list);
+    //     return list;
+    // }
 
     void treetoCDLLHelper(TreeNode root, LinkedList<Integer> list){
         if(root.left!=null) treetoCDLLHelper(root.left, list);
@@ -2371,32 +2404,6 @@ public class Tree {
         dfs(root.left, map, dist+1);
     }
 
-    //////////////TRAVERSALS
-    // https://leetcode.com/problems/binary-tree-inorder-traversal/
-    /** POINTS :
-     * 1 TWO WHILE LOOPS
-     * 2 STACK IS NOT EMPTY AND ROOT !=NULL
-     * 3 WHILE ROOT!=NULL, PUSH, ROOT = ROOT.LEFT
-     * 4 WHEN NULL, POP, ADD TO RESULT AND ROOT = ROOT.RIGHT
-    */
-    public List<Integer> inorderTraversal(TreeNode root) {
-        Deque<TreeNode> q = new LinkedList<>();
-        ArrayList<Integer> list = new ArrayList<>();
-        if(root == null) return list;
-        
-        while(q.size()!=0 || root!=null){
-            while(root!=null){
-                q.addLast(root);
-                root = root.left;
-            }
-            root = q.removeLast();
-            list.add(root.val);
-            root = root.right;
-            
-        }
-        return list;
-        
-    }
     // https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
     /** used a Queue, added null for demarcation
      * 1 add null whenever curr == null and q size is >1 and removeFirst
@@ -2442,57 +2449,35 @@ public class Tree {
         
     }
 
-    // https://leetcode.com/problems/binary-tree-inorder-traversal/
     // https://leetcode.com/problems/balance-a-binary-search-tree/
 
 
     // https://leetcode.com/problems/most-frequent-subtree-sum/
-    int sumFrequent;
-    HashMap<Integer, Integer> listFrequent = new HashMap<>();
-    
+    int maxFrequentSum = -1;
     public int[] findFrequentTreeSum(TreeNode root) {
-
-        postOrder(root);
-        int max = 0;
-        for (Integer value : listFrequent.values()) {
-            // ...
-            if(max<value) max = value;
-        }
-        for (Integer value : listFrequent.values()) {
-            if(value == max) count++;
-        }
-
-        int[] res= new int[count]; int i=0;
+        HashMap<Integer, Integer>map = new HashMap<>();
         
-        for (HashMap.Entry<Integer, Integer> entry : listFrequent.entrySet()) {
-            Integer key = entry.getKey();
-            Integer value = entry.getValue();
-            if(value == max) res[i++] = key;
-            // ...
-        }
-        print1DMatrix(res);
+        postOrderSum(map, root);
+        
+        List<Integer> list = new ArrayList<>();
+        for(Map.Entry<Integer, Integer> entry : map.entrySet())
+            if(entry.getValue()==maxFrequentSum) list.add(entry.getKey());
+        
+        int[] res = new int[list.size()];
+        for(int i =0; i<list.size(); i++) res[i] = list.get(i);
         return res;
     }
     
-    int postOrder(TreeNode node){
-        int left = 0; int right = 0;
-        if(node.left == null && node.right ==null) {
-            if(listFrequent.containsKey(node.key)) listFrequent.put(node.key, 
-                listFrequent.get(node.key)+1);
-            else listFrequent.put(node.key, 1);
-            return node.key;
-        } 
-        else{
-            if(node.left!=null) left = postOrder(node.left);
-            if(node.right!=null) right = postOrder(node.right);
-
-            int sum = left+right+node.key;
-            if(listFrequent.containsKey(sum)) listFrequent.put(sum, 
-                    listFrequent.get(sum)+1);
-            else listFrequent.put(sum, 1);
-
-            return sum;
-        }
+    int postOrderSum(HashMap<Integer, Integer>map, TreeNode root){
+        if(root == null) return 0;
+        
+        int left = postOrderSum(map, root.left);
+        int right = postOrderSum(map, root.right);
+        int sum = left+right+root.val;
+        
+        map.put(sum, map.getOrDefault(sum, 0)+1);
+        maxFrequentSum = Math.max(maxFrequentSum, map.get(sum));
+        return sum;
     }
 
     // https://leetcode.com/problems/subtree-of-another-tree
@@ -2611,19 +2596,18 @@ public class Tree {
     }
     
     public validBST postBST(TreeNode root) {
-            if (root == null) return new validBST(Long.MIN_VALUE, Long.MAX_VALUE, 0);
-            validBST left = postBST(root.left);
-            validBST right = postBST(root.right);
-        
-            if (root.val > left.max && root.val < right.min) {//valid BST
-                validBST res = new validBST(
-                    Math.max(right.max, root.val),//update max
-                    Math.min(left.min, root.val), 0);//update min
-                return res;
-            } else isBST = false;
-            //invalid BST so MAX is sent in place of min
-            return new validBST(Long.MAX_VALUE, Long.MIN_VALUE, 0);
-          
+        if (root == null) return new validBST(Long.MIN_VALUE, Long.MAX_VALUE, 0);
+        validBST left = postBST(root.left);
+        validBST right = postBST(root.right);
+    
+        if (root.val > left.max && root.val < right.min) {//valid BST
+            validBST res = new validBST(
+                Math.max(right.max, root.val),//update max
+                Math.min(left.min, root.val), 0);//update min
+            return res;
+        } else isBST = false;
+        //invalid BST so MAX is sent in place of min
+        return new validBST(Long.MAX_VALUE, Long.MIN_VALUE, 0);
     }
 
     // https://leetcode.com/problems/validate-binary-search-tree/discuss/32112/
@@ -2673,9 +2657,6 @@ public class Tree {
     // https://leetcode.com/problems/binary-tree-maximum-path-sum/
     
     /** 
-
-    https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
-
     https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/143798/
     1ms-beat-100-simple-Java-dfs-with(without)-hashmap-including-explanation
 
@@ -2700,6 +2681,7 @@ public class Tree {
      * 7 points to remember
      * 
      */
+    // https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
     public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
         ArrayList<Integer> res = new ArrayList<>();
         HashMap<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
@@ -2762,7 +2744,7 @@ public class Tree {
      * and use 3rd style of function root.left = f(left) and root.right  = f(right)
      */
     public TreeNode balanceBST(TreeNode root) {
-        ArrayList<Integer> list = new ArrayList();
+        ArrayList<Integer> list = new ArrayList<>();
         dfs(root, list);
         return build(list, 0, list.size()-1);
     }
@@ -2785,7 +2767,7 @@ public class Tree {
     }
 
     // https://leetcode.com/problems/binary-tree-maximum-path-sum
-    //still confusing as per the examples..basic idea is of postorder traversal
+    // still confusing as per the examples..basic idea is of postorder traversal
     // return Math.max(left, right)+a;
     // POSTORDER TRAVERSAL
     int maxSum = Integer.MIN_VALUE;    
@@ -2805,12 +2787,77 @@ public class Tree {
         return Math.max(left,right)+a;
     }
 
-    // https://leetcode.com/problems/find-largest-value-in-each-tree-row/
+    /**
+        [1,2,3,4,5,6,null,null,null,7,8]
+        [99,3,2,null,6,4,5,null,null,null,null,8,7]
+
+        [0,3,1,null,null,null,2]
+        [0,3,1,2]
+    */
+    // INCOMPLETE 71/76 TEST CASES PASSED
+    // https://leetcode.com/problems/flip-equivalent-binary-trees/
+    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
+        if(root1 == null && root2 == null) return true;
+        if((root1!=null && root2==null) || (root1 == null && root2 !=null)) 
+            return false;
+        if(root1.val != root2.val) return false;
+        int level = 0;
+        Deque<TreeNode> q = new LinkedList<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        
+        q.addLast(root1);
+        while(q.size()!=0){
+            int size = q.size();    
+            level++;
+            List<Integer> list = new ArrayList<>();
+            
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.remove();
+                if(curr.left!=null) {
+                    q.addLast(curr.left); list.add(curr.left.val);
+                }
+                if(curr.right!=null){
+                    q.addLast(curr.right); list.add(curr.right.val);
+                }
+            }
+            map.put(level, list);
+        }
+        q.clear();
+        q.addLast(root2);
+        level = 0;
+        while(q.size()!=0){
+            int size = q.size();    
+            level++;
+            List<Integer> list = new ArrayList<>();
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.remove();
+                if(curr.left!=null) {
+                    q.addLast(curr.left); list.add(curr.left.val);
+                }
+                if(curr.right!=null){
+                    q.addLast(curr.right); list.add(curr.right.val);
+                }
+            }
+            List<Integer> previous = map.get(level);
+            Collections.sort(previous);
+            Collections.sort(list);
+            if(!previous.equals(list)) return false;
+        }
+        return true;
+    }
+
+
+
     // https://leetcode.com/problems/binary-tree-postorder-traversal/
     // https://leetcode.com/problems/sum-of-left-leaves/
     // discuss/88951/3-line-recursive-c%2B%2B-solution-no-need-to-explain
     // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
     // #:~:text=Given%20a%20binary%20tree%2C%20we,7%2C%209%2C%2010).
+
+    // DP
+    // https://leetcode.com/problems/path-sum-iii/
+    // https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
+    // https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/
     /////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
@@ -2924,9 +2971,7 @@ public class Tree {
         // tree.leftLeafNode(tree.root.left);
         // tree.leftLeafNode(tree.root.right);
 
-        // System.out.println("all leaves");
-        // tree.sumOfLeftLeafNodes(tree.root.left);
-        // tree.sumOfLeftLeafNodes(tree.root.right);
+        // System.out.println("all leaves")
 
         // tree.queueLeft.add(tree.root);
         // System.out.println(tree.root.key);

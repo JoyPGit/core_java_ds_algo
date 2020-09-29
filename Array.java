@@ -42,6 +42,26 @@ class Array {
         }
     }
 
+    // some cases which have been avoided
+    // j = i+1 so count is 1 for [0], j-i+1 fails
+    // nums[i] == 0 continue
+    // only update if (j!=i+1) 
+    // n == 0 condn check not needed as j starts from i
+    // https://leetcode.com/problems/max-consecutive-ones/
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int n = nums.length;
+        int max = 0;
+
+        int i = 0;
+        while (i < n) {
+            int j = i;
+            while (j < n && nums[j] == 1 && nums[i] == 1) j++;
+            max = Math.max(j - i, max);
+            i = j;
+        }
+        return max;
+    }
+
 
     /**
      * MARKING VALUES OF VISITED INDICES AS -VE
