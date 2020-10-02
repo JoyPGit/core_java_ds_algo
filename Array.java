@@ -14,6 +14,10 @@ class Array {
      * Arrays.sort(res, Collections.reverseOrder());
      * 
      * TO SORT FROM A SPECIFIC INDEX USE ARGS Arrays.sort(arr, i, j);
+     * 
+     * TO CHECK IF ARRAY CONATINS A VALUE
+     * Arrays.asList(yourArray).contains(yourValue)
+     * 
 
     */
     /**TECHNIQUES
@@ -79,6 +83,22 @@ class Array {
         return list;
     }
 
+    // https://leetcode.com/problems/single-element-in-a-sorted-array/
+    // [1,1,2,3,3,4,4,8,8]
+    public int singleNonDuplicate(int[] nums) {
+        int n = nums.length;
+        int j = 0; int i = 0;
+        while(i<n-1){//out of bouds error
+            while(nums[j] == nums[i]) j++;
+            j--;// get back to 1
+            if(j == i) return nums[i];
+            // System.out.println("j "+j+" i "+i);
+            i = ++j;//move i and j both to 2
+        }
+        return nums[n-1];//if not returned, the last el must be the sinle el
+    }
+
+    
     /**
      * It is somewhat similar to QUICKSORT partition, 
      * the way we do partition(i++, swap(a[i], a[j]). 
@@ -93,9 +113,13 @@ class Array {
      * i = 3; arr[j] == arr[i]; continue; //j=1, i =3; 2==2
      * i = 4; arr[j] != arr[i]
      * j++, change val //arr= [1,2,3,2,3] j now holds first occurrence of 3.
+     * 
+     * 
      * https://leetcode.com/problems/remove-duplicates-from-sorted-array/ 
      * discuss/11769/5-lines-Java-solution
     */
+
+    // * J WILL HOLD THE INDEX F LAST NON REPEATING EL
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     public int removeDuplicates(int[] nums) {
         int n = nums.length;
@@ -107,6 +131,7 @@ class Array {
                 nums[j]=nums[i];
             }
         }
+        System.out.println("j is at "+j);
         utilCustom.Utility.print1DMatrix(nums);
         return ++j;
     }
@@ -810,28 +835,10 @@ class Array {
     // https://leetcode.com/problems/first-missing-positive/
     // inaccurate soln but works for tougher ques
     public int firstMissingPositive(int[] nums) {
+        int holder = 1;
         Arrays.sort(nums);
-        int n = nums.length; 
-        int i = 0; int j =0;
-        int min = 1; boolean found = false;
-        
-        while(nums[i]<=0 && i<n) i++;
-        // min = nums[i]<0?1:nums[i];
-        
-        if(i==n-1) return min;
-        if(i==n) return min;
-        // else min = nums[i];
-        System.out.println(i);
-        for(j =i+1; j<n; j++){
-            if((nums[j] - nums[j-1])!=1) {
-                min = nums[j-1]+1;
-                found =true;
-                System.out.println("min "+min);
-            }
-        }
-        System.out.println(j);
-        if(j== n && !found) return nums[n-1]+1;
-        return min;
+        for(int i : nums) if(i==holder) holder++;
+        return holder;
     }
 
     // PIVOT
@@ -886,6 +893,7 @@ class Array {
         return sum;
     }
 
+    // https://leetcode.com/problems/next-permutation/
     // https://leetcode.com/problems/subarray-sum-equals-k/
 
     // CIRCULAR ARRAY 
@@ -906,8 +914,8 @@ class Array {
         int[] arr2 = new int[] { 9, 7, 1, 8, 5, 6 };
         Array test = new Array();
         int[] duplicates = {1,1,2,2,2,3};
-        test.findMountain(arr2);
-        // test.removeDuplicates(duplicates);
+        // test.findMountain(arr2);
+        test.removeDuplicates(duplicates);
         int[] arr = new int[] { 1, 2, 5, 4, 3 };
         // test.findMissingAndRepeated(arr);
 

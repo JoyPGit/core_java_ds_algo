@@ -663,7 +663,7 @@ public class DP {
         
         return dp[n];
     }
-
+    // https://leetcode.com/problems/min-cost-climbing-stairs/
 
     int rodCutting(int[] price, int size){ //size is for fixing the for loop iteration number
         if(size <=0) return 0;
@@ -1574,14 +1574,18 @@ public class DP {
     // https://leetcode.com/problems/maximal-rectangle/
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
     // https://leetcode.com/problems/minimum-cost-to-cut-a-stick/
+    
+    // https://leetcode.com/problems/target-sum/
+    // https://leetcode.com/problems/number-of-dice-rolls-with-target-sum/
 
     // https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
-
+    // https://leetcode.com/problems/minimum-height-trees/
+    // https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/
 
     // https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/
 
     // https://leetcode.com/problems/count-square-submatrices-with-all-ones/
-    // https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/
+    // https://leetcode.com/problems/maximum-length-of-repeated-subarray/
     public static void main(String[] args) {
         DP dp = new DP();
 

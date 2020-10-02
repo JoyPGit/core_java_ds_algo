@@ -1349,7 +1349,7 @@ class StringPractice {
      * IF NEXT COMES 1, THEN SUBSTRINGS WITH ALL CHARACTERS 1 ARE
      * 1, 1, 11 (IDUPLCATES INCLUDED)
      * 
-     * 2 WE CALCULATE ON THE BASIS OF CONSECUTOVE ONES
+     * 2 WE CALCULATE ON THE BASIS OF CONSECUTIVE ONES
      * count++
      * res = (res+count)%(1000000007)
      * 
@@ -2085,6 +2085,7 @@ public boolean detectCapitalUse(String word) {
     }
     
 
+    // https://leetcode.com/problems/add-binary/
     // https://leetcode.com/problems/longest-duplicate-substring/
     // https://leetcode.com/problems/next-closest-time/
     // https://www.codertrain.co/next-closest-time

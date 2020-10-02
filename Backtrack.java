@@ -119,6 +119,91 @@ class Backtrack {
         }
     }
 
+
+    /**
+     * POINTS :
+     * 1 run 2 loops, row+1 style doesn't work here
+     * 2 return after for loop
+     * 3 isSafe first and then recursive call
+     * 4 imp row offset and col offset
+     * board[3*(row/3) + i/3][3*(col/3) + i%3] == c
+     * 
+     */
+    // https://leetcode.com/problems/sudoku-solver
+    public void solveSudoku(char[][] board) {
+        helper(board);
+    }
+    
+    boolean helper(char[][] board){
+        for(int i = 0; i<board.length; i++){
+            for(int j =0; j<board[0].length; j++){
+                
+                if(board[i][j] == '.'){
+                    for(char c = '1'; c<='9'; c++){
+                        if(isSafe(board, i, j, c)) {
+                            board[i][j] = c;
+                            if(helper(board)) return true;
+                            else board[i][j] = '.';
+                        }
+                    }
+                    //for loop over 
+                    return false;
+                }
+            }
+        }
+        //for loop over, return true
+        return true;
+    }
+    
+    boolean isSafe(char[][] board, int row, int col, char c){
+        // row check
+        for(int i=0; i<board.length; i++){
+            if(i == col) continue;
+            if(board[row][i] == c) return false;
+        }
+        
+        // col check
+        for(int i=0; i<board[0].length; i++){
+            if(i == row) continue;
+            if(board[i][col] == c) return false;
+        }
+        
+        // sub grid check
+        /** 
+         * logic : 
+         * row = 7, col = 1
+         * row/3 = 2, col/3 = 0
+         * 3*(row/3) = 6, 3*(col/3) = 0
+         * subgrid is identified
+         * 
+         * i from 0 till 8
+         * i  i/3  i%3
+         * 0   0    0
+         * 1   0    1
+         * 2   0    2
+         * 3   1    0
+         * 4   1    1
+         * 5   1    2
+         * .
+         * .
+         * .
+         * 
+         * this way the co-ordinates traversed are 
+         * (6,0), (6,1), (6,2),
+         * (7,0), (7,2) ...
+         * 
+         * so i/3 helps to keep row constant while i%3 keeps incrementing col by 1
+         */
+        for(int i =0; i<board.length; i++){
+            // System.out.println("row "+row+" col "+col);
+            // System.out.println(3*(row/3) + i/3);
+            // System.out.println(3*(col/3) + i%3);
+            if(board[3*(row/3) + i/3][3*(col/3) + i%3] == c) return false;
+        }
+        return true;
+    }
+    
+
     // 28 apr haspathsum
 
     //////////////////////////////////////////
@@ -160,7 +245,7 @@ class Backtrack {
         int i = 0;
         int j = 0;
 
-        // checking '\' direction
+        // checking upper '\' direction 
         for (i = row, j = col; i >= 0 && j >= 0; i--, j--) {
             if (i == row && j == col)
                 continue;
@@ -186,6 +271,7 @@ class Backtrack {
 
         return true;
     }
+    // https://leetcode.com/problems/queens-that-can-attack-the-king/
 
     // 6 june
     boolean solveRatMaze(int[][] maze) {
@@ -411,6 +497,7 @@ class Backtrack {
     }
     
 
+    // https://leetcode.com/problems/queens-that-can-attack-the-king/
     // https://leetcode.com/problems/knight-probability-in-chessboard/discuss/113954/Evolve-from-recursive-to-dpbeats-94
     public static void main(String[] args) {
         Backtrack solbacktrack = new Backtrack();
@@ -444,7 +531,19 @@ class Backtrack {
         // solbacktrack.subsetsList(subset);
 
         int[][] chessBoard = new int[8][8];
-        solbacktrack.knightsTour(chessBoard, 4, 6);
+        // solbacktrack.knightsTour(chessBoard, 4, 6);
+
+        char[][] sudoku = 
+        {{'5','3','.','.','7','.','.','.','.'},
+        {'6','.','.','1','9','5','.','.','.'},
+        {'.','9','8','.','.','.','.','6','.'},
+        {'8','.','.','.','6','.','.','.','3'},
+        {'4','.','.','8','.','3','.','.','1'},
+        {'7','.','.','.','2','.','.','.','6'},
+        {'.','6','.','.','.','.','2','8','.'},
+        {'.','.','.','4','1','9','.','.','5'},
+        {'.','.','.','.','8','.','.','7','9'}};
+        solbacktrack.solveSudoku(sudoku);
     }
 
 }

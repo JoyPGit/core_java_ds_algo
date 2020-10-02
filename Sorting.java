@@ -1,81 +1,7 @@
 import java.util.*;
 
-public class SearchSort {
-    
-    SearchSort(){}
-
-    /** 
-     * POINTS : 
-     * 1 THIS IS AN ACCEPTABLE SEARCH AS COMPARED TO THE RECURSIVE BINARY SEARCH
-     * IN SUCH THAT IT STORES A RESULT AND THEN IMPROVES UPON IT.
-     * 2 UPDATE RESULT AND RETURN AT END.
-     * 
-     * */
-    int binarySearch(int[] arr, int start, int end, int key){
-        int result = -1;
-        int low = start; int high = end;
-        while(high>=low){
-            int mid = low + (high-low)/2;
-
-            if(arr[mid] == key) result = mid; 
-            if(arr[mid]>key) high = mid-1;
-            if(arr[mid]<key) low =  mid+1;
-        }
-        
-        return result;
-    }
-
-    /**
-     * 1 USING ACCEPTABLE BINARY SEARCH
-     * 2 IF MID IS BAD, STORE THEN GO LEFT
-     * 3 ELSE GO RIGHT
-     * 4 WHEN TO STORE, CHECK WHICH TYPE IS ATLEAST ACCEPTABLE,
-     * IF BAD, STORE BAD.
-     * 
-     * STORING HELPS US AVOID UNNECESSARY CHECKS TO SEE IF THIS IS THE FIRST 
-     * BAD BY CHECKING LEFT.
-     */
-    // https://leetcode.com/problems/first-bad-version/submissions/
-    boolean isBadVersion(int x){return true;}//dummy func check ques
-    public int firstBadVersion(int n) {
-        int result = -1;
-        
-        int low = 1; int high = n;
-        while(low<=high){
-            int mid = low + (high-low)/2;
-            if(isBadVersion(mid)){
-                result =  mid; 
-                high = mid-1;
-            } else low = mid+1;
-        }
-        return result;
-    }
-
-    // https://leetcode.com/problems/search-insert-position/
-    /** USING ACCEPTABLE BIN SEARCH
-     * 1 IF EQUAL OR GREATER, IT'S ACCEPTABLE
-     * 2 ELSE 
-     */
-    public int searchInsert(int[] nums, int target) {
-        int result = -1; int n = nums.length;
-        int low = 0; int high = n-1;
-        if(n==0) return 0;
-        if(target>nums[n-1]) return n;
-        
-        while(low <= high){
-            int mid = low + (high-low)/2;
-            
-            // if(nums[mid] == target) result = mid;
-            if(nums[mid] >= target){
-                result = mid;
-                high = mid-1;
-            }
-            if(nums[mid] < target) low = mid+1;
-            
-        }
-        return result;
-    }
-
+public class Sorting {
+    Sorting(){}
 
     void insertionSort(int[] nums){
         int n = nums.length;
@@ -250,72 +176,7 @@ public class SearchSort {
     }
 
 
-    // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
-    /** POINTS :
-     * 1 USE TWO BINARY SEACH FUNCS, TO FIND FIRST AND LAST
-     * 2 THE FIRST USES HIGH = MID-1 AS ONCE WE FIND A MATCHING INDEX, 
-     *   WE NEED TO GO LEFT TO FIND IF SMALLER EXISTS
-     * 3 THE LAST USED LOW = MID+1
-     */
-    public int[] searchRange(int[] nums, int target) {
-        int n = nums.length; 
-        if(n ==1 && nums[0]!= target) return new int[]{-1, -1};
-        int i = binSearch(nums, 0, n-1, target);
-        int j = binSearchLast(nums, 0, n-1, target);
-      
-        return new int[]{i,j};
-    }
-    
-    int binSearch(int[] arr, int start, int end, int key){
-        int result = -1;
-        int low = start; int high = end;
-        while(high>=low){
-            int mid = low + (high-low)/2;
-            if(arr[mid]>key) high = mid-1;
-            if(arr[mid]<key) low =  mid+1;
-            if(arr[mid] == key) {
-                result = mid; 
-                high = mid-1;
-            }
-        }
-        
-        return result;
-    }
-    
-    int binSearchLast(int[] arr, int start, int end, int key){
-        int result = -1;
-        int low = start; int high = end;
-        while(high>=low){
-            int mid = low + (high-low)/2;
-            if(arr[mid]>key) high = mid-1;
-            if(arr[mid]<key) low =  mid+1;
-            if(arr[mid] == key) {
-                result = mid; 
-                low = mid+1;
-            }
-        }
-        
-        return result;
-    }
 
-    // https://leetcode.com/problems/search-a-2d-matrix-ii/
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int m = matrix.length;
-        if(m==0) return false;
-        int n = matrix[0].length;
-        if(m==1 && n==1 && matrix[0][0]!=target) return false;
-        
-        int i =0; int j = n-1;
-        // System.out.println("i "+i+" j "+j);
-        
-        while(i>=0 && i<m && j>=0 && j<n){
-            // System.out.println("i "+i+" j "+j);
-            if(matrix[i][j] == target) return true;
-            else if(matrix[i][j] > target) j--; //use else if
-            else if(matrix[i][j] < target) i++;
-        }
-        return false;
-    }
 
     // https://leetcode.com/problems/single-element-in-a-sorted-array/
     // https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
@@ -348,26 +209,10 @@ public class SearchSort {
         }
         // System.out.println(a);
     }
-    // https://leetcode.com/problems/rank-teams-by-votes/
-    // https://leetcode.com/problems/sort-the-matrix-diagonally/
-    // https://leetcode.com/problems/sort-list/
-    // https://leetcode.com/problems/pancake-sorting/
-    // https://leetcode.com/problems/maximum-number-of-coins-you-can-get/
-    // https://leetcode.com/problems/rank-teams-by-votes/
-    // https://leetcode.com/problems/car-fleet/
-    // https://leetcode.com/problems/all-elements-in-two-binary-search-trees/
-
-    // https://www.geeksforgeeks.org/nearly-sorted-algorithm/
-    // https://www.geeksforgeeks.org/
-    // queries-to-find-kth-greatest-character-in-a-range-l-r-from-a-string-with-updates/
-    // ?ref=leftbar-rightbar
-    public static void main(String[] args){
-        SearchSort coronaSort = new SearchSort();
-        int[] arr = {10,3,5,8,6,1};//,4,6,7,9,21,43};
-        coronaSort.insertionSort(arr);
-        // coronaSort.heapSort(arr);
-        // for(int i =0; i<arr.length; i++){
-        //     System.out.println(arr[i]);
-        // }
+    public static void main(String[] args) {
+        Sorting sorter = new Sorting();
+        int[] arr = {4,5,6,7,1,2,8};
+        sorter.insertionSort(arr);
+        
     }
 }

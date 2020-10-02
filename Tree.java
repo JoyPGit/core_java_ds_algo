@@ -1561,7 +1561,6 @@ public class Tree {
         if(root == null) return;
         Deque<TreeNode>q= new LinkedList<>();
         q.add(root);
-        q.add(null);
 
         while(q.size()!=0){
             TreeNode curr = q.removeFirst();
@@ -2853,8 +2852,14 @@ public class Tree {
     // discuss/88951/3-line-recursive-c%2B%2B-solution-no-need-to-explain
     // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
     // #:~:text=Given%20a%20binary%20tree%2C%20we,7%2C%209%2C%2010).
+    // https://practice.geeksforgeeks.org/problems/check-mirror-in-n-ary-tree/0
+    // https://practice.geeksforgeeks.org/problems/clone-a-binary-tree/1
+    // https://practice.geeksforgeeks.org/problems/fixed-two-nodes-of-a-bst/1
 
+    // https://www.geeksforgeeks.org/reverse-alternate-levels-binary-tree/
+    // https://www.interviewbit.com/courses/programming/topics/tree-data-structure/
     // DP
+    // https://www.youtube.com/watch?v=qZ5zayHSH2g&list=PL_z_8CaSLPWfxJPz2-YKqL9gXWdgrhvdn
     // https://leetcode.com/problems/path-sum-iii/
     // https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
     // https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/

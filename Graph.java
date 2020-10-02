@@ -723,7 +723,113 @@ class Graph {
         return 0;
 	}
 	
+	class Network{
+        int val, dist;
+        Network(int v,int d){
+            this.val = v;
+            this.dist = d;
+        }
+    }
 	
+	// https://leetcode.com/problems/network-delay-time/
+    // public int networkDelayTime1(int[][] times, int N, int start) {
+    //     int n = N+1;
+    //     if(n == 1)  return 0;
+        
+    //     int[][] g = new int[n][n];
+        
+	// 	for(int[] i: times) g[i[0]][i[1]] = i[2];
+	// 	utilCustom.Utility.printMatrix(g);
+
+    //     int[] dist = new int[n];
+    //     Arrays.fill(dist, Integer.MAX_VALUE);
+    //     boolean[] visited = new boolean[n];
+        
+    //     PriorityQueue<Integer> q = new PriorityQueue<>((x,y)->dist[x]-dist[y]);
+    //     q.add(start);
+    //     dist[start] = 0;
+        
+    //     while(q.size()!=0){
+	// 		// Network curr = q.remove();
+	// 		Network curr = q.remove();
+    //         if(visited[curr.val]) continue;
+    //         for(int i = 1; i<n; i++){
+    //             if(curr.val!=i && g[curr.val][i]!=0){
+    //                 if(dist[i]>dist[curr.val]+g[curr.val][i]) 
+    //                     dist[i] = dist[curr.val]+g[curr.val][i];
+    //                 q.add(new Network(i, dist[i]));
+    //             }
+    //         }
+    //         visited[curr.val] = true;
+    //     }
+        
+    //     int max = Integer.MIN_VALUE;
+    //     for(int i = 1; i<dist.length; i++){
+    //         System.out.println(dist[i]);
+    //         if(dist[i] == Integer.MAX_VALUE) return -1;
+    //         max = Math.max(max, dist[i]);
+    //     }
+    //     return max;
+	// }
+	
+	// https://leetcode.com/problems/network-delay-time/
+    public int networkDelayTime(int[][] times, int N, int K) {
+        int maxValue=6005;
+        int[][] graph = new int[N+1][N+1];
+        for(int i=0;i<graph.length;i++){
+            for(int j=0;j<graph[i].length;j++){
+                 graph[i][j]=maxValue;
+            }
+        }
+        int[] distance=new int[N+1];
+        for(int i=1;i<distance.length;i++){
+            distance[i]=maxValue;
+        }
+        
+        for(int i=0;i<times.length;i++){
+            int src=times[i][0];
+            int des=times[i][1];
+            int time=times[i][2];
+            graph[src][des]=time;
+        }
+		
+		utilCustom.Utility.printMatrix(graph);
+          
+        for(int i=1;i<graph[K].length;i++){
+            distance[i]=graph[K][i];
+        }
+        distance[K]=0;
+        boolean[] visited=new boolean[N+1];
+        visited[K]=true;
+ 
+        for(int i=1;i<=N;i++){
+            int minValue=Integer.MAX_VALUE;
+            int node=-1;
+            for(int j=1;j<distance.length;j++){
+                if(visited[j]==true) continue;
+                if(distance[j]<minValue){
+                    minValue=distance[j];
+                    node=j;
+                }
+            }
+            if(node==-1) break;
+            else visited[node]=true;
+            for(int k=1;k<graph[node].length;k++){
+                if(visited[k]==true) continue;
+                if(distance[k]>distance[node]+graph[node][k]){
+                    distance[k]=distance[node]+graph[node][k];
+                }
+            }
+            
+        }
+        
+        int res=0;
+        for(int i=1;i<distance.length;i++){
+            res=Math.max(res,distance[i]);
+        }
+        return res==maxValue ? -1 : res;
+    }
+
 	/**
 	 * basically same as backtracking.. a vertex is continually assigned colors from
 	 * 1 till n, and we check if it's safe, then we recur, else we go back to
@@ -858,8 +964,11 @@ class Graph {
 	}
 
 	/**
-	 * Differences: 1 iterate for n-1 2 dist = dist from src + edge wt 2 dist = edge
-	 * wt 3
+	 * https://www.youtube.com/watch?v=fyW6AeZkiYc&t=324s
+	 * 
+	 * Differences: 1 iterate for n-1 2 dist = dist from src + edge wt 
+	 * 2 dist = edge wt
+	 * 3
 	 */
 	void dijkstra(int[][] graph, int src) {
 		int n = graph.length;
@@ -1018,7 +1127,7 @@ class Graph {
 
 	// https://leetcode.com/problems/course-schedule/discuss/463067/Simple-dfs-faster-than-99.81
 
-	public void main(String args[]) {
+	public static void main(String args[]) {
 		// Create a graph given in the above diagram
 		Graph g = new Graph(8);
 		// g.addEdge(5, 2);
@@ -1067,6 +1176,9 @@ class Graph {
 
 		int[][] oranges = { { 2, 1, 1 }, { 1, 1, 0 }, { 0, 1, 1 } };
 		// g.orangesRotting(oranges);
+
+		int[][] times = {{2,1,1},{2,3,1},{3,4,1}}; int N = 4, K = 2;
+		g.networkDelayTime(times, N, K);
 
 		String beginWord = "hit";
 		String endWord = "cog";

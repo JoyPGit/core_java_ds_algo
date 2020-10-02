@@ -735,6 +735,7 @@ public class HashPractice{
     }
 
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
+    // https://leetcode.com/problems/longest-consecutive-sequence/
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();

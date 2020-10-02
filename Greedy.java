@@ -676,8 +676,13 @@ class Greedy{
     // MICROSOFT
     // https://leetcode.com/discuss/interview-question/447448/
 
+    // https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k/
     // https://leetcode.com/problems/non-overlapping-intervals/
-
+    // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
+    // GOOGLE
+    // https://leetcode.com/problems/couples-holding-hands/description/
+    // https://leetcode.com/problems/cinema-seat-allocation/
+    // https://leetcode.com/problems/minimum-swaps-to-make-strings-equal/
     // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
     // https://leetcode.com/problems/insert-interval/
     // https://leetcode.com/discuss/interview-question/350233/Google-or-Summer-Intern-OA-2019-or-Decreasing-Subsequences

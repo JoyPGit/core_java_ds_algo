@@ -53,5 +53,8 @@ public class Trie {
         return true;
     }
     // https://leetcode.com/problems/stream-of-characters/ 
+    // https://leetcode.com/problems/implement-magic-dictionary/
+    // https://leetcode.com/problems/replace-words/
+    // https://leetcode.com/problems/design-add-and-search-words-data-structure/
 
 }

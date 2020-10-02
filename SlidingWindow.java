@@ -170,9 +170,43 @@ public class SlidingWindow {
     }
 
 
+    /** 
+     * POINTS :
+     * 1 USE MAP.SIZE, NOT INDIVIDUAL COUNTS
+     * no need oF while(leftMap.get('a') + leftMap.get('b') + leftMap.get('c') >= 3)
+     * 
+     * 2 IF FREQ == 0, REMOVE FROM MAP
+     * 3 left++
+     * 4 count+=left similar to above
+     * 
+    */
+    // https://leetcode.com/problems/number-of-substrings-containing-all-three-characters
+    public int numberOfSubstrings(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int left = 0; int count = 0;
+        // HashSet<String> set = new HashSet<>();
+        
+        for(int i =0; i<s.length(); i++){
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
+            while(map.size() == 3){
+                // count++; 
+                map.put(s.charAt(left), map.get(s.charAt(left)) - 1);
+                if(map.get(s.charAt(left)) == 0) map.remove(s.charAt(left));
+                left++;
+            }
+            count+=left;
+        }
+            
+        return count;
+    }
+
     // https://leetcode.com/problems/minimum-size-subarray-sum/
-    /** run 2 loops, continue till sum>s, then
-     * try to decrement from the start, till sum>=s; increment left; track min
+    /** 
+     * POINTS : 
+     * 1 run 2 loops
+     * 2 WHILE sum>=s; track min, LEFT++ 
+     * 3 RETURN CONDITION IS IMP, IF length == 0 OR SUM NEVER REACHES s, 
+     * MAX_VALUE IS RETURNED
      */
     public int minSubArrayLenWithSumGreaterThanOrEqualK(int s, int[] nums) {
         int n = nums.length; int sum =0; 
@@ -183,11 +217,13 @@ public class SlidingWindow {
             sum+=nums[i];
             while(sum >= s){
                 min = Math.min(i-left+1, min);
-                sum = sum - nums[left++];
+                sum = sum - nums[left];
+                left++;
             }
         }
         return min == Integer.MAX_VALUE?0:min;
     }
+
 
     /** the above works for non negative integers, this one for both */
     // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
@@ -238,8 +274,8 @@ public class SlidingWindow {
     // https://www.geeksforgeeks.org/count-of-subarrays-of-size-k-with-
     // elements-having-even-frequencies/?ref=rp
     // use XOR
-
     
+
     // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
     void smallestSubArrayWithKDistinct(int[] arr, int k){
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -278,6 +314,105 @@ public class SlidingWindow {
         // System.out.println("max "+ max); 
         return max;
     }
+    /////////////////////////// NEXT 3 QUES ARE VERY IMP ////////////////
+
+    /** POINTS : 
+     * 1 left HOLDS THE INDEX OF A NON REPEATING CHAR
+     * left = Math.max(left, map.get(s.charAt(i))+1);
+     * handle aab, pwwke, dvdf
+     * 
+     * left IS INCREMENTED TO THE NEXT INDEX OF THE CHAR FOUND IN MAP
+     * 
+     */
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        if(n == 0) return n;
+        HashMap<Character, Integer> map = new HashMap<>();
+        int len = 0; 
+        int left = 0;
+        
+        for(int i =0; i<n; i++){
+            if(map.containsKey(s.charAt(i))) {
+                left = Math.max(left, map.get(s.charAt(i))+1);
+            }
+            len = Math.max(len, i-left+1);   
+            map.put(s.charAt(i), i);
+        }
+        return len;
+    }
+
+
+    // "cdadabcc"
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
+    public String smallestSubsequence(String text) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        HashSet<Character> set = new HashSet<>();
+        int left = 0;
+        int len = text.length();
+
+        PriorityQueue<String> pq = new PriorityQueue<>();
+
+        for (int i = 0; i < text.length(); i++)
+            set.add(text.charAt(i));
+
+        for (int i = 0; i < text.length(); i++) {
+            map.put(text.charAt(i), map.getOrDefault(text.charAt(i), 0) + 1);
+            while (map.size() == set.size()) {
+                map.put(text.charAt(left), map.get(text.charAt(left)) - 1);
+                if (map.get(text.charAt(left)) == 0)
+                    map.remove(text.charAt(left));
+                if (i - left + 1 <= len) {
+                    len = i - left + 1;
+                    pq.add(text.substring(left, i + 1));
+                }
+                left++;
+            }
+        }
+        System.out.println(pq);
+        return "pq listed";
+    }
+
+    /** 
+     * IMP QUES */
+    // https://leetcode.com/problems/minimum-window-substring
+    public String minWindow(String s, String t) {
+        if(s == null || s.length() < t.length() || s.length() == 0) return "";
+        HashMap<Character, Integer>map = new HashMap<>();
+        
+        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+        
+        for(int i =0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
+                if(map.get(s.charAt(i)) >= 0) count++;
+            }
+            
+            // System.out.println(map);
+            while(count == t.length()) {
+                if(i-left+1 < len){
+                    start = left;
+                    len = i-left+1;
+                }
+                // now increment the freq which was reduced
+                if(map.containsKey(s.charAt(left))){
+                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
+                    if(map.get(s.charAt(left))>0) count--;
+                }
+                left++;
+                // System.out.print("in here ");
+                // System.out.println(map);
+            }
+            // System.out.println("left "+left);
+        }
+        if(len>s.length()) return ""; 
+
+        return s.substring(start, start+len);
+    }
+
+
     
     // https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/
 
@@ -326,12 +461,16 @@ public class SlidingWindow {
      * 6 IMP BOUNDARY CONDNS : j = count+1 till n-count
      */
     // https://leetcode.com/discuss/interview-question/414660/
+    // MICROSOFT
     // https://www.geeksforgeeks.org/minimum-swaps-required-group-1s-together/
     // https://www.youtube.com/watch?v=VXi_-2CmitM
+    // https://leetcode.com/discuss/interview-question/344778/
+    // find-the-minimum-number-of-swaps-required-such-that-all-
+    // the-0s-and-all-the-1s-are-together
     int minSwaps(int[] arr){
         int n = arr.length;
         int count = 0;
-        for(int i =0; i< arr.length; i++) if(arr[i]==1) count++;
+        for(int i =0; i<n; i++) if(arr[i]==1) count++;
 
         int zero = 0; int min = Integer.MAX_VALUE;
         for(int i = 0; i<count; i++){
@@ -400,78 +539,55 @@ public class SlidingWindow {
         return res;
     }
 
-    /** POINTS : 
-     * 1 left HOLDS THE INDEX OF A NON REPEATING CHAR
-     * left = Math.max(left, map.get(s.charAt(i))+1);
-     * handle aab, pwwke, dvdf
-     * 
-     * left IS INCREMNTED TO TH NEXT INDEX OF THE CHAR FOUND IN MAP
-     * 
-     */
-    // https://leetcode.com/problems/longest-substring-without-repeating-characters
-    public int lengthOfLongestSubstring(String s) {
-        int n = s.length();
-        if(n == 0) return n;
-        HashMap<Character, Integer> map = new HashMap<>();
-        int len = 0; 
-        int left = 0;
-        
-        for(int i =0; i<n; i++){
-            if(map.containsKey(s.charAt(i))) {
-                left = Math.max(left, map.get(s.charAt(i))+1);
-            }
-            len = Math.max(len, i-left+1);   
-            map.put(s.charAt(i), i);
-        }
-        return len;
-    }
-
     /** 
-     * IMP QUES */
-    // https://leetcode.com/problems/minimum-window-substring
-    public String minWindow(String s, String t) {
-        if(s == null || s.length() < t.length() || s.length() == 0) return "";
-        HashMap<Character, Integer>map = new HashMap<>();
+     * POINTS : 
+     * 1 IF S1 CONTAINS ANY CHAR OF S2, TAKE SUBSTRING FROM 
+     * i TILL  i+n, SORT IT AND COMAPRE WITH S1'S CHAR ARRAY
+     * 
+     * SAME AS ANAGRAM, SORT AND COMPARE
+     * TAKE CARE OF INDEXES, loop till s2.length()-n+1
+    */
+    // https://leetcode.com/problems/permutation-in-string/
+    public boolean checkInclusion(String s1, String s2) {
+        int n = s1.length();
+        if(s1.length() > s2.length()) return false;
+        char[] ch = s1.toCharArray();
+        Arrays.sort(ch);
         
-        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
-        
-        int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
-        
-        for(int i =0; i<s.length(); i++){
-            if(map.containsKey(s.charAt(i))){
-                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
-                if(map.get(s.charAt(i)) >= 0) count++;
-            }
-            
-            // System.out.println(map);
-            while(count == t.length()) {
-                if(i-left+1 < len){
-                    start = left;
-                    len = i-left+1;
-                }
-                // now increment the freq which was reduced
-                if(map.containsKey(s.charAt(left))){
-                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
-                    if(map.get(s.charAt(left))>0) count--;
-                }
-                left++;
-                // System.out.print("in here ");
-                // System.out.println(map);
-            }
-            // System.out.println("left "+left);
+        for(int i =0; i<s2.length()-n+1; i++){
+            if(s1.contains(""+s2.charAt(i))){//1
+                char[] curr = (s2.substring(i, i+n)).toCharArray();//2
+                // System.out.println(String.valueOf(curr));
+                Arrays.sort(curr);
+                if(Arrays.equals(ch, curr)) return true;
+                // if(n >= 3)i += n-2;//3
+            }        
         }
-        if(len>s.length()) return ""; 
-
-        return s.substring(start, start+len);
+        return false;
     }
+    
 
+    // https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/
+    // discuss/516977/JavaC%2B%2BPython-Easy-and-Concise
     // https://leetcode.com/problems/permutation-in-string/
 
     // https://leetcode.com/problems/find-the-town-judge/
+
+    // Count Number of Nice Subarrays
+    // Replace the Substring for Balanced String
+    // Max Consecutive Ones III
+    // Binary Subarrays With Sum
+    // Subarrays with K Different Integers
+    // Fruit Into Baskets
+    // Shortest Subarray with Sum at Least K
+    // Minimum Size Subarray Sum
     public static void main(String[] args) {
         SlidingWindow slide = new SlidingWindow();
         int sum = 11; int[] nums = {1,2,3,4,5};    
         // slide.minSubArrayLenWithSumGreaterThanOrEqualK(sum, nums);
+
+        String smallestSub = "cdadabcc";
+        slide.smallestSubsequence(smallestSub);
 
         int[] arr = {1, 2, 4, 4};
         // {1, 2, 1, 3, 4, 2, 3};
@@ -491,7 +607,7 @@ public class SlidingWindow {
 
         int[] minSwap1s = {1,0,1,0,1,0,0,1,1,1};
         // int[] minSwap1s = {0,0,0,1,0};
-        slide.minSwaps(minSwap1s);
+        // slide.minSwaps(minSwap1s);
     }
     
 }
