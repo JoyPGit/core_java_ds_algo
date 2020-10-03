@@ -383,8 +383,6 @@ public class Recursion {
     // https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
     
     // https://www.geeksforgeeks.org/sort-a-stack-using-recursion/
-    // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
-    // https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/
 
     // https://www.geeksforgeeks.org/count-number-ways-reach-given-score-game/
     // https://leetcode.com/problems/different-ways-to-add-parentheses/

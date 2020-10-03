@@ -1561,22 +1561,24 @@ public class Tree {
         if(root == null) return;
         Deque<TreeNode>q= new LinkedList<>();
         q.add(root);
-
+        Deque<TreeNode> left = new LinkedList<>();
+        Deque<TreeNode> right = new LinkedList<>();
+        boolean isLeft = false;
         while(q.size()!=0){
-            TreeNode curr = q.removeFirst();
-            if(curr == null) {
-                q.add(null); continue;
-            }
-            System.out.println(curr.val);
-            if(curr.left!=null) q.addLast(curr.left);
-            if(curr.right!=null) q.addLast(curr.right);
-            if(curr.left == null && curr.right == null){
-                while(q.size()!=0){
-                    TreeNode ptr = q.removeFirst();
-                    if(ptr!=null) System.out.println(ptr.val);
+            int size = q.size();
+
+            for(int i=0; i<size; i++){
+                TreeNode curr = q.removeFirst();
+                System.out.println(curr.val);
+                if(curr.left!=null) {
+                    q.addLast(curr.left);
+                    if(!isLeft) left.addLast(curr.left);
                 }
-                break;
+                if(curr.right!=null) q.addLast(curr.right);                
             }
+
+            right.addFirst(q.getLast());
+
         }
     }
 

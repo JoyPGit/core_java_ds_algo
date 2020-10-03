@@ -16,6 +16,8 @@ public class ToDo {
     // https://netflixtechblog.com/byte-down-making-netflixs-data-infrastructure-cost-effective-fee7b3235032
     // http://highscalability.squarespace.com/blog/2017/12/11/netflix-what-happens-when-you-press-play.html
     /** SWAP BASED QUES 
+     * https://leetcode.com/problems/flip-string-to-monotone-increasing/
+     * https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid
      * https://leetcode.com/problems/couples-holding-hands/description/
      * https://leetcode.com/problems/maximum-swap/
      * https://leetcode.com/discuss/interview-question/124545/New-question-Google-interview/

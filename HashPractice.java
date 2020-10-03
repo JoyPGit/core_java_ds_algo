@@ -734,6 +734,49 @@ public class HashPractice{
         return count;
     }
 
+    /** 
+     * POINTS : 
+     * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN VISITED SET, CONTINUE
+     * 
+     * 2 IF LAST CHAR IS LEXICOGRAPHICALLY GREATER AND IT'S FREQ IS >0, 
+     * IT MEANS THAT CHAR CAN BE USED LATER, SO IT'S SAFE TO REMOVE IT.
+     * REMEMBER TO REMOVE IT FROM VISITED SET AS WELL
+     * 
+     * 3 USE STRING BUILDER, deleteCharAt CAN BE USED AND .toString()
+     * needs to be used
+     * 
+     * 4
+     * */
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
+    public String smallestSubsequence(String text) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        HashSet<Character> set = new HashSet<>();
+        StringBuilder res = new StringBuilder();
+        
+        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : text.toCharArray()){
+            map.put(c, map.get(c)-1);
+
+            if(set.contains(c)) continue; 
+            while(res.length()>0 && res.charAt(res.length()-1) > c 
+                && map.get(res.charAt(res.length()-1)) > 0 ){
+                    char last = res.charAt(res.length()-1); 
+                    set.remove(last);//out of bounds error
+                
+                    // map.put(c, map.get(last)+1);//don't add
+                    res.deleteCharAt(res.length()-1);
+            }
+            // if(res.length()==0 || res.charAt(res.length()-1) != c){
+            // if(set.contains(c)) continue; 
+                res.append(c);
+                set.add(c);
+            // } 
+            // System.out.println(res+ " "+map);
+        }
+        return res.toString();
+    }
+
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     // https://leetcode.com/problems/longest-consecutive-sequence/
     public static void main(String[] args) {

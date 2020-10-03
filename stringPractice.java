@@ -742,6 +742,80 @@ class StringPractice {
     }
 
     // RABIN KARP algo pattern searching
+        /** 
+     * POINTS : 
+     * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN VISITED SET, CONTINUE
+     * BECAUSE THE CHAR IS ALRFEADY AT ITS BEST POSN
+     * 
+     * 2 IF LAST CHAR IS LEXICOGRAPHICALLY GREATER AND IT'S FREQ IS >0, 
+     * IT MEANS THAT CHAR CAN BE USED LATER, SO IT'S SAFE TO REMOVE IT.
+     * REMEMBER TO REMOVE IT FROM VISITED SET AS WELL
+     * 
+     * 3 USE STRING BUILDER, deleteCharAt CAN BE USED AND .toString()
+     * NEEDS TO BE USED
+     * 
+     * 4
+     * */
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
+    public String smallestSubsequence(String text) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        HashSet<Character> set = new HashSet<>();
+        StringBuilder res = new StringBuilder();
+        
+        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : text.toCharArray()){
+            map.put(c, map.get(c)-1);
+            
+            if(set.contains(c)) continue; 
+
+            while(res.length()>0 && res.charAt(res.length()-1) > c 
+                && map.get(res.charAt(res.length()-1)) > 0 ){
+                    char last = res.charAt(res.length()-1); 
+                    set.remove(last);//out of bounds error
+                
+                    // map.put(c, map.get(last)+1);//don't add
+                    res.deleteCharAt(res.length()-1);
+            }
+            // if(res.length()==0 || res.charAt(res.length()-1) != c){
+            // if(set.contains(c)) continue; 
+            res.append(c);
+            set.add(c);
+            // } 
+            // System.out.println(res+ " "+map);
+        }
+        return res.toString();
+    }
+
+    // SAME AS ABOVE BUT WIHOUT STRINGBUILDER AND HASHSET
+    /**  
+     * BASICALLY 3 CONDNS
+     * 1 IF PRESENT IN RES, CONTINUE
+     * 2 KEEP REMOVING TILL LENGTH ==0 OR IF LAST CHAR IS 
+     * GREATER AND HAS FREQ>=1 REMOVE
+     * 3 IF LAST CHAR IS SMALLER, ADD
+    */
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
+    public String smallestSubsequenceString(String text) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        String res = "";
+        
+        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : text.toCharArray()){
+            map.put(c, map.get(c)-1);
+
+            if(res.contains(""+c)) continue; 
+            while(res.length()>0 
+                && res.charAt(res.length()-1) > c 
+                && map.get(res.charAt(res.length()-1)) > 0 ){
+                    res = res.substring(0, res.length()-1);
+            }
+            res+=c;
+        }
+        return res;
+    }
+
 
     // MIN WINDOW
     // works without duplicates,
@@ -750,72 +824,6 @@ class StringPractice {
     // https://leetcode.com/problems/minimum-window-substring/discuss/26808/
     // Here-is-a-10-line-template-that-can-solve-most-'substring'-problems
     
-    class minWindowString {
-        int start;
-        int end;
-
-        minWindowString(int s, int e) {
-            this.start = s;
-            this.end = e;
-        }
-    }
-
-    // public String minWindow(String s, String t) {
-    //     if (s.length() < t.length())
-    //         return "";
-    //     if (s.length() == t.length()) {
-    //         System.out.println("in here");
-    //         // System.out.println(s.equals(t)==false);
-    //         if (!s.equals(t))
-    //             return "";
-    //     }
-
-    //     String result = "";
-    //     HashMap<Character, Integer> map = new HashMap<>();
-    //     char[] ch = s.toCharArray();
-
-    //     for (int i = 0; i < s.length(); i++) {
-    //         if (t.contains(s.charAt(i) + "")) {
-    //             map.put(ch[i], i);
-
-    //             if (map.size() == t.length()) {
-    //                 int min = getMin(map);
-    //                 int max = getMax(map);
-    //                 // substring is inclusive of lower index only and not higher
-    //                 String str = s.substring(min, max + 1);
-
-    //                 if (result.length() == 0) {
-    //                     result = str;
-    //                     System.out.println("str first " + str);
-    //                 } else
-    //                     result = result.length() < str.length() ? result : str;
-    //             }
-
-    //         }
-    //     }
-    //     System.out.println("Result " + result);
-    //     return result;
-    // }
-
-    // int getMin(HashMap<Character, Integer> map) {
-    //     int min = Integer.MAX_VALUE;
-    //     for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-    //         Integer value = entry.getValue();
-    //         min = Math.min(min, value);
-    //     }
-    //     // System.out.println("min "+ min);
-    //     return min;
-    // }
-
-    // int getMax(HashMap<Character, Integer> map) {
-    //     int max = Integer.MIN_VALUE;
-    //     for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-    //         Integer value = entry.getValue();
-    //         max = Math.max(max, value);
-    //     }
-    //     // System.out.println("max "+ max);
-    //     return max;
-    // }
 
      /** POINTS : 
      * MOST IMP ANAGRAM SO WINDOW SIZE WILL REMAIN SAME
@@ -2017,7 +2025,7 @@ class StringPractice {
      * https://leetcode.com/problems/detect-capital/discuss/
      * 860902/Java-3-Flags-simple-solution
     */
-public boolean detectCapitalUse(String word) {
+    public boolean detectCapitalUse(String word) {
         boolean first = false;
         boolean allUpper = false;
         boolean allLower = false;
