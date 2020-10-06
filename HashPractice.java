@@ -777,8 +777,12 @@ public class HashPractice{
         return res.toString();
     }
 
+    // https://leetcode.com/discuss/interview-question/844979/amazon-online-assessment-question-2
+    /** USE DFS SIMILAR TO FRIEND CIRCLE LEETCODE */
+
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     // https://leetcode.com/problems/longest-consecutive-sequence/
+    
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();

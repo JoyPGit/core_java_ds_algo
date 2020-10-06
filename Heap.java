@@ -1,6 +1,21 @@
 import java.util.*;
 
 public class Heap {
+    /** 
+     * IMP POINT :
+     * ONCE A NODE HAS BEEN ADDED TO PQ, EVEN IF ITS VALUE IS CHANGED IN THE CORREPONDING,
+     * IT WON'T AFFECT THE POSITION IN THE PQ
+     * THAT'S WHY NETWORK DELAY QUES WAS FAILING
+     * 
+     * */
+    // int[] visited = new int[]{200, 1, 30};
+    // PriorityQueue<Integer> pq = new PriorityQueue<>((x,y)->visited[x] - visited[y]);
+    // pq.add(0);
+    // pq.add(1);
+    // pq.add(2);
+    // System.out.println(pq);
+    // visited[1] = 1000;
+    // System.out.println(pq);
 
     int[] heapArray;
     int lastIndex;
@@ -427,8 +442,8 @@ public class Heap {
         return new int[]{start, end};
     }
 
+    // https://leetcode.com/problems/sort-the-matrix-diagonally/
     // https://leetcode.com/problems/find-the-kth-smallest-sum-of-a-matrix-with-sorted-rows/
-    // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
     // https://www.geeksforgeeks.org/nearly-sorted-algorithm/
     // https://leetcode.com/problems/find-k-pairs-with-smallest-sums/
     // https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/discuss
@@ -485,8 +500,9 @@ public class Heap {
             }
             numsKList.add(newRow);
         }
-        System.out.println(numsKList);
-        newHeap.smallestRange(numsKList);
+        // System.out.println(numsKList);
+        // newHeap.smallestRange(numsKList);
 
+        
     }
 }

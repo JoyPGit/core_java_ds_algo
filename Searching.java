@@ -367,6 +367,23 @@ public class Searching {
         return res;
     }
 
+    // https://leetcode.com/problems/single-element-in-a-sorted-array/
+    // [1,1,2,3,3,4,4,8,8]
+    public int singleNonDuplicate(int[] nums) {
+        int n = nums.length;
+        int j = 0; int i = 0;
+        while(i<n-1){//out of bounds error
+            while(nums[j] == nums[i]) j++;
+            j--;// get back to curr el as j goes to next el
+            if(j == i) return nums[i];
+            // System.out.println("j "+j+" i "+i);
+            i = ++j;//move i and j both to next el
+        }
+        //if here, the last el must be the single el which is returned
+        return nums[n-1];
+    }
+
+
     // FIND FIRST 1 IN MATRIX ROW
     // https://leetcode.com/problems/search-a-2d-matrix-ii/
     public boolean searchMatrix(int[][] matrix, int target) {

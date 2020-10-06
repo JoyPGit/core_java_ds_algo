@@ -176,10 +176,6 @@ public class Sorting {
     }
 
 
-
-
-    // https://leetcode.com/problems/single-element-in-a-sorted-array/
-    // https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
     // https://leetcode.com/problems/diagonal-traverse-ii/
 
     /** 
@@ -209,6 +205,9 @@ public class Sorting {
         }
         // System.out.println(a);
     }
+
+    // https://www.geeksforgeeks.org/nearly-sorted-algorithm/
+    
     public static void main(String[] args) {
         Sorting sorter = new Sorting();
         int[] arr = {4,5,6,7,1,2,8};

@@ -88,14 +88,15 @@ class Array {
     public int singleNonDuplicate(int[] nums) {
         int n = nums.length;
         int j = 0; int i = 0;
-        while(i<n-1){//out of bouds error
+        while(i<n-1){//out of bounds error
             while(nums[j] == nums[i]) j++;
-            j--;// get back to 1
+            j--;// get back to curr el as j goes to next el
             if(j == i) return nums[i];
             // System.out.println("j "+j+" i "+i);
-            i = ++j;//move i and j both to 2
+            i = ++j;//move i and j both to next el
         }
-        return nums[n-1];//if not returned, the last el must be the sinle el
+        //if here, the last el must be the single el which is returned
+        return nums[n-1];
     }
 
     

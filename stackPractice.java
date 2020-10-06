@@ -212,7 +212,7 @@ public class StackPractice {
         }
     }
 
-    // https://leetcode.com/problems/evaluate-reverse-polish-notation/submissions/
+    // https://leetcode.com/problems/evaluate-reverse-polish-notation/
 
     void longestCorrectBracketSubsequence(String s){
         char[] charArray = s.toCharArray();
@@ -397,7 +397,7 @@ public class StackPractice {
         return sb.toString();
     }
 
-    // https://leetcode.com/problems/longest-valid-parentheses/submissions/
+    // https://leetcode.com/problems/longest-valid-parentheses/
     /**  
      * DEL ER(PEEK) : DEL ERP
      * EMPTY, LEFT, ELSE REMOVE, ELSE, PEEK 

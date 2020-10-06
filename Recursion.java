@@ -3,20 +3,33 @@ import java.util.*;
 public class Recursion {
     Recursion() {
     }
+    /** 
+     * BASIC IDEA IS TO EITHER SELECT AN INDEX OR NOT.
+     * IF SELECT f(sum-nums[i], index+1)
+     * IF REJECT f(sum, index+1)
+     * 
+     * index IS INCREMENTED,
+     * 
+     * BOUNDARY CONDITION (index == arr.length)
+    */
 
-    // https://www.techiedelight.com/recursion-practice-problems-with-solutions/
-    void printListOflists(ArrayList<ArrayList<Integer>> list) {
-        // System.out.println(list.size());//k
-        for (int i = 0; i < list.size(); i++) {
-            Object j;
-            Iterator it = list.get(i).listIterator();
-            while (it.hasNext()) {
-                j = it.next();
-                System.out.println(j);
-            }
-            System.out.println();
+
+    // https://leetcode.com/problems/target-sum/
+    int count = 0;
+    public int findTargetSumWays(int[] nums, int target) {
+        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
+        f(nums, 0, target);
+        return count;
+    }
+    
+    void f(int[] nums, int index, int sum){
+        if(index==nums.length) {
+            if(sum ==0) count++; 
+            return;
         }
-
+        
+        f(nums, index+1, sum+nums[index]);
+        f(nums, index+1, sum-nums[index]);
     }
 
     boolean ans = false;
@@ -246,12 +259,12 @@ public class Recursion {
         // Arrays.sort(arr);
         int start = 0;
         int sum = 0;
-        dfs(res, list, arr, k, start, sum);
+        btk(res, list, arr, k, start, sum);
         System.out.println(res);
         return res.size();
     }
 
-    void dfs(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
+    void btk(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
         if (sum > k)
             return;
 
@@ -260,7 +273,7 @@ public class Recursion {
         else {
             for (int i = start; i < arr.length; i++) {
                 list.add(arr[i]);
-                dfs(res, list, arr, k, i + 1, sum + arr[i]);
+                btk(res, list, arr, k, i + 1, sum + arr[i]);
                 list.remove(list.size() - 1);
             }
         }
@@ -300,31 +313,32 @@ public class Recursion {
         }
     }
 
-    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
-    // discuss/795846/Java-Easy-to-understand-DFS-or-Faster-than-98
+    // PAINTERS' PARTITION PROBLEM RECURSIVE SOLN
+    /**  
+     * 1 6 params, index, visited[], nums[], target, currrSum, partitions
+    */
+    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets
     public boolean canPartitionKSubsets(int[] nums, int k) {
-
-        int t = 0;
-        for (int i = 0; i < nums.length; i++) t += nums[i];
-        if (t % k != 0) return false;
-        int target = t / k;
-        boolean[] visited = new boolean[nums.length];
+        int n = nums.length; int sum = 0;
+        for (int i = 0; i < nums.length; i++) sum += nums[i];
+        if (sum%k != 0) return false;
+        
+        int target = sum/k;
+        boolean[] visited = new boolean[n];
 
         return partition(0, visited, nums, k, target, 0);
     }
-
-    public boolean partition(int index, boolean[] visited, int[] nums, int k, int target, int sum) {
-        if (k == 0) {
-            return true;
-        }
-        if (target == sum) {
-            return partition(0, visited, nums, k - 1, target, 0);
-        }
+    
+    boolean partition(int index, boolean[] visited, int[] nums, int k, int target, int currSum){
+        if (k == 0) return true;
+        // if one partition reaches target sum, recur for other k-1 partitions
+        if (target == currSum) return partition(0, visited, nums, k - 1, target, 0);
 
         for (int i = index; i < nums.length; i++) {
-            if (!visited[i] && sum + nums[i] <= target) {
+            if (!visited[i] && currSum + nums[i] <= target) {
                 visited[i] = true;
-                if (partition(i + 1, visited, nums, k, target, sum + nums[i])) {
+                // start from next index
+                if (partition(i + 1, visited, nums, k, target, currSum + nums[i])) {
                     return true;
                 }
                 visited[i] = false;
@@ -332,6 +346,7 @@ public class Recursion {
         }
         return false;
     }
+    
 
      /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
      int lcs(char[] X, char[] Y, int m, int n) {
@@ -376,6 +391,34 @@ public class Recursion {
     }
     // https://leetcode.com/problems/jump-game-iv/
 
+    // https://www.hackerearth.com/problem/algorithm/free-walk-0f675f40-0d59a400
+    int maxDistance = 0;
+    int solveDist(String S){
+        // Write your code here
+        recur(S, 0, 0);
+        System.out.println("max dist is "+maxDistance);
+        return maxDistance;
+    }
+
+    void recur(String str, int i, int sum){
+        maxDistance = Math.max(maxDistance, Math.abs(sum));
+
+        if(i == str.length()) return;
+
+        // System.out.println("count "+count);
+        if(str.charAt(i) == 'A') {
+            sum+=-1;
+            recur(str, i+1, sum);
+        }
+        else if(str.charAt(i) == 'C') {
+            sum+=1;
+            recur(str, i+1, sum);
+        }
+        else{
+            recur(str, i+1, sum+1);
+            recur(str, i+1, sum-1);
+        }
+    }
 
     // https://leetcode.com/problems/generate-parentheses/discuss/
     // 10442/Java-recursion-solution-with-comments-hope-it-helps!
@@ -396,12 +439,14 @@ public class Recursion {
     public static void main(String[] args) throws Exception {
         Recursion recur = new Recursion();
 
-        int[] stones =
+        String dist = "AC??C?C?????CCAC??CC";
+        recur.solveDist(dist);
+        // int[] stones ={
                 // {0,1,2,3};
                 // {0,1,2,7};
                 // {0,1,3,5,6,8,12,17};
                 // {0,1,2,3,4,8,9,11};
-                { 0, 1, 2, 3, 4, 5, 6, 12 };
+                // { 0, 1, 2, 3, 4, 5, 6, 12 };
         // recur.canCross(stones);
 
         // recur.printWithoutLoop(16);
@@ -427,12 +472,12 @@ public class Recursion {
 
         int[] uniqueComb = { 10, 1, 2, 7, 6, 1, 5 };
         // { 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5 };
-        recur.uniqueCombinationsSumK(uniqueComb, 8);
+        // recur.uniqueCombinationsSumK(uniqueComb, 8);
 
         int[] partition = { 1, 2, 3, 1 };
         // { 5, 6, 1, 11 };
         // System.out.println(recur.partition(partition));
-        System.out.println("------------------");
-        recur.partitionIn2(uniqueComb);
+        // System.out.println("------------------");
+        // recur.partitionIn2(uniqueComb);
     }
 }
