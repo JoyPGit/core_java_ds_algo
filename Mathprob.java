@@ -20,6 +20,23 @@ public class Mathprob {
         return res;
     }
 
+      // https://leetcode.com/problems/water-bottles/
+      public int numWaterBottles(int numBottles, int numExchange) {
+        int i = 0; 
+        while(i <= numBottles){
+            if(i%numExchange==0) {
+                numBottles++;
+            }
+            i++;
+        }
+
+        // for(i =1; i<=numBottles; i++){
+        //     if(i%numExchange==0) numBottles++;
+        // }
+        // System.out.println(numBottles);
+        return numBottles;
+    }
+    
     // https://leetcode.com/problems/lemonade-change/
     public boolean lemonadeChange(int[] bills) {
         int n = bills.length;

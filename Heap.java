@@ -366,8 +366,7 @@ public class Heap {
         return res;
     }
 
-    // https://www.geeksforgeeks.org/find-smallest-range-containing-elements-from-k-lists/
-    // https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/
+
     /** 
      * 1 create a custom class to hold index, row and val
      * 2 row and index are needed so that when we pop an element,
@@ -398,6 +397,8 @@ public class Heap {
      * we can't compare, while loop breaks and we return;
      * 
      */
+    // https://www.geeksforgeeks.org/find-smallest-range-containing-elements-from-k-lists/
+    // https://leetcode.com/problems/smallest-range-covering-elements-from-k-lists/
     class KListNode{
         int index, val, row;
         KListNode(int i, int v, int r){
@@ -443,6 +444,7 @@ public class Heap {
     }
 
     // https://leetcode.com/problems/sort-the-matrix-diagonally/
+    
     // https://leetcode.com/problems/find-the-kth-smallest-sum-of-a-matrix-with-sorted-rows/
     // https://www.geeksforgeeks.org/nearly-sorted-algorithm/
     // https://leetcode.com/problems/find-k-pairs-with-smallest-sums/

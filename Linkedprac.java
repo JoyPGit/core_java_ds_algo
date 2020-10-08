@@ -771,6 +771,48 @@ class Linkedprac {
         }
         return a;
     }
+
+     class Node {
+        public int val;
+        public Node prev;
+        public Node next;
+        public Node child;
+    };
+    /*the most imp thing was how to return 12 once we get to 11.
+    so when no child is present, we return the last node.
+    p will traverse as usual, so return q which holds p.prev
+     * 
+     * POINTS :
+     * 1 TAKE CARE TO SET NEXT AND PREV BOTH
+     * 2 SET CHILD TO NULL
+    */
+    // https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
+    class Solution {
+        public Node flatten(Node head) {
+            helper(head);
+            return head;
+        }
+        
+        Node helper(Node head){
+            Node p = head; Node q = null;
+            while(p!=null){
+                // if child exists, make the new adjustments
+                if(p.child!=null){
+                    Node r = p.next; // new next
+                    p.next = p.child; // -> next
+                    p.child.prev = p; // <- prev
+                    Node s = helper(p.child);
+                    // if(s==null) continue;
+                    p.child = null;//imp
+                    s.next = r; // -> next
+                    if(r!=null) r.prev = s; // <- prev
+                }
+                q = p;
+                p = p.next;
+            }
+            return q;
+        }
+    }
     
 
     /*

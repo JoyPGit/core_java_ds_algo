@@ -462,8 +462,15 @@ public class PermutationsCombinationsAndSubsets {
         return min;
     }
     
+    // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    public int maxUniqueSplit(String s) {
+        int max = 0;
+        return max;
+    }
 
-    // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/551/week-3-august-15th-august-21st/3428/
+    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
+    // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/
+    // 551/week-3-august-15th-august-21st/3428/
     public static void main(String[] args) {
         PermutationsCombinationsAndSubsets pcs = new PermutationsCombinationsAndSubsets();
 

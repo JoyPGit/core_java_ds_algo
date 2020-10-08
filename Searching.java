@@ -567,14 +567,11 @@ public class Searching {
     // GOOGLE
     // https://leetcode.com/discuss/interview-question/153179/google-onsite-min-swaps-to-make-sorted
     // https://leetcode.com/problems/rank-teams-by-votes/
-    // https://leetcode.com/problems/sort-the-matrix-diagonally/
-    // https://leetcode.com/problems/sort-list/
     // https://leetcode.com/problems/pancake-sorting/
     // https://leetcode.com/problems/maximum-number-of-coins-you-can-get/
     // https://leetcode.com/problems/car-fleet/
     // https://leetcode.com/problems/all-elements-in-two-binary-search-trees/
 
-    // https://leetcode.com/problems/single-element-in-a-sorted-array/
 
     // https://www.geeksforgeeks.org/nearly-sorted-algorithm/
     // https://www.geeksforgeeks.org/

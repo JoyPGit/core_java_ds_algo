@@ -1685,7 +1685,6 @@ class StringPractice {
     // IMP SORTING TO REDUCE COMPARISONS
 
     // IMP FILESYSTEM
-    // https://leetcode.com/problems/remove-sub-folders-from-the-filesystem/
     /** POINTS : 
      * 1 SORT THE ARRAY
      * 2 USE STARTSWITH; SIMILAR TO MERGE INTERVALS
@@ -1693,6 +1692,7 @@ class StringPractice {
      * 
      * if curr starts with prev and has '/', iit must be a subfolder, don't add to res
     */
+    // https://leetcode.com/problems/remove-sub-folders-from-the-filesystem/
     public List<String> removeSubfolders(String[] folder) {
         Arrays.sort(folder);
         List<String> res = new ArrayList<>();
@@ -1869,11 +1869,12 @@ class StringPractice {
     POINTS : 
      * 1 USE A CHAR ARRAY NOT A HASHMAP, IT'S EASIER TO COMPARE WITH ARRAYS.EQUALS
      * 2 STORE PATTERN'S COUNT IN A CHAR ARRAY(NAMED 'BASE') OF SIZE 26
-     * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 2 STEPS : 
+     * 
+     * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 3 STEPS : 
      * FIRST WINDOW AND THEN ALL OTHER WINDOWS,
-
      * TRAVERSE FROM i TILL n (PATTERN LENGTH) AND STORE IN A NEW ARRAY--> FIRST WINDOW
      * AND THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
+     * * IN BETWEEN, IF THE CONDN IS MET, (SET.SIZE == n), TRY TO SHRINK THE WINDOW
 
      * 4 COMPARE IF ARRAYS ARE EQUAL 
      * WE KEEP THE BASE ARRAY AS A REFERENCE AND THE CURR ARRAY HOLDS 
@@ -2092,6 +2093,11 @@ class StringPractice {
         return 0;
     }
     
+    // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    public int maxUniqueSplit(String s) {
+        int max = 0;
+        return max;
+    }
 
     // https://leetcode.com/problems/add-binary/
     // https://leetcode.com/problems/longest-duplicate-substring/

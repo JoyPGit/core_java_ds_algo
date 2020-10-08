@@ -542,38 +542,51 @@ class Matrix {
     }
    
 
-    void diagonalPrintMatrix(int[][] matrix) {
-        int R = matrix.length - 1; // 2
-        int C = matrix[0].length - 1; // 2
+    void antiDiaPrint(int[][] arr) {
         int sum = 0;
-        int i = 0, j = 0;
-        while (sum <= R * C) {
-            findAndPrint(matrix, sum);
-            sum++;
+        while (sum <= (arr.length - 1 + arr[0].length - 1)) {
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < arr[0].length; j++) {
+                    if (i + j == sum)
+                        System.out.print(arr[i][j] + ", ");
+                }
+            }
             System.out.println();
+            sum++;
         }
-        // while(i+j==sum && sum<=R*C){
-        // System.out.println(matrix[i][j]+", ");
-        // i++; j++;
-        // }
-        // for(i =0 ;i<=R; i++){
-        // for (j =0; j<=C; j++){
-        // if(sum==i+j && sum<=R*C){System.out.print(matrix[i][j]+", ");}
-        // sum++;
-        // }
-        // System.out.println();
-        // }
     }
 
     // https://leetcode.com/problems/diagonal-traverse-ii/
-    void findAndPrint(int[][] matrix, int sum) {
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[0].length; j++) {
-                if (i + j == sum)
-                    System.out.print(matrix[i][j] + ", ");
+
+    // https://leetcode.com/problems/sort-the-matrix-diagonally
+    /*
+     * the most imp thing is that the diff b/w indices remains 
+     * 1 same across a dia, so store diff in map
+     * 2 USE PQUEUE INSEAD OF LIST AND THEN SORTING IT LATER
+    */
+    public int[][] diagonalSort(int[][] mat) {
+        int m = mat.length;
+        int n = mat[0].length;
+        
+        HashMap<Integer, PriorityQueue<Integer>> map = new HashMap<>();
+        
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                PriorityQueue<Integer> curr = 
+                    map.getOrDefault(i-j, new PriorityQueue<>());
+                curr.add(mat[i][j]);
+                map.put(i-j, curr);
             }
         }
+        
+        for(int i =0; i<m; i++){
+            for(int j=0; j<n; j++){
+                mat[i][j] = (map.get(i-j)).remove();
+            }
+        }
+        return mat;    
     }
+    
 
     class holder {
         int row;
@@ -721,21 +734,7 @@ class Matrix {
             int up = maxPathLengthHelper(arr, i - 1, j, holder, value);
             int left = maxPathLengthHelper(arr, i, j - 1, holder, value);
             int right = maxPathLengthHelper(arr, i, j + 1, holder, value);
-            // }
-            // if(isSafePathLength(i+1, j, arr, value)){
-            // // this.countPathLength++;
-            // // down =1;
-
-            // }
-            // if(isSafePathLength(i-1, j, arr, value)){
-            // // up=1;
-            // }
-            // if(isSafePathLength(i, j+1, arr, value)){
-            // // right =1;
-            // }
-            // if(isSafePathLength(i, j-1, arr, value)){
-            // // left =1;
-            // }
+           
             // System.out.println("left "+left+" right "+right+" up "+up+" down "+down);
             holder[i][j] = Math.max(down, Math.max(up, Math.max(left, right))) + 1;
             System.out.println("holder[" + i + "][" + j + "] " + holder[i][j]);
@@ -798,7 +797,8 @@ class Matrix {
 
     //////////////////////////// 7 jun dp applied
     /**
-     * 1 pass -9999 2 pass current value for subsequent 3 math.max for max
+     * 1 pass -9999 
+     * 2 pass current value for subsequent 3 math.max for max
      */
     void goldMine(int[][] grid) {
         int max = -1;
@@ -990,19 +990,7 @@ class Matrix {
         }
     }
 
-    void antiDiaPrint(int[][] arr) {
-        int sum = 0;
-        while (sum <= (arr.length - 1 + arr[0].length - 1)) {
-            for (int i = 0; i < arr.length; i++) {
-                for (int j = 0; j < arr[0].length; j++) {
-                    if (i + j == sum)
-                        System.out.print(arr[i][j] + ", ");
-                }
-            }
-            System.out.println();
-            sum++;
-        }
-    }
+  
 
     boolean searchRowColSortedMatrix(int[][] arr, int num) {
         int row = -1;
@@ -1229,6 +1217,7 @@ class Matrix {
             dfs(grid, row, col-1);
         }
     }
+
     // https://leetcode.com/problems/number-of-closed-islands
     public int closedIsland(int[][] grid) {
         int count = 0;

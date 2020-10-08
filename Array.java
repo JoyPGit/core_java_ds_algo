@@ -687,7 +687,6 @@ class Array {
             max = Math.max(max, sum);
             if(sum<0) sum = 0;
         }
-        
         return max;
     }
 
@@ -730,9 +729,7 @@ class Array {
             }
             list.removeFirst();
             res[index++] = list.getLast();
-
         }
-
         utilCustom.Utility.print1DMatrix(res);
         return res;
     }

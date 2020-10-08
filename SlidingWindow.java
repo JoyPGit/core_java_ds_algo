@@ -228,15 +228,15 @@ public class SlidingWindow {
 
     /** the above works for non negative integers, this one for both */
     // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
-    // https://leetcode.com/problems/subarray-sum-equals-k/submissions/
 
 
     /** tricky thing here is to check for the list size and add the incoming el
      * and then return 0 if list size is empty.
      * 1 add to res after the first for loop
      * 2 if list is empty and arr[i-k] == getfirst(); add 0
-     * 3 
+     * 3 COMPARING THE INCOMING WITH Q's FIRST
      */
+    // ONLY DISTINCT NEGATIVE NO IN EVERY WINDOW OF SIZE K
     ArrayList<Integer> findFirstNegative(int[] arr, int k){
         ArrayList<Integer> res = new ArrayList<>();
         Deque<Integer> list = new LinkedList<>();
@@ -269,11 +269,42 @@ public class SlidingWindow {
         return res;
     }
 
+    /** 
+     * IMP : DISTINCT ONLY WHEN FREQ = 1.
+     * POINTS : 
+     * 1 TRAVERSE THE FIRST WINDOW
+     * 2 USE A SINGLE VAR COUNT 
+     * 3 FOR OTHER WINDOWS, REMOVE THE EL JUST BEFORE THE WINDOW, A[i-k]
+     * IF ITS FREQ IS <=0,  A DISTINCT CHAR HAS BEEN REMOVED, SO count--
+     * 4 ADD THE NEW EL, SAME LOGIC AS FIRST WINDOW
+     * IF FREQ > 1, IT'S NOT DISTINCT, SO ONLY FREQ = 1
+    */
+    // https://practice.geeksforgeeks.org/problems/count-distinct-elements-in-every-window/1
+    ArrayList<Integer> countDistinct(int A[], int n, int k)
+    {
+        ArrayList<Integer> res = new ArrayList<>();
+        if(n==0) return res;
+        int count = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i<k; i++){
+            map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            if(map.get(A[i]) == 1) count++;
+        }
+        res.add(count);
+        
+        for(int i = k; i<n; i++){
+            map.put(A[i-k], map.get(A[i-k])-1);
+            if(map.get(A[i-k]) < 1) count--;
+            map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            if(map.get(A[i]) == 1) count++;
+            res.add(count);
+        }
+        return res;
+    }
+
     // https://www.geeksforgeeks.org/
     // count-of-subarrays-of-size-k-with-elements-having-even-frequencies/?ref=rp
 
-    // https://www.geeksforgeeks.org/count-of-subarrays-of-size-k-with-
-    // elements-having-even-frequencies/?ref=rp
     // use XOR
     
 
@@ -429,7 +460,8 @@ public class SlidingWindow {
 	{   
         int n = matrix.length;
 		int a = 0; int b = n - 1; 
-		
+        
+        //checking single row, a holds possible celeb no
 		while (a < b) { 
 			if (knows(matrix, a, b)) a++; 
 			else b--; 
@@ -437,10 +469,9 @@ public class SlidingWindow {
 
 		// Check if a is a celebrity or not
 		for (int i = 0; i < n; i++) { 
-			// If any person doesn't know 'a' or 'a' doesn't 
-			// know any person, return -1 
-			if (i != a && (knows(matrix, a, i) || 
-						!knows(matrix, i, a))) 
+            // If 'a' knows any person or
+            // any person doesn't know 'a' return -1
+			if (i != a && (knows(matrix, a, i) || !knows(matrix, i, a))) 
 				return -1; 
 		} 
 		return a; 
@@ -452,42 +483,6 @@ public class SlidingWindow {
 	} 
 
 
-    /** POINTS :
-     * 1 WHENEVER A QUES OF MIN SWAPS AND THE DATA SET IS CONTIGOUS
-     * USE SLIDING WINDOW
-     * 2 HERE WE FIND THE NO OF 1s, THIS DETERMINES THE SIZE OF THE WINDOW
-     * 3 NOW COUNT NO OF 0s, THIS IS THE MIN NO OF SWAPS
-     * 4 KEEP TRACK OF MIN NO OF 0s
-     * 5 IF OUTGOING INDEX IS ZERO zero--; IF INCOMING IS ZERO zero++
-     * 6 IMP BOUNDARY CONDNS : j = count+1 till n-count
-     */
-    // https://leetcode.com/discuss/interview-question/414660/
-    // MICROSOFT
-    // https://www.geeksforgeeks.org/minimum-swaps-required-group-1s-together/
-    // https://www.youtube.com/watch?v=VXi_-2CmitM
-    // https://leetcode.com/discuss/interview-question/344778/
-    // find-the-minimum-number-of-swaps-required-such-that-all-
-    // the-0s-and-all-the-1s-are-together
-    int minSwaps(int[] arr){
-        int n = arr.length;
-        int count = 0;
-        for(int i =0; i<n; i++) if(arr[i]==1) count++;
-
-        int zero = 0; int min = Integer.MAX_VALUE;
-        for(int i = 0; i<count; i++){
-            if(arr[i]==0) zero++;
-        }
-        min = Math.min(min, zero);
-        System.out.println("min "+min);
-
-        for(int j = 1; j<n-count; j++){
-            if(arr[j-1]==0) zero--;
-            if(arr[j+count]==0) zero++;
-            min = Math.min(min, zero);
-        }
-        System.out.println("min no of swaps " + min);
-        return min;
-    }
     // https://leetcode.com/problems/max-consecutive-ones-iii/
 
     /** 
@@ -575,6 +570,70 @@ public class SlidingWindow {
 
     // https://leetcode.com/problems/find-the-town-judge/
 
+    /** POINTS :
+     * 1 WHENEVER A QUES OF MIN SWAPS AND THE DATA SET IS CONTIGOUS
+     * USE SLIDING WINDOW
+     * 2 HERE WE FIND THE NO OF 1s, THIS DETERMINES THE SIZE OF THE WINDOW
+     * 3 NOW COUNT NO OF 0s, THIS IS THE MIN NO OF SWAPS
+     * 4 KEEP TRACK OF MIN NO OF 0s
+     * 5 IF OUTGOING INDEX IS ZERO zero--; IF INCOMING IS ZERO zero++
+     * 6 IMP BOUNDARY CONDNS : j = count+1 till n-count
+     */
+    // https://leetcode.com/discuss/interview-question/414660/
+    // MICROSOFT
+    // https://www.geeksforgeeks.org/minimum-swaps-required-group-1s-together/
+    // https://www.youtube.com/watch?v=VXi_-2CmitM
+    // https://leetcode.com/discuss/interview-question/344778/
+    // find-the-minimum-number-of-swaps-required-such-that-all-
+    // the-0s-and-all-the-1s-are-together
+    int minSwaps(int[] arr){
+        int n = arr.length;
+        int windowSize = 0;
+        for(int i =0; i<n; i++) if(arr[i]==1) windowSize++; // no of 1s
+
+        //first window
+        int zero = 0; 
+        for(int i = 0; i<windowSize; i++){
+            if(arr[i]==0) zero++;
+        }
+        int min = zero;
+        System.out.println("min "+min);
+
+
+        // subsequent windows, start from windowSize and outgoing el = j-windowSize
+        for(int j = windowSize; j<n; j++){
+            if(arr[j-windowSize] == 0) zero--;
+            if(arr[j] == 0) zero++;
+            min = Math.min(min, zero);
+        }
+        System.out.println("min no of swaps " + min);
+        return min;
+    }
+
+    // https://leetcode.com/problems/max-consecutive-ones-iii
+    // window size = no of 1s won't work
+    // j holds start of the window where zeroes <=k
+    public int longestOnes(int[] A, int K) {
+        int n = A.length;
+        if(n == 0) return n;
+        int zeroes = 0;
+        int max = 0;
+        int j = 0;
+        
+        for(int i =0; i<n; i++){
+            if(A[i]==0) zeroes++;
+            
+            // int j = 0;
+            while(zeroes>K){
+                if(A[j]==0) zeroes--;
+                j++;
+            }
+            max = Math.max(max, i-j+1);
+        }
+        return max;
+    }
+
+
     // Count Number of Nice Subarrays
     // Replace the Substring for Balanced String
     // Max Consecutive Ones III
@@ -589,7 +648,7 @@ public class SlidingWindow {
         // slide.minSubArrayLenWithSumGreaterThanOrEqualK(sum, nums);
 
         String smallestSub = "cdadabcc";
-        slide.smallestSubsequence(smallestSub);
+        // slide.smallestSubsequence(smallestSub);
 
         int[] arr = {1, 2, 4, 4};
         // {1, 2, 1, 3, 4, 2, 3};
@@ -609,7 +668,7 @@ public class SlidingWindow {
 
         int[] minSwap1s = {1,0,1,0,1,0,0,1,1,1};
         // int[] minSwap1s = {0,0,0,1,0};
-        // slide.minSwaps(minSwap1s);
+        slide.minSwaps(minSwap1s);
     }
     
 }

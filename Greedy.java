@@ -210,22 +210,7 @@ class Greedy{
         return true;
     }
 
-    // https://leetcode.com/problems/water-bottles/
-    public int numWaterBottles(int numBottles, int numExchange) {
-        int i = 0; 
-        while(i <= numBottles){
-            if(i%numExchange==0) {
-                numBottles++;
-            }
-            i++;
-        }
-
-        // for(i =1; i<=numBottles; i++){
-        //     if(i%numExchange==0) numBottles++;
-        // }
-        // System.out.println(numBottles);
-        return numBottles;
-    }
+  
 
     /** points:
      * 1 -ve no divided by k gives same remainder as (+ve)*(-1)

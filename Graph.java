@@ -814,6 +814,8 @@ class Graph {
         
         return true;
 	}
+
+	// https://leetcode.com/problems/possible-bipartition/
 	
 
 	/**
@@ -914,27 +916,31 @@ class Graph {
 	 * 4 ADD TO SET ONLY WHEN REMOVING FROM PQ
 	 * 
 	 * 5 if(!set.contains(curr.node) && distance[i] > distance[curr.node] + g[curr.node][i])
-	 * ENSURE SET DOESN'T CONTAIN i
+	 * ENSURE NEIGHBOR HASN'T BEEN RELAXED (NOT IN VISITED SET)
 	 * 
 	 * 6 WHILE CHECKING FOR MAX DIST, CHECK FOR DIST = 7000
+	 *
+	 * https://cs.stackexchange.com/questions/10047/
+	 * is-dijkstras-algorithm-just-bfs-with-a-priority-queue 
 	 * 
+	 * DIJKSTRA IS A BIT DIFFERENT, IT USE SET.SIZE()==N-1
+	 * PQ WORKS JUST FINE
 	*/
 	// graph src, dest, edge wt : [[2,1,1],[2,3,1],[3,4,1]]
 	int dijkstra(int[][] graph, int head, int n) {
 		// any value greater than max edge wt(6000), but not Integer.MAX_VALUE
 		int[][] g = new int[n][n];
-		for(int[] i :g) Arrays.fill(i, 8000);
+		for(int[] i :g) Arrays.fill(i, Integer.MAX_VALUE-10000);
 
 		for(int[] i: graph){
 			g[i[0]][i[1]] = i[2];
 		}
 
 		int[] distance = new int[n];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+        Arrays.fill(distance, Integer.MAX_VALUE-10000);
         distance[head] = 0;
 
         PriorityQueue<Shortest> pq = new PriorityQueue<>((x,y)->x.dist - y.dist);
-		pq.add(new Shortest(head, 0));
 
 		HashSet<Integer> visited = new HashSet<>();
 
@@ -956,7 +962,7 @@ class Graph {
 		}
 		int maxTime = 0;
         for(int i=1; i<distance.length; i++){
-            if(distance[i] == 8000) return -1;
+            if(distance[i] == Integer.MAX_VALUE-10000) return -1;
             maxTime = Math.max(maxTime, distance[i]);
         }
         return maxTime;
@@ -1067,13 +1073,13 @@ class Graph {
 		parent[0] = -1;
 
 		while (set.size() != n) {
-			int i = getNextMinIndex(set, dist);
-			set.add(i);
-			System.out.println("index " + i);
+			int curr = getNextMinIndex(set, dist);
+			set.add(curr);
+			System.out.println("index " + curr);
 			for (int j = 0; j < n; j++) {
-				if (!set.contains(j) && dist[j] > graph[i][j]) {
-					dist[j] = graph[i][j];
-					parent[j] = i;
+				if (!set.contains(j) && dist[j] > graph[curr][j]) {
+					dist[j] = graph[curr][j];
+					parent[j] = curr;
 				}
 			}
 		}
