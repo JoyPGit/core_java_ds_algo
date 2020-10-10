@@ -1,43 +1,7 @@
 import java.util.*;
+import utilCustom.*;
 
 public class DP {
-
-    void printMatrix(int[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if(i==arr.length-1 && j == arr[0].length-1) {
-                    System.out.println(arr[i][j]+";");
-                    System.out.println();
-                } 
-                else System.out.print(arr[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
-
-    void printMatrixBool(boolean[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if(i==arr.length-1 && j == arr[0].length-1) {
-                    System.out.println(arr[i][j]+";");
-                    System.out.println();
-                } 
-                else System.out.print(arr[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
-
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if(i==arr.length-1) {
-                System.out.println(arr[i]+";");
-                System.out.println();
-            } 
-            else System.out.print(arr[i] + ", ");
-        }
-    }
-
 
     public int factorial(int n){
         if(n==0 || n==1) return 1;
@@ -63,8 +27,6 @@ public class DP {
         return dp[n];
     }
 
-    // KADANE'S ALGO
-    // https://leetcode.com/problems/maximum-subarray/
     /**
      * points: only right and down movements, else visited matrix would have
      * needed global var count to be used
@@ -83,7 +45,7 @@ public class DP {
         // printMatrix(countHolder);
 
         countPathsHelper(arr, countHolder);
-        printMatrix(countHolder);
+        utilCustom.Utility.printMatrix(countHolder);
         return countHolder[n - 1][m - 1];
 
     }
@@ -201,10 +163,8 @@ public class DP {
     int highwayBillBoard(int[] board, int[] revenue, int dist) {
         int n = board.length;
 
-        if (n == 0)
-            return 0;
-        if (n == 1)
-            return revenue[0];
+        if (n == 0) return 0;
+        if (n == 1) return revenue[0];
 
         int[] dp = new int[n];
         dp[0] = revenue[0];
@@ -252,7 +212,7 @@ public class DP {
         for(int i=0; i<n; i++){
             max = Math.max(max, dp[i]);
         }
-        print1DMatrix(dp);
+        utilCustom.Utility.print1DMatrix(dp);
         return max;
     }
     
@@ -519,7 +479,7 @@ public class DP {
             dp[arr[i]]+=arr[i];
         }
 
-        print1DMatrix(dp);
+        utilCustom.Utility.print1DMatrix(dp);
         dp[2] = Math.max(dp[1], dp[2]);
         for(int i =3; i<dp.length; i++){
             dp[i] = Math.max(dp[i]+dp[i-2], dp[i-1]);
@@ -551,7 +511,7 @@ public class DP {
         path[pathIndex] = arr[row][col];
         if (row == arr.length - 1 && col == arr[0].length - 1) {
             uniquePathCount++;
-            print1DMatrix(path);
+            utilCustom.Utility.print1DMatrix(path);
             System.out.println();
             return;
         }
@@ -616,7 +576,8 @@ public class DP {
 
     }
 
-    /**points
+    /**
+     * points
      * 1 assign infinity to dp index 1 till end 
      * 2 for i =1 loop j from j=0 till i
      * 3 if arr[j]+j >=i checking if we can reach index i from index j
@@ -660,11 +621,11 @@ public class DP {
         for(int i=3; i<=n;i++){
             dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
         }
-        
+
         return dp[n];
     }
-    // https://leetcode.com/problems/min-cost-climbing-stairs/
 
+    // https://leetcode.com/problems/min-cost-climbing-stairs
     int rodCutting(int[] price, int size){ //size is for fixing the for loop iteration number
         if(size <=0) return 0;
 
@@ -675,6 +636,7 @@ public class DP {
         }
         return max;
     }
+
 
     //trying a unifying pattern for rod cutting, coin change and knapsack
     int rodCuttingIncludeExclude(int[] price, int[] length, int L, int index){ 
@@ -729,7 +691,7 @@ public class DP {
                 }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         return dp[value.length][limit];
     }
 
@@ -765,7 +727,7 @@ public class DP {
                 }
             }
         }
-        printMatrix(temp);
+        utilCustom.Utility.printMatrix(temp);
         return temp[coins.length][total];
     }
 
@@ -821,7 +783,7 @@ public class DP {
                 }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         return dp[n][sum];
      }
 
@@ -860,7 +822,7 @@ public class DP {
 		}
 
 		// return maximum value
-		printMatrix(T);	
+		utilCustom.Utility.printMatrix(T);	
 		return T[v.length][W];
     }
 
@@ -895,7 +857,7 @@ public class DP {
                 }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         return dp[limit-1][n];
     }
 
@@ -928,7 +890,7 @@ public class DP {
     //21 June
     void allSubsets(int[] arr, int[] subset, int index){
         if(index == arr.length) {
-            print1DMatrix(subset);
+            utilCustom.Utility.print1DMatrix(subset);
             System.out.println();
             return;
         }
@@ -951,7 +913,7 @@ public class DP {
                 // }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
     }
     
     void matrixBlockSumHelper(int[][] arr, int[][] dp, int row, int col, int k){
@@ -994,7 +956,7 @@ public class DP {
 
     void subsetSumHelper(int[] arr, int[] dp, int sum, int index){
         if(sum == 0) {
-            print1DMatrix(dp);
+            utilCustom.Utility.print1DMatrix(dp);
             System.out.println("found");
             return;
         }
@@ -1050,7 +1012,7 @@ public class DP {
                 else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i]];
             }
         }
-        printMatrixBool(dp);
+        utilCustom.Utility.printMatrixBool(dp);
         System.out.println("the subset exists : "+dp[n-1][sum]);
         return dp[n-1][sum];
     }
@@ -1112,7 +1074,7 @@ public class DP {
                 else dp[i][j] = dp[i-1][j]|| dp[i-1][j-set[i-1]]; //ALWAYS USE ELSE
             }
         }
-        printMatrixBool(dp);
+        utilCustom.Utility.printMatrixBool(dp);
         return dp[set.length][target];
     }
 
@@ -1177,7 +1139,7 @@ public class DP {
             }
         }
         
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         if(dp[0][n-1]>=half) return true;
         return false;
     }
@@ -1205,20 +1167,18 @@ public class DP {
         && col>=0 && col<matrix[0].length
         && (matrix[row][col]-prev)==1){
             if(dp[row][col]!=0) return dp[row][col];
-            else{
-                int left = longestPathMatrixHelper(matrix, row, col-1, dp, matrix[row][col]);
-                int right = longestPathMatrixHelper(matrix, row, col+1, dp, matrix[row][col]);
-                int up = longestPathMatrixHelper(matrix, row-1, col, dp, matrix[row][col]);
-                int down = longestPathMatrixHelper(matrix, row+1, col-1, dp, matrix[row][col]);
+            int left = longestPathMatrixHelper(matrix, row, col-1, dp, matrix[row][col]);
+            int right = longestPathMatrixHelper(matrix, row, col+1, dp, matrix[row][col]);
+            int up = longestPathMatrixHelper(matrix, row-1, col, dp, matrix[row][col]);
+            int down = longestPathMatrixHelper(matrix, row+1, col-1, dp, matrix[row][col]);
 
-                dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down)))+1;
-                System.out.println("in here "+dp[row][col]);
-                return dp[row][col];
-            }
-            
+            dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down)))+1;
+            System.out.println("in here "+dp[row][col]);
+            return dp[row][col];
         }
         return 0;
     }
+
     /** remember to replace all consectuive * with a single *
      * even though the resultant matrix is upper triangular,
      * the whole matrix is filled.
@@ -1272,7 +1232,7 @@ public class DP {
         for(int i =0; i<n; i++){
             min = Math.min(min, dp[0][i]);
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         return min;
     }
 
@@ -1369,7 +1329,7 @@ public class DP {
                 else dp[i][j] = false;
             }
         }
-        printMatrixBool(dp);
+        utilCustom.Utility.printMatrixBool(dp);
         return dp[n1][n2];
     }
 
@@ -1424,7 +1384,7 @@ public class DP {
                 }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         System.out.println("all palindromic substrings' count : " + count);
         return count;
     }
@@ -1459,7 +1419,7 @@ public class DP {
                 }
             }
         }
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         return dp[0][arr.length-1];
     }
 
@@ -1523,7 +1483,7 @@ public class DP {
                 dp[i][j] = min; 
             } 
         } 
-        printMatrix(dp);
+        utilCustom.Utility.printMatrix(dp);
         return dp[k][n]; 
     } 
 
@@ -1556,7 +1516,9 @@ public class DP {
         
         for(int l=1; l<=n; l++){//2
             for(int i =0; l+i-1<n; i++){
-                if(l==1 && set.contains(s.substring(i,i+1))){ dp[i][i] = true; continue; }//3
+                if(l==1 && set.contains(s.substring(i,i+1))){
+                     dp[i][i] = true; continue; //3painter
+                }
                 int j = i+l-1;
                 if(set.contains(s.substring(i,j+1))) {//4
                     System.out.println("in here "+s.substring(i, j+1));
@@ -1571,6 +1533,7 @@ public class DP {
         return dp[0][n-1];
     }
 
+    // https://www.techiedelight.com/probability-alive-after-taking-n-steps-island/
     // https://leetcode.com/problems/maximal-rectangle/
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
     // https://leetcode.com/problems/minimum-cost-to-cut-a-stick/

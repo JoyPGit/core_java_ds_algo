@@ -46,7 +46,7 @@ public class Searching {
      * (MAX DIFF i-1, i or i-1,
      * USE CHECKS, COMPARE WITH ALL THREE VALUES,
      * END = MID-2 OR MID+2
-     * FOR BOUNDARY CONDS, MID-1>=0 && MID+1<=n-1)
+     * FOR BOUNDARY CONDNS, MID-1>=0 && MID+1<=n-1)
      * 
      * 
      * 9 FIND PEAK IN A BITONIC ARRAY
@@ -130,7 +130,7 @@ public class Searching {
             }
             else hi = mid-1;
         }
-        System.out.println("index "+result+", floor of "+key+ "is "+nums[result]);
+        System.out.println("index "+result+", floor of "+key+ " is "+nums[result]);
         return result;
     }
 
@@ -581,7 +581,7 @@ public class Searching {
         Searching coronaSearch = new Searching();
         int[] arr = {1,3,3,5,8,11,14};//,4,6,7,9,21,43};
 
-        // coronaSearch.findFloor(arr, 5);
+        coronaSearch.findFloor(arr, 5);
         int[] scores = {100, 90, 90, 80, 75, 60};
         int[] alice = {50, 65, 77, 90, 102};
         climbingLeaderboard(scores, alice);

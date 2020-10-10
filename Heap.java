@@ -211,7 +211,6 @@ public class Heap {
      */
 
     // SKYLINE
-    // FINDING MEDIAN
     // https://www.techiedelight.com/convert-min-heap-to-max-heap-linear-time/
 
     /** one optimization can be to keep heap size limited to k */
@@ -443,7 +442,38 @@ public class Heap {
         return new int[]{start, end};
     }
 
-    // https://leetcode.com/problems/sort-the-matrix-diagonally/
+    /** 
+     * MAX HEAP OF SMALLER ELS HOLDS THE MEDIAN IF ODD NO OF ELS
+     * POINTS :
+     * 1 MAX HEAP SMALLER ELES, MIN HEAP OF LARGER ELS,
+     * SO THE CLOSEST ELS ARE AT THE TOP
+     * 2 ADD TO MAX, ADD TO MIN, IS max.size()< LESS, ADD BACK
+     * 3 IF SIZES ARE SAME, EVEN SO AVERAGE OF TOP ELS
+     * ELSE MAX.PEEK()
+     * 
+    */
+    class MedianFinder {
+        // https://leetcode.com/problems/find-median-from-data-stream
+        // define max heap explicitly
+        PriorityQueue<Integer> max = new PriorityQueue<>((x,y)->y-x);
+        PriorityQueue<Integer> min = new PriorityQueue<>();
+        
+        public MedianFinder() {}
+        
+        public void addNum(int num) {
+            max.add(num);
+            min.add(max.remove());
+            if(max.size()<min.size()) max.add(min.remove());
+        }
+        
+        public double findMedian() {
+            if(max.size() == min.size()) return ((min.peek()+max.peek())*0.5);
+            return max.peek();
+        }
+    }
+
+    // https://leetcode.com/problems/median-of-two-sorted-arrays/
+    // discuss/268906/Java-Solution%3A(2ms)faster-than-100.00-(48.3)less-than-86.61.
     
     // https://leetcode.com/problems/find-the-kth-smallest-sum-of-a-matrix-with-sorted-rows/
     // https://www.geeksforgeeks.org/nearly-sorted-algorithm/

@@ -11,6 +11,13 @@ public class Utility {
      * 2 of type : map.entrySet()
      * 3 Integer i = entry.getValue();
      */
+
+    /** 
+     * While long type can represent all integer numbers in the range f
+     * rom its minimum to maximum, double type can only represent some of it.
+     * Since they occupy same amount of bits, the amount of numbers each is capable 
+     * to express are nearly equal (actually, double can represent fewer numbers).
+    */
     void hashiterator(HashMap<Integer, Integer> map) {
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer key = entry.getKey();

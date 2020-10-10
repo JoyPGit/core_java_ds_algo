@@ -235,7 +235,81 @@ public class Tree {
             if(curr.right!=null) q.addLast(curr.right);
             if(curr.left!=null) q.addLast(curr.left);
         }
+        return res;
+    }
+
+    /** 
+     * MORRIS INORDER TRAVERSAL
+     * SET CURRENT'S PREDECESSOR'S RIGHT TO CURRENT
+     * IF THE PRED'S RIGHT IS NOT NULL, SET IT NULL. (NOT NULL SIGNIFIES THAT IT HAS BEEN VISITED)
+     * 
+     * IF LEFT IS NULL ADD AND MOEV TO RIGHT,
+     * ELSE FIND PRED, SET RIGHT
+     * IF PRED RIGHT NOT NULL, SET NULL, ADD. 
+    */
+    // https://leetcode.com/problems/binary-tree-inorder-traversal
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        TreeNode curr = root;
+        while(curr!=null){
+            if(curr.left == null){
+                res.add(curr.val);
+                curr = curr.right;
+            }
+            else{
+                TreeNode pred = findPred(curr);
+                //link back if right null
+                if(pred.right == null){
+                    pred.right = curr;
+                    curr = curr.left;
+                }
+                // if right  not null, we have visited, unlink
+                // we are always setting the pred's right to null, so 
+                // if it's not null then we have already visited it.
+                else{
+                    pred.right = null;
+                    res.add(curr.val);
+                    curr = curr.right;
+                }
+            }
+        }
+        return res;
+    }
+    
+    TreeNode findPred(TreeNode node){
+        TreeNode current = node;
+        node = node.left;
+        while(node.right != null && node.right != current) node = node.right;
+        return node;
+    }
+
+    /** 
+     * POINTS :
+     * 1 ADD TO STACK, REMOVE CURR, ADD LEFT AND RIGHT
+     * 2   4,2,6-------STACK------RES 
+     *       4----------4----------
+     *      2,6--------2,6----------4
+     *        --------------------4,6,2
+     * LEFT IS ADDED AND THEN WHILE ADDING TO RES, FIRST RIGHT IS ADDED.
+     * SO FINAL ANS IS REVERSED
+     * 
+     *
+    */
+    // PREORDER -> RIGHT, LEFT; POST -> LEFT, RIGHT
+    // https://leetcode.com/problems/binary-tree-postorder-traversal
+    public List<Integer> postorderTraversal(TreeNode root) {
+        Deque<TreeNode> q = new LinkedList<>();
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;
         
+        q.addLast(root);
+        while(!q.isEmpty()){
+            TreeNode curr = q.removeLast();
+            res.add(curr.val);
+            if(curr.left!=null) q.addLast(curr.left);
+            if(curr.right!=null) q.addLast(curr.right);
+        }
+        Collections.reverse(res);
         return res;
     }
 
@@ -451,6 +525,23 @@ public class Tree {
         return res;
     }
 
+    HashMap<Integer, List<Integer>> diaMap = new HashMap<>();
+    void diagonalTraversal(TreeNode root){
+        diaHelper(root, 0);
+        for(Map.Entry<Integer, List<Integer>> entry : diaMap.entrySet()){
+            List<Integer> curr = entry.getValue();
+            System.out.println(curr);
+        }
+    }
+
+    void diaHelper(TreeNode root, int dia){
+        if(root == null) return;
+        List<Integer> curr = diaMap.getOrDefault(dia, new ArrayList<>());
+        curr.add(root.val);
+        diaMap.put(dia, curr);
+        if(root.right!=null) diaHelper(root.right, dia);
+        if(root.left!=null) diaHelper(root.left, dia+1);
+    }
 
     // https://leetcode.com/problems/same-tree/
     // SIMPLE PREORDER FOR BOTH SIMULTANEOUSLY
@@ -666,6 +757,45 @@ public class Tree {
         return root;
     }
 
+
+    /** 
+     * POINTS :
+     * 1 THE GLOBAL VAR PRESTART IS USED TO CREATE NEW NODES
+     * 2 STEPS : create node, find index, preStart++, set children
+     * 3 AND THE BOUNDARY FOR LEFT = (start, index-1)
+     * AND RIGHT = (index+1, end)
+    */
+    // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal
+    int preStart = 0; // 1
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int n = preorder.length;
+        if(n==0) return null;
+        return helper(preorder, inorder, 0, n-1);
+    }
+    
+    TreeNode helper(int[] preorder, int[] inorder, int start, int end){
+        if(start>end) return null;
+        if(preStart >= preorder.length) return null;
+
+        TreeNode root = new TreeNode(preorder[preStart]);//imp
+        
+        int index = findIndex(preorder[preStart], inorder);
+        preStart++;
+        root.left = helper (preorder, inorder, start, index-1);
+        root.right = helper (preorder, inorder, index+1, end);
+        return root;
+    }
+    
+    int findIndex(int val, int[] inorder){
+         for(int i =0; i<inorder.length; i++){
+            if(inorder[i] == val) return i;
+        }
+        return -1;
+    }
+
+    // https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+    // discuss/34787/Simple-and-clean-Java-solution-with-comments-recursive.
+
     // https://leetcode.com/problems/serialize-and-deserialize-bst/
 
     // https://leetcode.com/problems/path-sum/
@@ -711,6 +841,20 @@ public class Tree {
         return Math.max(left, right) + 1;
     }
 
+    // https://practice.geeksforgeeks.org/problems/diameter-of-binary-tree/1
+    int maxDia;
+    int diameter(TreeNode root) {
+        diaHelper(root);
+        return maxDia;
+    }
+    
+    int diaHelper(TreeNode root){
+        if(root == null) return 0;
+        int left = diaHelper(root.left);
+        int right = diaHelper(root.right);
+        maxDia = Math.max(maxDia, left + right+1);
+        return Math.max(left,right)+1;
+    }
 
     // SIMILAR TO HEIGHT, LEFT, RIGHT AND THEN ROOT
     // https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
@@ -727,7 +871,7 @@ public class Tree {
     }
     // print all ancestors
 
-    
+
     // https://leetcode.com/problems/sum-of-left-leaves/
     int sumLeftLeaf = 0;
     public int sumOfLeftLeaves(TreeNode root) {
@@ -744,8 +888,28 @@ public class Tree {
         preOrder(root.right);
     }
 
-    // https://leetcode.com/problems/count-complete-tree-nodes/
     
+    // https://leetcode.com/problems/count-complete-tree-nodes/
+
+    // https://leetcode.com/problems/binary-tree-maximum-path-sum/
+    // similar to dia
+    int maxPathSum = Integer.MIN_VALUE;    
+    public int maxPathSum(TreeNode root) {
+        maxHelper(root);
+        return maxPathSum;
+    }
+    
+    int maxHelper(TreeNode root){
+        if(root == null) return 0;
+        int left = maxHelper(root.left); 
+        int right = maxHelper(root.right);
+        // just make sure the value is >= 0
+        if(left < 0) left = 0;
+        if(right < 0) right = 0;
+        
+        maxPathSum = Math.max(maxPathSum, left + right + root.val);
+        return Math.max(left,right)+root.val;
+    }
 
     /** 
      * POINTS :
@@ -837,27 +1001,6 @@ public class Tree {
         dfsK(root.right, target, map, k, dist+1, res);
     }
 
-
-    // https://leetcode.com/problems/binary-tree-maximum-path-sum
-    // still confusing as per the examples. basic idea is of postorder traversal
-    // return Math.max(left, right)+a;
-    // POSTORDER TRAVERSAL
-    int maxSum = Integer.MIN_VALUE;    
-    public int maxPathSum(TreeNode root) {
-        maxHelper(root);
-        return max;
-    }
-    
-    int maxHelper(TreeNode root){
-        if(root == null) return 0;
-        int left = maxHelper(root.left); left= Math.max(left,0);
-        int right = maxHelper(root.right); right= Math.max(right,0);
-        // System.out.print("left "+left+" ");
-        // System.out.print("right "+right+" ");
-        int a = root.val; 
-        maxSum = Math.max(maxSum, left+right+a);
-        return Math.max(left,right)+a;
-    }
 
     // https://leetcode.com/problems/most-frequent-subtree-sum/
     int maxFrequentSum = -1;
@@ -1295,18 +1438,7 @@ public class Tree {
         }
     }
 
-    
-    void diameter(TreeNode node) {
-        int dia = height(node.left) + height(node.right);
-        System.out.println("heightnew(node.left) " + height(node.left));
-        System.out.println("heightnew(node.right) " + height(node.right));
-        System.out.println("dia " + dia);
-    }
-
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    
-   
-
     
 
     void removeHalfNodes(TreeNode node, TreeNode nodeparent) {
@@ -1343,14 +1475,6 @@ public class Tree {
         findMirrorNode(node1.right, node2.left, data);
     }
 
-    // void printHashMap() {
-    //     Iterator hmIterator = this.leftHashMap.entrySet().iterator();
-
-    //     while (hmIterator.hasNext()) {
-    //         HashMap.Entry mapElement = (HashMap.Entry) hmIterator.next();
-    //         System.out.println(mapElement.getKey() + " : " + mapElement.getValue());
-    //     }
-    // }
 
     ///////////////////////////// 5th feb LCA
     /**
@@ -1406,42 +1530,6 @@ public class Tree {
     }
 
 
-    public ArrayList<ArrayList<Integer>> hasPathSumList(TreeNode root, int sum) {
-        ArrayList<ArrayList<Integer>> paths = new ArrayList<>();
-
-        hasPathSumHelper(root, sum, new ArrayList<Integer>(), paths);
-
-        printArrayListofArrayLists(paths);
-        return paths;
-    }
-
-    void hasPathSumHelper(TreeNode node, int sum, ArrayList<Integer> current, ArrayList<ArrayList<Integer>> paths) {
-        if (node == null) {
-            return;
-        }
-
-        if (node.key == sum && node.left == null && node.right == null) {
-            paths.add(current);
-        }
-
-        current.add(node.key);
-        hasPathSumHelper(node.left, sum - node.key, new ArrayList<Integer>(current), paths);
-        hasPathSumHelper(node.right, sum - node.key, new ArrayList<Integer>(current), paths);
-    }
-
-    void printArrayListofArrayLists(ArrayList<ArrayList<Integer>> lists) {
-        System.out.println("in here" + lists);
-        for (int i = 0; i < lists.size(); i++) {
-            System.out.println(lists.get(i));
-            for (int j = 0; j < lists.get(i).size(); j++) {
-                System.out.println(lists.get(i).get(j));
-            }
-        }
-    }
-
-   
-
-
     void rightTraversal(TreeNode node) {
         System.out.println(node.rightpointer);
         if (node.left != null)
@@ -1449,97 +1537,6 @@ public class Tree {
         if (node.right != null)
             rightTraversal(node.right);
     }
-
-    void iterativePostorder(TreeNode node) {
-        Deque<TreeNode> stackPostorder = new LinkedList<>();
-        System.out.println("in here");
-        TreeNode left = null;
-        TreeNode right = null;
-        if (node != null)
-            stackPostorder.push(node);
-
-        while (!stackPostorder.isEmpty()) {
-
-            if (node.left != null)
-                left = node.left;
-
-            while (left != null) {
-                stackPostorder.push(left);
-                left = left.left;
-                // System.out.println("left "+left.key);
-            }
-            System.out.println("line 1656 " + stackPostorder.peek().key);
-
-            while ((stackPostorder.peek()).right == null) {
-                TreeNode x = stackPostorder.removeFirst();
-                System.out.print(x.key + ", ");
-                System.out.println("line 1661 " + stackPostorder.peek().key);
-            }
-            right = stackPostorder.peek().right;
-            if (right.right != null)
-                left = right.left;
-            if (right.right != null) {
-
-                right = right.right;
-            }
-        }
-
-    }
-
-    // TreeNode parent = null; int level = 0;
-    // boolean areCousins(TreeNode root, TreeNode a, TreeNode b, int level, TreeNode
-    // parent){
-    // // dfs(a, parent, 0);
-
-    // }
-
-    static void diagonalPrintUtil(TreeNode root, int d, HashMap<Integer, Vector<Integer>> diagonalPrint, int count) {
-
-        // Base case
-        if (root == null)
-            return;
-
-        System.out.println(count);
-        if (count == 0) {
-            System.out.println("the key is " + root.key);
-        }
-
-        // get the list at the particular d value
-        Vector<Integer> k = diagonalPrint.get(d);
-
-        // k is null then create a vector and store the data
-        if (k == null) {
-            k = new Vector<>();
-            k.add(root.key);
-        }
-
-        // k is not null then update the list
-        else {
-            k.add(root.key);
-        }
-
-        // Store all nodes of same line together as a vector
-        diagonalPrint.put(d, k);
-        // count--;
-        // Increase the vertical distance if left child
-        diagonalPrintUtil(root.left, d + 1, diagonalPrint, --count);
-
-        // Vertical distance remains same for right child
-        diagonalPrintUtil(root.right, d, diagonalPrint, --count);
-    }
-
-    // Print diagonal traversal of given binary tree
-    static void diagonalPrint(TreeNode root, int k) {
-        // create a map of vectors to store Diagonal elements
-        HashMap<Integer, Vector<Integer>> diagonalPrint = new HashMap<>();
-        diagonalPrintUtil(root, 0, diagonalPrint, k);
-
-        System.out.println("Diagonal Traversal of Binary Tree");
-        // for (Entry<Integer, Vector<Integer>> entry : diagonalPrint.entrySet()) {
-            // System.out.println(entry.getValue());
-        }
-// }
-
 
     void sumOfAllLeaves(TreeNode node){
         int sum = sumOfAllLeavesHelper(node);
@@ -1557,12 +1554,10 @@ public class Tree {
     }
 
     boolean isLeaf(TreeNode node){
-        if(node== null) return false;
+        if(node == null) return false;
         if(node.left== null && node.right == null) return true;
         return false;
     }
-
-    
 
 
     // Java program to find binary tree with given inorder 
@@ -1666,7 +1661,6 @@ public class Tree {
     ////////////////////////////////////////////////////////////////////////////
 
 
-    // https://leetcode.com/problems/binary-tree-postorder-traversal/
     // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
     // #:~:text=Given%20a%20binary%20tree%2C%20we,7%2C%209%2C%2010).
     // https://practice.geeksforgeeks.org/problems/check-mirror-in-n-ary-tree/0
@@ -1683,6 +1677,32 @@ public class Tree {
     // https://leetcode.com/problems/path-sum-iii/
     // https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
     // https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/
+    // similar to dia, take max of currSum*(sum - currSum), but return the currSum
+    long total = 0; long prod = 0; long mod = 1000000007;
+    public int maxProduct(TreeNode root) {
+        if(root == null) return 0;
+        
+        total = findTotal(root);
+        
+        dfs(root);
+        return (int)(prod%mod);
+    }
+    
+    long findTotal(TreeNode root){
+        if(root == null) return 0;
+        long left = findTotal(root.left);
+        long right = findTotal(root.right);
+        return (left + right + root.val)%mod;
+    }
+    
+    long dfs(TreeNode root){
+        if(root == null) return 0;
+        long left = dfs(root.left);
+        long right = dfs(root.right);
+        long currSum = (left+right+root.val)%mod;
+        prod = Math.max(prod, currSum*(total-currSum));
+        return (currSum)%mod;
+    }
     /////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         Tree tree = new Tree();
@@ -1693,10 +1713,11 @@ public class Tree {
         tree.root.left.right = new TreeNode(3);
         tree.root.right.left = new TreeNode(5);
         tree.root.right.right = new TreeNode(8);
-        tree.root.left.left.right = new TreeNode(9);
-        tree.root.left.left.left = new TreeNode(7);
+        tree.root.right.right.right = new TreeNode(9);
+        tree.root.right.right.left = new TreeNode(7);
         // tree.root.right.right.right.right = new TreeNode(11);
 
+        tree.diagonalTraversal(tree.root);
         // tree.spiralPrint(tree.root, 0);
         // tree.findFrequentTreeSum(tree.root);
         // tree.extremeAlternate(tree.root);
@@ -1878,7 +1899,7 @@ public class Tree {
         // tree.forestFire(tree.root.left);
         // tree.spiralTraversal(tree.root);
         // tree.boundaryTraversal21Apr(tree.root);
-        tree.boundaryOfTree(tree.root);
+        // tree.boundaryOfTree(tree.root);
         // tree.kthLargestElementBST(tree.root, 3);
         // tree.hasPathSum(tree.root, 9);
         // tree.printAncestorsUsingStack(tree.root, 1);

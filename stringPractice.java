@@ -9,6 +9,7 @@ class StringPractice {
         return new String(ch);
     }
 
+    // https://www.geeksforgeeks.org/string-data-structure/
     /**
      * imp methods : startsWith, contains, split, replace, StringBuilder
      * s.length() braces needed 
@@ -240,14 +241,47 @@ class StringPractice {
         return "a";
     }
 
-    // https://leetcode.com/problems/detect-capital/
     
+    /** 
+     * POINTS :
+     * 1 THE SAME CHAR ARRAY IS PASSED
+     * w/o -> ch[index] = '?'
+     * ch array if 0 10?
+     * ch array if 0 100
+     * ch array 100
+     * ch array if 1 101
+     * ch array 101
+     * ch array if 1 111
+     * ch array else 111
+     * ch array 111
+     * 
+     * with -> ch[index] = '?'
+     * ch array if 0 10?
+     * ch array if 0 100
+     * ch array 100
+     * ch array if 1 101
+     * ch array 101
+     * ch array if 1 11?
+     * ch array if 0 110
+     * ch array 110
+     * ch array if 1 111
+     * ch array 111
+     * 
+     * ONCE THE CHAR ARRAY IS SET TO 101, 
+     * THE CALL f(11?, 2) changes to f(111, 2);
+     * THE LAST INDEX HAS BEEN SET 1 AND THE 
+     * IF CHECK (ch[index] == '?') for f(111, 2) FAILS.
+     * 
+     * 
+     * 
+    */
     // using include-exclude concept of recursion
     /**
-     * using include-exclude concept of recursion if(i == length) sysout f(arr[i],
-     * i+1) arr[i] = 0 f(arr, i+1);
+     * using include-exclude concept of recursion 
+     * if(i == length) sysout f(arr[i], i+1) arr[i] = 0 f(arr, i+1);
      * 
      */
+    // https://www.geeksforgeeks.org/generate-all-binary-strings-from-given-pattern/
     void generateBinPattern(String str) {
         char[] ch = str.toCharArray();
         int n = ch.length;
@@ -264,8 +298,6 @@ class StringPractice {
         } else {
             if (ch[index] == '?') {
                 ch[index] = '0';
-                // curIndex = index + 1;
-                // System.out.println(index);
                 // System.out.println("ch array if 0 " + String.valueOf(ch));
                 generateBinPatternUtil(ch, k, index + 1);
 
@@ -280,6 +312,8 @@ class StringPractice {
         }
     }
 
+
+    // https://www.geeksforgeeks.org/generate-binary-permutations-1s-0s-every-point-permutations/
     void genBinPerm01s(int length) {
         String str = "1";
         for (int i = 1; i < length; i++) {
@@ -1744,7 +1778,7 @@ class StringPractice {
     /** 
      * POINTS : 
      * 1 IF NULL THEN 1 WAY; dp[0] = 1;
-     * 2 IF LENGTH 1 CHECK IF 0, THEN 0 AS A STARTS FROM 1
+     * 2 IF LENGTH IS 1 CHECK IF 0, THEN 0 AS A STARTS FROM 1
      * 3 dp[1] depends on s.charAt(0)
      * 4 singles keeps track of a single substring from i-1 till i
      * doubles same for i-2 till i
@@ -2128,8 +2162,8 @@ class StringPractice {
         // System.out.println(stringPractice.to_upper(in));
 
         // System.out.println((char)('a'+2));
-        String str1 = "1??";
-        // string.generateBinPattern(str1);
+        String str1 = "1???";
+        string.generateBinPattern(str1);
 
         // string.genBinPerm01s(4);
         // string.recPalindrome("abba");
@@ -2163,7 +2197,7 @@ class StringPractice {
                 "BANC";//"ADOBECODEBANC";
         String T = // "aa";
                 "ABC";
-        string.minWindow(S, T);
+        // string.minWindow(S, T);
 
         String palin = "ac";// "hellolle";
         // string.countAllPalindromes(palin);
