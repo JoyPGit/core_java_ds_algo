@@ -268,6 +268,8 @@ public class Backtrack {
         }
     }
 
+    // permute with duplicates
+    // https://www.youtube.com/watch?v=nYFd7VHKyWQ
     
     // https://leetcode.com/problems/combinations/
     //this ques is quiite silly start with combination sum 2
@@ -463,6 +465,68 @@ public class Backtrack {
         return min;
     }
     
+    /**
+     * POINTS :
+     * 1 row IS PASSED AS A PARAMTER
+     * 2 col IS ITERATED OVER IN EACH FUNCTION CALL
+     * 3 IF VALID PROCEED TO NEXT ROW, ELSE NEXT COL
+     * 4 NO NEED TO CHCK FOR LOWER RIGHT DIA AS NO QUEENS HAVE YET BEEN PLACED
+     */
+    void nQueen4jul(int n) {
+        int[][] board = new int[n][n];
+        helper(board, 0);
+    }
+
+    void helper(int[][] board, int row) {
+        if (row == board.length) {
+            System.out.println("found");
+            utilCustom.Utility.printMatrix(board);
+            return;
+        } else {
+            for (int i = 0; i < board.length; i++) {
+                board[row][i] = 1;
+                if (isValid(board, row, i)) helper(board, row + 1);
+                board[row][i] = 0;
+            }
+        }
+    }
+
+    boolean isValid(int[][] board, int row, int col) {
+        for (int i = 0; i < board.length; i++) {
+            if (i == col) continue;
+            if (board[row][i] == 1) return false;
+        }
+        for (int i = 0; i < board.length; i++) {
+            if (i == row) continue;
+            if (board[i][col] == 1) return false;
+        }
+        int i = 0;
+        int j = 0;
+
+        // board[i][j] == 1 implies queen placed
+        // upper LEFT DIA
+        for (i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+            if (i == row && j == col) continue;
+            if (board[i][j] == 1) return false;
+        }
+
+        // lower LEFT DIA
+        for (i = row, j = col; j >= 0 && i < board.length; i++, j--) {
+            if (i == row && j == col) continue;
+            if (board[i][j] == 1) return false;
+        }
+
+        // checking UPPER RIGHT DIA
+        for (i = row, j = col; i >= 0 && j < board.length; i--, j++) {
+            if (i == row && j == col) continue;
+            if (board[i][j] == 1) return false;
+        }
+
+        // NO LOWER RIGHT DIA CHECK AS NO QUEENS YET
+        
+        return true;
+    }
+
     
     ///////////////////////////////////////////////
 
@@ -718,7 +782,44 @@ public class Backtrack {
             }
         }
     }
-    
+
+
+    // generate 0s and 1s, free walk
+    // https://leetcode.com/problems/generate-parentheses/
+    List<String> res = new ArrayList<>();
+    String curr = "(";
+    int open = 1, close = 0;
+    public List<String> generateParenthesis(int n) {
+        
+        helper(n);
+        System.out.println("res "+res);
+        return res;
+        
+    }
+    void helper(int n){
+        if(open==n && close == n) {
+            res.add(curr);
+            System.out.println(curr);
+            return;
+        }
+
+        if(open<0 || close>open) return;
+        
+        System.out.println("curr "+curr);
+        if(open<n){
+            curr+="(";
+            open++;
+            helper(n);
+            curr = curr.substring(0, curr.length()-1);
+            open--;
+        }
+        curr+=")";
+        close++;
+        helper(n);
+        curr = curr.substring(0, curr.length()-1);
+        close--;
+    }
+
     // https://www.youtube.com/watch?v=KAoRNDx-S8M
     // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
     HashSet<String> splitSet;
@@ -744,10 +845,118 @@ public class Backtrack {
         }
         return countSplit;
     }
+
+
+    /**
+     * basically same as backtracking.. a vertex is continually assigned colors from
+     * 1 till n, and we check if it's safe, then we recur, else we go back to
+     * assigning it 0. 1 isSafe is tricky, run a for loop for all adjacent vertices
+     * check if the color is same as the color assigned to the vertex if there
+     * exists an edge.
+     * 
+     * 2 a global var foundMinColor is used to break out of the recursive calls
+     * 
+     */
+    boolean foundMinColor = false;
+
+    void mColoring(int[][] arr) {
+        int[] color = new int[arr.length];
+        mcolorUtil(arr, 0, color);
+    }
+
+    void mcolorUtil(int[][] arr, int vertex, int[] color) {
+        if (vertex == arr.length) {
+            this.foundMinColor = true;
+            int max = 0;
+            for (int i = 0; i < color.length; i++) {
+                max = Math.max(max, color[i]);
+            }
+            System.out.println("no of colors required is " + (max - 1));
+            return;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            if (!foundMinColor) {
+                color[vertex] = i;
+
+                if (isSafemColor(arr, vertex, color)) {
+                    mcolorUtil(arr, vertex + 1, color);
+                }
+
+                color[vertex] = 0;
+            }
+
+        }
+    }
+
+    boolean isSafemColor(int[][] arr, int vertex, int[] color) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[vertex][i] == 1 && color[vertex] == color[i])
+                return false;
+        }
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // 6 june
+    // multiple jumps allowed
+    boolean solveNJumpsRatMaze(int[][] maze) {
+        int n = maze.length;
+        int[][] sol = new int[n][n];
+        
+        System.out.println("in n rat multiple jumps");
+        if (!solveNRatMazeUtil(maze, sol, 0, 0))
+            return false;
+        utilCustom.Utility.printMatrix(sol);
+        System.out.println("sol found");
+        return true;
+    }
+
+    boolean solveNRatMazeUtil(int[][] maze, int[][] sol, int row, int col) {
+        if (isNSafeRatMaze(maze, row, col)) {
+            sol[row][col] = 1;
+            System.out.println("row " + row + ", col " + col + 
+            " maze index value " + maze[row][col]);
+
+            if (row == maze.length - 1 && col == maze[0].length - 1)
+                return true;
+
+            for (int i = 1; i <= maze[row][col]; i++) {
+                if (solveNRatMazeUtil(maze, sol, row + i, col))
+                    return true;
+                if (solveNRatMazeUtil(maze, sol, row, col + i))
+                    return true;
+            }
+
+            sol[row][col] = 0;// backtrack
+
+            return false;
+        }
+        return false;
+    }
+
+    boolean isNSafeRatMaze(int[][] grid, int rowIndex, int colIndex) {
+        System.out.println("rowIndex " + rowIndex + ", colIndex " + colIndex);
+        return (rowIndex >= 0 && colIndex >= 0 
+        && rowIndex < grid.length && colIndex < grid[0].length
+        && grid[rowIndex][colIndex] != 0);
+    }
+
+    
+
+    // rat in maze, n queen
+    // https://www.techiedelight.com/find-total-number-unique-paths-maze-source-destination/
+        
+    // https://www.geeksforgeeks.org/the-knights-tour-problem-backtracking-1
+    // https://www.geeksforgeeks.org/print-subsequences-string/
+    // https://www.techiedelight.com/find-total-number-unique-paths-maze-source-destination/
+    // https://www.techiedelight.com/find-minimum-number-possible-k-swaps/
     // https://www.techiedelight.com/find-minimum-cuts-needed-palindromic-partition-string/
 
     // https://www.techiedelight.com/find-all-nodes-at-given-distance-from-leaf-nodes-in-a-binary-tree/
 
+    // https://leetcode.com/problems/knight-probability-in-chessboard/discuss/
+    // 113954/Evolve-from-recursive-to-dpbeats-94
     public static void main(String[] args) {
         Backtrack pcs = new Backtrack();
 
@@ -763,9 +972,23 @@ public class Backtrack {
         // pcs.numMatchingSubseq(S, words);
 
         int[] subArrayMin = {3,1,2,4};
-        pcs.sumSubarrayMins(subArrayMin);
+        // pcs.sumSubarrayMins(subArrayMin);
 
         // pcs.subsets(subArrayMin);
+
+        pcs.generateParenthesis(3);
+
+        char[][] sudoku = 
+        {{'5','3','.','.','7','.','.','.','.'},
+        {'6','.','.','1','9','5','.','.','.'},
+        {'.','9','8','.','.','.','.','6','.'},
+        {'8','.','.','.','6','.','.','.','3'},
+        {'4','.','.','8','.','3','.','.','1'},
+        {'7','.','.','.','2','.','.','.','6'},
+        {'.','6','.','.','.','.','2','8','.'},
+        {'.','.','.','4','1','9','.','.','5'},
+        {'.','.','.','.','8','.','.','7','9'}};
+        pcs.solveSudoku(sudoku);
 
     }
 }

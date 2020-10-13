@@ -38,9 +38,6 @@ class DivideAndConquer{
      */
     // https://leetcode.com/tag/divide-and-conquer/
     
-    // https://leetcode.com/problems/different-ways-to-add-parentheses/
-    // discuss/66328/A-recursive-Java-solution-(284-ms)
-
     // https://leetcode.com/problems/find-all-duplicates-in-an-array/
 
     void findCountSortedInRange(int[] arr){
@@ -65,7 +62,6 @@ class DivideAndConquer{
     
     // https://leetcode.com/problems/maximum-subarray/
     // https://leetcode.com/problems/search-a-2d-matrix-ii/
-    // https://leetcode.com/problems/different-ways-to-add-parentheses/
     // https://leetcode.com/problems/count-of-range-sum/
     // https://leetcode.com/problems/the-skyline-problem/
     // https://leetcode.com/problems/merge-k-sorted-lists/

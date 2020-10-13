@@ -2,10 +2,11 @@ import java.util.*;
 
 class StringPractice {
 
+    // https://www.baeldung.com/java-string-immutable
+    
     String sortString(String s) {
         char[] ch = s.toCharArray();
         Arrays.sort(ch);
-        // System.out.println(ch);
         return new String(ch);
     }
 
@@ -53,7 +54,7 @@ class StringPractice {
         
         return j==b.length();
      * }
-     * 
+     *
      * 
      * 
      * QUESTIONS: 1 ALL SUBSTRINGS(2 loops) 
@@ -567,7 +568,8 @@ class StringPractice {
      * 
      * 2 A HASHMAP IS MAINTAINED FOR DUPLICATE SUBSEQUENCES,
      * IF FOUND AND TRUE COUNT++;
-     * 
+     * HERE WE ADD ALL SEEN SUBSEQUENCES, THEY BE VALID OR NOT.
+     * SO WE DON'T HAVE TO CHECK VALIDITY AGAIN
      * 3 IF NOT CHECK AND IF TRUE COUNT++;
      * 
      */
@@ -600,6 +602,37 @@ class StringPractice {
         }
         
         return j==b.length();
+    }
+
+    /** 
+     * POINTS :
+     * 1 DIFF FROM ABOVE AS FooBar WITH FB IS true BUT
+     * FooBarTest WITH FB IS false
+     * WEE NEED TO CONTINUE CHECKING FOR AN UPPERCASE BECAUSE
+     * HAD T NOT BEEN THERE, FooBarest WILL RETURN true.
+     * 
+     * 2 return j == pattern.length();
+    */
+    // https://leetcode.com/problems/camelcase-matching/
+    public List<Boolean> camelMatch(String[] queries, String pattern) {
+        List<Boolean> res = new ArrayList<>();
+        for(String q : queries){
+            if(isMatch(q, pattern)) res.add(true);
+            else res.add(false);
+        }
+        return res;
+    }
+    
+    boolean isMatch(String query, String pattern){
+        int j = 0;
+        for(int i =0; i<query.length(); i++){
+            // out of bounds, add check
+            if(j<pattern.length() && query.charAt(i) == pattern.charAt(j)) j++;
+            // [FooBarTest"] -> FoBa", fails for T so check added
+            else if(Character.isUpperCase(query.charAt(i))) return false;
+            // if(j== pattern.length()) return true; // j out of bounds 
+        }
+        return j == pattern.length();
     }
 
     // https://www.youtube.com/watch?v=qBbZ3tS0McI
@@ -2131,6 +2164,82 @@ class StringPractice {
     public int maxUniqueSplit(String s) {
         int max = 0;
         return max;
+    }
+
+    // TIME BASED QUES
+    // https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60/
+    /** 
+     * 1 CONVERT TO MINUTES
+     * 2 SORT, FIND MIN
+     * 3. CHECK THE CORNER CASE
+     * int corner = times[0] + (1440 - times[times.length-1]);
+     * 
+    */
+    // https://leetcode.com/problems/minimum-time-difference
+    public int findMinDifference(List<String> timePoints) {
+        // String time1 = timePoints.get(0);
+        // String time2 = timePoints.get(1);
+        
+        int[] times = new int[timePoints.size()];
+        for(int i =0; i<timePoints.size(); i++){
+            times[i] = convertToMinutes(timePoints.get(i));
+        }
+        Arrays.sort(times);
+        int min = Integer.MAX_VALUE;
+        
+        for(int i = 1; i<times.length; i++){
+            int diff = times[i]-times[i-1];
+            // if(diff>720) diff = 1440-diff;
+            // min = Math.min(min, diff);
+            min = Math.min(min, diff);
+        }
+        int corner = times[0] + (1440 - times[times.length-1]);
+        return Math.min(min, corner);
+    }
+    
+    int convertToMinutes(String time){
+        int minutes= Integer.parseInt(time.substring(0,2))*60;
+        minutes+= Integer.parseInt(time.substring(3));
+        return minutes;
+    }
+
+    
+    // https://leetcode.com/problems/largest-time-for-given-digits
+    public String largestTimeFromDigits(int[] arr) {
+        // start from 1439 (23:59 is the largest time)
+        // keep decrementing while checking validity
+        
+        HashMap<Integer, Integer> base = new HashMap<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i : arr) base.put(i, base.getOrDefault(i, 0)+1);
+        
+        int res = 1439;
+        
+        while(res>=0000){
+            map = (HashMap)base.clone();
+            if(isValid(res, map)) return timeFormat(res);
+            res--;
+        }
+        return ""; // if no valid time
+    }
+    
+    boolean isValid(int time, HashMap<Integer, Integer> map){
+        // convert to HH:MM format
+        int[] num = new int[]{time/60/10, time/60%10, time%60/10, time%60%10};
+        for(int i : num){
+            if(!map.containsKey(i) || map.get(i) <= 0) return false;
+            map.put(i, map.getOrDefault(i,0)-1);
+        }
+        map.clear();
+        return true;
+    }
+    
+    
+    String timeFormat(int time){
+        String res = "";
+        res+=time/60/10; res+= time/60%10; res+=":";
+        res+=time%60/10; res+= time%60%10;
+        return res;
     }
 
     // https://leetcode.com/problems/add-binary/

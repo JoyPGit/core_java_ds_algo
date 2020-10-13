@@ -10,6 +10,9 @@ public class Utility {
      * 1 Map.Entry<> 
      * 2 of type : map.entrySet()
      * 3 Integer i = entry.getValue();
+     * 
+     * 4 Without public it can't be seen by other classes
+     * 5 Without static, it can't be called directly
      */
 
     /** 
@@ -240,6 +243,23 @@ public class Utility {
      * IF 2 STRS HAVE SAME FREQ, SMALLER IS INSERTED FIRST A BEFORE AA
      */
 
+     
+
+    public static <T> void printPQueue (PriorityQueue<T> pq){
+        PriorityQueue<Object> curr = new PriorityQueue<>(pq);
+        while(curr.size()!=0) System.out.println(curr.remove());
+    }
+
+    /**
+     * Some research. What is an Integer? And why cannot we use int in an ArrayList?
+     * An Integer is a reference type (a class). An int is a value. And: The
+     * ArrayList requires, in its implementation, a reference type. So int is not
+     * allowed.
+     * 
+     * Quote: The Integer class wraps a value of the primitive type int in an
+     * object. An object of type Integer contains a single field whose type is int
+     * (Java Documentation).
+    */
     public static void main(String[] args) {
         Utility utility = new Utility();
         // utility.sortString("original");

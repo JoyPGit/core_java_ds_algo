@@ -425,6 +425,8 @@ public class StackPractice {
         return max;
     }
 
+    // https://leetcode.com/problems/minimum-insertions-to-balance-a-parentheses-string/
+    // discuss/?currentPage=1&orderBy=most_votes&query=
 
     // https://leetcode.com/problems/reorganize-string/
     public String decodeString(String s) {

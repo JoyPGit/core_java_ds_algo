@@ -420,15 +420,15 @@ public class Heap {
         int range = Integer.MAX_VALUE;
 
         while(q.size() == nums.size()){
-            
-            KListNode curr =q.remove();
+            KListNode curr = q.remove();
+            System.out.println(curr.val);
             if(max-curr.val < range){
                 start = curr.val;
                 end = max;
                 range = max - curr.val;
             }
             
-            //el removed so add el of the same row
+            // el removed so add el of the same row
             if(curr.index+1<nums.get(curr.row).size()){
                 KListNode currNew = new KListNode(curr.index+1, 
                             nums.get(curr.row).get(curr.index+1), curr.row);
@@ -471,6 +471,7 @@ public class Heap {
             return max.peek();
         }
     }
+
 
     // https://leetcode.com/problems/median-of-two-sorted-arrays/
     // discuss/268906/Java-Solution%3A(2ms)faster-than-100.00-(48.3)less-than-86.61.
@@ -533,7 +534,7 @@ public class Heap {
             numsKList.add(newRow);
         }
         // System.out.println(numsKList);
-        // newHeap.smallestRange(numsKList);
+        newHeap.smallestRange(numsKList);
 
         
     }

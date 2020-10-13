@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Tree",
+            "request": "launch",
+            "mainClass": "Tree",
+            "projectName": "javaGFG_5e57e9f9"
+        }
+    ]
+}

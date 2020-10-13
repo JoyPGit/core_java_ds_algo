@@ -295,13 +295,14 @@ public class DP {
     }
 
     /**
-     * Also the masseuse problem 
+     * Also the masseuse problem
      * 
      * WEIGHTED JOB SCHEDULING
      * https://leetcode.com/problems/maximum-profit-in-job-scheduling/ 
      * 1 SORT ON THE BASIS OF END TIMES
      * 2 ASSIGN MAX OF (jobs[i].profit, dp[i-1]);
      * 3 CHECK FOR j = i-1 till 0;
+     * 
     */
     class Job {
         int start, end, profit;
@@ -328,16 +329,16 @@ public class DP {
             for (int i = 1; i < n; i++){
                 dp[i] = Math.max(jobs[i].profit, dp[i-1]);
                 for(int j = i-1; j >= 0; j--){
-                    if(jobs[j].end <= jobs[i].start){ // if no overlap
+                    if(jobs[j].end <= jobs[i].start){ 
+                        // if no overlap
                         dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]);
                         break;
                     }
                 }
             }
+
             int max = Integer.MIN_VALUE;
-            for (int val : dp) {
-                max = Math.max(val, max);
-            }
+            for (int val : dp) max = Math.max(val, max);
             return max;
         }
         
@@ -1549,6 +1550,8 @@ public class DP {
 
     // https://leetcode.com/problems/count-square-submatrices-with-all-ones/
     // https://leetcode.com/problems/maximum-length-of-repeated-subarray/
+
+    // https://www.geeksforgeeks.org/probability-knight-remain-chessboard/
     public static void main(String[] args) {
         DP dp = new DP();
 

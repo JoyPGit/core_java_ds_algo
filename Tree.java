@@ -80,6 +80,10 @@ public class Tree {
             if(root.left== null && root.right ==null && root.val ==0) return null;
             return root;
          }
+     *
+     *    
+     * https://www.techiedelight.com/convert-given-binary-tree-to-full-tree-removing-half-nodes/
+     * https://leetcode.com/problems/delete-nodes-and-return-forest/
     ---------------------------------------------------------------------------
      * DFS IN A TREE USING LIST
      * 
@@ -212,32 +216,6 @@ public class Tree {
     }
 
 
-    void preOrder(TreeNode x) {
-        if (root == null) return;
-        System.out.print(x.key+", ");
-        preOrder(x.left);
-        preOrder(x.right);
-    }
-
-    // ITERATIVE
-    // ADD THE RIGHT AND THEN THE LEFT TO STACK 
-    // https://leetcode.com/problems/binary-tree-preorder-traversal
-    public List<Integer> preorderTraversal(TreeNode root) {
-        List<Integer> res = new ArrayList<>();
-        if(root == null) return res;  
-        
-        Deque<TreeNode> q = new LinkedList<>();
-        q.addLast(root);
-        
-        while(q.size()!=0){
-            TreeNode curr = q.removeLast();
-            res.add(curr.val);
-            if(curr.right!=null) q.addLast(curr.right);
-            if(curr.left!=null) q.addLast(curr.left);
-        }
-        return res;
-    }
-
     /** 
      * MORRIS INORDER TRAVERSAL
      * SET CURRENT'S PREDECESSOR'S RIGHT TO CURRENT
@@ -284,6 +262,94 @@ public class Tree {
     }
 
     /** 
+     * POTNTS :
+     * 1 PREV MUST BE LESS THAN ROOT, INORDER TRAVERSAL OF BST IS SORTED
+     * 2 WHENEVER CONDN IS VIOLATED, ASSIGN FIRST AND SECOND SIMULATNEOUSLY
+     * 
+     * 
+    */
+    // https://leetcode.com/problems/recover-binary-search-tree
+    // [3,1,4,null,null,2] both assignments made simultaneously
+    TreeNode prev = null;
+        // new TreeNode(Integer.MIN_VALUE);
+    TreeNode first = null, second = null;
+    public void recoverTree(TreeNode root) {
+    
+        // List<Integer> res = new ArrayList<>();
+        TreeNode curr = root;
+        while(curr!=null){
+            // prev must be lesser than root
+            if(prev!=null && curr.val <= prev.val){ // 1
+                if(first == null) first = prev;
+                second = curr;
+            }
+            
+            if(curr.left == null){
+                // res.add(curr.val);
+                // prev assigned when visiting root
+                prev = curr; // 2
+                curr = curr.right;
+            }
+            else{
+                TreeNode pred = findPred(curr);
+                //link back if right null
+                if(pred.right == null){
+                    pred.right = curr;
+                    curr = curr.left;
+                }
+                else{
+                    pred.right = null;
+                    // res.add(curr.val);
+                    // prev assigned when visiting root
+                    prev = curr;
+                    curr = curr.right;
+                }
+            }
+        }
+        
+        
+        // System.out.println(first.val);
+        // System.out.println(second.val);
+        int temp = first.val;
+        first.val = second.val;
+        second.val = temp;
+    }
+
+    ////////////////////////////////////////////PREORDER/////
+
+    void preOrder(TreeNode x) {
+        if (root == null) return;
+        System.out.print(x.key+", ");
+        preOrder(x.left);
+        preOrder(x.right);
+    }
+
+    // ITERATIVE
+    // ADD THE RIGHT AND THEN THE LEFT TO STACK 
+    // https://leetcode.com/problems/binary-tree-preorder-traversal
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;  
+        
+        Deque<TreeNode> q = new LinkedList<>();
+        q.addLast(root);
+        
+        while(q.size()!=0){
+            TreeNode curr = q.removeLast();
+            res.add(curr.val);
+            if(curr.right!=null) q.addLast(curr.right);
+            if(curr.left!=null) q.addLast(curr.left);
+        }
+        return res;
+    }
+
+    void postOrder(TreeNode root) {
+        postOrder(root.left);
+        postOrder(root.right);
+        System.out.println("node key " + root.key);
+    }
+
+    /** 
      * POINTS :
      * 1 ADD TO STACK, REMOVE CURR, ADD LEFT AND RIGHT
      * 2   4,2,6-------STACK------RES 
@@ -311,12 +377,6 @@ public class Tree {
         }
         Collections.reverse(res);
         return res;
-    }
-
-    void postOrder(TreeNode root) {
-        postOrder(root.left);
-        postOrder(root.right);
-        System.out.println("node key " + root.key);
     }
 
 
@@ -1481,83 +1541,6 @@ public class Tree {
      * 2 problems one index++ second check the index before assigning
      */
     
-    int count = 0;
-    int heightCorona = 0;
-    boolean stop = false;
-
-    void findCompleteNodes(TreeNode root) {
-        this.heightCorona = height(root);
-        findCompleteNodesHelper(root, 1);
-        System.out.println("the count is " + this.count);
-    }
-
-    void findCompleteNodesHelper(TreeNode root, int level) {
-        if (!this.stop) {
-            System.out.println("root " + root.key + " level " + level);
-            if (level == this.heightCorona - 1) {
-                System.out.println("in here");
-                if (root.left != null && root.right != null) {
-                    this.count = this.count + 3;
-                    System.out.println(this.count);
-                }
-                if (root.left != null && root.right == null) {
-                    this.count = this.count + 1;
-                    this.stop = true;
-                }
-                if (root.left == null)
-                    this.stop = true;
-            }
-
-            if (level < this.heightCorona - 1) {
-                if (root.left != null && root.right != null) {
-                    this.count++;
-                    int level1 = level + 1;
-                    findCompleteNodesHelper(root.left, level1);
-                    // System.out.println(this.count);
-                    findCompleteNodesHelper(root.right, level1);
-                }
-                if (root.left != null) {
-                    findCompleteNodesHelper(root.left, level);
-                }
-                if (root.right != null) {
-                    System.out.println("in right " + root.right.key);
-                    findCompleteNodesHelper(root.right, level);
-                }
-            }
-
-        }
-
-    }
-
-
-    void rightTraversal(TreeNode node) {
-        System.out.println(node.rightpointer);
-        if (node.left != null)
-            rightTraversal(node.left);
-        if (node.right != null)
-            rightTraversal(node.right);
-    }
-
-    void sumOfAllLeaves(TreeNode node){
-        int sum = sumOfAllLeavesHelper(node);
-        System.out.println("sum "+sum);
-    }
-
-    int sumOfAllLeavesHelper(TreeNode node){
-        int res = 0; 
-        if (node != null){
-            if (isLeaf(node)) res += node.key; 
-            else res += sumOfAllLeavesHelper(node.left) + sumOfAllLeavesHelper(node.right); 
-
-        } 
-        return res; 
-    }
-
-    boolean isLeaf(TreeNode node){
-        if(node == null) return false;
-        if(node.left== null && node.right == null) return true;
-        return false;
-    }
 
 
     // Java program to find binary tree with given inorder 
@@ -1610,62 +1593,18 @@ public class Tree {
 			} 
 		} 
 		return trees; 
-	} 
-
+    } 
     
-
-    /**  
-     * here we need to iterate over the preorder array and for each index
-     * we create a new node and then allow the fiunction to find the
-     * left and right children for us and return this node
-     * 
-     * 3 things
-     * 1 increment ondex for iteration
-     * 2 for start and end ensure the indexes change as per the current index found
-     * 3 return the current and also when start == end
-     * 
-     * basically the idea is for preorder the index+1 is the left child 
-     * and the index+2 is right for leaf nodes
-    */
-    TreeNode createTree(int[] pre, int[] in, int index, int start, int end){
-        System.out.println("index "+index);
-        if(start>end) return null;
-        if(start==end) return new TreeNode(in[start]);
-        int currIndex = findInInOrder(pre, in, index);
-        if(currIndex==-1) return null;
-        TreeNode curr = new TreeNode(in[currIndex]);
-        System.out.println("curr "+curr.key);
-        curr.left = createTree(pre, in, ++index, start, currIndex-1);
-        curr.right = createTree(pre, in, ++index, currIndex+1, end);
-        System.out.print(curr.key+", ");
-        return curr;
-    }
-
-    int findInInOrder(int[] pre, int[] in, int index){
-        for(int i =0; i<pre.length; i++){
-            if(in[i] == pre[index]) return i;
-        }
-        return -1;
-    }
-
-    int sum(ArrayList<Integer> list){
-        int sum =0;
-        for(int i =0; i<list.size(); i++){
-            sum+= list.get(i)*Math.pow(10, list.size()-i-1);
-        }
-        System.out.println(sum);
-        return sum;
-    }
-
+    // https://leetcode.com/problems/minimum-height-trees/
 
     ////////////////////////////////////////////////////////////////////////////
-
+    // https://www.techiedelight.com/convert-given-binary-tree-to-full-tree-removing-half-nodes/
+    // https://leetcode.com/problems/delete-nodes-and-return-forest/
 
     // https://www.geeksforgeeks.org/pairwise-swap-leaf-nodes-binary-tree/
     // #:~:text=Given%20a%20binary%20tree%2C%20we,7%2C%209%2C%2010).
     // https://practice.geeksforgeeks.org/problems/check-mirror-in-n-ary-tree/0
     // https://practice.geeksforgeeks.org/problems/clone-a-binary-tree/1
-    // https://practice.geeksforgeeks.org/problems/fixed-two-nodes-of-a-bst/1
 
     // https://www.geeksforgeeks.org/reverse-alternate-levels-binary-tree/
     // https://www.interviewbit.com/courses/programming/topics/tree-data-structure/

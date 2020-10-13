@@ -713,9 +713,10 @@ class Matrix {
     }
 
     /**
-     * this can't be solved without dp if we dont use a visited matrix else we eill
-     * be recurring for adjacent psns indefinitely dp is used to check if value
-     * exists or not.
+     * this can't be solved without dp if we dont use a visited matrix
+     * else we will be recurring for adjacent posns indefinitely
+     * 
+     * dp is used to check if value exists or not.
      */
     int maxPathLengthHelper(int[][] arr, int i, int j, int[][] holder, int curr) {
         /** should i put the check now or wait for the next func call with (i+1,j)? */
@@ -877,6 +878,8 @@ class Matrix {
         return gold;
     }
 
+    // https://www.techiedelight.com/probability-alive-after-taking-n-steps-island/
+    
     /** the -1s are inaccessible; reduce 99 to lowest dist from 0 */
 
     void wallsAndGates(int[][] grid) {

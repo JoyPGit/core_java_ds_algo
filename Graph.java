@@ -150,6 +150,130 @@ class Graph {
         }
 	}
 	
+	/** 
+	 * POINTS :
+	 * 1 TWO PARTS, 
+	 * FIND THE SET OF NODES THAT CAN VISIT THE TERMINAL EDGES,
+	 * FIND THE NODES THAT HAVE SELF LOOP
+	 * 
+	 * REMOVE ALL THOSE WHICH HAVE LOOP FROM TERMINAL SET AND RETURN RES
+	 * 
+	 * 2 HOW TO KNOW IF A NODE CAN REACH TERMINAL NODES? 
+	 * I USED A GLOBAL PARENT VAR WHICH IS ASSIGNED THE NODE NO AT THE 
+	 * START OF DFS AND ADDED TO TERMINAL IFDFS REACHES TERMINAL.
+	 * 
+	 * 3 WE DON'T STOP AFTER REACHING TERMINAL AS WE NEED TO FIND IF
+	 * LOOP EXISTS
+	 * 
+	 * 
+	 * 4 WHY VISITED IS NOT USED? PARENT IS GLOBAL SO VISITED
+	 * NODES CAN'T BE TRACKED IF THEY CAN REACH TERMINAL.
+	 * 
+	 */
+
+	// DOESN'T WORK, BECASUSE OF SELF LOOPS, ELSE WORKS WITH LOOPS TOO
+	// https://leetcode.com/problems/find-eventual-safe-states/
+    int parent = -1;
+    HashSet<Integer> currParents = new HashSet<>();
+    HashSet<Integer> loopNodes = new HashSet<>();
+    HashSet<Integer> terminal = new HashSet<>();
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        
+        for(int i = 0; i<graph.length; i++){
+            List<Integer> curr = new ArrayList<>();
+            for(int j =0; j<graph[i].length; j++){
+                curr.add(graph[i][j]);
+            }
+            if(curr.size() == 0) terminal.add(i);
+            else map.put(i, curr);
+        }
+        
+        for(int i =0; i<graph.length; i++){
+            if(!map.containsKey(i)) continue;
+            parent = i;//2
+            dfs(i, map);
+            currParents.clear();
+        }
+        
+        System.out.println(loopNodes);
+        System.out.println(terminal);
+		List<Integer> res = new ArrayList<Integer>(terminal);
+		for(Integer node : terminal){
+			// Exception in thread "main" java.util.ConcurrentModificationException
+			// if(loopNodes.contains(node)) terminal.remove(node);
+			if(loopNodes.contains(node)) res.remove(node);//3
+		}
+		System.out.println(res);
+        return res;
+    }
+    
+    // check if terminal is reacheable
+    // check for loop
+    
+    void dfs(int node, HashMap<Integer, List<Integer>> map){
+        if(terminal.contains(node)) terminal.add(parent);//
+        if(!map.containsKey(node)) return;//
+        currParents.add(node);
+        List<Integer> curr = map.get(node);
+        for(int i =0; i<curr.size(); i++){
+            if(currParents.contains(curr.get(i))) {
+                loopNodes.add(curr.get(i));
+                return;
+            }
+            dfs(curr.get(i), map);
+		}
+		currParents.remove(node);
+	}
+	
+	/** 
+	 * FIND COMPONENTS AND THEN CHECK MST PORPERTY
+	 * edges = n-1
+	 * HERE EACH EDGE IS COUNTED TWICE, DIRECTED (0->1, 1->0)
+	 * SO (edges/2).
+	 * 
+	 * return (edges/2)>=n-1?components-1:-1;
+	*/
+	// https://leetcode.com/problems/number-of-operations-to-make-network-connected
+    public int makeConnected(int n, int[][] graph) {
+        int components = 0; int edges = 0;
+        
+        HashSet<Integer> visited = new HashSet<>();
+        // HashSet<Integer> currParents = new HashSet<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        
+        for(int i = 0; i<graph.length; i++){
+            List<Integer> curr = map.getOrDefault(graph[i][0],new ArrayList<>());
+            curr.add(graph[i][1]);
+            edges++;
+            map.put(graph[i][0], curr);
+            
+            List<Integer> curr1 = map.getOrDefault(graph[i][1],new ArrayList<>());
+            curr1.add(graph[i][0]);
+            edges++;
+            map.put(graph[i][1], curr1);
+        }
+    
+        for(int i =0; i<n; i++){
+            if(visited.contains(i)) continue;
+            dfs(i, map, visited);
+            components++;
+        }
+       
+        return (edges/2)>=n-1?components-1:-1;
+    }
+    
+    void dfs(int node, HashMap<Integer, List<Integer>> map, HashSet<Integer> visited){
+        if(visited.contains(node)) return;
+        visited.add(node);
+        if(!map.containsKey(node)) return;
+        List<Integer> curr = map.get(node);
+        for(int i =0; i<curr.size(); i++){
+            if(visited.contains(curr.get(i))) continue;
+            dfs(curr.get(i), map, visited);
+        }
+    }
+
 	/**
 	 * BFS 
 	 * USING Q 1 CREATED MAP FROM A MATRIX 2 CREATE A VISITED ARRAY OF SIZE n+1,
@@ -1193,6 +1317,7 @@ class Graph {
 	}
 
 
+	// https://leetcode.com/problems/path-with-maximum-probability/
 	public static void main(String args[]) {
 		// Create a graph given in the above diagram
 		Graph g = new Graph(8);
@@ -1216,7 +1341,10 @@ class Graph {
 		// System.out.println("Following is a Topological " + "sort of the given
 		// graph");
 		// g.topologicalSort();
-		g.detectLoopUndirected();
+		// g.detectLoopUndirected();
+
+		int[][] eventualSafeGraph = {{1,2,3,4},{1,2},{3,4},{0,4},{}};
+		g.eventualSafeNodes(eventualSafeGraph);
 
 		int[][] graph = { { 0, 1, 1, 1 }, { 0, 0, 0, 1 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 } };
 

@@ -1,22 +1,7 @@
 import java.util.*;
-
 import utilCustom.*;
 
 class Greedy{
-
-    void printList(ArrayList<Integer> list){
-        for(int i : list){
-            System.out.println(list.get(i));
-        }
-    }
-    void printListArray(ArrayList<int[]> list){
-        // for(int i =0; i<list.size(); i++){
-        //     System.out.print("["+list.get(i)[0]+","+list.get(i)[1]+"], ");
-        // }
-        for(int[]i : list){
-            System.out.print("["+i[0]+","+i[1]+"], ");
-        }
-    }
 
     /**IMP
      * 1 PAIRS DIV BY K
@@ -565,7 +550,6 @@ class Greedy{
 				result.add(prevInterval);
             }
         }
-        printListArray(result);
 		return result.toArray(new int[result.size()][]);
     }
 
@@ -647,17 +631,120 @@ class Greedy{
         return (int) (max%MOD);
     }
 
-     // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
+
+    /**
+     * HERE WE FIND NO OF SWAPS TO MAKE ALL ELS IN A EQUAL TO A[0] AND B[0].
+     * SAME FOR B.
+     * f(A[0], A, B)
+     * f(B[0], A, B)
+     * f(A[0], B, A)
+     * f(A[0], B, A)
+     * 
+     * AND RETURN MIN
+     * 
+     * WHY THE SECOND ARR IN f? TO CHECK IF BOTH INDEXES DON'T HAVE THE TARGET
+     * THEN WE CAN'T SWAP TO GET THE TARGET. SECOND IS FOR CHECKING.
+     */
+    // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
+    public int minDominoRotations(int[] A, int[] B) {
+        int minSwaps = Math.min(findSwaps(A[0], A, B), findSwaps(B[0], A, B));
+        minSwaps = Math.min(minSwaps, findSwaps(A[0], B, A));
+        minSwaps = Math.min(minSwaps, findSwaps(B[0], B, A));
+        
+        return minSwaps == Integer.MAX_VALUE?-1:minSwaps;
+    }
+    
+    // the second arr is just to make if both arrays don't have the target, then return inf;
+    int findSwaps(int target, int[] a, int[] b){
+        int swaps = 0;
+        for(int i =0; i<a.length; i++){
+            if(a[i] != target && b[i] != target) return Integer.MAX_VALUE;
+            else if(a[i] != target) swaps++;
+        }
+        return swaps;
+    }
+
+
+    /** 
+     * POINTS :
+     * IF BOTH CHARS AT THE SAME INDEX ARE SAME, IGNORE(CONTINUE)
+     * ELSE COUNT X AND Y IN BOTH STRINGS
+     * SUM OF AND SUM OF Y MUST BE EVEN(EQUALLY SPREAD IN BOTH STRINGS)
+     * 
+     * int swaps = x1 / 2 + y1 / 2 + (x1 % 2) * 2;
+     * 4 CASES, 
+     * s1 : xy, xx, yy, xy
+     * s2 : xy, yy, xx, yx
+     * swaps : none, 1 (second x with first y alternate (x<->y)), 1 s(x<->y), 2
+     * 
+     * As we can swap s1[i] with s2[j], so for  xy , yx ->
+     * xx, yy and then 1 swap second x with first y (or vice-versa).
+     * 
+     * So (x1%2) gives no of odd x(s), which will need 2 swaps.
+     * 
+     * Cases to do 1 swap:
+     * "xx" => x1 / 2 => how many pairs of 'x' we have ?
+     * "yy" => y1 / 2 => how many pairs of 'y' we have ?
+     * 
+     * Cases to do 2 swaps:
+     * "xy" or "yx" =>  x1 % 2
+    */
+    // https://leetcode.com/problems/minimum-swaps-to-make-strings-equal
+    public int minimumSwap(String s1, String s2) {
+        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+        for(int i =0; i<s1.length(); i++){
+            // skip chars that are same at the same index
+            if(s1.charAt(i) == s2.charAt(i)) continue;
+            if(s1.charAt(i) == 'x') x1++;
+            else y1++;
+            
+            if(s2.charAt(i) == 'x') x2++;
+            else y2++;
+        }
+        
+        // x must be even equally spread in both strings
+        if((x1+x2)%2!=0) return -1;
+        if((y1+y2)%2!=0) return -1;
+
+        return x1/2+y1/2+(x1%2)*2;
+    }
+
+    // https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/
+    // https://www.youtube.com/watch?v=Mh8ES2PXsOI
+    public int minSwap(int[] A, int[] B) {
+        if(A.length!=B.length) return -1;
+        
+        int[] noSwap = new int[A.length];
+        int[] doSwap = new int[A.length];
+        
+        noSwap[0] = 0; 
+        doSwap[0] = 1; // 1
+        
+        for(int i = 1; i<A.length; i++){ 
+            if(A[i]>A[i-1] && B[i]>B[i-1] && A[i]>A[i-1] && B[i]>A[i-1]){ //2
+                noSwap[i] = Math.min(noSwap[i-1], doSwap[i-1]);
+                doSwap[i] = Math.min(noSwap[i-1], doSwap[i-1]) + 1; //3
+            }
+            else if(A[i]>A[i-1] && B[i]> B[i-1]){ //4
+                noSwap[i] = noSwap[i-1];
+                doSwap[i] = doSwap[i-1]+1; //5
+            }
+            else{
+                noSwap[i] = noSwap[i-1]+1;
+                doSwap[i] = doSwap[i-1];
+            }
+        }
+        return Math.min(doSwap[A.length-1], noSwap[A.length-1]);
+    }
+    // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
 
     // https://leetcode.com/problems/car-pooling/
     // https://leetcode.com/problems/construct-target-array-with-multiple-sums/
-    // https://leetcode.com/problems/largest-values-from-labels/
     // https://leetcode.com/problems/candy/
     // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
     // EVENT SCHEDULER
     // MEETING ROOM LEETCODE
     // https://www.youtube.com/watch?v=i2bBG7CaVxs
-    // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
     // MICROSOFT
     // https://leetcode.com/discuss/interview-question/447448/
 
@@ -667,10 +754,21 @@ class Greedy{
     // GOOGLE
     // https://leetcode.com/problems/couples-holding-hands/description/
     // https://leetcode.com/problems/cinema-seat-allocation/
-    // https://leetcode.com/problems/minimum-swaps-to-make-strings-equal/
     // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
     // https://leetcode.com/problems/insert-interval/
     // https://leetcode.com/discuss/interview-question/350233/Google-or-Summer-Intern-OA-2019-or-Decreasing-Subsequences
+
+
+    /** SWAP BASED QUES 
+     * https://www.techiedelight.com/find-minimum-number-possible-k-swaps/
+     * https://leetcode.com/problems/flip-string-to-monotone-increasing/
+     * https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid
+     * https://leetcode.com/problems/couples-holding-hands/description/
+     * https://leetcode.com/problems/maximum-swap/
+     * https://leetcode.com/discuss/interview-question/124545/New-question-Google-interview/
+     * https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing/
+     * discuss/119835/Java-O(n)-DP-Solution
+     * */
     public static void main(String[] args) {
         Greedy solGreedy = new Greedy();
         int[] mice = new int[]{-10, -79, -79, 67, 93, -85, -28, -94 };

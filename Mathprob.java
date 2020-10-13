@@ -126,6 +126,60 @@ public class Mathprob {
         return false;
     }
 
+    /**
+     * [1,7,9,9,8,3] 
+     * index = 1
+     * sort from index 3 till end
+     * swap 7 with just larger to right
+     * 
+     * Why reverse sort? 
+     * Because we are searching for the first smaller el
+     * that means all els till now are in descending order.
+     * 
+     * find first smaller, sort, swap
+    */
+    // https://leetcode.com/problems/next-permutation
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+        if(n<2) return;
+        
+        int index = -1; int i = n-1;
+        while(i>0){
+            if(nums[i]>nums[i-1]) {
+                index = i-1;
+                break;
+            }
+            i--;
+        }
+        
+        if(index == -1) reverseSort(nums, index+1, n-1);
+        else{
+            reverseSort (nums, index+1, n-1);
+            for(i = index+1; i<n; i++){
+                if(nums[i]>nums[index]) {
+                    swap(nums, index, i);
+                    break;
+                }   
+            }
+        }
+    }
+    
+    void swap(int[] arr, int a, int b){
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+    
+    void reverseSort(int[] arr, int start, int end){
+        while(start <= end){
+            swap(arr, start++, end--);
+        }
+    }
+
+
+    // https://leetcode.com/problems/maximum-swap/
+    // https://leetcode.com/problems/next-permutation/
+    // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
     // https://leetcode.com/problems/power-of-four
     
     public static void main(String[] args) {
