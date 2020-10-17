@@ -248,6 +248,49 @@ public class StackPractice {
         System.out.println("minList is "+minList);
     }
 
+    /** 
+     * POINTS :
+     * 1 BRUTE FORCE SOLUTION
+     * 2 PASSES 87 TEST CASES
+     * 3 
+     * O(n) stack solution exists, check if possible
+     * */
+    // https://leetcode.com/problems/sum-of-subarray-minimums/
+    public int sumSubarrayMins(int[] A) {
+        int n = A.length;
+        if(n==0) return 0;
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        int sum = 0;
+        
+        for(int l =1; l<=n; l++){
+            int min = Integer.MAX_VALUE;
+            for(int i = 0; i+l-1<n; i++){
+                int j = i+l-1;
+                System.out.println("i "+i+" j "+j);
+                sum+=findMin(A, i, j);
+            }
+            // sum+=min;
+            System.out.println("sum "+sum);
+
+        }
+        utilCustom.Utility.printListOfLists(res);
+        for(int i =0; i<res.size(); i++){
+            Collections.sort(res.get(i));
+            if((res.get(i)).size()==0) continue;
+            sum+=(res.get(i)).get(0);
+        }
+        return sum;
+    }
+
+    int findMin(int[] arr, int start, int end){
+        int min = Integer.MAX_VALUE;
+        for(int i = start; i<=end; i++){
+            min = Math.min(min, arr[i]);
+        }
+        return min;
+    }
+    
     // MINOR MODS NEEDED
     // https://leetcode.com/problems/asteroid-collision/
     public int[] asteroidCollision(int[] asteroids) {
@@ -493,7 +536,41 @@ public class StackPractice {
         System.out.println("letter "+letter);
     }
 
+    /** 
+     * POINTS :1
+     * 1 REVERSE DOESN'T TAKE ANY PARAM, INSERT TAKES ONE
+     * 2 INSERT AT BOTTOM TAKES AN INTEGER AND ADDS AT BOTTOM, 
+     * SAME PARAM IS PASSED TILL STACK IS EMPTY. 
+     * 3 REVERSE RETURNS WHEN STACK IS EMPTY
+     * 
+     * r(){
+     *   x = pop(); r(); i(x);
+     * }
+     * 
+     * i(x){
+     *   y = pop(); i(x); add(y); 
+     * }
+     * 
+    */
+    void reverseStackUsingRecursion(Deque<Integer> stack){
+        if(stack.isEmpty()) return;
+        int top = stack.removeLast();
+        reverseStackUsingRecursion(stack);
+        insertAtBottom(stack, top);
+    }
+
+    void insertAtBottom(Deque<Integer> stack, int num){
+        if(stack.isEmpty()) {
+            stack.addLast(num); return;
+        }
+        int top = stack.removeLast();
+        insertAtBottom(stack, num);
+        stack.addLast(top);
+    }
+
     // https://leetcode.com/problems/sum-of-subarray-minimums/
+    // https://leetcode.com/problems/maximal-rectangle/
+
     public static void main(String[] args) {
         StackPractice stack = new StackPractice();
 
@@ -528,7 +605,13 @@ public class StackPractice {
         // stack.reverseParentheses(bracketReverse);
 
         String decode = "100[leetcode]";// "3[a2[c]]";//"3[a]2[bc]";
-        stack.decodeString(decode);
+        // stack.decodeString(decode);
+
+        Deque<Integer> stackToReverse = new LinkedList<>();
+        for(int i =0; i<5; i++) stackToReverse.addLast(i);
+        System.out.println(stackToReverse);
+        stack.reverseStackUsingRecursion(stackToReverse);
+        System.out.println(stackToReverse);
     }
 
 }

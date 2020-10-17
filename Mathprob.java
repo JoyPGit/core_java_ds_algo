@@ -7,6 +7,73 @@ import java.util.*;
  * use mod circular array concept
  */
 public class Mathprob {
+
+    /** 
+     * POINTS :
+     * 1 BINARY CARRY = SUM/2;
+     * 2 SUM IS CALCULATED FOR THE CURRENT 2 DIGITS
+     * SUM = (CARRY + DIGITOF + DIGIT OF B)%2
+     * 
+    */
+    // https://leetcode.com/problems/add-binary/
+    public String addBinary(String a, String b) {
+        
+        int i = a.length()-1, j = b.length()-1;
+        int carry =0;
+        
+        StringBuilder res = new StringBuilder(); 
+
+        while(i>=0 || j>=0){
+            int sum = carry;
+            
+            if(i>=0) sum+= a.charAt(i) - '0';
+            if(j>=0) sum+= b.charAt(i) - '0';
+            
+            res.append(sum%2);
+            carry = sum/2;
+        }
+        
+        if(carry!=0) res.append(carry);
+        return res.reverse().toString();
+        // String class in Java does not have reverse() method
+    }
+
+    /** 
+     * SIMILAR AS ABOVE
+     * SUM = CARRY
+     * SUM+= A'S DIGIT
+     * SUM+= A'S DIGIT
+     * APPEND SUM%10
+     * CARRY = SUM/10
+    */
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode p = l1;
+        ListNode q = l2;
+        
+        int carry = 0; String res = "";
+        while(p!=null || q!=null){
+            int sum = carry;
+            if(p!=null) sum+=p.val;
+            if(q!=null) sum+=q.val;
+            // System.out.println(res);
+            res += (sum%10);
+            carry = sum/10;
+            if(p!=null) p = p.next; 
+            if(q!=null) q = q.next;
+        }
+        if(carry!=0) res += carry;
+        ListNode r = new ListNode(res.charAt(0)-'0');
+        
+        ListNode ans = r;
+        for(int i =1; i<res.length(); i++){
+            // System.out.println(res.charAt(i));
+            
+            r.next = new ListNode(res.charAt(i)-'0');
+            r = r.next;
+        }
+        return ans;
+    }
+
     public int[] distributeCandies(int candies, int num_people) {
         int[] res = new int[num_people];
         int count = 1; int i =0;

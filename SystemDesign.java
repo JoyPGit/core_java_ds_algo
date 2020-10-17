@@ -23,7 +23,7 @@ public class SystemDesign {
 
     /** 
      * LRU
-     * IF MNOT PRESENT, ADD AT FRONT
+     * IF NOT PRESENT, ADD AT FRONT
      * IF PRESENT, BRING TO FRONT
      * 
      * also update head and currLast in put

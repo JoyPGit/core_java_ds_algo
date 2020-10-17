@@ -2,34 +2,22 @@ import java.util.*;
 
 public class Backtrack {
 
-    class Node {
-        int key;
-        Node left;
-        Node right;
-    
-        Node(int key) {
-            this.key = key;
-            this.left = null;
-            this.right = null;
-        }
-    }
-
-    void printListOfLists(ArrayList<ArrayList<Integer>> lists) {
-        for (ArrayList<Integer> subset : lists) {
-            System.out.println(subset);
-        }
-    }
-
-    void printList(ArrayList<Integer> list) {
-        Iterator<Integer> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            System.out.println(iterator.next());
-        }
-    }
-
     /**  
      * 
+     * FOR FINDING ALL POSSIBLE PARTITIONS (OR SOMETHING LIKE THAT)
+     * WE USE BACKTRACKING, FOR FINDING MIN CUTS OR PARTITIONS
+     * WE NEED RECUSRION, NO ADDITION OR REMOVAL
+     * 
+     * SEE PALINDROME PARTITION 1 AND 2
+     * 
+     * WHENEVER WE NEED TO GO BACK ON OUR SELECTION ,WE NEED BACKTRACKING
+     * WHEN WE USE GLOBAL VARIABLE LIKE AN OBJECT LIKE CHAR ARRAY
+     * WHEN NORMAL INCLUSION-EXCLUSION WILL OD, RECUSRION IS ENOUGH, i.e.
+     * WE DON'T NEED TO GO BACK TO INCLUDE IF WE INITIALLY EXCLDUDED
+     * 
      * IMP CHECK WHEN TO ADD AND REMOVE INSIDE FOR AND WHEN OUTSIDE
+     * 
+     * * N QUEEN -> K EQUAL SUM SUBSETS 
      * 
      * POINTS : 
      * -------------------------------------
@@ -94,30 +82,7 @@ public class Backtrack {
 
     //28 apr
 
-    public ArrayList<ArrayList<Integer>> hasPathSum(Node root, int sum) {
-        ArrayList<ArrayList<Integer>> paths = new ArrayList<>();
-
-        hasPathSumHelper(root, sum, new ArrayList<Integer>(), paths);
-
-		// printListOfLists(paths);	
-		printListOfLists(paths);
-		
-        return paths;
-    }
-
-	void hasPathSumHelper(Node node, int sum, ArrayList<Integer> current, ArrayList<ArrayList<Integer>> paths) {
-        if (node == null) {
-            return;
-        }
-
-        if (node.key == sum && node.left == null && node.right == null) {
-            paths.add(current);
-        }
-
-        current.add(node.key);
-        hasPathSumHelper(node.left, sum - node.key, new ArrayList<Integer>(current), paths);
-        hasPathSumHelper(node.right, sum - node.key, new ArrayList<Integer>(current), paths);
-    }
+    
 
     
     // Subsets : https://leetcode.com/problems/subsets/
@@ -372,25 +337,122 @@ public class Backtrack {
           res.add(new ArrayList<>(list));
        else{
           for(int i = start; i < s.length(); i++){
-             if(isPalindrome(s, start, i)){
-                list.add(s.substring(start, i + 1));
-                backtrack7(res, list, s, i + 1);
+            String palin = s.substring(start, i+1);
+            if(utilCustom.Utility.isPalindrome(palin)){
+                list.add(palin);
+                backtrack7(res, list, s, i + 1);// 's' is passed
                 list.remove(list.size() - 1);
-             }
+            }
           }
        }
     }
+
+    /** 
+     * DIFF w.r.t ABOVE IS WE DON'T PASS  THE INDEX, RATHER THE
+     * SUBSTRING IS PASSED AND WE ALWAYS START FROM 0.
+    */
+    // https://leetcode.com/problems/palindrome-partitioning
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        helper(res, curr, s);
+        return res;
+    }
     
-    public boolean isPalindrome(String s, int low, int high){
-       while(low < high)
-          if(s.charAt(low++) != s.charAt(high--)) return false;
-       return true;
-    }    
+    
+    void helper(List<List<String>> res, List<String> curr, String str){
+        if(str.length() == 0){
+            // System.out.println(curr);
+            res.add(new ArrayList<>(curr));
+            return;
+        } 
+        
+        for(int i = 0; i<str.length(); i++){
+            String palin = str.substring(0, i+1);
+            if(utilCustom.Utility.isPalindrome(palin)) {
+                // System.out.println(palin);
+                curr.add(palin);
+                helper(res, curr, str.substring(i+1));// pass the string
+                curr.remove(curr.size()-1);
+            }
+        }
+    }
 
-    // https://www.geeksforgeeks.org/palindrome-partitioning-dp-17/
+      
+    /*
+     * return the min diff {1, 6, 11, 5} ; diff = 1 (12-11)
+     * 
+     * Using the same technique of backtracking as in combinations 
+     * for dividing in 2, set target of sum/2 add a check for target == 0
+     */
+    List<List<Integer>> partitionIn2(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        int sum = 0;
+        for (int i : nums) sum += i;
+        int target = sum / 2;
+        partitionIn2Util(nums, target, 0, res, list);
+        System.out.println(res);
+        return res;
+    }
+
+
+    void partitionIn2Util(int[] nums, int target, int start, List<List<Integer>> res, 
+    List<Integer> list) {
+        if (target < 0) return;
+        if (target == 0) {
+            // System.out.println(list);
+            res.add(new ArrayList<>(list)); return;
+        }
+        else {
+            for (int i = start; i < nums.length; i++) {
+                list.add(nums[i]);
+                partitionIn2Util(nums, target - nums[i], i + 1, res, list);
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    /**  
+     * N QUEEN SIMILAR -> K SUBSET
+     * IN QUEEN WE INCREMENT ROWS, HERE WE DECRMENT THE NO OF SUBSETS
+     * 
+     * 1 6 params, index, visited[], nums[], target, currrSum, partitions
+    */
+    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        int n = nums.length; int sum = 0;
+        for (int i = 0; i < nums.length; i++) sum += nums[i];
+        if (sum%k != 0) return false;
+        
+        int individual = sum/k;
+        boolean[] visited = new boolean[n];
+
+        return partition(0, visited, nums, k, individual, 0);
+    }
+    
+    boolean partition(int index, boolean[] visited, int[] nums, int k, int individual, int currSum){
+        if (k == 0) return true;
+        // if one partition reaches target sum, recur for other k-1 partitions
+        if (currSum == individual) return partition(0, visited, nums, k - 1, individual, 0);
+
+        for (int i = index; i < nums.length; i++) {
+            if (!visited[i] && currSum + nums[i] <= individual) {
+                visited[i] = true;
+                // start from next index
+                if (partition(i + 1, visited, nums, k, individual, currSum + nums[i])) {
+                    return true;
+                }
+                visited[i] = false;
+            }
+        }
+        return false;
+    }
+
+
     // https://leetcode.com/problems/letter-case-permutation/
-    // https://leetcode.com/problems/next-permutation/
 
+    // https://leetcode.com/problems/number-of-matching-subsequences
     public int numMatchingSubseq(String S, String[] words) {
         HashSet<String> set = new HashSet<>();
         List<Character> list = new ArrayList<>();
@@ -422,52 +484,10 @@ public class Backtrack {
         return s;
     }
 
-    /** 
-     * POINTS :
-     * 1 BRUTE FORCE SOLUTION
-     * 2 PASSES 87 TEST CASES
-     * 3 
-     * O(n) stack solution exists, check if possible
-     * */
-    // https://leetcode.com/problems/sum-of-subarray-minimums/
-    public int sumSubarrayMins(int[] A) {
-        int n = A.length;
-        if(n==0) return 0;
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> curr = new ArrayList<>();
-        int sum = 0;
-        
-        for(int l =1; l<=n; l++){
-            int min = Integer.MAX_VALUE;
-            for(int i = 0; i+l-1<n; i++){
-                int j = i+l-1;
-                System.out.println("i "+i+" j "+j);
-                sum+=findMin(A, i, j);
-            }
-            // sum+=min;
-            System.out.println("sum "+sum);
-
-        }
-        utilCustom.Utility.printListOfLists(res);
-        for(int i =0; i<res.size(); i++){
-            Collections.sort(res.get(i));
-            if((res.get(i)).size()==0) continue;
-            sum+=(res.get(i)).get(0);
-        }
-        return sum;
-    }
-
-    int findMin(int[] arr, int start, int end){
-        int min = Integer.MAX_VALUE;
-        for(int i = start; i<=end; i++){
-            min = Math.min(min, arr[i]);
-        }
-        return min;
-    }
     
     /**
      * POINTS :
-     * 1 row IS PASSED AS A PARAMTER
+     * 1 row IS PASSED AS A PARAMETER
      * 2 col IS ITERATED OVER IN EACH FUNCTION CALL
      * 3 IF VALID PROCEED TO NEXT ROW, ELSE NEXT COL
      * 4 NO NEED TO CHCK FOR LOWER RIGHT DIA AS NO QUEENS HAVE YET BEEN PLACED
@@ -523,7 +543,7 @@ public class Backtrack {
         }
 
         // NO LOWER RIGHT DIA CHECK AS NO QUEENS YET
-        
+
         return true;
     }
 
@@ -667,41 +687,6 @@ public class Backtrack {
 
     // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/
     // 551/week-3-august-15th-august-21st/3428/
-
-
-    // PAINTERS' PARTITION PROBLEM RECURSIVE SOLN
-    /**  
-     * 1 6 params, index, visited[], nums[], target, currrSum, partitions
-    */
-    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets
-    public boolean canPartitionKSubsets(int[] nums, int k) {
-        int n = nums.length; int sum = 0;
-        for (int i = 0; i < nums.length; i++) sum += nums[i];
-        if (sum%k != 0) return false;
-        
-        int target = sum/k;
-        boolean[] visited = new boolean[n];
-
-        return partition(0, visited, nums, k, target, 0);
-    }
-    
-    boolean partition(int index, boolean[] visited, int[] nums, int k, int target, int currSum){
-        if (k == 0) return true;
-        // if one partition reaches target sum, recur for other k-1 partitions
-        if (target == currSum) return partition(0, visited, nums, k - 1, target, 0);
-
-        for (int i = index; i < nums.length; i++) {
-            if (!visited[i] && currSum + nums[i] <= target) {
-                visited[i] = true;
-                // start from next index
-                if (partition(i + 1, visited, nums, k, target, currSum + nums[i])) {
-                    return true;
-                }
-                visited[i] = false;
-            }
-        }
-        return false;
-    }
     
 
     /** 
@@ -784,6 +769,53 @@ public class Backtrack {
     }
 
 
+    /** 
+     * For primitive arguments (int, long, etc.), the pass by value is 
+     * the actual value of the primitive (for example, 3).
+     * 
+     * For objects, the pass by value is the value of the reference to the object.
+     * 
+     * 
+     * 1 AS NEW INSTANCE OF STRINGBUILDER IS PASSED
+     * s.charAt(index) == 63 RETURNS ASCII VALUE, ? -> 63
+     * 
+     * 2 EVERYTIME A NEW INSTANCE IS PASSED, SO NO NEED TO 
+     * REVERT BACK THE CHAR
+     * 
+    */
+    void generatePattern(String s){
+        patternHelper(s, s.indexOf('?'), s.length());
+    }
+
+    void patternHelper(String s, int index, int n){
+        if(index == n) {
+            System.out.println("final "+s);
+            return;
+        }
+        if(s.charAt(index) == 63){ // ? -> 63
+            StringBuilder str1 = new StringBuilder(s);
+            str1.deleteCharAt(index);
+            str1.insert(index, "0");
+            // System.out.println("replace 0 "+str1);
+            patternHelper(str1.toString(), index+1, n);
+
+            StringBuilder str2 = new StringBuilder(s);
+            str2.deleteCharAt(index);
+            str2.insert(index, "1");
+            patternHelper(str2.toString(), index+1, n);
+        }else {
+            // System.out.println(s.charAt(index));
+            patternHelper(s, index+1, n);
+        }
+    }
+
+    /** 
+     * IF A GLOBAL VAR IS USED, THEN REMOVAL IS NEEDED, 
+     * curr = curr.substring(0, curr.length()-1);
+     * 
+     * IF PASSED AS PARAMETER, REMOVAL ISN'T REQUIRED.
+    */
+
     // generate 0s and 1s, free walk
     // https://leetcode.com/problems/generate-parentheses/
     List<String> res = new ArrayList<>();
@@ -820,30 +852,23 @@ public class Backtrack {
         close--;
     }
 
-    // https://www.youtube.com/watch?v=KAoRNDx-S8M
-    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
-    HashSet<String> splitSet;
-    public int maxUniqueSplit(String s) {
-        int n = s.length();
-        if(n==0) return 0;
-        splitSet = new HashSet<>();
-        int res = splitHelper(s);
-        return res;
+    public List<String> generateParenthesisWithoutBT(int n) {
+        List<String> list = new ArrayList<String>();
+        int open = 0, close = 0;
+        String curr = ""; 
+        helper(list, curr, open, close, n);
+        return list;
     }
-
-    int splitHelper(String str){
-        int countSplit = 0;
+    
+    public void helper(List<String> list, String curr, int open, int close, int n){
         
-        for(int i = 1; i<=str.length(); i++){
-            String sub = str.substring(0, i);
-            if(!splitSet.contains(sub)){
-                splitSet.add(sub);
-                countSplit = Math.max(countSplit, 
-                                1 + splitHelper (str.substring(i, str.length() ) ));
-                splitSet.remove(sub);
-            }
+        if(curr.length() == n*2){
+            list.add(curr);
+            return;
         }
-        return countSplit;
+        
+        if(open < n) helper(list, curr+"(", open+1, close, n);
+        if(close < open) helper(list, curr+")", open, close+1, n);
     }
 
 
@@ -941,17 +966,138 @@ public class Backtrack {
         && rowIndex < grid.length && colIndex < grid[0].length
         && grid[rowIndex][colIndex] != 0);
     }
-
     
 
-    // rat in maze, n queen
+   
+    ///////////////UNIQUE -> USE HASHMAP
+    /**
+     * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
+     * use BACKTRACKING FORMAT 
+     * 
+     * 1 dfs(){ res.add; for(){ add(i) //ADD dfs(i+1)
+     * remove(list.size()-1) //REMOVE } }
+     * 
+     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE COUNTED
+     * SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7 
+     * 
+     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
+     * 4 START WITH i = start AND USE i NOT start 
+     * 5 FOR NO DUPLICATES -> !res.contains(list)
+     */
+
+    int uniqueCombinationsSumK(int[] arr, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        // Arrays.sort(arr);
+        int start = 0;
+        int sum = 0;
+        btk(res, list, arr, k, start, sum);
+        System.out.println(res);
+        return res.size();
+    }
+
+    void btk(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
+        if (sum > k) return;
+
+        if(k == sum && !res.contains(list)){
+            res.add(new ArrayList<>(list)); 
+            return;
+        }
+        
+        for (int i = start; i < arr.length; i++) {
+            list.add(arr[i]);
+            btk(res, list, arr, k, i + 1, sum + arr[i]);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
+    HashSet<String> splitSet;
+    public int maxUniqueSplit(String s) {
+        int n = s.length();
+        if(n==0) return 0;
+        splitSet = new HashSet<>();
+        return splitHelper(s);
+    }
+
+    int splitHelper(String str){
+        int countSplit = 0;
+        
+        for(int i = 1; i<=str.length(); i++){
+            String sub = str.substring(0, i);
+            if(!splitSet.contains(sub)){
+                splitSet.add(sub);
+                // System.out.println(splitSet);
+                countSplit = Math.max(countSplit, 
+                                1 + splitHelper (str.substring(i, str.length() ) ));
+                splitSet.remove(sub); //if commented, fails for "wwwzfvedwfvhsww"
+            }
+        }
+        return countSplit;
+    }
+
+    /** 
+     * POINTS :
+     * 1 2 DFS ARE USED, ONE EXCLUSIVE ONE INLUSIVE
+     * 2 FOR EACH EXCLUSIVE, CALL THE INCLUSIVE
+     * SIMILAR TO INCLUDE EXCLUDE IN RECURSION
+     *  
+     * 3 IT'S JUST LIKE PREORDER, ONLY WE ADD ANOTHER CALL
+     * IN PLACE OF PRINTING ROOT
+    */
+    // https://www.youtube.com/watch?v=ofMqFAFVcKY
+    // https://leetcode.com/problems/path-sum-iii/submissions/
+    int count = 0;
+    int target = 0;
+    public int pathSumDFS(TreeNode root, int sum) {
+        target = sum;
+        dfsExclude(root);
+        return count;
+    }
+    
+    
+    void dfsExclude(TreeNode root){        
+        if(root == null) return;
+        dfsInclude(root, 0);// not root.val
+        dfsExclude(root.left);
+        dfsExclude(root.right);
+    }
+    
+    void dfsInclude(TreeNode root, int currSum){
+        if(root == null) return;
+        currSum+=root.val;
+        if(currSum == target) count++;
+        dfsInclude(root.left, currSum);
+        dfsInclude(root.right, currSum);
+    }
+
+    HashMap<Integer, Integer> map = new HashMap<>();
+    
+    public int pathSum(TreeNode root, int sum) {
+        target = sum;
+        map.put(0,1);
+        helper(root, 0);
+        return count;
+    }
+    
+    void helper(TreeNode root, int sum){
+        if(root == null) return;
+        sum+=root.val;
+        count+=map.getOrDefault(sum-target, 0);
+        map.put(sum, map.getOrDefault(sum, 0)+1);
+        helper(root.left, sum);
+        helper(root.right, sum);
+        // this is for leaf nodes, removing left leaf for right path
+        map.put(sum, map.getOrDefault(sum, 0)-1);
+        
+    }
+
     // https://www.techiedelight.com/find-total-number-unique-paths-maze-source-destination/
         
     // https://www.geeksforgeeks.org/the-knights-tour-problem-backtracking-1
     // https://www.geeksforgeeks.org/print-subsequences-string/
-    // https://www.techiedelight.com/find-total-number-unique-paths-maze-source-destination/
     // https://www.techiedelight.com/find-minimum-number-possible-k-swaps/
-    // https://www.techiedelight.com/find-minimum-cuts-needed-palindromic-partition-string/
 
     // https://www.techiedelight.com/find-all-nodes-at-given-distance-from-leaf-nodes-in-a-binary-tree/
 
@@ -962,6 +1108,8 @@ public class Backtrack {
 
 
         int[] nums={1,1,2,3};
+        // pcs.partitionIn2(nums);
+
         // pcs.permuteUnique(nums);
 
         String palindromePart = "babac";
@@ -974,9 +1122,16 @@ public class Backtrack {
         int[] subArrayMin = {3,1,2,4};
         // pcs.sumSubarrayMins(subArrayMin);
 
+        String uniqueSplit = "wwwzfvedwfvhsww";
+        // pcs.maxUniqueSplit(uniqueSplit);
         // pcs.subsets(subArrayMin);
 
-        pcs.generateParenthesis(3);
+        // pcs.generateParenthesis(3);
+        String pattern = "1??0?101";
+        // pcs.generateBinPattern(pattern);
+        // pcs.generatePattern(pattern);
+
+        // pcs.minCut("ababababababababab");
 
         char[][] sudoku = 
         {{'5','3','.','.','7','.','.','.','.'},
@@ -988,7 +1143,7 @@ public class Backtrack {
         {'.','6','.','.','.','.','2','8','.'},
         {'.','.','.','4','1','9','.','.','5'},
         {'.','.','.','.','8','.','.','7','9'}};
-        pcs.solveSudoku(sudoku);
+        // pcs.solveSudoku(sudoku);
 
     }
 }

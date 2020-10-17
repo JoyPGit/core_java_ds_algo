@@ -91,6 +91,18 @@ class StringPractice {
      * WHICH SAVES FROM TRAVERSING THE SAME ELEMENTS TWICE
      * 
     */
+
+
+    String reverse(String str){
+        StringBuilder res = new StringBuilder(str); 
+        res.append("1");//    
+        res.deleteCharAt(res.length()-1);
+        System.out.println(res);
+        res.insert(res.length(), 2);
+        System.out.println(res);
+        return res.reverse().toString();
+    }
+
     // https://leetcode.com/problems/consecutive-characters/
     public int maxPower(String s) {
         int max = 1; int i = 0;
@@ -2160,10 +2172,30 @@ class StringPractice {
         return 0;
     }
     
-    // https://www.youtube.com/watch?v=KAoRNDx-S8M
+   // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
+    HashSet<String> splitSet;
     public int maxUniqueSplit(String s) {
-        int max = 0;
-        return max;
+        int n = s.length();
+        if(n==0) return 0;
+        splitSet = new HashSet<>();
+        return splitHelper(s);
+    }
+
+    int splitHelper(String str){
+        int countSplit = 0;
+        
+        for(int i = 1; i<=str.length(); i++){
+            String sub = str.substring(0, i);
+            if(!splitSet.contains(sub)){
+                splitSet.add(sub);
+                // System.out.println(splitSet);
+                countSplit = Math.max(countSplit, 
+                                1 + splitHelper (str.substring(i, str.length() ) ));
+                splitSet.remove(sub); //if commented, fails for "wwwzfvedwfvhsww"
+            }
+        }
+        return countSplit;
     }
 
     // TIME BASED QUES
@@ -2263,6 +2295,7 @@ class StringPractice {
         // Programming"));
         // string.convertToTitle(3);
 
+        string.reverse("abc");
         String x = "123";
 
         // System.out.println(Integer.parseInt(x)+1);//4
@@ -2272,7 +2305,7 @@ class StringPractice {
 
         // System.out.println((char)('a'+2));
         String str1 = "1???";
-        string.generateBinPattern(str1);
+        // string.generateBinPattern(str1);
 
         // string.genBinPerm01s(4);
         // string.recPalindrome("abba");

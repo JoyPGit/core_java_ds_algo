@@ -117,12 +117,50 @@ class Greedy{
         System.out.println("the min no platforms required are "+ max);
     }
 
+    // https://zhuhan0.blogspot.com/2017/03/leetcode-253-meeting-rooms-ii.html
+
     void MaxTipCalculator(){}
 
     // https://leetcode.com/problems/course-schedule-iii/
 
+    /** 
+     * // [1,2,3,4,5], [3,4,5,1,2] 
+     * // [3,1,1], [1,2,2] mod fixed this
+     * // [7,1,0,11,4], [5,9,1,2,5] 
+     * // [5,6,7,8,6,4] [6,7,4,10,6,5]
+     * 
+     * POINTS :
+     * 1 THE TOTAL CUMULATIVE SUM OF GAS AND COST SHOULD BE >= 0
+     * 
+     * 2 WE HOLD CUMULATIVE TILL IT'S POSITIVE.
+     * ONCE -VE, IT MEANS WE CAN'T REACH HERE, SO WE HAVE TO START FROM NEXT POINT,
+     * WITH EMPTY TANK (curr = 0).
+     * 
+     * 
+    */
+    // https://leetcode.com/problems/gas-station
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int n = gas.length;
+        
+        int total = 0;
+        for(int i =0; i<n; i++) total+= gas[i] - cost[i];
+
+        // we need a separate var to make a decision on current tank cap
+        int start = 0; int curr = 0;
+        for(int i =0; i<n; i++){
+            curr += gas[i] - cost[i];
+            if(curr<0){
+                start = (i+1);//%n not reqd, for added safety
+                curr = 0;
+            }
+        }
+        
+        return total<0?-1:start;
+    }
+
+    
     // https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/
-    /** soove two linear equations
+    /** solve two linear equations
      * 1 convert all to float
      * 2 check for integer a = (int)a 
      * 3 check for negative (a*b)<0
@@ -221,6 +259,68 @@ class Greedy{
         return true;
     }
 
+    // [[1,10],[2,2],[2,2],[2,2],[2,2]] repeat
+    // [[1,2],[2,3],[3,4],[1,2]] spread over 2 days
+    // either run a loop for days and add events
+
+    public int maxEvents1(int[][] events) {
+        int n = events.length;
+        int count = 0;
+        Arrays.sort(events, (a, b)->{
+            if(a[1] == b[1]) return a[0] - b[0];
+            return a[1] - b[1];
+        });
+        
+        int maxDays = 100000;
+        // for(int[] i : events) maxDays = Math.max(maxDays,i[1]);
+        // System.out.println("maxD "+maxDays);
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 1; i<=maxDays; i++){
+            // System.out.println(set);
+            // int start = events[i][0];
+            // int end = events[i][1];
+            
+            // outerLoop : 
+            for(int k = 0; k<n; k++){
+                if(events[k][0] <= i && events[k][1]>=i && !set.contains(k)){
+                    set.add(k);
+                    count++;
+                    // System.out.println("i "+i+" k "+k);
+                    // continue;
+                    // i++;
+                    break ;//outerLoop;
+                    // because a single event can be attended in a day 
+                    // so break as soon as we find one event
+                    // continue;
+                }
+                // i++;
+                // continue;
+            }
+        }
+        return count;    
+    }
+
+    // or run a loop for events and find days
+    // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended
+    public int maxEvents2(int[][] events) {
+        int n = events.length;
+        Arrays.sort(events, (a, b)->{
+            if(a[1] == b[1]) return a[0] - b[0];
+            return a[1] - b[1];
+        });
+        
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i<n; i++){
+            for(int j = events[i][0]; j<=events[i][1]; j++){
+                if(!set.contains(j)) {
+                    set.add(j); break;// i or j? j as we are iterating over days
+                }
+            } 
+        }
+        return set.size();    
+    }
+
+    
     // https://leetcode.com/problems/reorganize-string/
     
     // https://leetcode.com/problems/task-scheduler/
@@ -553,6 +653,40 @@ class Greedy{
 		return result.toArray(new int[result.size()][]);
     }
 
+    /** 
+     * POINTS :
+     * 1 THE IDEA IS THAT FOR THE CURR INTERVAL TO ENCOMPASS THE NEXT INTERVAL
+     * ITS END> NEXT'S BEGINNING AND ITS END >= NEXT'S END
+     * 
+     * 2 SO SORTING IS DONE SO:
+     * SMALLER START IS PREFERRED, IF STARTS ARE SAME, LARGER END IS PREFERRED
+     * 
+     * 3 WHILE CURR ENCOMPASSES NEXT, INCREMNT COUNT ADN CONTINUE
+     * 4 ELSE CURR = NEXT AND NEXT = NEXT+1;
+     * 
+    */
+    // https://leetcode.com/problems/remove-covered-intervals
+    public int removeCoveredIntervals(int[][] intervals) {
+        int n = intervals.length;
+        
+        Arrays.sort(intervals, (x,y)->{
+            if(x[0] == y[0]) return y[1] - x[1];
+            return x[0]-y[0];
+            });
+        
+        int a = 0; int b = 1; int count = 0;
+        
+        while(b<n){
+            if(intervals[a][1]>intervals[b][0] && intervals[a][1]>=intervals[b][1]) {
+                b++; count++;
+            }
+            else {
+                a = b; b++;
+            }
+        }
+        return n - count;
+    }
+
     /** SORT ON THE BASIS OF END POINTS, IF CURR<START OF ANY POINT, COUNT++
      * IMP : ASSIGN CURR AFTER SORTING
      */
@@ -736,6 +870,10 @@ class Greedy{
         }
         return Math.min(doSwap[A.length-1], noSwap[A.length-1]);
     }
+
+    // https://leetcode.com/problems/couples-holding-hands/discuss/
+    // 113361/A-very-simple-hashmap-answer
+
     // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
 
     // https://leetcode.com/problems/car-pooling/
@@ -744,7 +882,6 @@ class Greedy{
     // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/
     // EVENT SCHEDULER
     // MEETING ROOM LEETCODE
-    // https://www.youtube.com/watch?v=i2bBG7CaVxs
     // MICROSOFT
     // https://leetcode.com/discuss/interview-question/447448/
 
@@ -752,7 +889,6 @@ class Greedy{
     // https://leetcode.com/problems/non-overlapping-intervals/
     // https://leetcode.com/problems/minimum-domino-rotations-for-equal-row/
     // GOOGLE
-    // https://leetcode.com/problems/couples-holding-hands/description/
     // https://leetcode.com/problems/cinema-seat-allocation/
     // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
     // https://leetcode.com/problems/insert-interval/

@@ -667,6 +667,11 @@ public class HashPractice{
     // discuss/41290/Simple-Java-Solution-Using-HashMap
 
     /** 
+     * ALWAYS THINK CUMULATIVE SUM, IF THERE EXISTS SUM-K
+     * TARGET = 8, SUM = 18 AND 10 EXISTS, SO THERE IS A SUBARRAY WHOSE
+     * SUM IS 10 AND ANOTHER WHOSE SUM IS 18, 
+     * SO SELECT FROM AFTER 10 TILL 18 TO GET 8
+     * 
      * POINTS : 
      * MOST IMP WE STORE CUMULATIVE SUM AS IT HELPS US SELECT CONTIGUOUS SUBARRAYS
      * 1 STORE SUM IN MAP ALONG WITH FREQ
@@ -688,6 +693,11 @@ public class HashPractice{
      * Existence of (sum-k) means from a previos index till this index
      * there is k sum subarray. 
      * 
+     * STEPS :
+     * 1 map.put(0,1)
+     * 2 sum+=i;
+     * 3 count += map.getOrDefault(sum-target)
+     * 4 add current sum
      */
     // https://leetcode.com/problems/subarray-sum-equals-k
     public int subarraySum(int[] nums, int k) {
@@ -701,12 +711,40 @@ public class HashPractice{
         
         for(int i : nums){
             sum+=i;
-            if(map.containsKey(sum-k)) count+=map.get(sum-k);
-            
+            count+=map.getOrDefault(sum-k,0);
             map.put(sum, map.getOrDefault(sum, 0)+1);
         }
         return count;
     }
+
+
+    // https://www.youtube.com/watch?v=ofMqFAFVcKY
+    // https://leetcode.com/problems/path-sum-iii/submissions/
+    int count = 0;
+    int target = 0;
+    HashMap<Integer, Integer> map = new HashMap<>();
+    
+    public int pathSum(TreeNode root, int sum) {
+        target = sum;
+        map.put(0,1);
+        helper(root, 0);
+        return count;
+    }
+    
+    void helper(TreeNode root, int sum){
+        if(root == null) return;
+        sum+=root.val;
+        count+=map.getOrDefault(sum-target, 0);
+        map.put(sum, map.getOrDefault(sum, 0)+1);
+        helper(root.left, sum);
+        helper(root.right, sum);
+        map.put(sum, map.getOrDefault(sum, 0)-1);
+        // this is for leaf nodes, removing left leaf for right path
+    }
+    // https://leetcode.com/problems/path-sum-iii/discuss/
+    // 895204/Java-DFS-2-ms-faster-than-100.00-39-MB-less-than-12.94
+
+    
 
     /** POINTS :
      * 1 STORE REMAINDER INSTEAD OF SUM

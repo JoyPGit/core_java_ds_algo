@@ -3,6 +3,13 @@ import java.util.*;
 class Array {
 
     /** 
+     * int, float and other primitive data types ar passed by value
+     * object by reference, like array, arraylist, pQueue etc.
+     * the object anme points to the same entity
+     * 
+     * Arrays class in Java doesn’t have reverse method. 
+     * We can use Collections.reverse() to reverse an array also.
+     * 
      * IMP: TO FIND MIDDLE ALWAYS USE (N-1)/2; NOT N/2
      * IF LENGTH=6 MID = 2, NOT 3
      * USE ARRAYS.EQUALS
@@ -18,6 +25,9 @@ class Array {
      * TO CHECK IF ARRAY CONATINS A VALUE
      * Arrays.asList(yourArray).contains(yourValue)
      * 
+     * 
+    
+     // https://www.geeksforgeeks.org/number-subarrays-sum-exactly-equal-k/
 
     */
     /**TECHNIQUES

@@ -3,6 +3,11 @@ package utilCustom;
 import java.util.*;
 
 public class Utility {
+
+    Utility(){}
+    // https://stackoverflow.com/questions/886955/
+    // how-do-i-break-out-of-nested-loops-in-java
+    
     // HASHMAP
     // Map iterator
     /**
@@ -13,6 +18,11 @@ public class Utility {
      * 
      * 4 Without public it can't be seen by other classes
      * 5 Without static, it can't be called directly
+     * 
+     * Arrays class in Java doesn’t have reverse method. 
+     * We can use Collections.reverse() to reverse an array also.
+     * 
+     * // String class in Java does not have reverse() method
      */
 
     /** 
@@ -164,6 +174,12 @@ public class Utility {
         }
     }
 
+    public static int sumSubarray(int[] arr, int start, int end){
+        int sum = 0;
+        for(int i =start; i<=end; i++) sum+=arr[i];
+        return sum;
+    }
+
     public static void swap(int[] arr, int index1, int index2){
         int temp = arr[index1];
         arr[index1] = arr[index2];
@@ -260,13 +276,39 @@ public class Utility {
      * object. An object of type Integer contains a single field whose type is int
      * (Java Documentation).
     */
+
+    // STRING
+    // String class in Java does not have reverse() method
+
+
+    public static boolean isPalindrome(String str){
+        int i = 0; int j = str.length()-1;
+        while(i<=j){
+            if(str.charAt(i)!=str.charAt(j)) return false;
+            i++; j--;
+        }
+        return true;
+    }
+
+    static String reverse(String str){
+        StringBuilder res = new StringBuilder(str); 
+        res.append(1);//    
+        res.deleteCharAt(res.length()-1);
+        System.out.println(res);
+        res.insert(res.length()-1, 2);
+        System.out.println(res);
+        return res.reverse().toString();
+    }
+
     public static void main(String[] args) {
         Utility utility = new Utility();
         // utility.sortString("original");
 
         // utility.charToint();
 
-        utility.maxheap();
+        // utility.maxheap();
+        utility.reverse("abc");
+
     }
 
     // public void main(String[] args) {

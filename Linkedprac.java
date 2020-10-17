@@ -5,6 +5,7 @@ class ListNode {
     int key;
     int val;
     ListNode next;
+    ListNode random;
 
     ListNode() {
     }
@@ -13,6 +14,7 @@ class ListNode {
     ListNode(int data) {
         this.key = data;
         this.next = null;
+        this.random = null;
         this.val = this.key;
     }
 }
@@ -120,6 +122,52 @@ class Linkedprac {
             s.next  = l2; s = s.next; l2= l2.next;
         }
         return head;
+    }
+
+    /** 
+     * BASICALLY WE USE A HASHAMP TO MAP THE ADDRESS OF EACH NODE WITH ITS CLONE, 
+     * IF NOT NULL.
+     * 
+     * POINTS :
+     * 1 FOR EACH NODE WE CREATE CLONE
+     * map.put(random2, new ListNode(random2.val));
+     * 2 IF CLOBE EXISTS, MAP TO P2' RANDOM OR NEXT
+     * 
+    */
+    // https://leetcode.com/problems/copy-list-with-random-pointer
+    // https://leetcode.com/problems/copy-list-with-random-pointer
+    public ListNode copyRandomList(ListNode head) {
+        if(head == null) return null;
+        
+        ListNode h2 = new ListNode(head.val);
+        ListNode p2 = h2;
+        HashMap<ListNode, ListNode> map = new HashMap<>();
+        map.put(head, h2);
+        ListNode p = head;
+        
+        while(p!=null){
+            // System.out.println(map);
+            ListNode random1Clone = p.random;
+            ListNode next1Clone = p.next;
+            
+            if(random1Clone!=null) {
+                if(!map.containsKey(random1Clone)) 
+                    map.put(random1Clone, new ListNode(random1Clone.val));
+            }
+            
+            if(next1Clone!=null){
+                if(!map.containsKey(next1Clone)) 
+                    map.put(next1Clone, new ListNode(next1Clone.val));
+            }
+            
+            p2.random = map.get(random1Clone);
+            p2.next = map.get(next1Clone);
+            
+            p2 = p2.next;
+            p = p.next;
+        }
+        
+        return h2;
     }
 
     // https://leetcode.com/problems/sort-list/submissions/
