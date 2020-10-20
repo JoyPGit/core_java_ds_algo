@@ -20,6 +20,8 @@ public class SystemDesign {
     // https://github.com/mission-peace/interview/blob/master/src/com/
     // interview/linklist/SortedLLToBalancedBST.java
 
+    // https://www.geeksforgeeks.org/design-a-data-structure-that-supports-
+    // insert-delete-search-and-getrandom-in-constant-time/
 
     /** 
      * LRU

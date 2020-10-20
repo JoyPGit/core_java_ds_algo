@@ -1,4 +1,3 @@
-import java.util.HashMap;
 import java.util.*;
 
 class ListNode {
@@ -22,7 +21,7 @@ class ListNode {
 /** 
  * POINTS :
  * TRICKS : (USE DUMMY NODE, DIVIDE INTO LISTS AND MERGE)
- * 1 P!= NULL OR P.NEXT != NULL
+ * 1 P!= NULL
  * 2 FAST, SLOW PTR TO FIND MID
  * 3 REVERSE LIST
  * 4 CYCLE, JOSEPHUS
@@ -34,34 +33,92 @@ class ListNode {
  * 10 ADD TWO NUMBERS
  * 11 REVERSE LIST IN PAIRS (RECURSIVE, ITERATIVE)
  * 12 MERGE SORT ON LIST
+ * 
+ *  AVOID CYCLE BY SETTING NEXT NULL
+ * 
+ *  MERGE 2 LIST TEMPLATE ONE FROM EACH ALTERNATE
+ *  while(a!=null && b!=null){
+        ListNode c = a.next;
+        ListNode d = b.next;
+        a.next = b;
+        b.next = c;
+        a = c; b = d;
+ *  }
+ * 
+ *  ELSE USE MERGE SORT AND A DUMMY HEAD
+ *  ListNode dummy = new ListNode(0);
+    ListNode p = dummy;
+    while(l1!=null && l2!=null){
+        if(l1.val<=l2.val){
+            p.next = l1;
+            l1 = l1.next;
+        }else{
+            p.next = l2;
+            l2 = l2.next;
+        }
+        p = p.next;
+    }
+    
+    if(l1!=null) p.next = l1;
+    if(l2!=null) p.next = l2;
+    return dummy.next;
+ *    
+ * .next type see recursive merging
 */
 
 class Linkedprac {
     ListNode head = null;
     ListNode current = null;
 
-    void printList(Linkedprac list) {
-        ListNode current = list.head;
-        System.out.print(head.key + "->");
-        while (current.next != null) {
-            current = current.next;
-            if (current.next != null)
-                System.out.print(current.key + "->");
-            else
-                System.out.println(current.key);
+    
+    /**
+     * 2 WAYS TO FIND MIDDLE
+     * 
+     * ONE IS FAST != NULL && FAST.NEXT != NULL
+     * OTHER IS FAST.NEXT != NULL && FAST.NEXT.NEXT != NULL
+     * 
+     * THE DIFF IN THE FIRST CASE, SLOW GOES ONE STEP AHEAD OF MIDDLE    
+     * IN CASE OF EVEN NO OF NODES
+     * 
+     * IN SECOND CASE, FAST DOESN'T REACH THE END
+     * 
+     */
+    ListNode middle(ListNode head){
+        ListNode fast = head, slow = head;
+        while(fast.next!=null && fast.next.next !=null){//1
+            fast = fast.next.next; 
+            slow = slow.next;
         }
+        return slow;
     }
 
-    void printList(ListNode head) {
-        while (head != null) {
-            System.out.print(head.key + "->");
-            head = head.next;
-            if (head.next == null) {
-                System.out.print(head.key + "-~~!");
-                System.out.println();
-                return;
-            }
+
+    ListNode reverse(ListNode curr){
+        ListNode a = null; ListNode b = curr; ListNode c= curr.next;
+        if(c==null) return b;
+        while(b!=null){
+            b.next = a;
+            a = b; b= c;
+            // System.out.println("a "+a.val);
+            if(c!=null) c = c.next;//2
         }
+        return a;
+    }
+
+    // SAME AS ABOVE (fast.next != null && fast.next.next != null)
+    // PUT THE CHECK AT THE END imp
+    // https://leetcode.com/problems/linked-list-cycle/
+    public boolean hasCycle(ListNode head) {
+        if(head == null || head.next == null) return false;
+        
+        ListNode slow = head, fast = head;
+        
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) return true; // imp
+        }
+        return false;
     }
 
     void addNode(int data) {
@@ -76,98 +133,193 @@ class Linkedprac {
         }
     }
 
-    void findIntersection(Linkedprac list1, Linkedprac list2) {
-        // HashMap h =
+    // if no common
+    // counter won't work as lists can be of diff length
+    // the loops terminate when a reaches headB's end and b reaches headA's end
+    // so null = null, no intersection 
+    // https://leetcode.com/problems/intersection-of-two-linked-lists
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null) return null;
+        
+        ListNode p = headA, q = headB;
+        while(p!=q){ //both null stops the iterations
+            if(p == null) p = headB;//
+            else p = p.next;
+            
+            if(q == null) q = headA;
+            else q = q.next;
+        }
+        return p;
     }
 
+    
+    // https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+    /**
+     * boundary conditions : n=4 and {1,2,3,4}; n=3 and {1,2,3,4} here tracker goes
+     * till end and ptr is at head, so return head as soon as tracker is null as n
+     * is then beyond the length of list.
+     * 
+     * if ptr == head, just set ptr.next = ptr.next.next and return head; POINTS:
+     * LENGTH GREATER, TRACKER = NULL, RETURN PTR == HEAD, PTR.NEXT = PTR.NEXT.NEXT,
+     * RETURN
+     * 
+     * * INSTEAD OF TRAVERSING TWICE, RUN LOOP FOR N-K TIMES
+     * 
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null || n == 0)
+            return head;
+        ListNode tracker = head;
+        ListNode ptr = head;
+
+        for (int i = 0; i < n; i++) {
+            tracker = tracker.next;
+            if (tracker == null) {
+                head = head.next;
+                return head;
+            }
+        }
+
+        while (tracker.next != null) {
+            tracker = tracker.next;
+            ptr = ptr.next;
+        }
+
+        ptr.next = ptr.next.next;
+
+        return head;
+    }
+
+    // https://leetcode.com/problems/rotate-list/submissions/
+    /**
+     * POINTS : 
+     * 1 FIND N, TAKE MOD K = K%N FOR ABVOIDING OVERFLOW
+     * 2 FIND END, ATTACH HEAD AND MAKE NODE AFTER K NODES  -> HEAD NODE
+     * 3 AND 
+     */
+    public ListNode rotateRight(ListNode head, int k) {
+        int n = 0;
+        ListNode end = head;
+        ListNode p = head;
+        if (head == null)
+            return head;
+
+        while (end.next != null) {
+            n++;
+            end = end.next;
+        }
+        n++;
+        k = k % n;
+
+        // new head found
+        for (int i = 0; i < n - k - 1; i++) p = p.next;
+
+        end.next = head;
+        head = p.next;
+        p.next = null; // avoid cycle
+
+        return head;
+    }
+
+
+    // can't be done without two separate lists, 
+    // just by using next as in odd even
+    /**
+     * MERGING OF TWO LISTS, USE TEMPLATE
+     * 
+     */
+    // https://leetcode.com/problems/reorder-list
+    public void reorderList(ListNode head) {
+        if(head == null || head.next == null 
+           || head.next.next == null) return;
+
+        ListNode fast = head, slow = head;
+        
+        // midlde 
+        while(fast.next!=null && fast.next.next !=null){//1
+            fast = fast.next.next; 
+            slow = slow.next;
+        }
+        
+        // 2 lists a and b
+        ListNode a = head;
+        ListNode b = reverse(slow.next);//3
+        // System.out.println(slow.val);
+        slow.next = null;//4
+
+        // merging two lists        
+        while(a!=null && b!=null){
+            ListNode c = a.next;
+            ListNode d = b.next;
+            a.next = b;
+            b.next = c;
+            a = c; b = d;
+        }
+    }
+
+    // COPIED
     // https://leetcode.com/problems/merge-two-sorted-lists/
     public ListNode mergeTwoListsRec(ListNode l1, ListNode l2){
 		if(l1 == null) return l2;
 		if(l2 == null) return l1;
 		if(l1.val < l2.val){
-			l1.next = mergeTwoLists(l1.next, l2);
+			l1.next = mergeTwoListsRec(l1.next, l2);
 			return l1;
 		} else{
-			l2.next = mergeTwoLists(l1, l2.next);
+			l2.next = mergeTwoListsRec(l1, l2.next);
 			return l2;
 		}
     }
 
+    // l1 still holds reference to list start
+    // passing to helper means the ends must be returned
+    // https://leetcode.com/problems/merge-two-sorted-lists/
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        ListNode s = null;
-        if(l1== null) return l2;
-        if(l2== null) return l1;
-        if(l1.val<l2.val) {
-            s = l1; l1= l1.next;
-        }
-        else {
-            s = l2; l2 = l2.next;
-        }
-        ListNode head = s;
+        ListNode dummy = new ListNode(0);
+        ListNode p = dummy;
         while(l1!=null && l2!=null){
             if(l1.val<=l2.val){
-                s.next = l1; l1 = l1.next;
+                p.next = l1;
+                l1 = l1.next;
+            }else{
+                p.next = l2;
+                l2 = l2.next;
             }
-            else{
-                s.next = l2; l2 = l2.next;
-            }
-            s= s.next;
-        }
-        
-        while(l1!=null) {
-            s.next  = l1; s = s.next; l1= l1.next;
-        }
-        
-        while(l2!=null) {
-            s.next  = l2; s = s.next; l2= l2.next;
-        }
-        return head;
-    }
-
-    /** 
-     * BASICALLY WE USE A HASHAMP TO MAP THE ADDRESS OF EACH NODE WITH ITS CLONE, 
-     * IF NOT NULL.
-     * 
-     * POINTS :
-     * 1 FOR EACH NODE WE CREATE CLONE
-     * map.put(random2, new ListNode(random2.val));
-     * 2 IF CLOBE EXISTS, MAP TO P2' RANDOM OR NEXT
-     * 
-    */
-    // https://leetcode.com/problems/copy-list-with-random-pointer
-    // https://leetcode.com/problems/copy-list-with-random-pointer
-    public ListNode copyRandomList(ListNode head) {
-        if(head == null) return null;
-        
-        ListNode h2 = new ListNode(head.val);
-        ListNode p2 = h2;
-        HashMap<ListNode, ListNode> map = new HashMap<>();
-        map.put(head, h2);
-        ListNode p = head;
-        
-        while(p!=null){
-            // System.out.println(map);
-            ListNode random1Clone = p.random;
-            ListNode next1Clone = p.next;
-            
-            if(random1Clone!=null) {
-                if(!map.containsKey(random1Clone)) 
-                    map.put(random1Clone, new ListNode(random1Clone.val));
-            }
-            
-            if(next1Clone!=null){
-                if(!map.containsKey(next1Clone)) 
-                    map.put(next1Clone, new ListNode(next1Clone.val));
-            }
-            
-            p2.random = map.get(random1Clone);
-            p2.next = map.get(next1Clone);
-            
-            p2 = p2.next;
             p = p.next;
         }
         
-        return h2;
+        if(l1!=null) p.next = l1;
+        if(l2!=null) p.next = l2;
+        return dummy.next;
+    }
+
+    // DIVIDING INTO TWO LISTS, USING DUMMY NODES
+    /**
+     * WHILE CONDN (p!=null) AS ALL NODES AHEV TOP BE TRAVERSED 
+     * 2 USE NEW LISTNODE(0) AND THEN RETURN NEXT;
+     */
+    // https://leetcode.com/problems/partition-list/
+    public ListNode partition(ListNode head, int x) {
+        ListNode smaller = new ListNode(0);
+        ListNode small = smaller;
+        ListNode bigger = new ListNode(0);
+        ListNode big = bigger;
+        ListNode p = head;
+        while (p != null) {
+            if (p.val >= x) {
+                big.next = new ListNode(p.val);
+                big = big.next;
+            } else {
+                small.next = new ListNode(p.val);
+                small = small.next;
+            }
+            p = p.next;
+        }
+
+        // removal of first dummy nodes of both lists
+        small.next = bigger.next;
+        head = smaller.next;
+        return head;
     }
 
     // https://leetcode.com/problems/sort-list/submissions/
@@ -221,68 +373,59 @@ class Linkedprac {
         return p.next;
     }
 
-    
+    /** 
+     * TEMPLATE (even!=null && even.next!=null)
+     * 
+     * POINTS :
+     * 1 SINGLE PASS, ODD.NEXT = EVEN.NEXT AND EVEN.NEXT = EVEN.NEXT.NEXT
+     * 2 UPDATE ODD AND EVEN
+     * 3 REMEMBER BOUNDARY CONDITION
+     * if(odd.next==null || even.next == null) break;
+     * 
+    */
+    // https://leetcode.com/problems/odd-even-linked-list/
+    public ListNode oddEvenIndexList(ListNode head) {
+        if(head == null || head.next == null) return head;
+        
+        ListNode odd = head;
+        ListNode even = head.next;
+        ListNode evenStart = even;
+        
+        while(even!=null && even.next!=null){
+            // if(odd.next==null || even.next == null) break;
+            odd.next = even.next;
+            even.next = even.next.next;
+            odd = odd.next; even = even.next;
+        }
+        
+        odd.next = evenStart;
+        return head;
+    }
+
+
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode first = new ListNode(0); boolean dup = false;
+        ListNode p = first;
+        first.next = head;
+        while(first.next!=null) {
+            ListNode tracker = first.next;
+            
+            while(tracker!=null && tracker.next!=null && tracker.val == tracker.next.val){
+                dup = true;
+                tracker = tracker.next;
+            }
+            if(dup) first.next = tracker.next;
+            else first = first.next;
+            dup = false;
+        }   
+        // printList(p.next);
+        return p.next;
+    }
     
     // https://leetcode.com/problems/insertion-sort-list/
 
-    void oddEvenSort(ListNode node) {
-        ListNode prev = node;
-        ListNode current = prev.next;
-        ListNode last = node;
 
-        while (last.next != null) {
-            last = last.next;
-        }
-
-        System.out.println("last " + last.key);
-        while (current.next != null) {
-            if (current.key % 2 != 0) {
-                prev.next = current.next;
-                last.next = current;
-                last = last.next;
-                last.next = null;
-            }
-            // System.out.println("prev " + prev.key);
-            // System.out.println("curr " + current.key);
-            // System.out.println("last " + last.key);
-            prev = prev.next;
-            current = prev.next;
-            /*
-             * errors while coding 1 current = current.next as current has been set as the
-             * last node, current.next will be null 2 current = prev.next.next
-             */
-        }
-    }
-
-    void reverseInKGroup(ListNode node, int k) {
-        ListNode start = node;
-        ListNode end = node;
-        ListNode nodeBefore = start;
-        ListNode nodeAfter;
-
-        int i = 0;
-        while (i < k) {
-            if (end.next != null) {
-                end = end.next;
-                i++;
-            }
-        }
-        reverseInKGrouphelper(start, end);
-        nodeBefore = end;
-        start = end.next;
-        i = 0;
-    }
-
-    void reverseInKGrouphelper(ListNode start, ListNode end) {
-        ListNode ptr1 = start;
-        ListNode ptr2 = null;
-        if (ptr1.next != null) {
-            ptr2 = ptr1.next;
-        }
-        ptr1.next.next = ptr1;
-        ptr2 = ptr2.next;
-        ptr1 = ptr1.next;
-    }
 
     int josephusCircle(ListNode head) {
         int value = 100;
@@ -297,10 +440,8 @@ class Linkedprac {
                 // System.out.println(tracker.key);
                 tracker = tracker.next;
             }
-            printList(head);
             if (direction) {
                 System.out.println("direction");
-                printList(head);
                 head = reverseList(head);
                 if (head.next == null)
                     return head.key;
@@ -311,7 +452,6 @@ class Linkedprac {
                     // System.out.println(tracker.key);
                     tracker = tracker.next;
                 }
-                printList(head);
             } else {
                 System.out.println("direction change");
                 head = reverseList(head);
@@ -319,7 +459,6 @@ class Linkedprac {
                 if (head.next == null)
                     return head.key;
                 head = head.next;
-                printList(head);
                 tracker = head;
                 while (tracker != null && tracker.next != null) {
 
@@ -327,9 +466,7 @@ class Linkedprac {
                     // System.out.println(tracker.key);
                     tracker = tracker.next;
                 }
-
             }
-
             direction = !direction;
         }
         if (head.next == null) {
@@ -337,6 +474,8 @@ class Linkedprac {
         }
         return value;
     }
+
+    ///////////////REVERSE
 
     // https://leetcode.com/problems/reverse-linked-list/submissions/
     /**
@@ -394,13 +533,44 @@ class Linkedprac {
         return head;
     }
 
-    // https://leetcode.com/problems/add-two-numbers-ii/submissions/
+    void reverseInKGroup(ListNode node, int k) {
+        ListNode start = node;
+        ListNode end = node;
+        ListNode nodeBefore = start;
+        ListNode nodeAfter;
+
+        int i = 0;
+        while (i < k) {
+            if (end.next != null) {
+                end = end.next;
+                i++;
+            }
+        }
+        reverseInKGrouphelper(start, end);
+        nodeBefore = end;
+        start = end.next;
+        i = 0;
+    }
+
+    void reverseInKGrouphelper(ListNode start, ListNode end) {
+        ListNode ptr1 = start;
+        ListNode ptr2 = null;
+        if (ptr1.next != null) {
+            ptr2 = ptr1.next;
+        }
+        ptr1.next.next = ptr1;
+        ptr2 = ptr2.next;
+        ptr1 = ptr1.next;
+    }
+
+
     /**
      * reverse both lists add and then reverse the final WHILE ADDING (SUM+CARRY)%10
      * IS NODE VALUE AND CARRY = SUM+CARRY/10 1 add a check for a!= null, b!=null
      * and carry!=0 2 create a head d = c; c = listnode(0), D WILL BE PASSED FOR
      * REVERSAL 3 while reversing the final list, pass head.next as the first is 0 4
      */
+    // https://leetcode.com/problems/add-two-numbers-ii/submissions/
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode a = reverseList(l1);
         ListNode b = reverseList(l2);
@@ -428,168 +598,15 @@ class Linkedprac {
         return reverseList(d.next);
     }
 
-    // https://leetcode.com/problems/partition-list/
-    /**
-     * 1 WHEN ALL NODES ARE TO BE TRAVERSED, USE P!=NULL, ELSE P.NEXT!=NULL 2 USE
-     * NEW LISTNODE(0) AND THEN RETURN NEXT;
-     */
-    public ListNode partition(ListNode head, int x) {
-        ListNode smaller = new ListNode(0);
-        ListNode small = smaller;
-        ListNode bigger = new ListNode(0);
-        ListNode big = bigger;
-        ListNode p = head;
-        while (p != null) {
-            if (p.val >= x) {
-                big.next = new ListNode(p.val);
-                big = big.next;
-            } else {
-                small.next = new ListNode(p.val);
-                small = small.next;
-            }
-            p = p.next;
-        }
 
-        small.next = bigger.next;
-        head = smaller.next;
-        return head;
-    }
-
-    void oddEvenGroup(ListNode head) {
-        ListNode odd = head;
-        ListNode even = null;
-        if (head.next != null)
-            even = head.next;
-        ListNode evencount = even;
-
-        while (odd.next != null) {
-            odd.next = evencount.next;
-            odd = odd.next;
-            evencount.next = odd.next;
-            evencount = evencount.next;
-        }
-
-        odd.next = even;
-    }
-
-    // https://leetcode.com/problems/odd-even-linked-list/
-    /**
-     * TECHNIQUES : 1 TARAVERSE ALL NODES, USE P!=NULL 2 USE STARTING LISTNODE(0); 3
-     * MERGE TWO LISTS
-     */
-    public ListNode oddEvenList(ListNode head) {
-        ListNode odd = new ListNode(0);
-        ListNode o = odd;
-        ListNode even = new ListNode(0);
-        ListNode e = even;
-        ListNode p = head;
-
-        boolean isOdd = false;
-        while (p != null) {
-            if (isOdd) {
-                o.next = new ListNode(p.val);
-                o = o.next;
-            } else {
-                e.next = new ListNode(p.val);
-                e = e.next;
-            }
-            p = p.next;
-            isOdd = !isOdd;
-        }
-
-        e.next = odd.next;
-        head = even.next;
-        return head;
-    }
-
-    public ListNode oddEvenListSinglePass(ListNode head) {
-        if (head != null) {
-        
-            ListNode odd = head, even = head.next, evenHead = even; 
-        
-            while (even != null && even.next != null) {
-                odd.next = odd.next.next; 
-                even.next = even.next.next; 
-                odd = odd.next;
-                even = even.next;
-            }
-            odd.next = evenHead; 
-        }
-        return head;
-    }
-
-    // https://leetcode.com/problems/remove-nth-node-from-end-of-list/
-    /**
-     * boundary conditions : n=4 and {1,2,3,4}; n=3 and {1,2,3,4} here tracker goes
-     * till end and ptr is at head, so return head as soon as tracker is null as n
-     * is then beyond the length of list.
-     * 
-     * if ptr == head, just set ptr.next = ptr.next.next and return head; POINTS:
-     * LENGTH GREATER, TRACKER = NULL, RETURN PTR == HEAD, PTR.NEXT = PTR.NEXT.NEXT,
-     * RETURN
-     * 
-     * * INSTEAD OF TRAVERSING TWICE, RUN LOOP FOR N-K TIMES
-     * 
-     */
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        if (head == null || n == 0)
-            return head;
-        ListNode tracker = head;
-        ListNode ptr = head;
-
-        for (int i = 0; i < n; i++) {
-            tracker = tracker.next;
-            if (tracker == null) {
-                head = head.next;
-                return head;
-            }
-        }
-
-        while (tracker.next != null) {
-            tracker = tracker.next;
-            ptr = ptr.next;
-        }
-
-        ptr.next = ptr.next.next;
-
-        return head;
-    }
-
-    // https://leetcode.com/problems/rotate-list/submissions/
-    /**
-     * POINTS : 1 FIND LENGTH 2 K = K%N 3 KEEP TRACK OF END 4 INSTEAD OF TRAVERSING
-     * TWICE, RUN LOOP FOR N-K TIMES
-     */
-    public ListNode rotateRight(ListNode head, int k) {
-        int n = 0;
-        ListNode end = head;
-        ListNode p = head;
-        if (head == null)
-            return head;
-
-        while (end.next != null) {
-            n++;
-            end = end.next;
-        }
-        n++;
-        k = k % n;
-
-        // System.out.println(k);
-
-        for (int i = 0; i < n - k - 1; i++)
-            p = p.next;
-        // System.out.println(p.val);
-        end.next = head;
-        head = p.next;
-        p.next = null;
-
-        return head;
-    }
+    
 
     // https://leetcode.com/problems/merge-k-sorted-lists/
     /**
-     * 1 add to heap 2 use the sam etechnique as in adding 2 nos CREATE A NODE RES
-     * WITH VAL 0, node.next = new ListNode and then return RES.next
+     * 1 add to heap 
+     * 2 use the same technique as in adding 2 nos 
+     * CREATE A NODE RES WITH VAL 0, 
+     * node.next = new ListNode and then return RES.next
      */
     public ListNode mergeKLists(ListNode[] lists) {
         PriorityQueue<Integer> heap = new PriorityQueue<>();
@@ -621,25 +638,6 @@ class Linkedprac {
         return res.next;
     }
 
-    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
-    public ListNode deleteDuplicates(ListNode head) {
-        ListNode first = new ListNode(0); boolean dup = false;
-        ListNode p = first;
-        first.next = head;
-        while(first.next!=null) {
-            ListNode tracker = first.next;
-            
-            while(tracker!=null && tracker.next!=null && tracker.val == tracker.next.val){
-                dup = true;
-                tracker = tracker.next;
-            }
-            if(dup) first.next = tracker.next;
-            else first = first.next;
-            dup = false;
-        }   
-        // printList(p.next);
-        return p.next;
-    }
 
     // https://leetcode.com/problems/swap-nodes-in-pairs/
     public ListNode swapPairs(ListNode head) {
@@ -734,93 +732,7 @@ class Linkedprac {
     }
 
 
-    /**
-     * 2 WAYS TO FIND MIDDLE
-     * ONE IS FAST!=NULL && FAST.NEXT != NULL
-     * OTHER IS FAST.NEXT!=NULL && FAST.NEXT.NEXT!=NULL
-     * 
-     * THE DIFF IS IN THE FIRST CASE, SLOW GOES ONE STEP AHEAD OF MIDDLE 
-     * IN CASE OF EVEN NO OF NODES
-     */
-    // https://leetcode.com/problems/reorder-list/submissions/
-    public void reorderList(ListNode head) {
-        if(head == null || head.next ==null || head.next.next == null) return;
-
-        ListNode m = head; ListNode n = null;
-        ListNode fast = head; ListNode slow = head; ListNode temp = null;
-        while(fast!=null && fast.next!=null){
-            temp = slow;
-            slow = slow.next; fast = fast.next.next;
-        }
-        
-        if(fast==null) { temp.next = null; n = reverse(slow); }    
-        else if(fast.next==null) { n = reverse(slow.next); slow.next = null; }
-        // System.out.println(n.val);
-
-        ListNode s = n.next;
-        if(s==null) {n.next = m.next; m.next = n;}
-        
-        while(s!=null){
-            s = n.next; ListNode r = m.next;
-            m.next = n; n.next = r; m = r; n = s; 
-        }
-    }
-
-    /** A VARIATION OF REVERSE LIST, 1->2->3->4->5->6->7->8->9->10 
-     * TO 1->10->3->8->5->6->7->4->9->2
-     * POINTS TO REMEMBER : 
-     * 1 FOR FAST SLOW, P.NEXT!=NULL
-     * 2 E = E.NEXT AND THEN
-     * 3 INSIDE USE IF(P.NEXT==NULL) BREAK;
-     * 4 ENSURE LAST NODE IS NULL E.NEXT = NULL
-     * 5 IN REVERSE IF(C!=NULL) C= C.NEXT;
-     * 
-     * REMEMBER TO SET NULL
-    */
-    public void reorderListCustom(ListNode head) {
-        if(head == null) return;
-        ListNode p = head; 
-        ListNode e = new ListNode(0); ListNode b = e;
-        
-        while(p.next!=null){//1
-            System.out.println("p "+p.val);
-            
-            e.next = p.next; p.next = p.next.next; 
-            e = e.next;    
-            if(p.next==null) break;//2
-            p = p.next;
-        }
-        
-        // System.out.println(p.val);
-        e.next = null;//3
-        b = b.next; p = head;
-            
-        ListNode q = reverse(b); 
-        ListNode t = q;
-        while(t!=null) {
-            System.out.print(t.val+", ");t = t.next;
-        }
-        while(p!=null && q!=null){
-            ListNode s = q.next; ListNode r = p.next;
-            // System.out.println("s "+s.val);
-            
-            p.next = q; q.next = r; p = r; q = s;
-        }
-    }
-    
-    ListNode reverse(ListNode curr){
-        ListNode a = null; ListNode b = curr; ListNode c= curr.next;
-        if(c==null) return b;
-        while(b!=null){
-            b.next = a;
-            a = b; b= c;
-            // System.out.println("a "+a.val);
-            if(c!=null) c = c.next;//2
-        }
-        return a;
-    }
-
-     class Node {
+    class Node {
         public int val;
         public Node prev;
         public Node next;
@@ -863,6 +775,9 @@ class Linkedprac {
     }
     
 
+    
+    
+
     /*
      * public ListNode reverseKGroup(ListNode head, int k) { ListNode begin; if
      * (head==null || head.next ==null || k==1) return head; ListNode dummyhead =
@@ -872,11 +787,60 @@ class Linkedprac {
      * 
      * }
      * 
-     * public ListNode reverse(ListNode begin, ListNode end){ ListNode b =
-     * begin.next; ListNode next, first; ListNode a = begin; first = b; while
-     * (b!=end){ next = b.next; curr.next = a; a = curr; b = next; } begin.next =
-     * prev; first.next = curr; return first; }
+     * public ListNode reverse(ListNode begin, ListNode end){ 
+     * ListNode b = begin.next; 
+     * ListNode next, first; ListNode a = begin; first = b; 
+     * while (b!=end){ 
+     * next = b.next; curr.next = a; a = curr; b = next; 
+     * } 
+     * begin.next = prev; first.next = curr; return first; 
+     * }
      */
+
+     /** 
+     * BASICALLY WE USE A HASHAMP TO MAP THE ADDRESS OF EACH NODE WITH ITS CLONE, 
+     * IF NOT NULL.
+     * 
+     * POINTS :
+     * 1 FOR EACH NODE WE CREATE CLONE
+     * map.put(random2, new ListNode(random2.val));
+     * 2 IF CLOBE EXISTS, MAP TO P2' RANDOM OR NEXT
+     * 
+    */
+    // https://leetcode.com/problems/copy-list-with-random-pointer
+    public ListNode copyRandomList(ListNode head) {
+        if(head == null) return null;
+        
+        ListNode h2 = new ListNode(head.val);
+        ListNode p2 = h2;
+        HashMap<ListNode, ListNode> map = new HashMap<>();
+        map.put(head, h2);
+        ListNode p = head;
+        
+        while(p!=null){
+            // System.out.println(map);
+            ListNode random1Clone = p.random;
+            ListNode next1Clone = p.next;
+            
+            if(random1Clone!=null) {
+                if(!map.containsKey(random1Clone)) 
+                    map.put(random1Clone, new ListNode(random1Clone.val));
+            }
+            
+            if(next1Clone!=null){
+                if(!map.containsKey(next1Clone)) 
+                    map.put(next1Clone, new ListNode(next1Clone.val));
+            }
+            
+            p2.random = map.get(random1Clone);
+            p2.next = map.get(next1Clone);
+            
+            p2 = p2.next;
+            p = p.next;
+        }
+        
+        return h2;
+    }
 
     // https://stackoverflow.com/questions/21528422/storing-a-doubly-linked-list-using-just-a-single-pointer-field
     // https://github.com/mission-peace/interview/blob/master/src/com/interview/linklist/SortedLLToBalancedBST.java

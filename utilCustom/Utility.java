@@ -7,6 +7,10 @@ public class Utility {
     Utility(){}
     // https://stackoverflow.com/questions/886955/
     // how-do-i-break-out-of-nested-loops-in-java
+
+    // https://stackoverflow.com/questions/9560600/
+    // java-no-enclosing-instance-of-type-foo-is-accessible
+
     
     // HASHMAP
     // Map iterator

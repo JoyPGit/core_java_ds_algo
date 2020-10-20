@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 public class StackPractice {
     
     void print1DMatrix(int[] arr) {

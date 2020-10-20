@@ -1,8 +1,20 @@
 import java.util.*;
-import utilCustom.*;
 
 public class Recursion {
     Recursion() {
+    }
+    public class TreeNode {
+        int key; int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode rightpointer;
+    
+        TreeNode(int key) {
+            this.key = key;
+            this.val = key;
+            this.left = null;
+            this.right = null;
+        }
     }
     /** 
      * BASIC IDEA IS TO EITHER SELECT AN INDEX OR NOT.

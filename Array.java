@@ -5,7 +5,7 @@ class Array {
     /** 
      * int, float and other primitive data types ar passed by value
      * object by reference, like array, arraylist, pQueue etc.
-     * the object anme points to the same entity
+     * the object name points to the same entity
      * 
      * Arrays class in Java doesn’t have reverse method. 
      * We can use Collections.reverse() to reverse an array also.
@@ -25,7 +25,7 @@ class Array {
      * TO CHECK IF ARRAY CONATINS A VALUE
      * Arrays.asList(yourArray).contains(yourValue)
      * 
-     * 
+     * REMOVE DUPLICATES CHECK 3 SUM
     
      // https://www.geeksforgeeks.org/number-subarrays-sum-exactly-equal-k/
 
@@ -41,6 +41,22 @@ class Array {
      * 8 CIRCULAR ARRAY 
      */
    
+    // https://leetcode.com/problems/two-sum/
+    public int[] twoSum(int[] nums, int target) {
+        int n = nums.length;
+        int[] res = new int[2];
+        // Arrays.sort(nums);
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i =0; i<nums.length; i++){
+            if(map.containsKey(target - nums[i])) {
+                res[0] = i; res[1] = map.get(target - nums[i]);
+                break;
+            }     
+            else map.put(nums[i], i);
+        }
+        return res;
+    }
 
     // { 9, 7, 1, 8, 5, 6 };
     void findMountain(int[] arr) {
@@ -130,7 +146,7 @@ class Array {
      * discuss/11769/5-lines-Java-solution
     */
 
-    // * J WILL HOLD THE INDEX F LAST NON REPEATING EL
+    // * J WILL HOLD THE INDEX OF LAST NON REPEATING EL
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     public int removeDuplicates(int[] nums) {
         int n = nums.length;
@@ -146,6 +162,7 @@ class Array {
         utilCustom.Utility.print1DMatrix(nums);
         return ++j;
     }
+
 
     // https://leetcode.com/discuss/interview-question/558379/
     
@@ -907,11 +924,9 @@ class Array {
     // CIRCULAR ARRAY 
     // https://leetcode.com/problems/next-greater-element-ii/
 
-    // https://leetcode.com/problems/subarray-product-less-than-k/
-    
-
     // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
-    // Given an array, find all the subarrays (contiguous) of even length which 
+    // Given an array, find all the subarrays (contiguous) of even 
+    // length which 
     // have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
     // answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
 

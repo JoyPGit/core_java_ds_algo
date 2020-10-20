@@ -47,7 +47,6 @@ public class Tree {
         if(!(max > root.val && root.val > min)) return false;
         return bstHelper(root.left, root.val, min) && bstHelper(root.right, max, root.val);
     }
-
      * return a helper func
      * in the helper func add a check for root == null
      * and not for root.left or root.right individually
@@ -106,7 +105,6 @@ public class Tree {
         dfs(node.right, parentList, currentList);
         currentList.remove(currentList.size() - 1);
      }
-
      */ 
     
 
@@ -127,7 +125,6 @@ public class Tree {
       1.8 SORTED DLL TO BALANCED BST
       1.9 FLOOR AND CEILING
       1.10 ALL IN RANGE
-
       2 BINARY TREES
       
       2.1 TRAVERSAL
@@ -144,16 +141,11 @@ public class Tree {
       2.1.4 SPIRAL TRAVERSAL
       2.1.5 BOUNDARY TRAVERSAL
       2.1.6 CREATE TREE FROM TRAVERSAL  
-
-
       2.2 VIEWS
       2.2.1 TOP, BOTTOM, LEFT, RIGHT
-
       2.3 HASHMAP
       2.3.1 NODES AT DIST K
-
       2.4
-
       3 HEIGHT
       3.1 HEIGHT
       3.2 DIA
@@ -162,30 +154,23 @@ public class Tree {
       3.5 IS SUBTREE
       3.6 IS SAME TREE
       3.7 MIN DEPTH
-
       4 SUBTREES
       4.1 IS SUBTREE 
       4.2 IS SAME TREE (PREORDER WITH TAIL REC)
-
       5 LEAF NODES
       5.1 CHECK LEAF NODES
       5.2 REMOVE LEAF NODES
       5.3 CHECK IF COMPLETE BINARY TREE
       5.4 PRUNING
       5.5 HALF NDOES
-
-
       6 DP QUES
       https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
-
-
       7 MISC
       FOREST BURNING, MIN TIME TO INFORM EMP
       COUSINS IN BINARY TREE, FLATTEN TO LINKED LIST
       ROOT TO LEAF PATHS, NEXT SIBLING,
       ISOMORPHISM, MIRROR, MAX SUM PATH BETWEEN ANY TWO NODES
       SERIALIZE DESERIALIZE
-
       8 PREORDER WITH TAIL RECURSION
       IS-SAME, IS-VALID-BST
         
@@ -999,7 +984,6 @@ public class Tree {
     /** 
     https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/143798/
     1ms-beat-100-simple-Java-dfs-with(without)-hashmap-including-explanation
-
      * 1 we do a tarversal till we find target node, once we find we make an entry 
      * and return 0, for all nodes in the path from root till target, 
      * an entry is made in hashmap with dist from target
@@ -1104,7 +1088,6 @@ public class Tree {
     /**
         [1,2,3,4,5,6,null,null,null,7,8]
         [99,3,2,null,6,4,5,null,null,null,null,8,7]
-
         [0,3,1,null,null,null,2]
         [0,3,1,2]
     */

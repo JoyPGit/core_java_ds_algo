@@ -36,6 +36,24 @@ import java.util.*;
     */
 public class HashPractice{
 
+    // https://leetcode.com/problems/two-sum/
+    public int[] twoSum(int[] nums, int target) {
+        int n = nums.length;
+        int[] res = new int[2];
+        // Arrays.sort(nums);
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i =0; i<n; i++){
+            if(map.containsKey(target - nums[i])) {
+                res[0] = i; res[1] = map.get(target - nums[i]);
+                break;
+            }     
+            else map.put(nums[i], i);
+        }
+        return res;
+    }
+
+
     /** POINTS : 
      * 1 CREATE AN ARRAY TO SERVE AS A PRIMARY MAP(OR DICTIONARY)
      * WHICH WILL STORE THE COMMON ELEMENTS
@@ -107,92 +125,16 @@ public class HashPractice{
     }
 
 
-    void findSubArrayWithSumZero(int[] arr){
-        int sum = 0;
+    int smallestElementRepeatedKTimes(int[] arr, int k){
+        int n = arr.length; int min = Integer.MAX_VALUE;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 
-        for(int i =0; i<arr.length; i++){
-            sum+= arr[i];
+        for(int i =0; i<n; i++) map.put(arr[i], map.getOrDefault(arr[i], 0)+1);
 
+        for(HashMap.Entry<Integer, Integer> entry : map.entrySet()){
+            if(entry.getValue() == k) min = Math.min(min, entry.getKey());
         }
-    }
-
-    boolean CheckSubsetArray(int[] arr1, int[] arr2){
-        HashSet<Integer> hset= new HashSet<Integer>();
-        // int[] longer = arr1.length>arr2.length?arr1:arr2;
-
-        for(int i =0; i<arr1.length; i++){
-            hset.add(arr1[i]);
-        }
-        System.out.println("hset "+hset);
-        for (int i=0; i<arr2.length; i++){
-            if(!hset.contains(arr2[i])){
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    int minSubsets(int[] arr){
-        HashMap<Integer, Integer> minsubmap = new HashMap<Integer, Integer>();
-        for(int i =0; i<arr.length; i++){
-            minsubmap.put(arr[i],minsubmap.get(arr[i]) == null?1:minsubmap.get(arr[i])+1);
-        }
-
-
-        Iterator hmIterator = minsubmap.entrySet().iterator(); 
-
-        int maxFreq = 0;
-        while (hmIterator.hasNext()) { 
-            HashMap.Entry mapElement = (HashMap.Entry)hmIterator.next(); 
-            int frequency = (int)mapElement.getValue();
-            if(frequency > maxFreq) maxFreq = frequency; 
-            System.out.println(mapElement.getKey() + " : " + frequency); 
-        } 
-
-        // for (HashMap.Entry mapElement : minsubmap.entrySet()) { 
-        //     String key = (String)mapElement.getKey();   
-        //     int value = (int)mapElement.getValue(); 
-  
-        //     System.out.println(key + " : " + value); 
-        // } 
-        minsubmap.forEach((k, v) -> System.out.println(k + " : frquency ->" + (v)));
-
-        return maxFreq;
-    }
-
-
-    int SmallestElementRepeatedKTimes(int[] arr, int times){
-        HashMap<Integer, Integer> repeatkmap = new HashMap<Integer, Integer>();
-
-        for(int i =0; i<arr.length; i++){
-            repeatkmap.put(arr[i], repeatkmap.get(arr[i])==null?1:repeatkmap.get(arr[i])+1);
-        }
-
-        Iterator hmIterator = repeatkmap.entrySet().iterator(); 
-
-        int maxFreq = 0; int smallest =100000000;
-        while (hmIterator.hasNext()) { 
-            HashMap.Entry mapElement = (HashMap.Entry)hmIterator.next(); 
-            int frequency = (int)mapElement.getValue();
-            int key = (int)mapElement.getKey();
-            if(frequency == times && key <smallest ) {
-                maxFreq = frequency; 
-                smallest = key;
-            }
-            System.out.println(mapElement.getKey() + " : " + frequency); 
-        } 
-        return smallest;
-        // int[] smallest = {10000000}; 
-        // repeatkmap.forEach((k,v)->{
-        //     System.out.println("v "+v);
-        //     if(times == v && smallest[0] < k){
-        //        smallest[0] = k;
-        //        System.out.println("samller "+k);
-        //     }
-        // });
-        // System.out.println("smallest "+smallest[0]);
-        // return smallest[0];
+        return min;
     }
 
     //IMP QUESTIONS
@@ -231,89 +173,138 @@ public class HashPractice{
     // https://www.geeksforgeeks.org/common-elements-in-all-rows-of-a-given-matrix/
     // https://www.geeksforgeeks.org/find-pairs-given-sum-elements-pair-different-rows/
     
+    /** 
+     * POINTS :
+     * 1 USE A SLIDING WINDOW, A LEFT POINTER
+     * 2 ALWAYS USE INDEXES, NOT (int i : nums) FOR SUM
+     * 3 ALWAYS UPDATE LENGTH INSIDE WHILE LOOP
+     * 4 ADD A CHECK IN THE RETURN STATEMENT
+    */
+    // https://leetcode.com/problems/minimum-size-subarray-sum
+    public int minSubArrayLen(int s, int[] nums) {
+        int n = nums.length;
+        int left = 0; int sum = 0;
+        int length = Integer.MAX_VALUE;
+        
+        for(int i=0; i<n; i++){
+            sum += nums[i];
+            while(sum>=s){
+                length = Math.min(length, i-left+1);
+                // System.out.println(sum);
+                // System.out.println("len "+length);
+                sum-=nums[left];
+                left++;
+            }
+        }
+        return length==Integer.MAX_VALUE?0:length;
+    }
     
-    // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
-    /** it is not sliding window prob, rather a counter is kept when map size 
-     * equals k.
-     * USES SHRINKING TECHNIQUE THOUGH, FOR LOOP THEN SHRINK WITH WHILE
-     * 
-     * the technique is to hold the rightmost index of every el
-     * and if map size>k, remove the min el and find length with next min
+    /** 
+     * HOLD THE FREQ OF INTEGER IN MAP, NOT INDEX, 
+     * INDEX CAN BE KEPT TRACK OF USING LEFT FLAG
      * 
      * how to shrink?
-     * once the map size is >k, 
+     * once the map size is >= k, 
      * while loop
-     * start with left
-     * remove left, then left = get new min
-     * compare len
+     * compare length
+     * remove left, 
      * 
-     * 
-     * holding left ptr and updating it by checking if the el matches left
-     * helps in removing the min element
-    // arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
-    // arr[] = { 1, 2, 2, 3} , k = 2 o/p = [0,1]
-
+     * repeated eles can cause the length to grow
+     * arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
      */
-    void smallestSubArrayKDistinct(int[] arr, int k) {
+    // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
+    int smallestSubArrayKDistinct(int[] arr, int k){
+        int n = arr.length; 
+        int left = 0; int length = Integer.MAX_VALUE;
         HashMap<Integer, Integer> map = new HashMap<>();
-        int minLen = Integer.MAX_VALUE; int left = 0;
 
-        for (int i = 0; i < arr.length; i++) {
-            if (map.containsKey(arr[i])) {
-                map.put(arr[i], i);
+        for(int i = 0; i<n; i++){
+            map.put(arr[i], map.getOrDefault(arr[i], 0)+1); 
+            while(map.size()>=k){
+                length = Math.min(length, i- left+1);
+                if(map.get(arr[left]) == 1) map.remove(arr[left]);
+                else map.put(arr[left], map.get(arr[left]) - 1);
+                left++;
+            }
+        }
+        System.out.println("smallest subarray with "+k+" distinct els has length "+length);
+        return length;
+    }
+
+     /** 
+     * POINTS : 
+     * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN RESULT STRING, CONTINUE
+     * Why? beacuse the char is alrady at its lowest lexicographic position.
+     * 
+     * 2 IF LAST CHAR IS LEXICOGRAPHICALLY GREATER AND IT'S FREQ IS >0, 
+     * IT MEANS THAT CHAR CAN BE USED LATER, SO IT'S SAFE TO REMOVE IT.
+     * REMEMBER TO REMOVE IT FROM VISITED SET AS WELL
+     * 
+     * STEPS :
+     * 1 CHECK IF INCOMING CHAR IS IN RESULT STRING
+     * 2 CHECK IS THE INCOMING CHAR IS GREATER THAN THE LAST CHAR IN RESULT
+     * AND IF IT THE LAST CHAR HAS ANY OCCURENCES LEFT (FREQ >= 1)
+     * 3 AFTER TRIMMING USING WHILE LOOP ADD THE CHAR AT END
+     * 
+     * */
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
+    public String smallestSubsequence(String text) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        String res = "";
+        
+        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : text.toCharArray()){
+            map.put(c, map.get(c)-1);
+
+            if(res.contains(""+c)) continue; // 1
+            while(res.length()>0 // 2
+                  // last char must be graeter and has future occurences
+                  && res.charAt(res.length()-1) > c // 3
+                  // no need to keep an index as substrng removes the last char
+                  && map.get(res.charAt(res.length()-1)) > 0 ){ // 4 
+                    res = res.substring(0, res.length()-1);
+            }
+            res+=c; // 5
+        }
+        return res;
+    }
+
+
+    // 1,1,2,3,1,4
+    // always store freq, not index, use left for index
+    // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
+    int longesSubArraytWithkEls(int[] arr, int k){
+        int n = arr.length;
+        int left = 0; int length = Integer.MIN_VALUE;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i =0; i<n; i++){
+            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+
+            while(map.size()>k){
+                if(map.get(arr[left]) == 1) map.remove(arr[left]);
+                else map.put(arr[left], map.get(arr[left])-1);
+                System.out.println(arr[left]);
+                left++;
                 System.out.println(map);
-            } else {
-                map.put(arr[i], i);
             }
-            if(map.size()==k) System.out.println("start " + left + " end " + i);
-            // left starts with 0, then when shrinking starts, 
-            // it is updated to next min index
-            while(map.size() > k) {
-                map.remove(arr[left]);
-                left = getMin(map);
-                int end = i;
-                if((end- left+1) < minLen){
-                    minLen = end- left+1;
-                    System.out.println("start " + left + " end " + i);
-                }
-            }
+            length = Math.max(length, i-left+1);
+            // length is placed here, so it checks for cases
+            // when the map size is <= k
+
         }
-        System.out.println("min length : "+minLen+" start : "+left);
+        System.out.println("longest subarray with "+k+" els has length "+length);
+        return length;
     }
+    // similar
+    // https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
 
-    // int shrink(){}
-    int getMin(HashMap<Integer, Integer>map){
-        int min =Integer.MAX_VALUE;
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer value = entry.getValue();
-            min = Math.min(min, value);
-        }
-        return min;
-    }
 
-    // int getMax(HashMap<Integer, Integer>map){
-    //     int max =Integer.MIN_VALUE;
-    //     for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-    //         Integer value = entry.getValue();
-    //         max = Math.max(max, value);
-    //     }
-    //     return max;
-    // }
-
-    // https://www.geeksforgeeks.org/design-a-data-structure-that-supports-
-    // insert-delete-search-and-getrandom-in-constant-time/
-
+    // https://leetcode.com/problems/subarrays-with-k-different-integers/solution/
     // https://www.geeksforgeeks.org/find-four-elements-a-b-c-and-d-in-an-array-such-that-ab-cd/
 
     // https://www.geeksforgeeks.org/smallest-element-repeated-exactly-k-times-not-limited-small-range/
-
-    //IMP
-    // https://www.geeksforgeeks.org/print-triplets-sorted-array-form-ap/
-    // https://www.geeksforgeeks.org/count-number-triplets-product-equal-given-number/
-        
    
-    //RABIN KARP ALGO
-
     // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
     // int pairGreatestProduct(int[] arr){
         
@@ -331,19 +322,6 @@ public class HashPractice{
 
         return max;
     }
-    
-    //https://www.geeksforgeeks.org/longest-arithmetic-progression-dp-35/
-
-    class APHolder{
-        int start, end, count;
-        
-        APHolder(int a, int b, int c){
-            this.start = a;
-            this.end = b;
-            this.count = c;
-        }
-    }
-    
     
 
     // IMP check this with largest subarray with equal no of 0s and 1s
@@ -408,35 +386,6 @@ public class HashPractice{
     //     return result;
     // }
 
-    //didn't work, don't know why
-    public int longestArithSeqLength(int[] arr) {
-        int maxLen = 0;
-        HashMap<Integer, APHolder> map = new HashMap<>();
-
-        for(int i =0; i<arr.length-1; i++){
-            for(int j = i+1; j<arr.length; j++){
-                int diff = arr[i] - arr[j];
-                if(map.containsKey(diff)){
-                    APHolder curr = map.get(diff);
-                    if(curr.end == arr[i]){
-                        map.put(diff, new APHolder(curr.start, arr[j], curr.count+1));
-                    } else map.put(diff, new APHolder(arr[i], arr[j], 2));
-                }
-                else map.put(diff, new APHolder(arr[i], arr[j], 2));
-            }
-        }
-        
-        for (Map.Entry<Integer, APHolder> entry : map.entrySet()) {
-            Integer key = entry.getKey();
-            Integer value = entry.getValue().count;
-            maxLen = Math.max(maxLen, value);
-            System.out.println("diff "+key+" value " +value);
-        }
-        System.out.println("maxLen is "+maxLen);
-        return maxLen;
-    }
-
-    //this works
     public int longestAPHash(int[] A) {
         HashMap<Integer, Integer> hash[] = new HashMap[A.length];
         for(int i = 0; i < A.length; i++)
@@ -486,7 +435,9 @@ public class HashPractice{
     }
 
     
-    //https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+    // https://www.geeksforgeeks.org/count-number-triplets-product-equal-given-number/
+    // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+
     // https://leetcode.com/problems/top-k-frequent-words/
     /** if same freq check for lexicographically smaller x.compareTo(y) */
     class KFreq {
@@ -667,6 +618,8 @@ public class HashPractice{
     // discuss/41290/Simple-Java-Solution-Using-HashMap
 
     /** 
+     * PREFIX-SUM
+     * 
      * ALWAYS THINK CUMULATIVE SUM, IF THERE EXISTS SUM-K
      * TARGET = 8, SUM = 18 AND 10 EXISTS, SO THERE IS A SUBARRAY WHOSE
      * SUM IS 10 AND ANOTHER WHOSE SUM IS 18, 
@@ -705,7 +658,7 @@ public class HashPractice{
         if(n==0) return 0;
         
         HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(0,1);
+        map.put(0,1); // tricky, don't forget
 
         int sum = 0; int count = 0;
         
@@ -744,7 +697,7 @@ public class HashPractice{
     // https://leetcode.com/problems/path-sum-iii/discuss/
     // 895204/Java-DFS-2-ms-faster-than-100.00-39-MB-less-than-12.94
 
-    
+
 
     /** POINTS :
      * 1 STORE REMAINDER INSTEAD OF SUM
@@ -772,51 +725,50 @@ public class HashPractice{
         return count;
     }
 
-    // https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60/
-
-    
-    /** 
-     * POINTS : 
-     * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN VISITED SET, CONTINUE
-     * 
-     * 2 IF LAST CHAR IS LEXICOGRAPHICALLY GREATER AND IT'S FREQ IS >0, 
-     * IT MEANS THAT CHAR CAN BE USED LATER, SO IT'S SAFE TO REMOVE IT.
-     * REMEMBER TO REMOVE IT FROM VISITED SET AS WELL
-     * 
-     * 3 USE STRING BUILDER, deleteCharAt CAN BE USED AND .toString()
-     * needs to be used
-     * 
-     * 4
-     * */
-    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
-    public String smallestSubsequence(String text) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        HashSet<Character> set = new HashSet<>();
-        StringBuilder res = new StringBuilder();
-        
-        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
-        
-        for(char c : text.toCharArray()){
-            map.put(c, map.get(c)-1);
-
-            if(set.contains(c)) continue; 
-            while(res.length()>0 && res.charAt(res.length()-1) > c 
-                && map.get(res.charAt(res.length()-1)) > 0 ){
-                    char last = res.charAt(res.length()-1); 
-                    set.remove(last);//out of bounds error
-                
-                    // map.put(c, map.get(last)+1);//don't add
-                    res.deleteCharAt(res.length()-1);
-            }
-            // if(res.length()==0 || res.charAt(res.length()-1) != c){
-            // if(set.contains(c)) continue; 
-                res.append(c);
-                set.add(c);
-            // } 
-            // System.out.println(res+ " "+map);
+    // need to do dfs for every node, stuck when node doesn't have entry. 
+    // Use for loop as in dfs of graph
+    // https://leetcode.com/problems/reconstruct-itinerary/
+    public List<String> findItinerary(List<List<String>> tickets) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        int count = tickets.size()+1;
+        List<String> res = new ArrayList<>();
+        // map creation
+        for(int i =0; i<tickets.size(); i++){
+            
+            List<String> curr = 
+                map.getOrDefault((tickets.get(i)).get(0), new ArrayList<String>());
+            curr.add((tickets.get(i)).get(1));
+            map.put((tickets.get(i)).get(0), curr);
         }
-        return res.toString();
+        
+        // map sortiing lexicographically
+        for(HashMap.Entry<String, List<String>> entry : map.entrySet()){
+            List<String> curr = entry.getValue();
+            Collections.sort(curr);
+            map.put(entry.getKey(), curr);
+        }
+        // HashSet<String> visited
+        // can remove the vivited airports from the list
+        String start = "JFK"; res.add(start);
+        dfs(start, map, res);
+        
+        return res;
     }
+    
+    void dfs(String start, HashMap<String, List<String>> map, List<String> res){
+        if(!map.containsKey(start)) return;
+        List<String> currList = map.get(start);
+        while(currList.size()!=0){
+            start = currList.remove(0);
+            res.add(start);
+            dfs(start, map, res);
+        }
+        map.remove(start);
+    }
+
+    // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
+
+    // https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60/
 
     // https://leetcode.com/discuss/interview-question/844979/amazon-online-assessment-question-2
     /** USE DFS SIMILAR TO FRIEND CIRCLE LEETCODE */
@@ -859,11 +811,10 @@ public class HashPractice{
             // System.out.println("subset true");
         // }
 
-        int[] arr3 = {2,2,3,4,5,6,6,6,6,7,7,8,8,8};
+        int[] arr3 = {2,2,3,4,5,6,6,6,7,7,8,8,8};
         // System.out.println(h.minSubsets(arr3));
+        // h.smallestElementRepeatedKTimes(arr3, 3);
 
-
-        // System.out.println("smallest k times is "+h.SmallestElementRepeatedKTimes(arr3, 2));
         int[] maxDiffArr = {2, 1, 3, 4, 2, 1, 5, 1, 7};
         // h.MaxDiffFirstAndLast(maxDiffArr);
 
@@ -873,6 +824,10 @@ public class HashPractice{
         // 2;
         // h.smallestSubArrayKDistinct(subarrKdis, k);
 
+        int[] longestK = new int[]
+        // {6, 5, 1, 2, 3, 2, 1, 4, 5};
+        {1,1,2,3,1,4};
+        h.longesSubArraytWithkEls(longestK, 3);
         int[] apSeq = {24,13,1,100,0,94,3,0,3};
         //{3,6,9,10};
             // {44,46,22,68,45,66,43,9,37,30,50,67,32,47,
@@ -891,7 +846,7 @@ public class HashPractice{
         int A1[] = {2, 1, 2, 5, 7, 1, 9, 3, 6, 8, 8};
         int A2[] = {2, 1, 8, 3};
         // ans = {2, 2, 1, 1, 8, 8, 3, 5, 6, 7, 9}    
-        h.relativeSortArray(A1, A2);
+        // h.relativeSortArray(A1, A2);
 
     }
 }
