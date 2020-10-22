@@ -64,11 +64,17 @@ class Greedy{
     /**float vs double
      * https://study.com/academy/lesson/java-floating-point-numbers.html
      * float q = 506.12789f;
-        Here the variable q saves the value 506.1247 as a float.
-
-        float r = -101.23;
+     * Here the variable q saves the value 506.1247 as a float.
+     * float r = -101.23;
+     * 
+     * 
      */
 
+    /** 
+     * HERE APPROACH AS THAT OF INTERVALS DOESN'T WORK BECAUSE
+     * WE HAVE TO DECREMENT COUNTS TOO, SO NEED TO CHECK 
+     * EVERY TIME INDIVIDUALLY
+    */
     class Traintime{
         String type;
         int time;
@@ -100,27 +106,6 @@ class Greedy{
         return max;
     }
 
-    // arrival and departure times in a 2d array
-    int trainPlatform(int[][] times){
-        int n = times.length;
-
-        int count = 0; int max = 0;
-        Arrays.sort(times, (x,y)->{
-            if(x[0] == y[0]) return y[1] - x[1];
-            return x[0] - y[0];
-        });
-
-        int prev = times[0][1];
-        for(int i =1; i<n; i++){
-            System.out.println("prev "+prev +" curr "+times[i][1]);
-            if(prev >= times[i][0]) count++;
-            else prev = times[i][1];
-            System.out.println("count "+ count+ " max "+max);
-            max = Math.max(max, count);
-        }
-        System.out.println("greedy platforms "+max);
-        return max;
-    }
 
     // https://www.programcreek.com/2014/05/leetcode-meeting-rooms-ii-java/
     // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
@@ -1039,7 +1024,6 @@ class Greedy{
         String[] arrivalTimesString = {"900", "940", "950", "1100", "1500", "1800"};
         String[] departureTimesString = {"910", "1200", "1120", "1130", "1900", "2000"};
 
-        solGreedy.trainPlatform(times);
         solGreedy.trainPlatformCount(arrivalTimesString, departureTimesString);
         int numBottles = 9; int numExchange = 3;
         // solGreedy.numWaterBottles(numBottles, numExchange);

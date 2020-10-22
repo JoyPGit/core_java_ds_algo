@@ -637,6 +637,70 @@ public class Recursion {
 
     // valid parenthesis combination, linked list flatten
 
+    /** 
+     * TO FOCUS ON HOW TO RETURN A VALUE INSTEAD OF USING A GLOBAL VAR
+     * 1 HEIGHT 
+     * function h(root){
+     *      if(root == null) return 0;
+     *      int left = h(left);
+     *      int right = h(right);
+     *      return max(left, right)+1;
+     * }
+     * 
+     * 2 ALL ANCESTORS (SIMILAR TO HEIGHT)
+     *  if(allAncestorsHelper(root.left, res, target)
+     *   ||allAncestorsHelper(root.right, res, target)){
+     *     res.add(root.val);
+     *     return true;
+     *   }
+     * 
+     * // USING SAME STYLE AS HEIGHT
+     *  boolean left = allAncestorsHelper(root.left, res, target);
+     *  boolean right = allAncestorsHelper(root.right, res, target);
+     *  if(left || right) res.add(root.val);
+     *  return (left || right);
+     * 
+     * 3 DELETE BST
+     * 
+     * 4 REVERSE LIST
+     * 
+     * 
+     * FOR REMOVAL OF GLOBAL VAR SEE ANCESTORS AS TEMPLATE
+     * 
+     * boolean allAncestorsHelper(TreeNode root, List<Integer> res, int target){
+        if(root == null) return false;
+        if(root.val == target) return true;
+        // if(allAncestorsHelper(root.left, res, target)
+        // ||allAncestorsHelper(root.right, res, target)){
+        //     res.add(root.val);
+        //     return true;
+        // }
+        // return false;
+        
+        boolean left = allAncestorsHelper(root.left, res, target);
+        boolean right = allAncestorsHelper(root.right, res, target);
+        if(left || right) res.add(root.val);
+        return (left || right);
+    }
+     * public boolean isValidBST(TreeNode root) {
+     *    if(root == null) return true;
+     *    return helper(root, Long.MAX_VALUE, Long.MIN_VALUE);
+     *    // return isValid;
+    }
+    
+     * boolean helper(TreeNode root, long max, long min){
+     *  // if(!isValid) return;
+     *  if(root == null) return true;
+     * 
+     *  if(root.val<=min || root.val>=max) return false;
+     *  
+     *  boolean left = helper(root.left, root.val, min);
+     *  boolean right = helper(root.right, max, root.val);
+     *  
+     *  return (left == true && right == true);
+     * }
+     * 
+     */
     
     public static void main(String[] args) throws Exception {
         Recursion recur = new Recursion();

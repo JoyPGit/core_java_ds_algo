@@ -365,26 +365,7 @@ public class HashPractice{
         System.out.println("Length of longest balanced sub string = " + res);
         return res;
     }
-
-    // class ItineraryHolder{
-    //     String to;
-    //     int rank;
-    //     ItineraryHolder(String s, int r){
-    //         this.to = s;
-    //         this.rank = r;
-    //     }
-    // }
-
-    // public List<String> findItinerary(List<List<String>> tickets) {
-    //     ArrayList<String> result = new ArrayList<>();
-    //     HashMap<String, ItineraryHolder> map = new HashMap<>();
-
-    //     for(int i =0; i<tickets.size(); i++){
-    //         // if(map.containsKey(tickets.get(i)))
-    //         System.out.println(tickets.get(i));
-    //     }
-    //     return result;
-    // }
+    
 
     public int longestAPHash(int[] A) {
         HashMap<Integer, Integer> hash[] = new HashMap[A.length];

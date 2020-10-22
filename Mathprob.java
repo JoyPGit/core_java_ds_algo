@@ -243,6 +243,31 @@ public class Mathprob {
         }
     }
 
+    // https://leetcode.com/problems/elimination-game
+    public int lastRemaining(int n) {
+        int start  = 0; boolean ltor = true;
+        List<Integer> list = new ArrayList<>();
+        for(int i =0; i<n; i++) list.add(i,i+1);
+        
+        while(list.size()>1){
+            if(start >= list.size()) {
+                Collections.reverse(list);
+                start = 0;//
+                continue;
+            }
+            if(start == list.size()-1) {// not size-1
+                list.remove(start);
+                // System.out.println(list);
+                Collections.reverse(list);
+                start = 0;//
+                continue;
+            } 
+            // System.out.println(list+" "+start);
+            list.remove(start);// removal reduces list size
+            start++;
+        }
+        return list.get(0);
+    }
 
     // https://leetcode.com/problems/maximum-swap/
     // https://leetcode.com/problems/next-permutation/

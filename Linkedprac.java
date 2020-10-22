@@ -70,7 +70,13 @@ class Linkedprac {
     ListNode head = null;
     ListNode current = null;
 
-    
+    public void printList(ListNode head){
+        ListNode p = head;
+        while(p!=null) {
+            System.out.print(p.val+"->");
+            p = p.next;
+        }
+    }
     /**
      * 2 WAYS TO FIND MIDDLE
      * 
@@ -221,9 +227,63 @@ class Linkedprac {
         return head;
     }
 
+    /** 
+     * SAME AS FINDING DUPLICATES IN ARRAY
+     * USE 2 LOOPS
+    */
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-list
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null) return head;
+        // ListNode dummy = new ListNode(0);
+        ListNode p = head; 
+        // p.next = head;
+        while(p!=null){
+            ListNode n = p;
+            while(n.next != null && n.val == n.next.val) n = n.next;
+            // comparing address
+            if(p != n) p.next = n.next;
+            p = p.next;
+        }
+        return head;
+    }
+
+    /** 
+     * IF DUP FOUND, DONT UPDATE P
+     * HERE WE HAVE TO REMOVE THE DUPLICATE NODES COMPLETELY SO
+     * A POINTER POINTING TO NODE BEFORE HEAD IS USED  
+     * 
+     * POINTS :
+     * 1 THE SAME PRINCIPLE AS ABOVE, 2 LOOPS ONE TO INCREMENT, ONE 
+     * TO FIND DUPS
+     * 2 WE CHECK THE ADDRESSES, IF P.NEXT == N, THE SAME NODE
+     * SO MOVE P
+     * 2->3->3->4->4, p is at 2; p.next(3) != n(3), 
+     * n is at second 3 so diff addr
+     * p.next = n.next;
+     * 3 ELSE p.next = n.next
+    */
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii
+    public ListNode deleteDuplicates2(ListNode head) {
+        if(head == null || head.next == null) return head;
+        
+        ListNode dummy = new ListNode(0);
+        ListNode p = dummy;
+        p.next = head; // imp
+        while(p.next!=null){
+            ListNode n = p.next;
+            
+            while(n.next!=null && n.val == n.next.val) n = n.next;
+            // no dups as p.next and n point ot the same node, so addrs match
+            // move p to the right
+            if(p.next == n) p = n;
+            // if dup, move to next n, dont update p
+            else p.next = n.next;
+        }
+        return dummy.next;
+    }
 
     // can't be done without two separate lists, 
-    // just by using next as in odd even
+    // as by using next as in odd even
     /**
      * MERGING OF TWO LISTS, USE TEMPLATE
      * 
@@ -402,26 +462,7 @@ class Linkedprac {
         return head;
     }
 
-
-    // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
-    public ListNode deleteDuplicates(ListNode head) {
-        ListNode first = new ListNode(0); boolean dup = false;
-        ListNode p = first;
-        first.next = head;
-        while(first.next!=null) {
-            ListNode tracker = first.next;
-            
-            while(tracker!=null && tracker.next!=null && tracker.val == tracker.next.val){
-                dup = true;
-                tracker = tracker.next;
-            }
-            if(dup) first.next = tracker.next;
-            else first = first.next;
-            dup = false;
-        }   
-        // printList(p.next);
-        return p.next;
-    }
+    
     
     // https://leetcode.com/problems/insertion-sort-list/
 
@@ -842,6 +883,8 @@ class Linkedprac {
         return h2;
     }
 
+    
+
     // https://stackoverflow.com/questions/21528422/storing-a-doubly-linked-list-using-just-a-single-pointer-field
     // https://github.com/mission-peace/interview/blob/master/src/com/interview/linklist/SortedLLToBalancedBST.java
     // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
@@ -850,6 +893,8 @@ class Linkedprac {
         linked.addNode(1);
         linked.addNode(2);
         linked.addNode(3);
+        linked.addNode(3);
+        linked.addNode(4);
         linked.addNode(4);
         linked.addNode(5);
         // linked.addNode(6);
@@ -858,7 +903,7 @@ class Linkedprac {
         // linked.addNode(9);
 
         // linked.deleteDuplicates(linked.head);
-        linked.reorderList(linked.head);
+        // linked.reorderList(linked.head);
         // System.out.println(linked.josephusCircle(linked.head));
         // linked.reverseListWithoutPointer( linked.head,linked.head, linked.head.next);
         // linked.printList(linked.head);

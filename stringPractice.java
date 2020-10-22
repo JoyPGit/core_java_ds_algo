@@ -2172,7 +2172,7 @@ class StringPractice {
         return 0;
     }
     
-   // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    // https://www.youtube.com/watch?v=KAoRNDx-S8M
     // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
     HashSet<String> splitSet;
     public int maxUniqueSplit(String s) {
