@@ -32,77 +32,18 @@ public class Tree {
         this.root = null;
     }
     
-    /** POINTS : 
-     * 1 USE ONE OF TWO DISTINCT FUNC DEFINITIONS
-     * PREORDER WITH TAIL RECURSION 
-     * IS-SAME-TREE
-     * VALID-BST
-     * 
-     * public boolean isValidBST(TreeNode root) {
-        return bstHelper(root, Long.MAX_VALUE, Long.MIN_VALUE);        
-    }
-    
-     * boolean bstHelper(TreeNode root, long max, long min){
-        if(root == null) return true;
-        if(!(max > root.val && root.val > min)) return false;
-        return bstHelper(root.left, root.val, min) && bstHelper(root.right, max, root.val);
-    }
-     * return a helper func
-     * in the helper func add a check for root == null
-     * and not for root.left or root.right individually
-     * return left and right
-     * 
-     *
-     * 
-     * --------------------------------------------------------------------
-     * 2 OR USE POSTORDER AS IN MAX SIZE BST
-     *  
-     * SIMILAR TO HEIGHT OF TREE
-     * 
-     * function h(root){
-     *      if(root == null) return 0;
-     *      int left = h(left);
-     *      int right = h(right);
-     *      return max(left, right)+1;
-     * }
-     * 
-     * --------------------------------------------------------------------
-     * 3 USE ROOT.LEFT = F() AND ROOT.RIGHT = F()
-     * THIS CAN BE USED WHEN BUILDING A TREE OR DELETING SOME NODES
-     * BINARY TREE PRUNING
-     * 
-     *    
-     * https://www.techiedelight.com/convert-given-binary-tree-to-full-tree-removing-half-nodes/
-     * https://leetcode.com/problems/delete-nodes-and-return-forest/
-    ---------------------------------------------------------------------------
-     * DFS IN A TREE USING LIST
-     * 
-     * 1 List<List<Integer>> doesn't need a multi ArrayList
-     *   only use new ArrayList when adding to final list
-     * 
-     * 2 REMOVING FROM LIST TWICE, ONCE FOR EACH NODE
-     *    
-     * void dfs(TreeNode node, List<List<Integer>> parentList, List<Integer> currentList) {
-        // if(node!=null){
-        if(node == null) return;
-        if (node.left == null && node.right == null) {
-            currentList.add(node.key);
-            parentList.add(new ArrayList<>(currentList));
-            return;
-        }
-        currentList.add(node.key);
-        dfs(node.left, parentList, currentList);
-        currentList.remove(currentList.size() - 1);
-        dfs(node.right, parentList, currentList);
-        currentList.remove(currentList.size() - 1);
-     }
-     */ 
-    
     /** 
-     * TEMPLATES : 
-     * 1 HEIGHT -> ANCESTOR (REMOVE GLOBAL)
+     *  * TEMPLATES : 
+     * 1 HEIGHT -> ANCESTOR (REMOVE GLOBAL), VALID BST(POST)
      * 2 TREE PRUNING
-     * 3 PATH SUM 3
+     * 3 PATH SUM 3, IS SUBTREE, VALID BST(PRE)
+     * 
+     *  function h(root){
+     *    if(root == null) return 0;
+     *    int left = h(left);
+     *    int right = h(right);
+     *    return max(left, right)+1;
+     * }
      * 
      * 
      * boolean allAncestorsHelper(TreeNode root, List<Integer> res, int target){
@@ -115,6 +56,7 @@ public class Tree {
      *  return (left || right);
      * }
      * 
+     * -------------------------------------------------------
      * 
      * public TreeNode pruneTree(TreeNode root) {
      *   if(root == null) return null;
@@ -125,10 +67,58 @@ public class Tree {
      *   return root;
      * }
      * 
-
-     */
-
+     * 
+     * ----------------------------------------------------------
+     *
+     * public boolean isSubtree(TreeNode s, TreeNode t) {
+     *  if(s == null) return false;
+     *  else if(isSame(s, t)) return true;
+     *  else return isSubtree(s.left, t) || isSubtree(s.right, t);
+     * }
+     * 
+     * boolean isSame(TreeNode a, TreeNode b){
+     *   if(a == null || b == null) return (a == null && b == null);
+     *   if(a.val != b.val) return false;
+     *  
+     *   left = isSame(a.left, b.left)
+     *   right = isSame(a.right, b.right)
+     *   return left && right;
+     * }
+     * 
+     * 
+     * ////////////PATH SUM 3
+     * int pathCounter = 0; int target = 0;
+     * public int pathSum3(TreeNode root, int sum) {
+     *   if (root == null) return 0;
+     *   target = sum;
+     *   outerDfs(root);
+     *   return pathCounter;
+     * }
+     * 
+     * void outerDfs(TreeNode root){
+     *   if(root == null) return;
+     *   innerDfs(root, 0); // 
+     *   outerDfs(root.left);
+     *   outerDfs(root.right);
+     * } 
+     * 
+     * void innerDfs(TreeNode root, int sum){
+     *   if(root == null) return;
+     *   int currSum = sum+root.val;
+     *   // System.out.println(currSum);
+     *   if(currSum == target) pathCounter++;
+     *   innerDfs(root.left, currSum);
+     *   innerDfs(root.right, currSum);
+     * }
+     * 
+     * 
+     * https://www.techiedelight.com/convert-given-binary-tree-to-full-tree-removing-half-nodes/
+     * https://leetcode.com/problems/delete-nodes-and-return-forest/
+    ---------------------------------------------------------------------------
      /**  
+     * IMP K DIST, FLATTEN, MAX SUM BST, SORTED ARRAY TO BST, ISOMORPHISM
+     * MORRIS INORDER, 
+
       * QUESTIONS
       1 BST (3 POINTS : 
       1 LEFT.MAX<ROOT<RIGHT.MIN 
@@ -802,7 +792,7 @@ public class Tree {
         return Math.max(left,right)+1;
     }
 
-    //////////////////////////////////// SIMILAR TO HEIGHT, LEFT, RIGHT AND THEN ROOT
+    /////////////// SIMILAR TO HEIGHT, LEFT, RIGHT AND THEN ROOT DECISION
     // ANCESTOR PATTERN 
     // (ALSO HELPS TO AVOID GLOBAL VAR)
     // CONDITIONS FOR LEFT AND RIGHT CAN BE MERGED USING AND (OR) OR
@@ -865,6 +855,21 @@ public class Tree {
         // return false;
     }
 
+    ///////////////////////////////////ANCESTOR TEMPLATE
+    // https://leetcode.com/problems/symmetric-tree/
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null) return true;
+        return helper(root.left, root.right);
+    }
+    
+    boolean helper(TreeNode a, TreeNode b){
+        if(a == null && b == null) return true;
+        if(a == null || b == null) return false;
+        if(a.val != b.val) return false;
+        boolean left = helper(a.left, b.right);
+        boolean right = helper(a.right, b.left);
+        return (left && right);
+    }
 
     // USING ANCESTOR TEMPLATE (LEFT, RIGHT AND RETURN)
     public boolean isSameTreeLR(TreeNode p, TreeNode q) {
@@ -880,9 +885,11 @@ public class Tree {
     // SIMPLE PREORDER FOR BOTH SIMULTANEOUSLY
     public boolean isSameTree(TreeNode p, TreeNode q) {
         if(p == null && q == null) return true;
-        if(p == null || q == null) return false;
-        if(p.val == q.val) return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
-        return false;
+        if(p == null || q == null) return false; // p== null && q == null
+        if(p.val != q.val) return false;
+        boolean left = isSameTree(p.left, q.left) ;
+        boolean right = isSameTree(p.right, q.right);
+        return left && right;
     }
 
     // https://leetcode.com/problems/subtree-of-another-tree
@@ -892,21 +899,19 @@ public class Tree {
      * 1 isSubtree -> isSame
      * 2 else -> isSubtree(left) || isSubtree(right)
      * 
-     * 2 DFS STYLE PATH SUM 3
+     * SAME TREE METHOD FROM ABOVE, RUN FOR ALL NODES LIKE
+     * DFS STYLE PATH SUM 3
+     * 
      */
     public boolean isSubtree(TreeNode s, TreeNode t) {
         if(s == null) return false;
-        else if(isSame(s, t)) return true;
+        else if(isSameTree(s, t)) return true;
         else return isSubtree(s.left, t) || isSubtree(s.right, t);
     }
     
-    boolean isSame(TreeNode a, TreeNode b){
-        if(a == null || b==null) return a==null&&b== null;
-        if(a.val == b.val) return isSame(a.left, b.left) && isSame(a.right, b.right);
-        else return false;
-    }
 
-     /** PREORDER WITH TAIL RECURSION
+     /** 
+     * 
      * return f(left) && f(right)
      * 
      * THERE ARE 2 WAYS FOR BST
@@ -926,7 +931,9 @@ public class Tree {
     boolean bstHelper(TreeNode root, long max, long min){
         if(root == null) return true;
         if(!(max > root.val && root.val > min)) return false;
-        return bstHelper(root.left, root.val, min) && bstHelper(root.right, max, root.val);
+        boolean left = bstHelper(root.left, root.val, min);
+        boolean right = bstHelper(root.right, max, root.val);
+        return left && right;
     } 
     /**
      * SIMILAR USING LEFT AND RIGHT VARS
@@ -940,15 +947,9 @@ public class Tree {
      *  return (left == true && right == true);
      */ 
 
-    // https://leetcode.com/problems/path-sum/
-    public boolean hasPathSum(TreeNode root, int sum) {
-        if(root == null) return false;
-        if(root.left == null && root.right== null && sum-root.val ==0) return true;
-
-        return hasPathSum(root.left, sum- root.val) || hasPathSum(root.right, sum- root.val);
-    }
-
     
+
+    // https://leetcode.com/discuss/general-discussion/454844/binary-tree-isomorphism-problem    
 
     // https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
     // discuss/34787/Simple-and-clean-Java-solution-with-comments-recursive.
@@ -976,8 +977,16 @@ public class Tree {
     // https://leetcode.com/problems/serialize-and-deserialize-bst/
 
 
-    ////////////////////////////////////////////////PATH SUM
+    ////////////////////////////////PATH SUM
 
+    // https://leetcode.com/problems/path-sum/
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null) return false;
+        if(root.left == null && root.right== null && sum-root.val ==0) return true;
+
+        return hasPathSum(root.left, sum- root.val) || hasPathSum(root.right, sum- root.val);
+    }
+    
     // https://leetcode.com/problems/binary-tree-maximum-path-sum/
     // similar to dia
     int maxPathSum = Integer.MIN_VALUE;    
@@ -1017,6 +1026,7 @@ public class Tree {
         return res;
     }
     
+    // HEIGHT TEMPLATE
     // for sum always prefer bottom up -> POSTORDER
     int postOrderSum(HashMap<Integer, Integer>map, TreeNode root){
         if(root == null) return 0;
@@ -1122,6 +1132,8 @@ public class Tree {
     
 
     ///////////////////////////////LEAF NODES
+    // SAME AS INSERT TEMPLATE .left = f()
+
     // https://leetcode.com/problems/sum-of-left-leaves/
     int sumLeftLeaf = 0;
     public int sumOfLeftLeaves(TreeNode root) {
@@ -1141,9 +1153,33 @@ public class Tree {
         preOrder(root.right);
     }
 
+    /**
+     * POINST : 
+     * 1 USE INSERT TEMPLATE
+     * 2 IF LEAF, RETURN ROOT 
+     * 3 IF ANY CHILD IS NULL, RETURN TEH OTHER CHILD
+     * 4 IF NON CHILD IS NULL, RETURN ROOT
+     */
+    // https://practice.geeksforgeeks.org/problems/remove-half-nodes/1
+    public TreeNode removeHalfNodes(TreeNode root)
+    {
+        if(root == null) return root;
+        root.left = removeHalfNodes(root.left);
+        root.right = removeHalfNodes(root.right);
+
+        if((root.left == null && root.right == null))
+            return root;
+
+        else if(root.left == null || root.right == null) 
+            return root.left == null ? root.right : root.left;
+    
+        return root;
+    }
+
+
     // https://leetcode.com/problems/count-complete-tree-nodes/
 
-    
+    ////////////////////////////////////////////////////////////
     ///////////////IMP
 
     /** 
@@ -1380,7 +1416,8 @@ public class Tree {
         return -1;
     }
 
-    /////////////////////////////////////////. BST. ////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    //////////////////////////. BST. ////////////////////////
     //    TEMPLATE       .left = (); .right =() type
     
     // INSERT INTO BST
@@ -1750,26 +1787,6 @@ public class Tree {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     
 
-    void removeHalfNodes(TreeNode node, TreeNode nodeparent) {
-        if (node.left != null && node.right != null) {
-            removeHalfNodes(node.left, node);
-            removeHalfNodes(node.right, node);
-        } else {
-            if (node.left == null && node.right != null) {
-                if (nodeparent.left == node)
-                    nodeparent.left = node.right;
-                if (nodeparent.right == node)
-                    nodeparent.right = node.right;
-            }
-            if (node.left != null && node.right == null) {
-                if (nodeparent.left == node)
-                    nodeparent.left = node.left;
-                if (nodeparent.right == node)
-                    nodeparent.right = node.left;
-            }
-
-        }
-    }
 
     ////////////////////////////////////////////////////
     // https://www.geeksforgeeks.org/find-mirror-given-node-binary-tree/
@@ -1960,20 +1977,23 @@ public class Tree {
         // System.out.println(tree.root.right.left.key);
         // tree.lowestCommonAncestor(tree.root, tree.root.right.left,
         // tree.root.right.right);
-        tree.allAncestors(tree.root, 1);
+        // tree.allAncestors(tree.root, 1);
         // tree.findMirrorNode(tree.root, tree.root, 1);
         // tree.findRootToLeafPathsWithGivenSumLists6Jun(tree.root, 7);
 
         Tree mirrorTree = new Tree();
-        mirrorTree.root = new TreeNode(4);
-        mirrorTree.root.left = new TreeNode(6);
-        mirrorTree.root.right = new TreeNode(5);
+        mirrorTree.root = new TreeNode(7);
+        mirrorTree.root.left = new TreeNode(7);
+        mirrorTree.root.right = new TreeNode(8);
         mirrorTree.root.left.left = new TreeNode(2);
-        mirrorTree.root.left.right = new TreeNode(3);
-        mirrorTree.root.right.left = new TreeNode(3);
-        mirrorTree.root.right.right = new TreeNode(8);
-        tree.root.right.right.right = new TreeNode(9);
-        tree.root.right.right.left = new TreeNode(17);
+        mirrorTree.removeHalfNodes(mirrorTree.root);
+        mirrorTree.inOrder(mirrorTree.root);
+        // mirrorTree.root.left.right = new TreeNode(3);
+        // mirrorTree.root.right.left = new TreeNode(3);
+        // mirrorTree.root.right.right = new TreeNode(8);
+        // tree.root.right.right.right = new TreeNode(9);
+        // tree.root.right.right.left = new TreeNode(17);
+
 
         // tree.findRootToLeafPathsWithGivenSumLists6Jun(mirrorTree.root, 12);
         // tree.checkLevelAnagram(tree.root, mirrorTree.root);

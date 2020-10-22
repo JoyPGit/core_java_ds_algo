@@ -220,6 +220,44 @@ class StringPractice {
     }
 
 
+    // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
+    public String removeDuplicates(String str) {
+        StringBuilder res = new StringBuilder();
+        res.append(str.charAt(0));
+        
+        for(int i = 1; i<str.length(); i++){
+            if(res.length()!=0 && res.charAt(res.length()-1) == str.charAt(i)) 
+                res.deleteCharAt(res.length()-1);
+            else res.append(str.charAt(i));
+        }
+        return res.toString();
+    }
+
+
+    // STRINGBUILDER - > 4 METHODS append, delete, deleteCharAt, reverse, toString
+    // ddd, dee, deee
+    // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
+    public String removeDuplicates(String s, int k) {
+        StringBuilder res = new StringBuilder();
+        
+        res.append(s.charAt(0));
+        
+        for(int i =1; i<s.length(); i++){
+            res.append(s.charAt(i)); //imp
+            int counter = 0;
+
+            while(res.length() >= k
+                  && counter<k
+                  && res.charAt(res.length()-counter-1) == s.charAt(i)) counter++;
+
+            if(res.length()>=k && counter == k) {
+                res.delete(res.length()-k, res.length());
+            }
+            
+        }
+        return res.toString();
+    }
+
     // incomplete
     String sumOf2LargeNos(String str1, String str2) {
         String output = "";
@@ -445,7 +483,8 @@ class StringPractice {
      * 1 start a dfs whenever the ch[i][j] matches the starting char of string
      * 2 USE THE WORD, DON'T USE CHAR ARRAY
      * 3 NO NEED TO MAINTAIN VISITED ARRAY, USE BACKTRACKING
-     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE CHECKS
+     * 
+     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE HELPS CHECK
      * FOR ALL POSSIBLE STARTS AND DOESN'T RETURN TRUE TILL ALL POSSIBILITIES
      * ARE EXHAUSTED, WHICH RESULTS IN TLE
      * 5 
@@ -458,7 +497,8 @@ class StringPractice {
         
         for(int i =0; i<board.length; i++){
             for(int j =0; j<board[0].length; j++){
-                if(board[i][j] == word.charAt(0) && dfs(board, i, j, word, 0)) return true;
+                if(board[i][j] == word.charAt(0) && dfs(board, i, j, word, 0)) 
+                    return true;
             }
         }
         return false;
@@ -519,7 +559,6 @@ class StringPractice {
             }
             else return false;
         }
-        
         return map.size()==0;
     }
 
@@ -533,12 +572,7 @@ class StringPractice {
 
         Arrays.sort(ch1);
         Arrays.sort(ch2);
-        String s1 = "";
-        String s2 = "";
-        // for(char c:ch1) s1+=c;
-        // for(char c:ch2) s2+=c;
-        // System.out.println(s1.compareTo(s2));
-        // return s1.compareTo(s2)==0?true:false;
+
         return new String(ch1).compareTo(new String(ch2)) == 0 ? true : false;
     }
 
@@ -1139,7 +1173,7 @@ class StringPractice {
      * 2 CREATE A NEW ARRAY FOR EACH SUBSEQUENT STRING AND STORE THE FREQ
      * 3 UPDATE THE PRIMARY ARAY TO STORE COMMON OF BOTH PRIMARY ABND CURR
      * 
-     * SIMILAR TO INTERSECTION O F 2 ARRAYS
+     * SIMILAR TO INTERSECTION OF 2 ARRAYS
      */
     // https://leetcode.com/problems/find-common-characters/
     public List<String> commonChars(String[] A) {
@@ -1184,6 +1218,13 @@ class StringPractice {
 
 
     // COMPARE WITH ABOVE QUES COMMON CHARS
+    /** 
+     * Input: strs = ["flower","flow","flight"]
+     * Output: "fl"
+     * 
+     * SORT AND COMPARE ONLY FIRST AND LAST WORDS CHAR BY CHAR
+     * FIND COUNT
+    */
     // https://leetcode.com/problems/longest-common-prefix/
     public String longestCommonPrefix(String[] strs) {
         int n = strs.length;

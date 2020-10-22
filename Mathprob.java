@@ -8,6 +8,11 @@ import java.util.*;
  */
 public class Mathprob {
 
+    int gcd(int a, int b){
+        if(a%b == 0) return b;
+        return gcd(b, a%b);
+    }
+
     /** 
      * POINTS :
      * 1 BINARY CARRY = SUM/2;

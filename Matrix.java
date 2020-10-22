@@ -834,49 +834,6 @@ class Matrix {
             return 0;
     }
 
-    // https://www.includehelp.com/icp/gold-mine-problem.aspx
-    int GoldMine7Jun(int[][] arr, int n, int m) {
-        // DP table
-        int[][] DP = new int[n][m];
-
-        for (int i = 0; i < n; i++)
-            DP[i][0] = arr[i][0];
-
-        // for every column
-        for (int j = 0; j < n; j++) {
-            // check which option is better accordingly
-            for (int i = 0; i < m; i++) {
-                // choosing max of possible moves
-                DP[i][j] = arr[i][j];
-                int val = DP[i][j - 1];
-                if (isSafe(i, j - 1, DP)) {
-                    if (val < DP[i - 1][j - 1])
-                        val = DP[i - 1][j - 1];
-                }
-                if (isSafe(i, j + 1, DP)) {
-                    if (val < DP[i - 1][j - 1])
-                        val = DP[i - 1][j - 1];
-                }
-                if (i - 1 >= 0) {
-                    if (val < DP[i - 1][j - 1])
-                        val = DP[i - 1][j - 1];
-                }
-                if (i + 1 < n) {
-                    if (val < DP[i + 1][j - 1])
-                        val = DP[i + 1][j - 1];
-                }
-                DP[i][j] += val;
-            }
-        }
-        // find the maximum of the last column
-        int gold = DP[0][m - 1];
-        for (int i = 1; i < n; i++) {
-            if (DP[i][m - 1] > gold)
-                gold = DP[i][m - 1];
-        }
-
-        return gold;
-    }
 
     // https://www.techiedelight.com/probability-alive-after-taking-n-steps-island/
     

@@ -11,6 +11,7 @@ public class Utility {
     // https://stackoverflow.com/questions/9560600/
     // java-no-enclosing-instance-of-type-foo-is-accessible
 
+    // System.out.println(null == null);// true
     
     // HASHMAP
     // Map iterator
