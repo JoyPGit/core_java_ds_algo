@@ -1003,6 +1003,7 @@ class Greedy{
 
 
     /** SWAP BASED QUES 
+     * https://www.geeksforgeeks.org/minimum-number-of-swaps-required-for-arranging-pairs-adjacent-to-each-other/?ref=rp
      * https://www.techiedelight.com/find-minimum-number-possible-k-swaps/
      * https://leetcode.com/problems/flip-string-to-monotone-increasing/
      * https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid

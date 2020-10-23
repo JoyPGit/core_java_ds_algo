@@ -2071,8 +2071,6 @@ public class DP {
         // System.out.println("can the set be partitioned : "+dp.canPartition(setPartition));
         // System.out.println("can the set be partitioned : "+dp.canPartitionDP(setPartition));
 
-        int[] nums = {1,3,-1,-3,5,3,6,7}; int k = 3;
-        // dp.print1DMatrix(dp.maxSlidingWindow(nums, k));
 
         // int[] stone= {1, 5, 3, 7, 10};
         int[] stone= {8, 15, 3, 7};

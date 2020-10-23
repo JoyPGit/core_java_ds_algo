@@ -2,15 +2,19 @@ import java.util.*;
 
 public class StackPractice {
     
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if(i==arr.length-1) {
-                System.out.println(arr[i]+";");
-                System.out.println();
-            } 
-            else System.out.print(arr[i] + ", ");
+    /** 
+     * TEMPLATES :
+     * 1 ALWAYS STORE INDEX
+     * BASIC TEMPLATE
+     * for(int i =0; i<k; i++){
+            while(q.size()!=0 && nums[i] > nums[q.getLast()]){
+                q.removeLast();
+            }
+            q.addLast(i);
         }
-    }
+     * 
+     * 
+     * */
     /** POINTS
      * 1 FOR REMOVING DUPLICATES USE STACK
      * 2 NEXT GREATER EL (DAILY TEMP - STORE INDEX)
@@ -59,6 +63,14 @@ public class StackPractice {
             
     }
 
+    /**  
+     * POINTS :
+     * 1 THIS IS DIFF FROM NEXT GREATER EL, WE NEED A MAPPING BETWEEN
+     * FIRST ARR AND SECOND ARR, SO ADD ALL (EL, GREATER EL) PAIRINGS 
+     * TO A MAP. 
+     * 
+     * 2 FINALLY TRAVERSE THE ARR1 AND FETCH GREATER AND ADD TO RES
+    */
     // https://leetcode.com/problems/next-greater-element-i/
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
         int n1 = nums1.length; int n2 = nums2.length;
@@ -88,7 +100,52 @@ public class StackPractice {
     }
     // https://leetcode.com/problems/next-greater-element-ii/
 
+
+    /** 
+     * POINTS :
+     * 1 RES ARRAY IS OF SIZE n-k+1
+     * 2 DON'T FORGET TO REMOVE THE OUTGOING EL
+     * 3 TWO ITERATIONS ONE till k ELS
+     * AND THEN FROM k TILL n
+     * 4 HERE STORED INDEXES, CAN STORE ELS ALSO
+     * 
+    */
+    // https://leetcode.com/problems/sliding-window-maximum/
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int[] res = new int[n-k+1]; //
+        if(n==0) return res;
+        
+        if(n==1) {
+            res[0] = nums[0];
+            return res;
+        }
+        
+        int index = 0;
+        Deque<Integer> q = new LinkedList<>();
+        for(int i =0; i<k; i++){
+            while(q.size()!=0 && nums[i] > nums[q.getLast()]){
+                q.removeLast();
+            }
+            q.addLast(i);
+        }
+        res[index++] = nums[q.getFirst()];
+        
+        for(int i = k; i<n; i++){
+            // need to remove the outgoing            
+            if(q.getFirst() == i-k) q.removeFirst();
+            while(q.size()!=0 && nums[i] > nums[q.getLast()]){
+                q.removeLast();
+            }
+            q.addLast(i);
+            res[index++] = nums[q.getFirst()];
+        }
+        return res;
+    }
+
     // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
+    // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
+
     // https://leetcode.com/problems/remove-k-digits/
     void stockSpan(int[] arr){
         Deque<Integer> stock = new ArrayDeque<Integer>();
@@ -104,148 +161,74 @@ public class StackPractice {
                 System.out.println("peek "+stock.peek());
                 span[i] = i - stock.peek();
             }
-            print1DMatrix(span);
             stock.push(i);
         }
-        print1DMatrix(span);
-    }
-
-    public int[] maxSlidingWindowStack(int[] nums, int k) {
-        int n = nums.length;
-        int[] res = new int [n-k+1]; int index= 0;
-
-        Deque<Integer> list = new LinkedList<>();
-
-        for(int i =0; i<k; i++){
-            while(list.size()!=0 && list.getLast()<nums[i]){
-                list.removeLast();
-            }
-
-            list.add(nums[i]);
-            // System.out.println(list);
-        }
-        res[index++] = list.getFirst();
-    
-        System.out.println("first k");
-        print1DMatrix(res);
-
-        for(int i =k; i<n; i++){
-            if(list.getFirst()==nums[i-k]){
-                list.removeFirst();                
-            }
-            
-            while(list.size()!=0 && list.getLast()<nums[i]){
-                list.removeLast();
-            }
-            
-            list.add(nums[i]);
-            System.out.println(list);
-            res[index++] = list.getFirst();
-        }
-        print1DMatrix(res);
-        return res;
     }
 
     /**
-     * AMAZON
-     * https://www.geeksforgeeks.org/form-minimum-number-from-given-sequence/
-     *  Input: D        Output: 21
-        Input: I        Output: 12
-        Input: DD       Output: 321
-        Input: II       Output: 123
-        Input: DIDI     Output: 21435
-        Input: IIDDD    Output: 126543
-        Input: DDIDDIID Output: 321654798 
-     */
-
-    void printPattern (String s){
-        char[] charArray = s.toCharArray();
-        System.out.print(charArray);
-        Deque<Integer> intStack = new LinkedList<>();
-        Deque<Integer> intStackPopHolder = new LinkedList<>();
-
-        int counter = 0;
-
-        boolean first = true;
-        for(char c:charArray){
-
-            System.out.print(c+" ");
-            System.out.println(intStack);
-            if(c == 'I'){
-                counter++;
-                if(first){
-                    intStack.push(1);
-                    intStack.push(2);
-                    first = false;
-                    counter++;
-                } else{
-                    intStack.push(counter);
-                }
-                
-
-            } else if(c == 'D'){
-                counter++;
-                System.out.print("counter "+counter);
-                if(first){
-                    intStack.push(2);
-                    intStack.push(1);
-                    first = false;
-                    counter++;
-                } else{
-                    while(!intStack.isEmpty() && intStack.peekFirst() != (counter-1)){
-                        intStackPopHolder.push(intStack.pop());
-                    }
-                    int holeder = intStack.pop();
-                    intStack.push(counter);
-                    intStack.push(holeder);
-                    while(!intStackPopHolder.isEmpty()){
-                        intStack.push(intStackPopHolder.pop());
-                    }
-                    System.out.println(" line 140 " +intStack);
-                }
+     * 
+     * ALWAYS USE INDEX
+     * THE BASIC PREMISE IS THAT A BAR CAN EXPAND ONLY TILL ITS
+     * SMALLER ELS. SO WE FIND SMALLER ELS' INDEX.
+     * 
+     * IMP : heights[q.getLast()], 
+     * 
+     * while(q.size()!=0 && heights[i] < heights[q.getLast()]) 
+     *      smallerRightIndex[q.removeLast()] = i;
+     * q.addLast(i);
+     *  
+     * POINTS :
+     * 1 FIND THE NEXT SMALLER EL TO THE RIGHT AND LEFT
+     * 2 FOR ELS AT THE ENDS OR LARGEST ONES OR FOR WHOM 
+     * SMALLER ELS DON'T EXIST, PREFILL THE ARRAY WITH n AND -1.
+     *
+     * 3 AREA IS (RIGHT - LEFT) * HEIGHT
+     *  
+    */
+    // https://www.youtube.com/watch?v=0do2734xhnU
+    // {2,1,5,6,2,3};
+    // https://leetcode.com/problems/largest-rectangle-in-histogram/
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        if(n == 0) return 0;
+        if(n == 1) return heights[0];
+        
+        // for end els fill n and -1
+        int[] smallerRightIndex = new int[n];
+        Arrays.fill(smallerRightIndex, n);
+        int[] smallerLeftIndex = new int[n];
+        Arrays.fill(smallerLeftIndex, -1);
+        
+        // finding next smaller on the right
+        Deque<Integer> q = new LinkedList<>();
+        for(int i=0; i<n; i++){
+            while(q.size()!=0 && heights[i] < heights[q.getLast()]) {
+                smallerRightIndex[q.removeLast()] = i;
             }
+            q.addLast(i);
         }
-
-        while(!intStack.isEmpty()){
-            System.out.print(intStack.pop());
+        
+        // finding next smaller on the left
+        q.clear();
+        for(int i=n-1; i>=0; i--){
+            while(q.size()!=0 && heights[i] < heights[q.getLast()]) {
+                smallerLeftIndex[q.removeLast()] = i;
+            }
+            q.addLast(i);
         }
+        
+        int maxArea = 0;
+        for(int i =0; i<n; i++){
+            int width = smallerRightIndex[i] - smallerLeftIndex[i] - 1;
+            int area = heights[i]*width;
+            maxArea = Math.max(maxArea, area);
+        }
+        return maxArea;
     }
+
 
     // https://leetcode.com/problems/evaluate-reverse-polish-notation/
 
-    void longestCorrectBracketSubsequence(String s){
-        char[] charArray = s.toCharArray();
-        int counter = 0; int maxCounter = 0; int max = 0;
-        for(char c:charArray){
-            if(c=='('){
-                counter++;
-            } else{
-                maxCounter = counter;
-                counter--;
-            }
-            if(counter <0){
-                maxCounter =0;
-            }
-            if(max >maxCounter) max = maxCounter;
-        }
-        System.out.println("max is "+max);
-    }
-
-    void findMin(int[] nums){
-        Deque<Integer> list = new LinkedList<>();
-        Deque<Integer> minList = new LinkedList<>();
-        list.addLast(nums[0]); minList.addLast(nums[0]);
-        for(int i =1; i<nums.length; i++){
-            if(nums[i]<minList.getLast()){
-                minList.addLast(nums[i]);
-            }else {
-                minList.addLast(minList.getLast());
-            }
-            list.addLast(nums[i]);
-        }
-        System.out.println("list is "+list);
-        System.out.println("minList is "+minList);
-    }
 
     /** 
      * POINTS :
@@ -337,33 +320,11 @@ public class StackPractice {
             res[i] = list.removeFirst();
             i++;
         }
-        print1DMatrix(res);
+        utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 
-    // https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/submissions/
-    public int minAddToMakeValidParentheses(String S) {
-        Deque<Character> list = new LinkedList<>();
-        
-        char[] ch = S.toCharArray();
-        
-        for(int i =0; i<ch.length; i++){
-            if(list.size()==0) list.add(ch[i]);
-            else{
-                if(list.getLast() == '('){
-                    if(ch[i] == ')') list.removeLast();
-                    else if(ch[i] == '(') list.addLast(ch[i]);
-                }
-                else list.addLast(ch[i]);                
-            }
-        }
-        
-        return list.size();
-    }
-    // https://leetcode.com/problems/minimum-insertions-to-balance-a-parentheses-string/
-    
-    // https://leetcode.com/problems/next-greater-element-i/
-
+   
 
     // https://leetcode.com/problems/simplify-path/
     // https://leetcode.com/problems/remove-k-digits/
@@ -371,12 +332,13 @@ public class StackPractice {
     // https://leetcode.com/problems/decode-string/
     // https://leetcode.com/problems/next-greater-element-ii/
 
-    // https://leetcode.com/problems/daily-temperatures/
+
 
     /** POINTS:
      * 1 CUSTOM CLASS TO HOLD index and value
      * 2 when popping store difference of current index and popped index
      */
+    // https://leetcode.com/problems/daily-temperatures/
     class Temperature{
         int val; int index;
         Temperature(int v, int i){
@@ -417,7 +379,13 @@ public class StackPractice {
 
     // https://leetcode.com/problems/exclusive-time-of-functions/
     // https://leetcode.com/problems/sum-of-subarray-minimums/
+
+
+
+    /////////////////////////////////////////////////////
+    ///////////// PARENTHESIS
     // LOOK FOR DIFFERENT SOLN, WAY TOO MUCH OPTIMIZED
+    // https://leetcode.com/problems/reverse-substrings-between-each-pair-of-parentheses/
     String reverseParentheses(String s) {
         Deque<String> stack = new LinkedList<>();
         StringBuilder sb = new StringBuilder();
@@ -441,13 +409,20 @@ public class StackPractice {
 
     // https://leetcode.com/problems/longest-valid-parentheses/
     /**  
-     * DEL ER(PEEK) : DEL ERP
-     * EMPTY, LEFT, ELSE REMOVE, ELSE, PEEK 
-     * left= 0; max = 0;
-     * if ( add index
-     * if ) -> if empty left = j+1;
-     *      -> else pop -> empty : max, j-left+1     
-     *                  -> not : max j-getLast
+     * ADD DEL DEL
+     * OPEN ADD,
+     * D CLOSED
+     * E EMPTY
+     * L LEFT UPDATE(j+1)
+     * D DELETE
+     * E EMPTY 
+     * L MAX USING LEFT
+     * 
+     * left= 0; max = 0; 
+     * if ( add index                               ADD
+     * if ) -> if empty left = j+1;                 D,E,L
+     *      -> else pop -> empty : max, j-left+1    DEL, E , L 
+     *                  -> not : max j-getLast      
     */                  
     public int longestValidParentheses(String s) {
         Deque<Integer> q = new LinkedList<Integer>();
@@ -456,6 +431,7 @@ public class StackPractice {
         for(int j=0;j<s.length();j++){
             if(s.charAt(j)=='(') q.addLast(j);            
             else {
+                // first char is ')'
                 if (q.isEmpty()) left=j+1;
                 else{
                     q.removeLast();
@@ -467,10 +443,54 @@ public class StackPractice {
         return max;
     }
 
+     // https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/submissions/
+     public int minAddToMakeValidParentheses(String S) {
+        Deque<Character> list = new LinkedList<>();
+        
+        char[] ch = S.toCharArray();
+        
+        for(int i =0; i<ch.length; i++){
+            if(list.size()==0) list.add(ch[i]);
+            else{
+                if(list.getLast() == '('){
+                    if(ch[i] == ')') list.removeLast();
+                    else if(ch[i] == '(') list.addLast(ch[i]);
+                }
+                else list.addLast(ch[i]);                
+            }
+        }
+        
+        return list.size();
+    }
+    
+
+    void longestCorrectBracketSubsequence(String s){
+        char[] charArray = s.toCharArray();
+        int counter = 0; int maxCounter = 0; int max = 0;
+        for(char c:charArray){
+            if(c=='('){
+                counter++;
+            } else{
+                maxCounter = counter;
+                counter--;
+            }
+            if(counter <0){
+                maxCounter =0;
+            }
+            if(max >maxCounter) max = maxCounter;
+        }
+        System.out.println("max is "+max);
+    }
+
+    // https://leetcode.com/problems/minimum-insertions-to-balance-a-parentheses-string/
+
     // https://leetcode.com/problems/minimum-insertions-to-balance-a-parentheses-string/
     // discuss/?currentPage=1&orderBy=most_votes&query=
 
     // https://leetcode.com/problems/reorganize-string/
+
+
+    // https://leetcode.com/problems/decode-string/
     public String decodeString(String s) {
         int n = s.length();
         if(n==1) return s;
@@ -570,6 +590,72 @@ public class StackPractice {
     // https://leetcode.com/problems/sum-of-subarray-minimums/
     // https://leetcode.com/problems/maximal-rectangle/
 
+
+    /**
+     * AMAZON
+     * https://www.geeksforgeeks.org/form-minimum-number-from-given-sequence/
+     *  Input: D        Output: 21
+        Input: I        Output: 12
+        Input: DD       Output: 321
+        Input: II       Output: 123
+        Input: DIDI     Output: 21435
+        Input: IIDDD    Output: 126543
+        Input: DDIDDIID Output: 321654798 
+     */
+
+    void printPattern (String s){
+        char[] charArray = s.toCharArray();
+        System.out.print(charArray);
+        Deque<Integer> intStack = new LinkedList<>();
+        Deque<Integer> intStackPopHolder = new LinkedList<>();
+
+        int counter = 0;
+
+        boolean first = true;
+        for(char c:charArray){
+
+            System.out.print(c+" ");
+            System.out.println(intStack);
+            if(c == 'I'){
+                counter++;
+                if(first){
+                    intStack.push(1);
+                    intStack.push(2);
+                    first = false;
+                    counter++;
+                } else{
+                    intStack.push(counter);
+                }
+                
+
+            } else if(c == 'D'){
+                counter++;
+                System.out.print("counter "+counter);
+                if(first){
+                    intStack.push(2);
+                    intStack.push(1);
+                    first = false;
+                    counter++;
+                } else{
+                    while(!intStack.isEmpty() && intStack.peekFirst() != (counter-1)){
+                        intStackPopHolder.push(intStack.pop());
+                    }
+                    int holeder = intStack.pop();
+                    intStack.push(counter);
+                    intStack.push(holeder);
+                    while(!intStackPopHolder.isEmpty()){
+                        intStack.push(intStackPopHolder.pop());
+                    }
+                    System.out.println(" line 140 " +intStack);
+                }
+            }
+        }
+
+        while(!intStack.isEmpty()){
+            System.out.print(intStack.pop());
+        }
+    }
+
     public static void main(String[] args) {
         StackPractice stack = new StackPractice();
 
@@ -581,13 +667,16 @@ public class StackPractice {
         {100, 80,60,70,60,75,85};
         // stack.stockSpan(price);
 
+        int[] heights = new int[]{2,1,5,6,2,3};
+        stack.largestRectangleArea(heights);
+
         int[] nums = // {7, 2, 4};
         {9,10,9,-7,-4,-8,2,-6};
 
                 // { 1, -1 };
         // {1,3,-1,-3,5,3,6,7};
         int k = 5;//1;// 3;//2
-        // stack.maxSlidingWindowStack(nums, k);
+        stack.maxSlidingWindow(nums, k);
 
 
         int[] stackMin = {2,3,1,4,5,2};
@@ -607,10 +696,10 @@ public class StackPractice {
         // stack.decodeString(decode);
 
         Deque<Integer> stackToReverse = new LinkedList<>();
-        for(int i =0; i<5; i++) stackToReverse.addLast(i);
-        System.out.println(stackToReverse);
-        stack.reverseStackUsingRecursion(stackToReverse);
-        System.out.println(stackToReverse);
+        // for(int i =0; i<5; i++) stackToReverse.addLast(i);
+        // System.out.println(stackToReverse);
+        // stack.reverseStackUsingRecursion(stackToReverse);
+        // System.out.println(stackToReverse);
     }
 
 }

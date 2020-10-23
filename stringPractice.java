@@ -12,7 +12,15 @@ class StringPractice {
 
     // https://www.geeksforgeeks.org/string-data-structure/
     /**
-     * imp methods : startsWith, contains, split, replace, StringBuilder
+     * 
+     * QUES : VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
+     * WORD SEARCH, WORD LADDER, REORGANIZE, NUMBER OF DECODINGS,
+     * LARGEST TIME
+     * 
+     * 
+     * 
+     * imp methods : startsWith, contains, split, replace, isBlank
+     * StringBuilder
      * s.length() braces needed 
      * split removes trailing spaces
      * str1.compareTo(str2) - lexicographically smaller word
@@ -393,6 +401,7 @@ class StringPractice {
             }
         }
     }
+    // https://www.youtube.com/watch?v=qBbZ3tS0McI
 
     
     /** 
@@ -681,29 +690,6 @@ class StringPractice {
         return j == pattern.length();
     }
 
-    // https://www.youtube.com/watch?v=qBbZ3tS0McI
-    // void generateParentheses(int n){
-    // int open = n/2;
-    // char[] arr = new char[n];
-
-    // generateParenthesesHelper(arr, 0, open);
-    // }
-
-    // void generateParenthesesHelper(char[] arr, int index, int count){
-    // if(index == arr.length){
-    // System.out.println(arr.toString());
-    // return;
-    // }
-    // if(count == 0){
-    // arr[index] = ')';
-    // generateParenthesesHelper(arr, index+1, count );
-    // }else {
-    // arr[index] = '(';
-    // generateParenthesesHelper(arr, index+1, count-1);
-    // // arr[index] =
-    // }
-
-    // }
 
     void stringtoWords(String number) {
         int n = number.length();
@@ -1413,13 +1399,6 @@ class StringPractice {
         }
     }
 
-    // void hashiterator1(HashMap<Character, partition> map) {
-    // for (Map.Entry<Character, partition> entry : map.entrySet()) {
-    // Character key = entry.getKey();
-    // Integer value = entry.getValue().group;
-    // System.out.println("key "+key+" value " +value);
-    // }
-    // }
 
     // "0.1.2", "0.01.2"
     /**
@@ -1463,12 +1442,7 @@ class StringPractice {
         }
         return 0;
     }
-    // https://leetcode.com/problems/next-closest-time/
-
-    // https://leetcode.com/problems/largest-time-for-given-digits/
-    
-     
-    // https://leetcode.com/problems/minimum-time-difference/
+  
     // https://leetcode.com/problems/reformat-date/
     // https://leetcode.com/problems/integer-to-english-words/
 
@@ -1507,17 +1481,17 @@ class StringPractice {
     // https://leetcode.com/problems/multiply-strings/
 
 
-    // https://leetcode.com/problems/remove-k-digits/
     /**
      * NEW NO IS SMALLEST POSSIBLE
      * 
-     * add the digits to stack, when the top(GETLAST) is smaller than current, pop
-     * till you find smaller or k==0
+     * add the digits to stack, when the top is smaller than current,
+     * pop till you find smaller or k==0
      * 
      * if k!=0 pop till k==0
      * 
      * ensure leading zeroes are removed.
      */
+    // https://leetcode.com/problems/remove-k-digits/
     public String removeKdigits(String num, int k) {
         Deque<Character> s = new LinkedList<>();
         s.addLast(num.charAt(0));
@@ -1544,6 +1518,7 @@ class StringPractice {
         return sb.length() != 0 ? sb.toString() : "0";
     }
 
+    // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
     // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
     
 
@@ -1647,7 +1622,7 @@ class StringPractice {
         return c;
     }
     
-    //adds the letter n times, n= number.peek() 
+    //adds the letter n times, n = number.peek() 
     void process(Deque<Character> letter, Deque<Integer> number){
         String res = "";
         while(letter.size()!=0 && letter.peekLast()!='['){
@@ -2244,10 +2219,12 @@ class StringPractice {
     /** 
      * 1 CONVERT TO MINUTES
      * 2 SORT, FIND MIN
-     * 3. CHECK THE CORNER CASE
+     * 3 FIND MIN DIFF B/W ADJACENTS 
+     * 4 CHECK THE CORNER CASE AT THE END
      * int corner = times[0] + (1440 - times[times.length-1]);
      * 
     */
+    // find min minutes difference between any two time-points in the list
     // https://leetcode.com/problems/minimum-time-difference
     public int findMinDifference(List<String> timePoints) {
         // String time1 = timePoints.get(0);

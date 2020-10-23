@@ -4,6 +4,13 @@ public class Backtrack {
 
     /**  
      * 
+     * WHEN THE CONDITION IS MET, USING RETURN DOESN'T REMOVE THE LAST EL
+     * FROM THE LIST. SO WHILE FINDING PATH SUM IN TREE, DON'T USE
+     * BUT IT CAN BE USED IN SUBSET(PARTITION IN 2)
+     * BECAUSE IF WE FIND A SET OF SUM/2, THEN WE CAN RETURN.
+     * BUT IN TREE PATH SUM, EWE NEED TO REMOVE THE LEFT SUBTREE
+     * BEFORE PROCESSING THE RIGHT SUBTREE 
+     * 
      * FOR FINDING ALL POSSIBLE PARTITIONS (OR SOMETHING LIKE THAT)
      * WE USE BACKTRACKING, FOR FINDING MIN CUTS OR PARTITIONS
      * WE NEED RECUSRION, NO ADDITION OR REMOVAL
@@ -66,25 +73,10 @@ public class Backtrack {
      * 
      * 7 while checking for target value, add 2 checks for sum<0 and sum == 0
      * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * LIST ACCEPTS NEW ARRAYLIST, BUT NOT NESTED
-     *  List<List<Integer>> res = new ArrayList<ArrayList<>>(); is incorrect
-     *  List<List<Integer>> res = new ArrayList<>(); also is incorrect
-     *  ArrayList<ArrayList<Integer>> res = new ArrayList<>(); is incorrect
-     * THIS WORKS THOUGH
-     * ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
     */
 
     //28 apr
 
-    
-
-    
     // Subsets : https://leetcode.com/problems/subsets/
     /** 
      * use BACKTRACKING FORMAT
@@ -236,8 +228,9 @@ public class Backtrack {
     // permute with duplicates
     // https://www.youtube.com/watch?v=nYFd7VHKyWQ
     
+
     // https://leetcode.com/problems/combinations/
-    //this ques is quiite silly start with combination sum 2
+    // this ques is quite silly start with combination sum 2
     // if all combinations of size k are reqd; add a check for list.size
     public List<List<Integer>> combine(int n, int k) {
         int[] nums = new int[n];
@@ -376,6 +369,32 @@ public class Backtrack {
                 curr.remove(curr.size()-1);
             }
         }
+    }
+
+    // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
+    HashSet<String> splitSet;
+    public int maxUniqueSplit(String s) {
+        int n = s.length();
+        if(n==0) return 0;
+        splitSet = new HashSet<>();
+        return splitHelper(s);
+    }
+
+    int splitHelper(String str){
+        int countSplit = 0;
+        
+        for(int i = 1; i<=str.length(); i++){
+            String sub = str.substring(0, i);
+            if(!splitSet.contains(sub)){
+                splitSet.add(sub);
+                // System.out.println(splitSet);
+                countSplit = Math.max(countSplit, 
+                                1 + splitHelper (str.substring(i, str.length() ) ));
+                splitSet.remove(sub); //if commented, fails for "wwwzfvedwfvhsww"
+            }
+        }
+        return countSplit;
     }
 
       
@@ -547,8 +566,6 @@ public class Backtrack {
         return true;
     }
 
-    
-    ///////////////////////////////////////////////
 
     /**
      * POINTS :
@@ -1011,31 +1028,6 @@ public class Backtrack {
         }
     }
 
-    // https://www.youtube.com/watch?v=KAoRNDx-S8M
-    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
-    HashSet<String> splitSet;
-    public int maxUniqueSplit(String s) {
-        int n = s.length();
-        if(n==0) return 0;
-        splitSet = new HashSet<>();
-        return splitHelper(s);
-    }
-
-    int splitHelper(String str){
-        int countSplit = 0;
-        
-        for(int i = 1; i<=str.length(); i++){
-            String sub = str.substring(0, i);
-            if(!splitSet.contains(sub)){
-                splitSet.add(sub);
-                // System.out.println(splitSet);
-                countSplit = Math.max(countSplit, 
-                                1 + splitHelper (str.substring(i, str.length() ) ));
-                splitSet.remove(sub); //if commented, fails for "wwwzfvedwfvhsww"
-            }
-        }
-        return countSplit;
-    }
 
     /** 
      * POINTS :

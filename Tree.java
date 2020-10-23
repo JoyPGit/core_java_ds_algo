@@ -793,7 +793,7 @@ public class Tree {
     }
 
     /////////////// SIMILAR TO HEIGHT, LEFT, RIGHT AND THEN ROOT DECISION
-    // ANCESTOR PATTERN 
+    /////////////////////// ANCESTOR TEMPLATE
     // (ALSO HELPS TO AVOID GLOBAL VAR)
     // CONDITIONS FOR LEFT AND RIGHT CAN BE MERGED USING AND (OR) OR
 
@@ -810,7 +810,6 @@ public class Tree {
      *  boolean right = allAncestorsHelper(root.right, res, target);
      *  if(left || right) res.add(root.val);
      *
-     *     
     */
     // https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -855,7 +854,6 @@ public class Tree {
         // return false;
     }
 
-    ///////////////////////////////////ANCESTOR TEMPLATE
     // https://leetcode.com/problems/symmetric-tree/
     public boolean isSymmetric(TreeNode root) {
         if(root == null) return true;
@@ -870,6 +868,7 @@ public class Tree {
         boolean right = helper(a.right, b.left);
         return (left && right);
     }
+
 
     // USING ANCESTOR TEMPLATE (LEFT, RIGHT AND RETURN)
     public boolean isSameTreeLR(TreeNode p, TreeNode q) {
@@ -892,25 +891,7 @@ public class Tree {
         return left && right;
     }
 
-    // https://leetcode.com/problems/subtree-of-another-tree
-    /** if the root matches, then recur for that using isSame
-     * else recur for left and right nodes.
-     * 
-     * 1 isSubtree -> isSame
-     * 2 else -> isSubtree(left) || isSubtree(right)
-     * 
-     * SAME TREE METHOD FROM ABOVE, RUN FOR ALL NODES LIKE
-     * DFS STYLE PATH SUM 3
-     * 
-     */
-    public boolean isSubtree(TreeNode s, TreeNode t) {
-        if(s == null) return false;
-        else if(isSameTree(s, t)) return true;
-        else return isSubtree(s.left, t) || isSubtree(s.right, t);
-    }
-    
-
-     /** 
+    /** 
      * 
      * return f(left) && f(right)
      * 
@@ -935,19 +916,6 @@ public class Tree {
         boolean right = bstHelper(root.right, max, root.val);
         return left && right;
     } 
-    /**
-     * SIMILAR USING LEFT AND RIGHT VARS
-     * 
-     *  if(root == null) return true; 
-     *  if(root.val<=min || root.val>=max) return false;
-     *  
-     *  boolean left = helper(root.left, root.val, min);
-     *  boolean right = helper(root.right, max, root.val);
-     *  
-     *  return (left == true && right == true);
-     */ 
-
-    
 
     // https://leetcode.com/discuss/general-discussion/454844/binary-tree-isomorphism-problem    
 
@@ -977,8 +945,9 @@ public class Tree {
     // https://leetcode.com/problems/serialize-and-deserialize-bst/
 
 
-    ////////////////////////////////PATH SUM
-
+    //////////////////////////////////PATH SUM
+    /// SIMILAR TO HEIGHT AND ANCESTOR TEMPLATE
+    
     // https://leetcode.com/problems/path-sum/
     public boolean hasPathSum(TreeNode root, int sum) {
         if(root == null) return false;
@@ -1068,13 +1037,6 @@ public class Tree {
         curr.remove(curr.size()-1);
     }
 
-    // 2 dfs one simple preorder, other dfs takes a param sum starting from 0
-    // works on inclusion exclusion as in recursion
-    // the inclusion is done in the inner dfs
-    // int currSum = sum+root.val;
-    // if(currSum == target) pathCounter++; 
-
-    // https://leetcode.com/problems/path-sum-iii/
     /** 
      * USED PREFIX SUM TO OPTIMISE
      * 1 SAME AS ABOVE INNER DFS STARTS WITH SUM 0
@@ -1082,6 +1044,7 @@ public class Tree {
      * 5 REMOVE THE CURR ENTRY AT LAST, FREQ -1, REMOVE LEFT SUBTREE WHILE
      * MOVING TO RIGHT SUBTREE
      */
+    // HASHING (DFS 2+ BACKTRACKING)
     int pathCounter1 = 0; int target1 = 0;
     public int pathSumHash(TreeNode root, int sum) {
         if (root == null) return 0;
@@ -1104,7 +1067,56 @@ public class Tree {
         map.put(currSum, map.getOrDefault(currSum, 0)-1); // 5
     }
 
-    // IMP WITHOUT HASHING (2 DFS + BACKTRACKING)
+    ////////////////////////////////////////////////
+    //////////////////////// DFS PATH SUM 3 TEMPLATE
+
+    // https://leetcode.com/problems/subtree-of-another-tree
+    /** if the root matches, then recur for that using isSame
+     * else recur for left and right nodes.
+     * 
+     * 1 isSubtree -> isSame
+     * 2 else -> isSubtree(left) || isSubtree(right)
+     * 
+     * SAME TREE METHOD FROM ABOVE, RUN FOR ALL NODES LIKE
+     * DFS PATH SUM 3
+     * 
+     */
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if(s == null) return false;
+        else if(isSameTree(s, t)) return true;
+        // t is passed, not t.left or t.right
+        else return isSubtree(s.left, t) || isSubtree(s.right, t);
+    }
+
+    // SAME AS DFS PATH SUM 3, ONLY USE OR INSTEAD OF AND
+    // https://leetcode.com/problems/linked-list-in-binary-tree/
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        if(root == null) return false;
+        if(isSame(head, root)) return true;
+        return (isSubPath(head, root.left) // not head.next
+        || isSubPath(head, root.right));
+    }
+    
+    // a == null is true as the list can be short 
+    boolean isSame(ListNode a, TreeNode b){
+        if(a == null) return true;
+        if(b == null) return false;
+        // if(a==null || b == null) return a==null && b==null;
+        if(a.val != b.val) return false;
+        // use || not && as list can match any one child, not both
+        return isSame(a.next, b.left) || isSame(a.next, b.right);
+    }
+
+    // https://leetcode.com/problems/longest-zigzag-path-in-a-binary-tree/
+
+
+    // 2 dfs one simple preorder, other dfs takes a param sum starting from 0
+    // works on inclusion exclusion as in recursion
+    // the inclusion is done in the inner dfs
+    // int currSum = sum+root.val;
+    // if(currSum == target) pathCounter++; 
+
+    // https://leetcode.com/problems/path-sum-iii/
     int pathCounter = 0; int target = 0;
     public int pathSum3(TreeNode root, int sum) {
         if (root == null) return 0;
@@ -1129,9 +1141,9 @@ public class Tree {
         innerDfs(root.right, currSum);
     }
 
-    
 
-    ///////////////////////////////LEAF NODES
+
+    ////////////////////////////////////LEAF NODES
     // SAME AS INSERT TEMPLATE .left = f()
 
     // https://leetcode.com/problems/sum-of-left-leaves/
@@ -1179,243 +1191,6 @@ public class Tree {
 
     // https://leetcode.com/problems/count-complete-tree-nodes/
 
-    ////////////////////////////////////////////////////////////
-    ///////////////IMP
-
-    /** 
-     * POINTS :
-     * 1 POSTORDER TRAVERSAL
-     * 2 MOVE TILL RIGHT END OF NODE AND THEN MAKE THE NEW CONNECTIONS
-     * 3 SET LEFT = NULL
-    */
-    // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
-    public void flatten(TreeNode root) {
-        // helper(root);
-        if(root == null) return;
-        flatten(root.left);
-        flatten(root.right);
-        TreeNode y = null;
-        if(root.left!=null) {
-            y = root.left;
-            while(y.right!=null) y = y.right;
-            y.right = root.right;
-            root.right = root.left;
-            root.left = null; // imp
-            // return;
-        }
-        // return;
-    }
-
-
-    /** 
-    https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/143798/
-    1ms-beat-100-simple-Java-dfs-with(without)-hashmap-including-explanation
-     * 1 we do a traversal till we find target node, once we find we make an entry 
-     * and return 0, for all nodes in the path from root till target, 
-     * an entry is made in hashmap with dist from target
-     * 
-     * 2 left = find; if(left !=-1) map.put(root, left+1)
-     * same for right
-     * if left = -1 and right = -1, return -1; not found 
-     * 
-     * 3 now in dfs, we fetch the dist from map, and 
-     * if found, start dfs from this length
-     * else start with the initial length (map.get(root))
-     * 
-     * 4 how this works once the dist till root is found, say x
-     * the subtree not containing the target is traversed till a depth of
-     * dist - x, as we fetch the length from map
-     * and the subtree containing the target is traversed by fetching the dist at 
-     * each node, so when dist = k, it is added.
-     * 
-     * 7 points to remember
-     * 
-     */
-    // https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
-    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
-        ArrayList<Integer> res = new ArrayList<>();
-        HashMap<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
-
-        findK(root, target, map);//1
-       
-        dfsK(root, target, map, k, map.get(root), res);//2
-        return (List<Integer>)res;
-    }
-
-    int findK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map){
-        if(root == null) return -1;//3
-        if(root == target) {
-            map.put(root, 0);//4
-            return 0;
-        }
-        int left = findK(root, target, map);
-        if(left!=-1) {
-            map.put(root, left+1);//5
-            return left+1;
-        }
-        int right = findK(root, target, map);
-        if(right!=-1) {
-            map.put(root, right+1);
-            return right+1;
-        }
-
-        return -1;
-    }
-    
-    void dfsK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map, int k, 
-        int dist, ArrayList<Integer> res){
-        if(root == null) return;
-        if(map.containsKey(root)) dist = map.get(root);//6
-        if(dist == k) res.add(root.val);//7
-        dfsK(root.left, target, map, k, dist+1, res);
-        dfsK(root.right, target, map, k, dist+1, res);
-    }
-
-
-    /**
-        [1,2,3,4,5,6,null,null,null,7,8]
-        [99,3,2,null,6,4,5,null,null,null,null,8,7]
-        [0,3,1,null,null,null,2]
-        [0,3,1,2]
-    */
-    // INCOMPLETE 71/76 TEST CASES PASSED
-    // https://leetcode.com/problems/flip-equivalent-binary-trees/
-    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
-        if(root1 == null && root2 == null) return true;
-        if((root1!=null && root2==null) || (root1 == null && root2 !=null)) 
-            return false;
-        if(root1.val != root2.val) return false;
-        int level = 0;
-        Deque<TreeNode> q = new LinkedList<>();
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        
-        q.addLast(root1);
-        while(q.size()!=0){
-            int size = q.size();    
-            level++;
-            List<Integer> list = new ArrayList<>();
-            
-            for(int i =0; i<size; i++){
-                TreeNode curr = q.remove();
-                if(curr.left!=null) {
-                    q.addLast(curr.left); list.add(curr.left.val);
-                }
-                if(curr.right!=null){
-                    q.addLast(curr.right); list.add(curr.right.val);
-                }
-            }
-            map.put(level, list);
-        }
-        q.clear();
-        q.addLast(root2);
-        level = 0;
-        while(q.size()!=0){
-            int size = q.size();    
-            level++;
-            List<Integer> list = new ArrayList<>();
-            for(int i =0; i<size; i++){
-                TreeNode curr = q.remove();
-                if(curr.left!=null) {
-                    q.addLast(curr.left); list.add(curr.left.val);
-                }
-                if(curr.right!=null){
-                    q.addLast(curr.right); list.add(curr.right.val);
-                }
-            }
-            List<Integer> previous = map.get(level);
-            Collections.sort(previous);
-            Collections.sort(list);
-            if(!previous.equals(list)) return false;
-        }
-        return true;
-    }
-
-    // FOREST FIRE 
-    // MICROSOFT
-    void forestFire(TreeNode node) {
-        int arr[] = new int[12];
-        TreeNode parent = null;
-        Queue<TreeNode> q = new LinkedList<TreeNode>();
-        q.add(node);
-        while (!q.isEmpty()) {
-            TreeNode removed = q.remove();
-            System.out.print(removed.key + ", ");
-            arr[removed.key] = -1;
-            parent = findParent(root, removed);
-            if (parent != null && arr[parent.key] != -1) {
-                q.add(parent);
-                arr[parent.key] = -1;
-                // parent.key = -1;
-            }
-            if (removed.left != null && arr[removed.left.key] != -1) {
-                q.add(removed.left);
-                arr[removed.left.key] = -1;
-                // removed.left.key = -1;
-            }
-            if (removed.right != null && arr[removed.right.key] != -1) {
-                q.add(removed.right);
-                arr[removed.right.key] = -1;
-                // removed.right.key = -1;
-            }
-        }
-    }
-
-    TreeNode findParent(TreeNode root, TreeNode node) {
-        TreeNode left = null;
-        TreeNode right = null;
-        if (root == node)
-            return null;
-        if (root.left == node || root.right == node) {
-            // this.parent = root;
-            // System.out.println("parent "+root.key);
-            return root;
-        } else {
-            if (node.left != null)
-                left = findParent(root, node.left);
-            if (node.right != null)
-                right = findParent(root, node.right);
-            return (left != null) ? left : right;
-        }
-    }
-
-    
-
-    // IMP
-    /** 
-     * POINTS :
-     * 1 THE GLOBAL VAR PRESTART IS USED TO CREATE NEW NODES
-     * 2 STEPS : create node, find index, preStart++, set children
-     * 3 AND THE BOUNDARY FOR LEFT = (start, index-1)
-     * AND RIGHT = (index+1, end)
-    */
-    // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal
-    int preStart = 0; // 1
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
-        int n = preorder.length;
-        if(n==0) return null;
-        return helper(preorder, inorder, 0, n-1);
-    }
-    
-    TreeNode helper(int[] preorder, int[] inorder, int start, int end){
-        if(start>end) return null;
-        if(preStart >= preorder.length) return null;
-
-        TreeNode root = new TreeNode(preorder[preStart]);//imp
-        
-        int index = findIndex(preorder[preStart], inorder);
-        preStart++;
-        root.left = helper (preorder, inorder, start, index-1);
-        root.right = helper (preorder, inorder, index+1, end);
-        return root;
-    }
-    
-    int findIndex(int val, int[] inorder){
-         for(int i =0; i<inorder.length; i++){
-            if(inorder[i] == val) return i;
-        }
-        return -1;
-    }
-
     /////////////////////////////////////////////////////////
     //////////////////////////. BST. ////////////////////////
     //    TEMPLATE       .left = (); .right =() type
@@ -1445,8 +1220,7 @@ public class Tree {
 
     /** 
      * POSTORDER
-     * TEMPLATE .LEFT AND .RIGHT TYPE 
-     * 
+     * INSERT TEMPLATE
     */
     // https://leetcode.com/problems/binary-tree-pruning/
     public TreeNode pruneTree(TreeNode root) {
@@ -1760,6 +1534,245 @@ public class Tree {
         }
     }
 
+    ////////////////////////////////////////////////////////////
+    ///////////////IMP
+
+    /** 
+     * POINTS :
+     * 1 POSTORDER TRAVERSAL
+     * 2 MOVE TILL RIGHT END OF NODE AND THEN MAKE THE NEW CONNECTIONS
+     * 3 SET LEFT = NULL
+    */
+    // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+    public void flatten(TreeNode root) {
+        // helper(root);
+        if(root == null) return;
+        flatten(root.left);
+        flatten(root.right);
+        TreeNode y = null;
+        if(root.left!=null) {
+            y = root.left;
+            while(y.right!=null) y = y.right;
+            y.right = root.right;
+            root.right = root.left;
+            root.left = null; // imp
+            // return;
+        }
+        // return;
+    }
+
+
+    /** 
+    https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/143798/
+    1ms-beat-100-simple-Java-dfs-with(without)-hashmap-including-explanation
+     * 1 we do a traversal till we find target node, once we find we make an entry 
+     * and return 0, for all nodes in the path from root till target, 
+     * an entry is made in hashmap with dist from target
+     * 
+     * 2 left = find; if(left !=-1) map.put(root, left+1)
+     * same for right
+     * if left = -1 and right = -1, return -1; not found 
+     * 
+     * 3 now in dfs, we fetch the dist from map, and 
+     * if found, start dfs from this length
+     * else start with the initial length (map.get(root))
+     * 
+     * 4 how this works once the dist till root is found, say x
+     * the subtree not containing the target is traversed till a depth of
+     * dist - x, as we fetch the length from map
+     * and the subtree containing the target is traversed by fetching the dist at 
+     * each node, so when dist = k, it is added.
+     * 
+     * 7 points to remember
+     * 
+     */
+    // https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        ArrayList<Integer> res = new ArrayList<>();
+        HashMap<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
+
+        findK(root, target, map);//1
+       
+        dfsK(root, target, map, k, map.get(root), res);//2
+        return (List<Integer>)res;
+    }
+
+    int findK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map){
+        if(root == null) return -1;//3
+        if(root == target) {
+            map.put(root, 0);//4
+            return 0;
+        }
+        int left = findK(root, target, map);
+        if(left!=-1) {
+            map.put(root, left+1);//5
+            return left+1;
+        }
+        int right = findK(root, target, map);
+        if(right!=-1) {
+            map.put(root, right+1);
+            return right+1;
+        }
+
+        return -1;
+    }
+    
+    void dfsK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map, int k, 
+        int dist, ArrayList<Integer> res){
+        if(root == null) return;
+        if(map.containsKey(root)) dist = map.get(root);//6
+        if(dist == k) res.add(root.val);//7
+        dfsK(root.left, target, map, k, dist+1, res);
+        dfsK(root.right, target, map, k, dist+1, res);
+    }
+
+
+    /**
+        [1,2,3,4,5,6,null,null,null,7,8]
+        [99,3,2,null,6,4,5,null,null,null,null,8,7]
+        [0,3,1,null,null,null,2]
+        [0,3,1,2]
+    */
+    // INCOMPLETE 71/76 TEST CASES PASSED
+    // https://leetcode.com/problems/flip-equivalent-binary-trees/
+    public boolean flipEquiv(TreeNode root1, TreeNode root2) {
+        if(root1 == null && root2 == null) return true;
+        if((root1!=null && root2==null) || (root1 == null && root2 !=null)) 
+            return false;
+        if(root1.val != root2.val) return false;
+        int level = 0;
+        Deque<TreeNode> q = new LinkedList<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        
+        q.addLast(root1);
+        while(q.size()!=0){
+            int size = q.size();    
+            level++;
+            List<Integer> list = new ArrayList<>();
+            
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.remove();
+                if(curr.left!=null) {
+                    q.addLast(curr.left); list.add(curr.left.val);
+                }
+                if(curr.right!=null){
+                    q.addLast(curr.right); list.add(curr.right.val);
+                }
+            }
+            map.put(level, list);
+        }
+        q.clear();
+        q.addLast(root2);
+        level = 0;
+        while(q.size()!=0){
+            int size = q.size();    
+            level++;
+            List<Integer> list = new ArrayList<>();
+            for(int i =0; i<size; i++){
+                TreeNode curr = q.remove();
+                if(curr.left!=null) {
+                    q.addLast(curr.left); list.add(curr.left.val);
+                }
+                if(curr.right!=null){
+                    q.addLast(curr.right); list.add(curr.right.val);
+                }
+            }
+            List<Integer> previous = map.get(level);
+            Collections.sort(previous);
+            Collections.sort(list);
+            if(!previous.equals(list)) return false;
+        }
+        return true;
+    }
+
+    // FOREST FIRE 
+    // MICROSOFT
+    void forestFire(TreeNode node) {
+        int arr[] = new int[12];
+        TreeNode parent = null;
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.add(node);
+        while (!q.isEmpty()) {
+            TreeNode removed = q.remove();
+            System.out.print(removed.key + ", ");
+            arr[removed.key] = -1;
+            parent = findParent(root, removed);
+            if (parent != null && arr[parent.key] != -1) {
+                q.add(parent);
+                arr[parent.key] = -1;
+                // parent.key = -1;
+            }
+            if (removed.left != null && arr[removed.left.key] != -1) {
+                q.add(removed.left);
+                arr[removed.left.key] = -1;
+                // removed.left.key = -1;
+            }
+            if (removed.right != null && arr[removed.right.key] != -1) {
+                q.add(removed.right);
+                arr[removed.right.key] = -1;
+                // removed.right.key = -1;
+            }
+        }
+    }
+
+    TreeNode findParent(TreeNode root, TreeNode node) {
+        TreeNode left = null;
+        TreeNode right = null;
+        if (root == node)
+            return null;
+        if (root.left == node || root.right == node) {
+            // this.parent = root;
+            // System.out.println("parent "+root.key);
+            return root;
+        } else {
+            if (node.left != null)
+                left = findParent(root, node.left);
+            if (node.right != null)
+                right = findParent(root, node.right);
+            return (left != null) ? left : right;
+        }
+    }
+
+    
+
+    // IMP
+    /** 
+     * POINTS :
+     * 1 THE GLOBAL VAR PRESTART IS USED TO CREATE NEW NODES
+     * 2 STEPS : create node, find index, preStart++, set children
+     * 3 AND THE BOUNDARY FOR LEFT = (start, index-1)
+     * AND RIGHT = (index+1, end)
+    */
+    // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal
+    int preStart = 0; // 1
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int n = preorder.length;
+        if(n==0) return null;
+        return helper(preorder, inorder, 0, n-1);
+    }
+    
+    TreeNode helper(int[] preorder, int[] inorder, int start, int end){
+        if(start>end) return null;
+        if(preStart >= preorder.length) return null;
+
+        TreeNode root = new TreeNode(preorder[preStart]);//imp
+        
+        int index = findIndex(preorder[preStart], inorder);
+        preStart++;
+        root.left = helper (preorder, inorder, start, index-1);
+        root.right = helper (preorder, inorder, index+1, end);
+        return root;
+    }
+    
+    int findIndex(int val, int[] inorder){
+         for(int i =0; i<inorder.length; i++){
+            if(inorder[i] == val) return i;
+        }
+        return -1;
+    }
+
+    
+
 
     ///////////////////////////////////////////////////////////////////////////////////
   
@@ -1785,10 +1798,6 @@ public class Tree {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    
-
-
-    ////////////////////////////////////////////////////
     // https://www.geeksforgeeks.org/find-mirror-given-node-binary-tree/
     void findMirrorNode(TreeNode node1, TreeNode node2, int data) {
         if(node1==null) return;
@@ -1878,7 +1887,7 @@ public class Tree {
     // https://www.interviewbit.com/courses/programming/topics/tree-data-structure/
 
     // DP
-
+    // https://leetcode.com/problems/longest-zigzag-path-in-a-binary-tree/
     // https://www.youtube.com/watch?v=qZ5zayHSH2g&list=PL_z_8CaSLPWfxJPz2-YKqL9gXWdgrhvdn
     // https://leetcode.com/problems/longest-zigzag-path-in-a-binary-tree/
     

@@ -37,6 +37,62 @@ public class Sorting {
     void quickSelect(int[] arr){
         
     }
+
+
+    void merge(int[] arr, int l, int m, int r) {
+        // all work is done on the arr passed as param
+        int n1 = m - l + 1; // middle is always on the lower side
+        int n2 = r - m;
+
+        int[] arr1 = new int[n1];
+        int[] arr2 = new int[n2];
+
+        for (int i = 0; i < n1; i++) {
+            arr1[i] = arr[l + i];
+        }
+        for (int i = 0; i < n2; i++) {
+            arr2[i] = arr[m + i]; // m+i+1
+        }
+        
+        int[] arr3 = new int[n1 + n2];
+        int t1 = 0, t2 = 0;
+      
+        int k = l;
+        
+        while (t1 < n1 && t2 < n2) {
+            if (arr1[t1] < arr2[t2]) {
+                arr3[t1] = arr1[t1];
+                t1++;
+            } else {
+                arr3[t2] = arr2[t2];
+                t2++;
+            }
+            k++;
+        }
+
+        while (t1 < k) {
+            arr[k] = arr1[t1];
+            t1++; k++;
+        }
+        while (t2 < k) {
+            arr[k] = arr2[t2];
+            t2++; k++;
+        }
+    }
+
+    void mergeSort(int[] arr, int l, int r) {
+        if (l < r) {
+            int middle = (l + r) / 2;
+            mergeSort(arr, l, middle);
+            mergeSort(arr, middle + 1, r);
+
+            merge(arr, l, middle, r);
+        }
+    }
+
+    // in place merge sort
+    // merge sort linked list
+
     /** POINTS : (IMP INDEX VAR)
      * 1 ADD a(TO BE SORTED) TO A MAP
      * 2 ITERATE OVER B AND ADD THE ELS TO A 'FREQ' NO OF TIMES
