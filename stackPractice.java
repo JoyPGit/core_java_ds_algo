@@ -409,9 +409,8 @@ public class StackPractice {
 
     // https://leetcode.com/problems/longest-valid-parentheses/
     /**  
-     * ADD DEL DEL
-     * OPEN ADD,
-     * D CLOSED
+     * ADD EL DEL
+     * OPEN ADD
      * E EMPTY
      * L LEFT UPDATE(j+1)
      * D DELETE
@@ -420,8 +419,8 @@ public class StackPractice {
      * 
      * left= 0; max = 0; 
      * if ( add index                               ADD
-     * if ) -> if empty left = j+1;                 D,E,L
-     *      -> else pop -> empty : max, j-left+1    DEL, E , L 
+     * if ) -> if empty left = j+1;                 E,L
+     *      -> else pop -> empty : max, j-left+1    DEL, E, L 
      *                  -> not : max j-getLast      
     */                  
     public int longestValidParentheses(String s) {
