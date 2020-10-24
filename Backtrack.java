@@ -4,11 +4,30 @@ public class Backtrack {
 
     /**  
      * 
+     * DFS WITH RETURN TEMPLATE
+     * 
+     * boolean dfs(char[][] board, int row, int col, String word, int index){
+     *   // proceed till index == word.length() 
+     *   if(index == word.length()) return true;
+     * 
+     *   if(isSafeBoard(board, row, col, word.charAt(index))){
+     *      char temp = word.charAt(index);
+     *      board[row][col] = ' '; // 2
+     *      boolean found = dfs(board, row+1, col, word, index+1) // 3
+     *      ||dfs(board, row-1, col, word, index+1)
+     *      ||dfs(board, row, col+1, word, index+1)
+     *      ||dfs(board, row, col-1, word, index+1);
+     *      if(found) return true; // 4
+     *      board[row][col] = temp; // 5
+     *   }
+     *  return false;
+     * }
+     * 
      * WHEN THE CONDITION IS MET, USING RETURN DOESN'T REMOVE THE LAST EL
      * FROM THE LIST. SO WHILE FINDING PATH SUM IN TREE, DON'T USE
      * BUT IT CAN BE USED IN SUBSET(PARTITION IN 2)
      * BECAUSE IF WE FIND A SET OF SUM/2, THEN WE CAN RETURN.
-     * BUT IN TREE PATH SUM, EWE NEED TO REMOVE THE LEFT SUBTREE
+     * BUT IN TREE PATH SUM, WE NEED TO REMOVE THE LEFT SUBTREE
      * BEFORE PROCESSING THE RIGHT SUBTREE 
      * 
      * FOR FINDING ALL POSSIBLE PARTITIONS (OR SOMETHING LIKE THAT)
@@ -662,45 +681,46 @@ public class Backtrack {
      * 5 
      * 
      */
-    // https://leetcode.com/problems/word-search/submissions/
+    // https://leetcode.com/problems/word-search/
     public boolean exist(char[][] board, String word) {
-        // char[] ch = word.toCharArray();
-        // boolean[][] visited = new boolean[board.length][board[0].length];
+        int m = board.length;
+        int n = board[0].length;
         
-        for(int i =0; i<board.length; i++){
-            for(int j =0; j<board[0].length; j++){
-                if(board[i][j] == word.charAt(0) && dfs(board, i, j, word, 0)) return true;
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                if(board[i][j] == word.charAt(0)) {
+                    if(dfs(board, i, j, word, 0)) return true;
+                }
             }
         }
         return false;
     }
     
     boolean dfs(char[][] board, int row, int col, String word, int index){
-        if(isSafe(board, row, col, word, index)){
-            if(index == word.length()-1 && word.charAt(index) == board[row][col]) {
-                // System.out.println("in here"); 
-                return true;
-            }
-            char temp = board[row][col];
-            board[row][col] = ' '; // 4 not using visited array
-            boolean found =  dfs(board, row-1, col, word, index+1) 
-            || dfs(board, row+1, col, word, index+1) 
-            || dfs(board, row, col-1, word, index+1)
-            || dfs(board, row, col+1, word, index+1);
-            
-            board[row][col] = temp; // 3 backtracking
-            return found;
+        // proceed till index == word.length() 
+        if(index == word.length()) return true;
+        
+        if(isSafeBoard(board, row, col, word.charAt(index))){
+            char temp = word.charAt(index);
+            board[row][col] = ' '; // 2
+            boolean found = dfs(board, row+1, col, word, index+1) // 3
+            || dfs(board, row-1, col, word, index+1)
+            || dfs(board, row, col+1, word, index+1)
+            || dfs(board, row, col-1, word, index+1);
+            if(found) return true; // 4
+            board[row][col] = temp; // 5
         }
         return false;
     }
     
-    
-    boolean isSafe(char[][] board, int row, int col, String word, int index){
+    boolean isSafeBoard(char[][] board, int row, int col, char ch){
         if(row>=0 && row<board.length
           && col>=0 && col<board[0].length
-          && board[row][col] == word.charAt(index)) return true;
+          && board[row][col] == ch) return true;
         return false;
     }
+
+
 
     // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/
     // 551/week-3-august-15th-august-21st/3428/

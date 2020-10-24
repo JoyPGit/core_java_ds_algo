@@ -404,6 +404,8 @@ public class DP {
         return dp[dp.length - 1];
     }
 
+    // https://leetcode.com/explore/featured/card/
+    // october-leetcoding-challenge/560/week-2-october-8th-october-14th/3494/
     public int deleteAndEarn(int[] arr) {
         int n = arr.length;
         int i = 0, j = 0;

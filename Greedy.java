@@ -270,21 +270,26 @@ class Greedy{
      * 
      * PREV END MUST BE GREATER THAN CURR START, FOR THE INTERVAL TO MERGE
      */
+    // bullshit test case [[-2147483646,-2147483645],[2147483646,2147483647]] 
     // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
     public int findMinArrowShots(int[][] points) {
         int n = points.length;
         if(n==0) return 0;
-        // if(n==1) return 1;
-        Arrays.sort(points, (a, b) -> a[1] - b[1]);
+        Arrays.sort(points, (x, y)->{
+            if(x[1] == y[1]) return x[0] - y[0];
+            return x[1] - y[1];
+        }); 
+        
         int count = 1;
-        int prev = points[0][1];
-        
-        for(int i =1; i<n; i++){
-            if(prev >= points[i][0]) continue;
-            prev = points[i][1];
-            count++;
+        int[] prev = points[0];
+        for(int i =0; i<n; i++){
+            int[] curr = points[i];
+            if(prev[1]>=curr[0]) continue;
+            else {
+                prev = curr;
+                count++;
+            }
         }
-        
         return count;
     }
 
@@ -650,7 +655,6 @@ class Greedy{
         int n = people.length;
         ArrayList<People> list = new ArrayList<People>();
         
-
         for(int i = 0; i<n; i++){
             list.add(new People(people[i][0], people[i][1]));
         }

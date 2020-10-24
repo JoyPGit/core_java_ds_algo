@@ -52,15 +52,15 @@ class StringPractice {
      * * FOR SUBSEQUENCE HASHMAP CAN BE USED
      * 
      * boolean isSubsequence(String a, String b){
-        int i = 0; int j = 0;
-        
-        while(i<a.length() && j<b.length()){
-            if(a.charAt(i) == b.charAt(j)){
-                i++; j++;
-            }else i++;
-        }
-        
-        return j==b.length();
+     * int j = 0;
+     * 
+     * for(int i =0; i<a.length(); i++){
+     *      if(a.charAt(i) == b.charAt(j)) i++; j++;
+     *      // if end reached, substring
+     *      if(j == b.length()) return true;
+     * }
+     *  
+     * return j==b.length();
      * }
      *
      * 
@@ -499,44 +499,45 @@ class StringPractice {
      * 5 
      * 
      */
-    // https://leetcode.com/problems/word-search/submissions/
+    // backtracking
+    // mark as ' '
+    // pass the char
+    // https://leetcode.com/problems/word-search/
     public boolean exist(char[][] board, String word) {
-        // char[] ch = word.toCharArray();
-        // boolean[][] visited = new boolean[board.length][board[0].length];
+        int m = board.length;
+        int n = board[0].length;
         
-        for(int i =0; i<board.length; i++){
-            for(int j =0; j<board[0].length; j++){
-                if(board[i][j] == word.charAt(0) && dfs(board, i, j, word, 0)) 
-                    return true;
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                if(board[i][j] == word.charAt(0)) {
+                    if(dfs(board, i, j, word, 0)) return true;
+                }
             }
         }
         return false;
     }
     
     boolean dfs(char[][] board, int row, int col, String word, int index){
-        if(isSafe(board, row, col, word, index)){
-            if(index == word.length()-1 && word.charAt(index) == board[row][col]) {
-                // System.out.println("in here"); 
-                return true;
-            }
-            char temp = board[row][col];
-            board[row][col] = ' '; // 4 not using visited array
-            boolean found =  dfs(board, row-1, col, word, index+1) 
-            || dfs(board, row+1, col, word, index+1) 
-            || dfs(board, row, col-1, word, index+1)
-            || dfs(board, row, col+1, word, index+1);
-            
-            board[row][col] = temp; // 3 backtracking
-            return found;
+        // proceed till index == word.length() 
+        if(index == word.length()) return true;
+        
+        if(isSafe(board, row, col, word.charAt(index))){
+            char temp = word.charAt(index);
+            board[row][col] = ' '; // 2
+            boolean found = dfs(board, row+1, col, word, index+1) // 3
+            || dfs(board, row-1, col, word, index+1)
+            || dfs(board, row, col+1, word, index+1)
+            || dfs(board, row, col-1, word, index+1);
+            if(found) return true; // 4
+            board[row][col] = temp; // 5
         }
         return false;
     }
     
-    
-    boolean isSafe(char[][] board, int row, int col, String word, int index){
+    boolean isSafe(char[][] board, int row, int col, char ch){
         if(row>=0 && row<board.length
           && col>=0 && col<board[0].length
-          && board[row][col] == word.charAt(index)) return true;
+          && board[row][col] == ch) return true;
         return false;
     }
 
@@ -648,14 +649,14 @@ class StringPractice {
     }
     
     boolean isSubsequence(String a, String b){
-        int i = 0; int j = 0;
+        int j = 0;
         
-        while(i<a.length() && j<b.length()){
-            if(a.charAt(i) == b.charAt(j)){
-                i++; j++;
-            }else i++;
+        for(int i =0; i<a.length(); i++){
+            if(a.charAt(i) == b.charAt(j)) i++; j++;
+            // if end reached, substring
+            if(j == b.length()) return true;
         }
-        
+        // match j with b.length()
         return j==b.length();
     }
 
@@ -1400,47 +1401,41 @@ class StringPractice {
     }
 
 
-    // "0.1.2", "0.01.2"
-    /**
-     * mapping between integer and char
-     * 
-     * 1 create an int for every substring b/w dots and compare 2 two while loops 3
-     * p1, p2 are incremented once when dot is encountered, p1++ takes it till '.' 4
-     * char value of '0' is 0 5 for chars use single quotes and double for strings
-     * 
-     * can be done using Integer.parseInt too one base case for str = "" when no dot
-     * is present then add a check
-     */
+    // use start and end to make substring comparison
+    // 2 loops for each substring
+    // increment end after dot
+    // compare and if equal, increment start and end
+    // special case when 1, no . start == end, so add a check
+    // no and is needed in while as start == end will terminate the loop
+    // because comparison will definitely give an o/p
+    // "1.0.1", "1.00"
     // https://leetcode.com/problems/compare-version-numbers/
     public int compareVersion(String version1, String version2) {
-        int p1 = 0, p2 = 0;
-        while (p1 < version1.length() || p2 < version2.length()) {
-            int num1 = 0, num2 = 0;
+        String num1 = ""; String num2 = "";
+        int start1 = 0; int end1 = 0; 
+        int start2 = 0; int end2 = 0;   
+        
+        while(end1<version1.length() || end2<version2.length()){
+            while(end1<version1.length() && version1.charAt(end1) != '.') end1++;
+            // 1 so start == end
+            if(start1 == end1) num1 = "0"; // 1
+            else num1 = version1.substring(start1, end1); // 2
+            
+            while(end2<version2.length() && version2.charAt(end2) != '.') end2++;
+            if(start2 == end2) num2 = "0";
+            else num2 = version2.substring(start2, end2);
 
-            String str1 = "";
-            String str2 = "";
-            while (p1 < version1.length() && version1.charAt(p1) != '.') {
-                // System.out.println("char val of 0 "+'0');
-                // System.out.print("char val of '1'-'0' ");
-                // System.out.println('1'-'0');
-                // num1 = num1*10 + (version1.charAt(p1++) - '0');
-                str1 += version1.charAt(p1++);
-                System.out.println("str1 " + str1);
-            }
-            while (p2 < version2.length() && version2.charAt(p2) != '.') {
-                // num2 = num2*10 + (version2.charAt(p2++) - '0');
-                str2 += version2.charAt(p2++);
-                System.out.println("str2 " + str2);
-            }
-
-            num1 = Integer.parseInt(str1);
-            num2 = Integer.parseInt(str2);
-            if (num1 != num2)
-                return num1 > num2 ? 1 : -1;
-            p1++;
-            p2++;
+            int val = compare(num1, num2); // 3
+            if(val == 0){
+                end1++; start1 = end1; // 4
+                end2++; start2 = end2;
+            }else return val>0?1:-1; // to keep o/p either 1 or -1 
         }
         return 0;
+    }
+    
+    int compare(String a, String b){
+        return Integer.parseInt(a) - Integer.parseInt(b);
     }
   
     // https://leetcode.com/problems/reformat-date/
@@ -1715,6 +1710,66 @@ class StringPractice {
         return res.length() == s.length()? res : "";
     }
 
+    // if freq = 1, remove
+    // else add back to pq from map
+    // "vvvlo", how to ensure v comes before l when freq of both is 1? 
+
+    // add to res and the if q is empty return ""
+    // check for size k
+    // https://leetcode.com/problems/reorganize-string/
+    class StringFreq{
+        char c; int freq;
+        StringFreq(char ch, int f){
+            this.c = ch;
+            this.freq = f;
+        }
+    }
+    public String reorganizeString1(String S) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        for(char c : S.toCharArray()) 
+            map.put(c, map.getOrDefault(c, 0)+1);
+        
+        int k = 3;
+        
+        PriorityQueue<StringFreq> pq = new PriorityQueue<>((x,y) ->{
+            if(y.freq == x.freq) return (""+x.c).compareTo(""+y.c);
+            return y.freq - x.freq;
+        });
+        
+        for(HashMap.Entry<Character, Integer> e : map.entrySet()){
+            pq.add(new StringFreq(e.getKey(), e.getValue()));
+        }
+        
+        int len = S.length();
+        ArrayList<Character> temp = new ArrayList<>();
+        String res = "";
+        while(pq.size()!=0){
+            int cnt = Math.min(k, len);
+            System.out.println("cnt "+cnt);
+            for(int i =0; i<cnt; i++){
+                if(pq.isEmpty()) return "";
+                StringFreq curr = pq.remove();
+                res += curr.c;
+                
+                map.put(curr.c, map.get(curr.c)-1);
+                System.out.println(map);
+                if(map.get(curr.c)>0) temp.add(curr.c);
+                len--;
+                System.out.println("len "+len);
+            }
+            System.out.println("temp "+temp);
+            // repeat process of populating pq from temp
+            for(int  i =0; i<temp.size(); i++){
+                pq.add(new StringFreq(temp.get(i), map.get(temp.get(i))));
+            }
+            temp.clear();
+            
+        }
+        System.out.println("result "+res);
+        return res;
+    }
+
     /** 
      * POINTS :
      * 1 dp size [m+1][n+1]
@@ -1780,12 +1835,21 @@ class StringPractice {
     // IMP SORTING TO REDUCE COMPARISONS
 
     // IMP FILESYSTEM
-    /** POINTS : 
+    /** 
+     * SIMILAR TO MERGE INTERVALS
+     * CHECK curr.charAt(prev.length()) == '/'
+     * IF '/' IS FOUND A SUBFOLDER SO CAN IGNORE
+     * 
+     * POINTS : 
      * 1 SORT THE ARRAY
      * 2 USE STARTSWITH; SIMILAR TO MERGE INTERVALS
-     * 3 prev = folder[0]; curr.startsWith(prev) && curr.charAt(prev.length()) == '/'
+     * 3 prev = folder[0]; 
+     * curr.startsWith(prev) && curr.charAt(prev.length()) == '/'
      * 
-     * if curr starts with prev and has '/', iit must be a subfolder, don't add to res
+     * 4 if curr starts with prev and has '/', 
+     * it must be a subfolder, don't add to res
+     * 
+     * 
     */
     // https://leetcode.com/problems/remove-sub-folders-from-the-filesystem/
     public List<String> removeSubfolders(String[] folder) {
@@ -2313,7 +2377,7 @@ class StringPractice {
         // Programming"));
         // string.convertToTitle(3);
 
-        string.reverse("abc");
+        // string.reverse("abc");
         String x = "123";
 
         // System.out.println(Integer.parseInt(x)+1);//4
@@ -2370,6 +2434,8 @@ class StringPractice {
 
         // System.out.println(string.compareVersion("0.1.2", "0.01.2"));
 
+        String reorgStr = "aaabbc";
+        string.reorganizeString1(reorgStr);
         String balanceLR = "RLLLLRRRLR";
         // string.balancedStringSplit(balanceLR);
 

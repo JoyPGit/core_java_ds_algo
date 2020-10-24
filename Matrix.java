@@ -2,6 +2,54 @@ import java.util.*;
 
 class Matrix {
 
+    /** 
+     * 
+     * PACIFIC ATLANTIC, OBSTACLES, WALLS AND GATES, WORD SEARCH
+     * SPIRAL PRINT
+     * 
+     * TEMPLATES : 
+     * 1 BACKTRACKING
+     * 2 DP, VISITED
+     * 3 AREA OF ISLAND
+     * 
+     * ONE MAJOR ISSUE IS INFINITE LOOP BY VISITING LEFT AND THEN RIGHT
+     * VISITED ARRAY
+     * 
+     * 
+     * BASIC COUNT TEMPLATE 
+     * for(int i =0; i<grid.length; i++){
+     *    for(int j =0; j<grid[0].length; j++){
+     *        if(grid[i][j] == '1') {
+     *            dfs(grid, i, j); 
+     *            count++;
+     *        }
+     *    }
+     * }
+     * return count;
+     * 
+     * 
+     * DFS WITH RETURN TEMPLATE
+     * 
+     * boolean dfs(char[][] board, int row, int col, String word, int index){
+     *   // proceed till index == word.length() 
+     *   if(index == word.length()) return true;
+     * 
+     *   if(isSafeBoard(board, row, col, word.charAt(index))){
+     *      char temp = word.charAt(index);
+     *      board[row][col] = ' '; // 2
+     *      boolean found = dfs(board, row+1, col, word, index+1) // 3
+     *      ||dfs(board, row-1, col, word, index+1)
+     *      ||dfs(board, row, col+1, word, index+1)
+     *      ||dfs(board, row, col-1, word, index+1);
+     *      if(found) return true; // 4
+     *      board[row][col] = temp; // 5
+     *   }
+     *  return false;
+     * }
+     * 
+     * 
+     * 
+    */
     // DFS TEMPLATE
     void dfs(int[][] arr){
         int n = arr.length; int m = arr[0].length;
@@ -289,43 +337,59 @@ class Matrix {
     }
 
 
-    // https://leetcode.com/problems/longest-increasing-path-in-a-matrix/
+    /** 
+     * POINTS :
+     * 1 DP IN MATRIX
+     * 2 NO VISITED, CHECK ID DP!=0
+     * 3 PASS PREV AS MIN TO START THE PROCESS
+     * 4 PASS CURR MATRIX VAL
+     * 5 TAKE MAX+1, DON'T SUM UP
+    */
+    // https://leetcode.com/problems/longest-increasing-path-in-a-matrix
     public int longestIncreasingPath(int[][] matrix) {
-        if(matrix.length==0) return 0;
-        int[][] dp = new int[matrix.length][matrix[0].length];
+        int m = matrix.length;
+        if(m==0) return 0;
+        int n = matrix[0].length;
         
-        int max = Integer.MIN_VALUE;
+        int[][] dp = new int[m][n];
         
-        for(int i = 0; i<matrix.length; i++){
-            for(int j = 0; j<matrix[0].length; j++){
-                if(dp[i][j] !=0) continue;//1
-                dfs(i, j, matrix, dp, Integer.MIN_VALUE);
-                max = Math.max(max, dp[i][j]);
+        int max = 0;
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(dp[i][j] == 0){
+                    max = Math.max(max, dfsInc(matrix, i, j, dp, Integer.MIN_VALUE));
+                }
             }
         }
         return max;
     }
     
-    int dfs(int row, int col, int[][] matrix, int[][] dp, int prev){
-        if(isSafe(row, col, matrix, prev)){
+    int dfsInc(int[][] matrix, int row, int col, int[][] dp, int prev){
+        if(isSafeInc(matrix, row, col, dp, prev)){
+            // System.out.println("row "+row+" col " +col);
+            // pass matrix[row][col]
+            // take max
             if(dp[row][col]!=0) return dp[row][col];
-            
-            int left = dfs(row, col-1, matrix, dp, matrix[row][col]);//2
-            int right = dfs(row, col+1, matrix, dp, matrix[row][col]);
-            int up = dfs(row-1, col, matrix, dp, matrix[row][col]);
-            int down = dfs(row+1, col, matrix, dp, matrix[row][col]);
-            dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down)))+1;
-            return dp[row][col];
+            else{
+                dp[row][col] = 
+                    Math.max(dfsInc(matrix, row+1, col, dp, matrix[row][col]),
+                    Math.max(dfsInc(matrix, row-1, col, dp, matrix[row][col]),
+                    Math.max(dfsInc(matrix, row, col+1, dp, matrix[row][col]),
+                    + dfsInc(matrix, row, col-1, dp, matrix[row][col]))))+1; // imp
+                return dp[row][col];
+            }
         }
         return 0;
     }
     
-    boolean isSafe(int r, int c, int[][] matrix, int prev){
-        if(r>=0 && r<matrix.length
-          && c>=0 && c<matrix[0].length
-          && matrix[r][c]>prev) return true;//3
+    boolean isSafeInc(int[][] matrix, int row, int col, int[][] dp, int prev){
+        if(row>=0 && row<matrix.length
+          && col>=0 && col<matrix[0].length
+          && matrix[row][col] > prev) return true;
+        
         return false;
     }
+
 
     int numberOfIslands(int[][] arr) {
         int i = 0;
@@ -689,67 +753,6 @@ class Matrix {
         return false;
     }
 
-    /**
-     * need to take one of two approaches either a global var and update it after
-     * every dfs or make function return value
-     */
-    int countPathLength = 0;
-
-    void maxPathLength(int[][] arr) {
-        int[][] holder = new int[arr.length][arr[0].length];
-        int max7jun = -1;
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                // holder[i][j] = maxPathLengthHelper(arr, i, j, holder);
-                // System.out.print(holder[i][j]+", ");
-                max7jun = Math.max(max7jun, maxPathLengthHelper(arr, i, j, holder, -9999));
-                // 3 technique for max no extra for loop
-
-                // this.countPathLength = 0;
-            }
-        }
-
-        System.out.println("max length path is " + max7jun);
-    }
-
-    /**
-     * this can't be solved without dp if we dont use a visited matrix
-     * else we will be recurring for adjacent posns indefinitely
-     * 
-     * dp is used to check if value exists or not.
-     */
-    int maxPathLengthHelper(int[][] arr, int i, int j, int[][] holder, int curr) {
-        /** should i put the check now or wait for the next func call with (i+1,j)? */
-
-        // 1 check is put first
-        // 2 pass -999... as the first arg when calling helper, hten pass the arr value
-        // for
-        // left , right, up and down
-        if (isSafePathLength(i, j, arr, curr)) {
-            int value = arr[i][j];
-            // this line caused all problems
-            if (holder[i][j] != 0) {
-                return holder[i][j];
-            }
-            int down = maxPathLengthHelper(arr, i + 1, j, holder, value);
-            int up = maxPathLengthHelper(arr, i - 1, j, holder, value);
-            int left = maxPathLengthHelper(arr, i, j - 1, holder, value);
-            int right = maxPathLengthHelper(arr, i, j + 1, holder, value);
-           
-            // System.out.println("left "+left+" right "+right+" up "+up+" down "+down);
-            holder[i][j] = Math.max(down, Math.max(up, Math.max(left, right))) + 1;
-            System.out.println("holder[" + i + "][" + j + "] " + holder[i][j]);
-            return holder[i][j];
-        } else
-            return 0;
-    }
-
-    boolean isSafePathLength(int row, int col, int[][] arr, int curr) {
-        if (row >= 0 && row < arr.length && col >= 0 && col < arr[0].length && arr[row][col] - curr >= 1) {
-            return true;
-        }
-        return false;
-    }
 
     public int sumGold = 0;
     public int currSumGold = 0;
@@ -951,7 +954,6 @@ class Matrix {
     }
 
   
-
     boolean searchRowColSortedMatrix(int[][] arr, int num) {
         int row = -1;
         for (int i = 0; i < arr.length - 1; i++) {
@@ -983,8 +985,8 @@ class Matrix {
             return binsearch(arr, row, num, mid + 1, end);
     }
     
-    int countPath;
 
+    int countPath;
     // https://leetcode.com/problems/unique-paths-ii/
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
         int m = obstacleGrid.length;
@@ -1024,6 +1026,7 @@ class Matrix {
     }
     // https://leetcode.com/problems/unique-paths-iii/
 
+
     /**
      * POINTS : 
      * 1 start a dfs whenever the ch[i][j] matches the starting char of string
@@ -1035,43 +1038,46 @@ class Matrix {
      * 5 
      * 
      */
-    // https://leetcode.com/problems/word-search/submissions/
+    // backtracking
+    // mark as ' '
+    // pass the char, not word and index both
+    // return boolean not void 
+    // https://leetcode.com/problems/word-search/
     public boolean exist(char[][] board, String word) {
-        // char[] ch = word.toCharArray();
-        // boolean[][] visited = new boolean[board.length][board[0].length];
+        int m = board.length;
+        int n = board[0].length;
         
-        for(int i =0; i<board.length; i++){
-            for(int j =0; j<board[0].length; j++){
-                if(board[i][j] == word.charAt(0) && dfs(board, i, j, word, 0)) return true;
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                if(board[i][j] == word.charAt(0)) {
+                    if(dfs(board, i, j, word, 0)) return true;
+                }
             }
         }
         return false;
     }
     
     boolean dfs(char[][] board, int row, int col, String word, int index){
-        if(isSafe(board, row, col, word, index)){
-            if(index == word.length()-1 && word.charAt(index) == board[row][col]) {
-                // System.out.println("in here"); 
-                return true;
-            }
-            char temp = board[row][col];
-            board[row][col] = ' '; // 4 not using visited array
-            boolean found =  dfs(board, row-1, col, word, index+1) 
-            || dfs(board, row+1, col, word, index+1) 
-            || dfs(board, row, col-1, word, index+1)
-            || dfs(board, row, col+1, word, index+1);
-            
-            board[row][col] = temp; // 3 backtracking
-            return found;
+        // proceed till index == word.length() 
+        if(index == word.length()) return true;
+        
+        if(isSafeBoard(board, row, col, word.charAt(index))){
+            char temp = word.charAt(index);
+            board[row][col] = ' '; // 2
+            boolean found = dfs(board, row+1, col, word, index+1) // 3
+            ||dfs(board, row-1, col, word, index+1)
+            ||dfs(board, row, col+1, word, index+1)
+            ||dfs(board, row, col-1, word, index+1);
+            if(found) return true; // 4
+            board[row][col] = temp; // 5
         }
         return false;
     }
     
-    
-    boolean isSafe(char[][] board, int row, int col, String word, int index){
+    boolean isSafeBoard(char[][] board, int row, int col, char ch){
         if(row>=0 && row<board.length
           && col>=0 && col<board[0].length
-          && board[row][col] == word.charAt(index)) return true;
+          && board[row][col] == ch) return true;
         return false;
     }
 
@@ -1105,6 +1111,7 @@ class Matrix {
         
         int n = matrix[0].length;
         
+        // visited
         int pacific[][] = new int[m][n];
         int atlantic[][] = new int[m][n];
         
@@ -1160,7 +1167,10 @@ class Matrix {
         
         for(int i =0; i<grid.length; i++){
             for(int j =0; j<grid[0].length; j++){
-                if(grid[i][j] == '1') {dfs(grid, i, j); count++;}
+                if(grid[i][j] == '1') {
+                    dfs(grid, i, j); 
+                    count++;
+                }
             }
         }
         return count;
@@ -1213,6 +1223,8 @@ class Matrix {
             dfs(grid, row, col-1);
         }
     }
+
+
     // https://leetcode.com/problems/surrounded-regions
     public void solve(char[][] board) {
 
@@ -1249,56 +1261,62 @@ class Matrix {
         }
     }
 
+
+    // why -2? we are taking into acount the oundary of the upper cell
+    // -2 one for each cell
     // https://leetcode.com/problems/island-perimeter/
-    int countPerimeter = 0; 
     public int islandPerimeter(int[][] grid) {
-        int r = grid.length; int c = grid[0].length;
-        for(int i =0; i<r; i++){
-            for(int j=0; j<c; j++){
-                if(grid[i][j] == 1) dfsPerimeter(grid, i, j);
+        int m = grid.length; int n = grid[0].length;
+        int perimeter = 0;
+        
+        for(int i =0; i<m; i++){
+            for(int j=0; j<n; j++){
+                
+                if(grid[i][j] == 1) {
+                    perimeter += 4;
+                    
+                    if(i>0 && grid[i-1][j] == 1) perimeter -= 2;
+                    if(j>0 && grid[i][j-1] == 1) perimeter -= 2;
+                }
             }
         }
-        return countPerimeter;
-    }
-    
-    void dfsPerimeter(int[][] grid, int row, int col){
-        if(row >= 0 && row<grid.length
-          && col>=0 && col<grid[0].length
-          && grid[row][col] == 1){
-            if(row+1 == grid.length || grid[row+1][col] == 0) countPerimeter++;
-            if(row-1 == -1 || grid[row-1][col] == 0) countPerimeter++;
-            if(col+1 == grid[0].length || grid[row][col+1] == 0) countPerimeter++;
-            if(col-1 == -1 || grid[row][col-1] == 0) countPerimeter++;
-        }
+        return perimeter;
     }
 
-    // https://leetcode.com/problems/max-area-of-island/
-    int countArea = 0;
+
+    /**  
+     * TRY TO RETURN THE DFS VALUE
+     * SAME AS IN LONGEST PATH
+     * ALSO MARK TEH VISITED, SO NO EXTRA VISITED
+    */
+    // https://leetcode.com/problems/max-area-of-island
     public int maxAreaOfIsland(int[][] grid) {
         int max = 0;
         for(int i =0; i<grid.length; i++){
             for(int j =0; j<grid[0].length; j++){
                 if(grid[i][j] == 1){
-                    dfsArea(grid, i, j);
-                    max = Math.max(count, max);
-                    countArea = 0;
+                    max = Math.max(max, dfsArea(grid, i, j));
                 }
             }
         }
         return max;
     }
     
-    void dfsArea(int[][] grid, int r, int c){
+    int dfsArea(int[][] grid, int r, int c){
         if(r>=0 && r<grid.length
           && c>=0 && c<grid[0].length
           && grid[r][c] == 1){
-            countArea++;
+            // so we don't visit again
             grid[r][c] = 0;
-            dfs(grid, r+1, c);
-            dfs(grid, r-1, c);
-            dfs(grid, r, c+1);
-            dfs(grid, r, c-1);
+
+            int val = dfsArea(grid, r+1, c)
+            + dfsArea(grid, r-1, c)
+            + dfsArea(grid, r, c+1)
+            + dfsArea(grid, r, c-1) + 1;
+            
+            return val;
         }
+        return 0;
     }
 
     
