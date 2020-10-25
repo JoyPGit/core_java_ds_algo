@@ -2,6 +2,23 @@ import java.util.*;
 
 //how hashmaps work https://www.youtube.com/watch?v=c3RVW3KGIIE
 
+/** 
+ * PREFIX SUM
+ * LONGEST SUBARRAY OF 0S AMND 1S
+ * LONGEST AP
+ * RANK TEAMS
+ * WORD SUBSETS
+ * PATH SUM 3
+ * NO OF SUBARRAYS HAVING SUM K (PREFIX SUM)
+ * LONGEST SUBARRAY OF 0S AND 1S (STORE +/- DIFF)
+ * FIND ITINERARY
+ * WORD SUBSETS
+ * 
+ * SLIDING WINDOW -> WHENEVER K DISTINCT
+ * LONGEST SUBARRAY OF K DISTINCT ELS
+ * SMALLEST
+*/
+
 /** hash stores key value pairs by adding an extra hash value for the key which is used to compute the index
  * key->hash->value
  * the value returned with get is the value of the key
@@ -232,6 +249,7 @@ public class HashPractice{
     }
 
      /** 
+     * 
      * POINTS : 
      * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN RESULT STRING, CONTINUE
      * Why? beacuse the char is alrady at its lowest lexicographic position.
@@ -247,6 +265,15 @@ public class HashPractice{
      * 3 AFTER TRIMMING USING WHILE LOOP ADD THE CHAR AT END
      * 
      * */
+    /**
+     * imp how to handle bb? -> if(res.contains) continue;
+     * decrement freq of incoming char as it cn't be used further
+     * if exists continue
+     * check for freq >= 1
+     * add after removal of larger with freq>=1
+     * 
+     * FREQ-- FOR ALL, IF EXISTS CONTINUE; REST SAME 
+     */ 
     // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
     public String smallestSubsequence(String text) {
         HashMap<Character, Integer> map = new HashMap<>();
@@ -271,6 +298,7 @@ public class HashPractice{
     }
 
 
+    // SLIDING WINDOW
     // 1,1,2,3,1,4
     // always store freq, not index, use left for index
     // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
@@ -324,46 +352,90 @@ public class HashPractice{
     }
     
 
-    // IMP check this with largest subarray with equal no of 0s and 1s
-    // https://www.geeksforgeeks.org/substring-equal-number-0-1-2/
-    // https://www.geeksforgeeks.org/length-of-the-longest-substring-with-equal-1s-and-0s/
-    // Java Code for finding the length of
-    // the longest balanced substring
-    int longestSubarrayEqual0sAnd1s() {
-        String str = "101001000";
+    //////////////////////////////////// IMP
 
-        // Create a map to store differences
-        // between counts of 1s and 0s.
-        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+    /** 
+     * PREFIX-SUM
+     * 
+     * ALWAYS THINK CUMULATIVE SUM, IF THERE EXISTS SUM-K
+     * TARGET = 8, SUM = 18 AND 10 EXISTS, SO THERE IS A SUBARRAY WHOSE
+     * SUM IS 10 AND ANOTHER WHOSE SUM IS 18, 
+     * SO SELECT FROM AFTER 10 TILL 18 TO GET 8
+     * 
+     * POINTS : 
+     * MOST IMP WE STORE CUMULATIVE SUM AS IT HELPS US SELECT CONTIGUOUS SUBARRAYS
+     * 1 STORE SUM IN MAP ALONG WITH FREQ
+     * 2 NO NEED TO CHECK FOR INDIVIDUAL ELS
+     * 3 NO NEED TO KEEP TRACK OF 0, THE FREQ COUNT OF 0 WILL DO THE TRICK
+     * 4 MAKE AN ENTRY IF DOES NOT EXIST
+     * 
+     * [1,-1,2,1] ; k = 1
+     * put sum not sum-k
+     * el----sum----sum-k-------count---------map{0=1}
+     * 1 -----1-------0----------1(0)--------{0=1, 1=1}
+     * -1-----0------(-1)--------1+1(0)------{0=2, 1=1}
+     * 2 -----3-------2----------2-----------{0,2, 1=1, 3=1}
+     * 1 -----4-------3----------2+1(3)------{0,2, 1=2}
+     * 
+     * count = 3 [1],[-1,2],[1]
+     * 
+     * sum + x - k = sum => x=k
+     * Existence of (sum-k) means from a previos index till this index
+     * there is k sum subarray. 
+     * 
+     * STEPS :
+     * 1 map.put(0,1)
+     * 2 sum+=i;
+     * 3 count += map.getOrDefault(sum-target)
+     * 4 add current sum
+     */
+    // https://leetcode.com/problems/subarray-sum-equals-k
+    public int subarraySum(int[] nums, int k) {
+        int n = nums.length;
+        if(n==0) return 0;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0,1); // tricky, don't forget
 
-        // Initially difference is 0;
-        map.put(0, -1);
-        int res = 0;
-        int count_0 = 0, count_1 = 0;
-        for (int i = 0; i < str.length(); i++) {
-            // Keep track of count of 0s and 1s
-            if (str.charAt(i) == '0')
-                count_0++;
-            else
-                count_1++;
-
-            // If difference between current counts
-            // already exists, then substring between
-            // previous and current index has same
-            // no. of 0s and 1s. Update result if this
-            // substring is more than current result.
-
-            if (map.containsKey(count_1 - count_0))
-                res = Math.max(res, (i - map.get(count_1 - count_0)));
-
-            // If the current difference is seen first time.
-            else
-                map.put(count_1 - count_0, i);
-
+        int sum = 0; int count = 0;
+        
+        for(int i : nums){
+            sum+=i;
+            count+=map.getOrDefault(sum-k,0);
+            map.put(sum, map.getOrDefault(sum, 0)+1);
         }
+        return count;
+    }
 
-        System.out.println("Length of longest balanced sub string = " + res);
-        return res;
+    /**  
+     * LONGEST SUBARRAY OF 0S AND 1S
+     * 
+     * If difference between current counts already exists, 
+     * then substring between previous and current index has same
+     * no. of 0s and 1s. 
+     * Update result.
+     * 
+     * ELSE MAKE AN ENTRY
+    */ 
+    // https://leetcode.com/problems/contiguous-array
+     public int findMaxLength(int[] nums) {
+        int n = nums.length;
+        int countZeroes = 0; int countOnes = 0;
+        int maxLen = 0;
+        //store diff and index
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0,-1); // imp
+        
+        for(int i =0; i<n; i++){
+            if(nums[i] == 0) countZeroes++;
+            else countOnes++;
+            int diff = countOnes - countZeroes;
+            if(map.containsKey(diff)) {
+                maxLen = Math.max(maxLen, i - map.get(diff));
+            }   
+            else map.put(diff, i);
+        }
+        return maxLen;
     }
     
 
@@ -469,16 +541,20 @@ public class HashPractice{
      * THE SCORE CARD IS OF SIZE  = THE NO OF PLAYERS
      * 
      * IMP : 
-     * ABCD -> 4 PLAYERS, SO SCORECARD FOR EACH PLAYER WILL HAVE ONLY 4 PLACES
-     * AND WE WILL INCREMENT THE RANKS BY 1.
-     * AEBCD, ACBDE, 
-     * A [2,0,0,0,0]
-     * B [0,0,2,0,0]
-     * C [0,1,0,1,0]
-     * D [0,0,0,2,0]
-     * E [0,1,0,0,1]
+     * ABC -> 3 PLAYERS, SO SCORECARD FOR EACH PLAYER WILL HAVE 3 PLACES
+     * AND WE WILL INCREMENT THE RANKS BY 1, USING INDEX OF CHAR IN 
+     * CURRENT STRING.
      * 
-     * ACEBD
+     * A [ , , ]
+     * B []
+     * C []
+     * 
+     * ABC - > A[1,0,0]; B[0,1,0]; C[0,0,1]
+     * ACB - > A[2,0,0]; B[0,1,1]; C[0,1,1]
+     * ABC - > A[3,0,0]; B[0,2,1]; C[0,1,2]
+     * ACB - > A[4,0,0]; B[0,2,2]; C[0,2,2]
+     * BCA - > A[4,0,1]; B[1,2,2]; C[0,3,2]
+     * 
      * 
      * SORT BY RANKS, IF RANKS ARE SAME LEXICOGRAPHICALLY SMALLEST 
      * 
@@ -486,12 +562,15 @@ public class HashPractice{
      * EVEN IF E SCORES MORE THAN B WITH 2 3rd places, 
      * E IS PREFERRED BECAUSE OF BETTER RANK (2)
      * 
-     * RANK OFFSET WITH ARRAY INDEX
      * 
      * 1 CREATE AN ARRAY OF SIZE votes[0], THIS IS MAPPED TO CHAR
      * 2 INCREMENT RANK map.get(s.charAt(i))[i]++
      * 3 COMPARATOR IN Q IS IMP
      * 4 ADD TO Q AND REMOVE TO RESULT
+     * 
+     * the tricky thing is for each team we create a scoreboard of size
+     * n, (n = no of positions, not the length of array).
+     * 
     */
     // https://leetcode.com/problems/rank-teams-by-votes/
     public String rankTeams(String[] votes) {
@@ -501,19 +580,16 @@ public class HashPractice{
         
         for(String s : votes){
             for(int i =0; i<s.length(); i++){
-                if(map.containsKey(s.charAt(i))) map.get(s.charAt(i))[i]++;
-                else {
-                    int[] curr = new int[places];
-                    curr[i]++;
-                    map.put(s.charAt(i), curr);
-                }
+                int[] curr = map.getOrDefault(s.charAt(i), new int[places]);
+                curr[i]++; // 1
+                map.put(s.charAt(i), curr);
             }
         }
         
         PriorityQueue<Character> q = new PriorityQueue<>((x,y)->{
             int[] a = map.get(x); int[] b = map.get(y);
             for(int i =0; i<a.length; i++){
-                if(a[i]!=b[i]) return b[i]-a[i]; //max heap
+                if(a[i]!=b[i]) return b[i]-a[i]; // 2 max heap
             }
             return x-y;
         });
@@ -558,27 +634,35 @@ public class HashPractice{
      * 
      * 4 FLAG IS USED TO KEEP TRACK. 
      * 
+     * // [leetcode"]  ["lo","eo"] 
      * 
+     * IMP : 
+     * create an array for each word in both A and B
+     * for B, we keep max of each array in base
+     * and if max freq of any el is lesser than A's curr, don't add.
+     * 
+     * TRICK is to merge all separate arrays of B into one using max
+     * and then compare.
     */
     // https://leetcode.com/problems/word-subsets/
     public List<String> wordSubsets(String[] A, String[] B) {
-        int[] base = new int[26];
+        int[] base = new int[26]; // 1
 
         for (String s : B) {
-            int[] temp = getFreq(s);
+            int[] temp = getFreqArr(s);
             for (int i = 0; i < 26; i++) {
-                base[i] = Math.max(base[i], temp[i]);
+                base[i] = Math.max(base[i], temp[i]); // 2
             }
         }
 
         List<String> result = new ArrayList<>();
         for (String str : A) {
             boolean flag = true;
-            int[] curr = getFreq(str);
+            int[] curr = getFreqArr(str);
 
             for (int i = 0; i < 26; i++) {
-                if (base[i] > curr[i]) {
-                    flag = false;
+                if (base[i] > curr[i]) { // 3
+                    flag = false; 
                     break;
                 }
             }
@@ -587,7 +671,7 @@ public class HashPractice{
         return result;
     }
 
-    public int[] getFreq(String s) {
+    public int[] getFreqArr(String s) {
         int[] result = new int[26];
         for (char c : s.toCharArray()) {
             result[c - 'a']++;
@@ -597,59 +681,6 @@ public class HashPractice{
 
     // https://leetcode.com/problems/longest-consecutive-sequence/
     // discuss/41290/Simple-Java-Solution-Using-HashMap
-
-    /** 
-     * PREFIX-SUM
-     * 
-     * ALWAYS THINK CUMULATIVE SUM, IF THERE EXISTS SUM-K
-     * TARGET = 8, SUM = 18 AND 10 EXISTS, SO THERE IS A SUBARRAY WHOSE
-     * SUM IS 10 AND ANOTHER WHOSE SUM IS 18, 
-     * SO SELECT FROM AFTER 10 TILL 18 TO GET 8
-     * 
-     * POINTS : 
-     * MOST IMP WE STORE CUMULATIVE SUM AS IT HELPS US SELECT CONTIGUOUS SUBARRAYS
-     * 1 STORE SUM IN MAP ALONG WITH FREQ
-     * 2 NO NEED TO CHECK FOR INDIVIDUAL ELS
-     * 3 NO NEED TO KEEP TRACK OF 0, THE FREQ COUNT OF 0 WILL DO THE TRICK
-     * 4 MAKE AN ENTRY IF DOES NOT EXIST
-     * 
-     * [1,-1,2,1] ; k = 1
-     * put sum not sum-k
-     * el----sum----sum-k-------count---------map{0=1}
-     * 1 -----1-------0----------1(0)-------{0=1, 1=1}
-     * -1-----0------(-1)--------1+1(0)------{0=2, 1=1}
-     * 2 -----3-------2----------2-----------{0,2, 1=1, 3=1}
-     * 1 -----4-------3----------2+1(3)------{0,2, 1=2}
-     * 
-     * count = 3 [1],[-1,2],[1]
-     * 
-     * sum + x - k = sum => x=k
-     * Existence of (sum-k) means from a previos index till this index
-     * there is k sum subarray. 
-     * 
-     * STEPS :
-     * 1 map.put(0,1)
-     * 2 sum+=i;
-     * 3 count += map.getOrDefault(sum-target)
-     * 4 add current sum
-     */
-    // https://leetcode.com/problems/subarray-sum-equals-k
-    public int subarraySum(int[] nums, int k) {
-        int n = nums.length;
-        if(n==0) return 0;
-        
-        HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(0,1); // tricky, don't forget
-
-        int sum = 0; int count = 0;
-        
-        for(int i : nums){
-            sum+=i;
-            count+=map.getOrDefault(sum-k,0);
-            map.put(sum, map.getOrDefault(sum, 0)+1);
-        }
-        return count;
-    }
 
 
     // https://www.youtube.com/watch?v=ofMqFAFVcKY
@@ -685,6 +716,8 @@ public class HashPractice{
      * 2 NO NEED TO CHECK IF INDIVIDUAL EL IS DIV BY K
      * COUNT+=MAP.GET(REM) DOES THE TRICK
      * 3 IF REM<0 REM+=K TO MAKE IT GREATER THAN 0
+     * 
+     * imp : rem<0 rem+=k
      */
     // https://leetcode.com/problems/subarray-sums-divisible-by-k/
     public int subarraysDivByK(int[] nums, int k) {
@@ -697,8 +730,8 @@ public class HashPractice{
         map.put(rem,1);
         
         for(int i : nums){
-            sum+=i; rem = sum%k;
-            if(rem<0) rem+=k;
+            sum+=i; rem = sum%k; // 1
+            if(rem<0) rem+=k; // 2
             if(map.containsKey(rem)) count+=map.get(rem);
             // System.out.println("i "+i+" "+count);
             map.put(rem, map.getOrDefault(rem, 0)+1);

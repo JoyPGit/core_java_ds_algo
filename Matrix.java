@@ -6,14 +6,17 @@ class Matrix {
      * 
      * PACIFIC ATLANTIC, OBSTACLES, WALLS AND GATES, WORD SEARCH
      * SPIRAL PRINT
+     * PATH WITH OBSTACLES (USE DP, NO DFS)
      * 
      * TEMPLATES : 
      * 1 BACKTRACKING
      * 2 DP, VISITED
      * 3 AREA OF ISLAND
+     * 4 UNIQUE PATHS
+     * 
      * 
      * ONE MAJOR ISSUE IS INFINITE LOOP BY VISITING LEFT AND THEN RIGHT
-     * VISITED ARRAY
+     * VISITED ARRAY, OR PASS PREV, OR DP
      * 
      * 
      * BASIC COUNT TEMPLATE 
@@ -45,6 +48,54 @@ class Matrix {
      *      board[row][col] = temp; // 5
      *   }
      *  return false;
+     * }
+     * 
+     * DP TO AVOID LOOP W/O VISITED :
+     * DON'T ADD DP CONDN IN ISSAFE
+     * int dfsInc(int[][] matrix, int row, int col, int[][] dp, int prev){
+     *   if(isSafeInc(matrix, row, col, dp, prev)){
+     *      // System.out.println("row "+row+" col " +col);
+     *      // pass matrix[row][col]
+     *      // take max
+     *      if(dp[row][col]!=0) return dp[row][col];
+     * 
+     *      else{
+     *        dp[row][col] = 
+     *        Math.max(dfsInc(matrix, row+1, col, dp, matrix[row][col]),
+     *        Math.max(dfsInc(matrix, row-1, col, dp, matrix[row][col]),
+     *        Math.max(dfsInc(matrix, row, col+1, dp, matrix[row][col]),
+     *        + dfsInc(matrix, row, col-1, dp, matrix[row][col])))) +1; //imp
+     *       return dp[row][col];
+     *      }
+     *   }
+     *   return 0;
+     * }
+     * 
+     * boolean isSafeInc(int[][] matrix, int row, int col, int[][] dp, int prev){
+     *    if(row>=0 && row<matrix.length
+     *    && col>=0 && col<matrix[0].length
+     *    && matrix[row][col] > prev) return true;
+     *  
+     *  return false;
+     * }
+     * 
+     * 
+     * 
+     * AVOIDING INF LOOP USING VISITED ARR
+     * void dfs(int[][] matrix, int row, int col, int[][] arr, int prev){
+     *    if(row>=0 && row<matrix.length
+     *    && col>=0 && col<matrix[0].length
+     *    && matrix[row][col] >= prev){
+     *       // don't add in isSafe as in dp  
+     *       if(arr[row][col] == 1) return;
+     *      
+     *       arr[row][col] = 1;
+     *      
+     *       dfs(matrix, row+1, col, arr, matrix[row][col]);
+     *       dfs(matrix, row-1, col, arr, matrix[row][col]);
+     *       dfs(matrix, row, col+1, arr, matrix[row][col]);
+     *       dfs(matrix, row, col-1, arr, matrix[row][col]);
+     *    }
      * }
      * 
      * 
@@ -256,87 +307,7 @@ class Matrix {
         return arr[row2][col2];
     }
 
-    void maxPathSum(int[][] arr) {
-        int rowMax = arr.length;
-        int colMax = arr[0].length;
-
-        for (int i = 0; i < rowMax; i++) {
-            for (int j = 0; j < colMax; j++) {
-
-            }
-        }
-    }
-
-    int maximumPathSum(int i, int j, int[][] matrix) {
-        int down = 0;
-        int right = 0;
-        if (isSafe(i, j + 1, matrix)) {
-            right = maximumPathSum(i, j + 1, matrix);
-        }
-        if (isSafe(i + 1, j, matrix)) {
-            down = maximumPathSum(i + 1, j, matrix);
-        }
-        System.out.println(max(right, down) + matrix[i][j] + " i " + i + " j " + j);
-        return max(right, down) + matrix[i][j];
-    }
-
-    boolean isSafe(int i, int j, int[][] matrix) {
-        if (i <= matrix.length - 1 && j <= matrix[0].length - 1 && i >= 0 && j >= 0)
-            return true;
-        return false;
-    }
-
-    int max(int a, int b) {
-        return a > b ? a : b;
-    }
-
     ////////////////////////////// WITH DP
-
-    int[][] fill2DArray(int[][] arr, int numRows, int numCols) {
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                arr[i][j] = -1;
-            }
-        }
-        return arr;
-    }
-
-    int maxPathSumWithDP(int[][] arr, int i, int j, int[][] dp) {
-        if (dp[i][j] == -1) {
-            int right = 0;
-            int down = 0;
-            int ans = 0;
-            if (isSafe(i, j + 1, arr)) {
-                right = maxPathSumWithDP(arr, i, j + 1, dp);
-            }
-            if (isSafe(i + 1, j, arr)) {
-                down = maxPathSumWithDP(arr, i + 1, j, dp);
-            }
-            ans = max(right, down) + arr[i][j];
-            return dp[i][j] = ans;
-        } else
-            return dp[i][j];
-
-    }
-
-    int findMaxIn2DArray(int[][] arr) {
-        int max = 0;
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                System.out.println(arr[i][j]);
-                if (arr[i][j] > max)
-                    max = arr[i][j];
-            }
-        }
-        return max;
-    }
-
-    void lengthOfLongestConsecutiveFromGivenChar() {
-
-    }
-
-
     /** 
      * POINTS :
      * 1 DP IN MATRIX
@@ -598,11 +569,12 @@ class Matrix {
     }
 
     boolean isSafe29Apr(int[][] arr, int rowIndex, int colIndex) {
-        if (rowIndex >= 0 && rowIndex < arr.length && colIndex >= 0 && colIndex < arr[0].length
-                && arr[rowIndex][colIndex] == 0) {
-            return true;
-        } else
-            return false;
+        if (rowIndex >= 0 && rowIndex < arr.length 
+        && colIndex >= 0 && colIndex < arr[0].length
+        && arr[rowIndex][colIndex] == 0) 
+            return true; 
+
+        return false;
     }
    
 
@@ -818,8 +790,10 @@ class Matrix {
 
     int goldMineHelper(int[][] grid, int rowIndex, int colIndex, int[][] dp, int prev) {
 
-        if (rowIndex >= 0 && rowIndex < grid.length && colIndex >= 0 && colIndex < grid[0].length
-                && prev < grid[rowIndex][colIndex] && grid[rowIndex][colIndex] != 0) {
+        if (rowIndex >= 0 && rowIndex < grid.length 
+        && colIndex >= 0 && colIndex < grid[0].length
+        && prev < grid[rowIndex][colIndex] 
+        && grid[rowIndex][colIndex] != 0) {
             if (dp[rowIndex][colIndex] != 0)
                 return dp[rowIndex][colIndex];
 
@@ -986,6 +960,7 @@ class Matrix {
     }
     
 
+    ///////////////PATHS WITH OBSTACLES
     int countPath;
     // https://leetcode.com/problems/unique-paths-ii/
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
@@ -1027,59 +1002,7 @@ class Matrix {
     // https://leetcode.com/problems/unique-paths-iii/
 
 
-    /**
-     * POINTS : 
-     * 1 start a dfs whenever the ch[i][j] matches the starting char of string
-     * 2 USE THE WORD, DON'T USE CHAR ARRAY
-     * 3 NO NEED TO MAINTAIN VISITED ARRAY, USE BACKTRACKING
-     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE CHECKS
-     * FOR ALL POSSIBLE STARTS AND DOESN'T RETURN TRUE TILL ALL POSSIBILITIES
-     * ARE EXHAUSTED, WHICH RESULTS IN TLE
-     * 5 
-     * 
-     */
-    // backtracking
-    // mark as ' '
-    // pass the char, not word and index both
-    // return boolean not void 
-    // https://leetcode.com/problems/word-search/
-    public boolean exist(char[][] board, String word) {
-        int m = board.length;
-        int n = board[0].length;
-        
-        for(int i =0; i<m; i++){
-            for(int j =0; j<n; j++){
-                if(board[i][j] == word.charAt(0)) {
-                    if(dfs(board, i, j, word, 0)) return true;
-                }
-            }
-        }
-        return false;
-    }
     
-    boolean dfs(char[][] board, int row, int col, String word, int index){
-        // proceed till index == word.length() 
-        if(index == word.length()) return true;
-        
-        if(isSafeBoard(board, row, col, word.charAt(index))){
-            char temp = word.charAt(index);
-            board[row][col] = ' '; // 2
-            boolean found = dfs(board, row+1, col, word, index+1) // 3
-            ||dfs(board, row-1, col, word, index+1)
-            ||dfs(board, row, col+1, word, index+1)
-            ||dfs(board, row, col-1, word, index+1);
-            if(found) return true; // 4
-            board[row][col] = temp; // 5
-        }
-        return false;
-    }
-    
-    boolean isSafeBoard(char[][] board, int row, int col, char ch){
-        if(row>=0 && row<board.length
-          && col>=0 && col<board[0].length
-          && board[row][col] == ch) return true;
-        return false;
-    }
 
     /**
      * THE BASIC TEMPLATE IS CHANGED A BIT,
@@ -1102,6 +1025,7 @@ class Matrix {
      * ADDED TO RES.
      * 
      * */
+    // water flows from inside to boundaries, matrix[row][col] >= prev
     // https://leetcode.com/problems/pacific-atlantic-water-flow/
     public List<List<Integer>> pacificAtlantic(int[][] matrix) {
         List<List<Integer>> res= new ArrayList<>();
@@ -1140,22 +1064,20 @@ class Matrix {
         return res;
     }
     
-    void dfs(int[][] matrix, int row, int col, int[][] visited, int prev){
-        if(isSafe(matrix, row, col, visited, prev)){
-            visited[row][col] = 1;
-            dfs(matrix, row+1, col, visited, matrix[row][col]);
-            dfs(matrix, row-1, col, visited, matrix[row][col]);
-            dfs(matrix, row, col+1, visited, matrix[row][col]);
-            dfs(matrix, row, col-1, visited, matrix[row][col]);
+    void dfs(int[][] matrix, int row, int col, int[][] arr, int prev){
+        if(row>=0 && row<matrix.length
+          && col>=0 && col<matrix[0].length
+          && matrix[row][col] >= prev){
+            // don't add in isSafe as in dp  
+            if(arr[row][col] == 1) return;
+            
+            arr[row][col] = 1;
+            
+            dfs(matrix, row+1, col, arr, matrix[row][col]);
+            dfs(matrix, row-1, col, arr, matrix[row][col]);
+            dfs(matrix, row, col+1, arr, matrix[row][col]);
+            dfs(matrix, row, col-1, arr, matrix[row][col]);
         }
-    }
-    
-    boolean isSafe(int[][] matrix, int r, int c, int[][] visited, int prev){
-        if(r>=0 && r<matrix.length
-          && c>=0 && c<matrix[0].length
-          && matrix[r][c]>=prev 
-          && visited[r][c]!=1) return true;
-        return false;
     }
     
     //all paths from a to b 
@@ -1319,7 +1241,60 @@ class Matrix {
         return 0;
     }
 
+    /**
+     * POINTS : 
+     * 1 start a dfs whenever the ch[i][j] matches the starting char of string
+     * 2 USE THE WORD, DON'T USE CHAR ARRAY
+     * 3 NO NEED TO MAINTAIN VISITED ARRAY, USE BACKTRACKING
+     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE CHECKS
+     * FOR ALL POSSIBLE STARTS AND DOESN'T RETURN TRUE TILL ALL POSSIBILITIES
+     * ARE EXHAUSTED, WHICH RESULTS IN TLE
+     * 5 
+     * 
+     */
+    // backtracking
+    // mark as ' '
+    // pass the char, not word and index both
+    // return boolean not void 
+    // https://leetcode.com/problems/word-search/
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                if(board[i][j] == word.charAt(0)) {
+                    if(dfs(board, i, j, word, 0)) return true;
+                }
+            }
+        }
+        return false;
+    }
     
+    boolean dfs(char[][] board, int row, int col, String word, int index){
+        // proceed till index == word.length() 
+        if(index == word.length()) return true;
+        
+        if(isSafeBoard(board, row, col, word.charAt(index))){
+            char temp = word.charAt(index);
+            board[row][col] = ' '; // 2
+            boolean found = dfs(board, row+1, col, word, index+1) // 3
+            ||dfs(board, row-1, col, word, index+1)
+            ||dfs(board, row, col+1, word, index+1)
+            ||dfs(board, row, col-1, word, index+1);
+            if(found) return true; // 4
+            board[row][col] = temp; // 5
+        }
+        return false;
+    }
+    
+    boolean isSafeBoard(char[][] board, int row, int col, char ch){
+        if(row>=0 && row<board.length
+          && col>=0 && col<board[0].length
+          && board[row][col] == ch) return true;
+        return false;
+    }
+
     
     // https://leetcode.com/problems/check-if-there-is-a-valid-path-in-a-grid/
     // discuss/547633/Python-SUPER-EASY-Idea%3A-just-walk-the-maze-based-on-the-rule

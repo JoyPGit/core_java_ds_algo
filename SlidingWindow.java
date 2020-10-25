@@ -375,34 +375,28 @@ public class SlidingWindow {
     }
 
 
-    // "cdadabcc"
+    // "cdadabcc", "bbcaac"
     // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
     public String smallestSubsequence(String text) {
         HashMap<Character, Integer> map = new HashMap<>();
-        HashSet<Character> set = new HashSet<>();
-        int left = 0;
-        int len = text.length();
+        String res = "";
+        
+        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : text.toCharArray()){
+            map.put(c, map.get(c)-1);// 1
 
-        PriorityQueue<String> pq = new PriorityQueue<>();
-
-        for (int i = 0; i < text.length(); i++)
-            set.add(text.charAt(i));
-
-        for (int i = 0; i < text.length(); i++) {
-            map.put(text.charAt(i), map.getOrDefault(text.charAt(i), 0) + 1);
-            while (map.size() == set.size()) {
-                map.put(text.charAt(left), map.get(text.charAt(left)) - 1);
-                if (map.get(text.charAt(left)) == 0)
-                    map.remove(text.charAt(left));
-                if (i - left + 1 <= len) {
-                    len = i - left + 1;
-                    pq.add(text.substring(left, i + 1));
-                }
-                left++;
+            if(res.contains(""+c)) continue; 
+            while(res.length()>0 
+                  // last char must be graeter and has future occurences
+                  && res.charAt(res.length()-1) > c 
+                  // no need to keep an index as substrng removes the last char
+                  && map.get(res.charAt(res.length()-1)) > 0 ){
+                    res = res.substring(0, res.length()-1);
             }
+            res+=c;
         }
-        System.out.println(pq);
-        return "pq listed";
+        return res;
     }
 
     /** 

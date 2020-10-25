@@ -365,7 +365,18 @@ public class Recursion {
         allSubsetHelper(arr, subset, index + 1);
     }
 
-
+    //21 June
+    void allSubsets(int[] arr, int[] subset, int index){
+        if(index == arr.length) {
+            utilCustom.Utility.print1DMatrix(subset);
+            System.out.println();
+            return;
+        }
+        subset[index] = 0;
+        allSubsets(arr, subset, index+1);
+        subset[index] = arr[index];
+        allSubsets(arr, subset, index+1);
+    }
     
 
     // https://leetcode.com/problems/generate-parentheses/
@@ -737,7 +748,7 @@ public class Recursion {
         // System.out.println("max sum div by 3 "+recur.maxSumDivThree(nums));
 
         int[] subsets = { 1, 2 };
-        // recur.allSubsets(subsets);
+        recur.allSubsets(subsets);
 
         int[] uniqueComb = { 10, 1, 2, 7, 6, 1, 5 };
         // { 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5 };

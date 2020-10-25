@@ -4,9 +4,18 @@ import utilCustom.*;
 public class DP {
 
     /** 
+     * STAIRS - INCLUDE EXCLUDE
+     * DEL AND EARN, HOUSE ROOBER, 
      * PAINTER -> BOOK ALLOCATION -> DP INDEX -> BINARY SEARCH
      * PALINDROME -> USE l, i+l-1<n
      * ELSE FOR ALL OTHERS USE size [m+1][n+1]
+     * 
+     * MIN CUTS, PALINDROME, ROD CUT
+     * DFS MATRIX GOLDMINE
+     * RECURSION INCLUDE EXCLUDE MEMO
+     * TRAIN TICKET
+     * DEL AND EARN
+     * 
     */
 
     public int factorial(int n){
@@ -32,6 +41,26 @@ public class DP {
         }
         return dp[n];
     }
+
+    // INCLUDE EXCLUDE
+    // https://leetcode.com/problems/target-sum/
+    int sumCount = 0;
+    public int findTargetSumWays(int[] nums, int target) {
+        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
+        f(nums, 0, target);
+        return sumCount;
+    }
+    
+    void f(int[] nums, int index, int sum){
+        if(index==nums.length) {
+            if(sum ==0) sumCount++; 
+            return;
+        }
+        
+        f(nums, index+1, sum+nums[index]);
+        f(nums, index+1, sum-nums[index]);
+    }
+    // TRY TO ADD MEMOIZATION
 
     /**
      * points: only right and down movements, else visited matrix would have
@@ -93,263 +122,6 @@ public class DP {
         return 0;
     }
 
-    // https://leetcode.com/problems/unique-paths-ii/
-
-    /**
-     * the trick is to convert a recursive relation to a dp relation dfs(r,c) =
-     * dfs(r+1,c)+dfs(r,c+1);
-     * 
-     * but the relation here for dp is built in bottom up manner
-     */
-    void countPathsHelper(int[][] arr, int[][] dp) {
-        for (int i = 0; i < arr.length; i++) {
-            dp[i][0] = 1;
-        }
-        for (int i = 0; i < arr.length; i++) {
-            dp[0][i] = 1;
-        }
-
-        for (int i = 1; i < dp.length; i++) {
-            for (int j = 1; j < dp.length; j++) {
-                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
-            }
-        }
-    }
-
-    int LIShelper(int[] arr, int index, int prev) {
-        if (index == arr.length) {
-            return 0;
-        }
-
-        int inc = 0, exc = 0;
-        if (prev < arr[index]) inc = LIShelper(arr, index + 1, arr[index]) + 1;
-        // return LIShelper(arr, index-1);
-        exc = LIShelper(arr, index + 1, prev);
-        return Math.max(inc, exc);
-    }
-
-    int LIShelperReverse(int[] arr, int index) {
-        if (index == arr.length - 2) {
-            if (arr[index] < arr[index + 1])
-                return 2;
-            return 1;
-        }
-        if (arr[index] < arr[index + 1])
-            return LIShelperReverse(arr, index + 1) + 1;
-        return LIShelperReverse(arr, index + 1);
-    }
-
-    /**
-     * 1 dp[0]= 1 
-     * 2 i = 1 
-     * 3 j = 0, j<i 
-     * 4 dp[i] = dp[j] 5 dp[i]++ 6
-     * return max of dp
-     */
-    int longestIncreasingSubsequenceDP(int[] arr) {
-        int[] dp = new int[arr.length];
-        dp[0] = 1;
-        for (int i = 1; i < arr.length; i++) {
-            for (int j = 0; j < i; j++) {
-                if (arr[j] < arr[i] && dp[i] < dp[j]) {
-                    dp[i] = dp[j];
-                }
-            }
-            dp[i]++;
-        }
-
-        int max = -1;
-        for (int i = 0; i < dp.length; i++) {
-            max = Math.max(max, dp[i]);
-        }
-        return max;
-    }
-
-
-    int highwayBillBoard(int[] board, int[] revenue, int dist) {
-        int n = board.length;
-
-        if (n == 0) return 0;
-        if (n == 1) return revenue[0];
-
-        int[] dp = new int[n];
-        dp[0] = revenue[0];
-        for (int i = 1; i < revenue.length; i++) {
-            for (int j = 0; j < i; j++) {
-                if (dp[j] > dp[i] && board[i] - board[j] > dist) {
-                    dp[i] = dp[j];
-                }
-            }
-            dp[i] += revenue[i];
-        }
-
-        int max = -1;
-        for (int i = 0; i < dp.length; i++) {
-            max = Math.max(max, dp[i]);
-        }
-        System.out.println("max billboard revenue " + max);
-        return max;
-    }
-
-
-    int maxSumIncreasingSubsequence(int[] nums){
-        int n = nums.length;
-        int[] dp = new int[n];
-        
-        for(int i =0; i<n; i++){
-            dp[i] = nums[i];
-        }
-
-        /** the dp[i] is incremented by the addition of nums[j],
-         * and for the next iteration of j, we check if the nums[i] + nums[j]>dp[i];
-         * if yes, then nums[j] is greater than nums[j-1] and dp[i] is incremented
-         * 
-         * nums[i]+nums[j]>=dp[i] the equal to here is needed in case 3+100 = 1+2+100
-         */
-        for(int i =1 ; i<n; i++){
-            for(int j =0; j<i; j++){
-                if(nums[j]<nums[i] && nums[i]+nums[j]>=dp[i]){
-                    dp[i] += nums[j];
-                }
-            }
-        }
-
-        int max  = 0;
-        for(int i=0; i<n; i++){
-            max = Math.max(max, dp[i]);
-        }
-        utilCustom.Utility.print1DMatrix(dp);
-        return max;
-    }
-    
-    // https://leetcode.com/problems/maximum-length-of-pair-chain/submissions/
-    public int findLongestChain(int[][] pairs) {
-        int n = pairs.length;
-        int[] dp = new int[n];
-        
-        Arrays.sort(pairs,(x,y)->x[0]-y[0]);
-        dp[0] =1;
-        
-        for(int i =1; i<n; i++){
-            for(int j =0; j<i; j++){
-                if(pairs[i][0]>pairs[j][1] && dp[i]<dp[j]){
-                    dp[i] = dp[j];
-                }    
-            }
-            dp[i]++;
-        }
-        return dp[n-1];
-    }
-
-    int russianDoll(int[][] arr) {
-        int n = arr.length;
-        if (n == 0)
-            return 0;
-        if (n == 1)
-            return arr[0][0];
-        int[] dp = new int[arr.length];
-
-        russianDollhelper(arr, dp);
-        int max = -1;
-        for (int i = 0; i < dp.length; i++) {
-            max = Math.max(max, dp[i]);
-        }
-        return max;
-    }
-
-    class russianDoll {
-        int h;
-        int w;
-
-        russianDoll(int height, int width) {
-            this.h = height;
-            this.w = width;
-        }
-    }
-
-    void russianDollhelper(int[][] arr, int[] dp) {
-        russianDoll[] holder = new russianDoll[arr.length];
-        int i = 0, j = 0;
-        for (i = 0; i < holder.length; i++) {
-            holder[i] = new russianDoll(arr[i][0], arr[i][1]);
-        }
-        sortClass(holder);
-        for (i = 0; i < holder.length; i++) {
-            System.out.println(holder[i].h + ", " + holder[i].w);
-        }
-        dp[0] = 1;
-        for (i = 1; i < holder.length; i++) {
-            for (j = 0; j < i; j++) {
-                if ((holder[j]).h < holder[i].h && (holder[j]).w < holder[i].w && dp[i] < dp[j]) {
-                    dp[i] = dp[j];
-                }
-            }
-            dp[i]++;
-        }
-    }
-
-    void sortClass(russianDoll[] arr) {
-        for (int i = 1; i < arr.length; i++) {
-            for (int j = 0; j < i; j++) {
-                if (arr[i].h < arr[j].h && arr[i].w < arr[j].w) {
-                    russianDoll temp = arr[i];
-                    arr[i] = arr[j];
-                    arr[j] = temp;
-                }
-            }
-        }
-    }
-
-    /**
-     * Also the masseuse problem
-     * 
-     * WEIGHTED JOB SCHEDULING
-     * https://leetcode.com/problems/maximum-profit-in-job-scheduling/ 
-     * 1 SORT ON THE BASIS OF END TIMES
-     * 2 ASSIGN MAX OF (jobs[i].profit, dp[i-1]);
-     * 3 CHECK FOR j = i-1 till 0;
-     * 4 FINAL CONDN dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]);
-     * 
-    */
-    class Job {
-        int start, end, profit;
-        
-        public Job(int s, int e, int p) {
-            this.start = s;
-            this.end = e;
-            this.profit = p;
-        }
-    }
-
-    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
-        int n = profit.length;
-        Job[] jobs = new Job[n];
-        for (int i = 0; i < startTime.length; i++) {
-            jobs[i] = (new Job(startTime[i], endTime[i], profit[i]));
-        }
-        
-        int dp[] = new int[jobs.length];
-        Arrays.sort(jobs, (a,b)->(a.end - b.end));
-        
-        dp[0] = jobs[0].profit;
-
-        for (int i = 1; i < n; i++){
-            dp[i] = Math.max(jobs[i].profit, dp[i-1]);
-            for(int j = i-1; j >= 0; j--){
-                if(jobs[j].end <= jobs[i].start){ 
-                    // if no overlap
-                    dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]);
-                    break;
-                }
-            }
-        }
-
-        int max = Integer.MIN_VALUE;
-        for (int val : dp) max = Math.max(val, max);
-        return max;
-    }
-        
-
     // https://leetcode.com/explore/interview/card/
     // top-interview-questions-hard/121/dynamic-programming/860/
     /** 
@@ -380,29 +152,6 @@ public class DP {
         return ans;
     }
 
-    /**
-     * 1 add boundary condition check for n= 0and 1 2 also dp[1] = max pdf arr[0]
-     * and arr[1] 2 after that just dp[i] = max(arr[i]+ dp[i-2], dp[i-1])
-     */
-    int houseRobber(int[] arr) {
-        int n = arr.length;
-        if (n == 0)
-            return 0;
-        if (n == 1)
-            return arr[0];
-
-        if (n == 2)
-            return arr[0] > arr[1] ? arr[0] : arr[1];
-        int[] dp = new int[n];
-
-        dp[0] = arr[0];
-        dp[1] = arr[0] > arr[1] ? arr[0] : arr[1];
-
-        for (int i = 2; i < arr.length; i++) {
-            dp[i] = (arr[i] + dp[i - 2] > dp[i - 1]) ? (arr[i] + dp[i - 2]) : dp[i - 1];
-        }
-        return dp[dp.length - 1];
-    }
 
     // https://leetcode.com/explore/featured/card/
     // october-leetcoding-challenge/560/week-2-october-8th-october-14th/3494/
@@ -671,6 +420,293 @@ public class DP {
      * }
     */
 
+    // https://leetcode.com/problems/unique-paths-ii/
+
+    /**
+     * the trick is to convert a recursive relation to a dp relation dfs(r,c) =
+     * dfs(r+1,c)+dfs(r,c+1);
+     * 
+     * but the relation here for dp is built in bottom up manner
+     */
+    void countPathsHelper(int[][] arr, int[][] dp) {
+        for (int i = 0; i < arr.length; i++) {
+            dp[i][0] = 1;
+        }
+        for (int i = 0; i < arr.length; i++) {
+            dp[0][i] = 1;
+        }
+
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp.length; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+    }
+
+    ////////////////////////////LIS
+    int LIShelper(int[] arr, int index, int prev) {
+        if (index == arr.length) {
+            return 0;
+        }
+
+        int inc = 0, exc = 0;
+        if (prev < arr[index]) inc = LIShelper(arr, index + 1, arr[index]) + 1;
+        // return LIShelper(arr, index-1);
+        exc = LIShelper(arr, index + 1, prev);
+        return Math.max(inc, exc);
+    }
+
+    int LIShelperReverse(int[] arr, int index) {
+        if (index == arr.length - 2) {
+            if (arr[index] < arr[index + 1])
+                return 2;
+            return 1;
+        }
+        if (arr[index] < arr[index + 1])
+            return LIShelperReverse(arr, index + 1) + 1;
+        return LIShelperReverse(arr, index + 1);
+    }
+
+    /**
+     * 1 dp[0]= 1 
+     * 2 i = 1 
+     * 3 j = 0, j<i 
+     * 4 dp[i] = dp[j] 5 dp[i]++ 6
+     * return max of dp
+     */
+    int longestIncreasingSubsequenceDP(int[] arr) {
+        int[] dp = new int[arr.length];
+        dp[0] = 1;
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (arr[j] < arr[i] && dp[i] < dp[j]) {
+                    dp[i] = dp[j];
+                }
+            }
+            dp[i]++;
+        }
+
+        int max = -1;
+        for (int i = 0; i < dp.length; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+
+    int highwayBillBoard(int[] board, int[] revenue, int dist) {
+        int n = board.length;
+
+        if (n == 0) return 0;
+        if (n == 1) return revenue[0];
+
+        int[] dp = new int[n];
+        dp[0] = revenue[0];
+        for (int i = 1; i < revenue.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] > dp[i] && board[i] - board[j] > dist) {
+                    dp[i] = dp[j];
+                }
+            }
+            dp[i] += revenue[i];
+        }
+
+        int max = -1;
+        for (int i = 0; i < dp.length; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        System.out.println("max billboard revenue " + max);
+        return max;
+    }
+
+
+    int maxSumIncreasingSubsequence(int[] nums){
+        int n = nums.length;
+        int[] dp = new int[n];
+        
+        for(int i =0; i<n; i++){
+            dp[i] = nums[i];
+        }
+
+        /** the dp[i] is incremented by the addition of nums[j],
+         * and for the next iteration of j, we check if the nums[i] + nums[j]>dp[i];
+         * if yes, then nums[j] is greater than nums[j-1] and dp[i] is incremented
+         * 
+         * nums[i]+nums[j]>=dp[i] the equal to here is needed in case 3+100 = 1+2+100
+         */
+        for(int i =1 ; i<n; i++){
+            for(int j =0; j<i; j++){
+                if(nums[j]<nums[i] && nums[i]+nums[j]>=dp[i]){
+                    dp[i] += nums[j];
+                }
+            }
+        }
+
+        int max  = 0;
+        for(int i=0; i<n; i++){
+            max = Math.max(max, dp[i]);
+        }
+        utilCustom.Utility.print1DMatrix(dp);
+        return max;
+    }
+    
+    // https://leetcode.com/problems/maximum-length-of-pair-chain/submissions/
+    public int findLongestChain(int[][] pairs) {
+        int n = pairs.length;
+        int[] dp = new int[n];
+        
+        Arrays.sort(pairs,(x,y)->x[0]-y[0]);
+        dp[0] =1;
+        
+        for(int i =1; i<n; i++){
+            for(int j =0; j<i; j++){
+                if(pairs[i][0]>pairs[j][1] && dp[i]<dp[j]){
+                    dp[i] = dp[j];
+                }    
+            }
+            dp[i]++;
+        }
+        return dp[n-1];
+    }
+
+    int russianDoll(int[][] arr) {
+        int n = arr.length;
+        if (n == 0)
+            return 0;
+        if (n == 1)
+            return arr[0][0];
+        int[] dp = new int[arr.length];
+
+        russianDollhelper(arr, dp);
+        int max = -1;
+        for (int i = 0; i < dp.length; i++) {
+            max = Math.max(max, dp[i]);
+        }
+        return max;
+    }
+
+    class russianDoll {
+        int h;
+        int w;
+
+        russianDoll(int height, int width) {
+            this.h = height;
+            this.w = width;
+        }
+    }
+
+    void russianDollhelper(int[][] arr, int[] dp) {
+        russianDoll[] holder = new russianDoll[arr.length];
+        int i = 0, j = 0;
+        for (i = 0; i < holder.length; i++) {
+            holder[i] = new russianDoll(arr[i][0], arr[i][1]);
+        }
+        sortClass(holder);
+        for (i = 0; i < holder.length; i++) {
+            System.out.println(holder[i].h + ", " + holder[i].w);
+        }
+        dp[0] = 1;
+        for (i = 1; i < holder.length; i++) {
+            for (j = 0; j < i; j++) {
+                if ((holder[j]).h < holder[i].h && (holder[j]).w < holder[i].w && dp[i] < dp[j]) {
+                    dp[i] = dp[j];
+                }
+            }
+            dp[i]++;
+        }
+    }
+
+    void sortClass(russianDoll[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (arr[i].h < arr[j].h && arr[i].w < arr[j].w) {
+                    russianDoll temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+    }
+
+    // HOUSE ROBBER
+    /**
+     * 1 add boundary condition check for n= 0and 1 2 also dp[1] = max pdf arr[0]
+     * and arr[1] 2 after that just dp[i] = max(arr[i]+ dp[i-2], dp[i-1])
+     */
+    int houseRobber(int[] arr) {
+        int n = arr.length;
+        if (n == 0)
+            return 0;
+        if (n == 1)
+            return arr[0];
+
+        if (n == 2)
+            return arr[0] > arr[1] ? arr[0] : arr[1];
+        int[] dp = new int[n];
+
+        dp[0] = arr[0];
+        dp[1] = arr[0] > arr[1] ? arr[0] : arr[1];
+
+        for (int i = 2; i < arr.length; i++) {
+            dp[i] = (arr[i] + dp[i - 2] > dp[i - 1]) ? (arr[i] + dp[i - 2]) : dp[i - 1];
+        }
+        return dp[dp.length - 1];
+    }
+
+
+    /**
+     * Also the masseuse problem, NOT GREEDY BUT DP
+     * 
+     * WEIGHTED JOB SCHEDULING
+     * https://leetcode.com/problems/maximum-profit-in-job-scheduling/ 
+     * 1 SORT ON THE BASIS OF END TIMES
+     * 2 ASSIGN MAX OF (jobs[i].profit, dp[i-1]);
+     * 3 CHECK FOR j = i-1 till 0;
+     * 4 FINAL CONDN dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]);
+     * 
+    */
+    class Job {
+        int start, end, profit;
+        
+        public Job(int s, int e, int p) {
+            this.start = s;
+            this.end = e;
+            this.profit = p;
+        }
+    }
+
+    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = profit.length;
+        Job[] jobs = new Job[n];
+        for (int i = 0; i < startTime.length; i++) {
+            jobs[i] = (new Job(startTime[i], endTime[i], profit[i]));
+        }
+        
+        int dp[] = new int[jobs.length];
+        Arrays.sort(jobs, (a,b)->(a.end - b.end));
+        
+        dp[0] = jobs[0].profit;
+
+        for (int i = 1; i < n; i++){
+            dp[i] = Math.max(jobs[i].profit, dp[i-1]);
+            for(int j = i-1; j >= 0; j--){
+                if(jobs[j].end <= jobs[i].start){ 
+                    // if no overlap
+                    dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]);
+                    break;
+                }
+            }
+        }
+
+        int max = Integer.MIN_VALUE;
+        for (int val : dp) max = Math.max(val, max);
+        return max;
+    }
+        
+
+    
+
+    ////////////////////////KNAPSACK TYPE
     int rodCutting(int[] price, int size){ //size is for fixing the for loop iteration number
         if(size <=0) return 0;
 
@@ -889,13 +925,13 @@ public class DP {
         
         // if(dp[index][remainingWeight]!=0) return dp[index][remainingWeight];
         utilCustom.Utility.printMatrix(dp);
-        return 
+
         dp[index][remainingWeight] = 
         Math.max(
         knapsackMemo(val, wt, remainingWeight - wt[index], currVal + val[index], index, dp),
         knapsackMemo(val, wt, remainingWeight, currVal, index+1, dp));
         // boundary conditions are remainingWeight - wt[index] and index+1
-
+        return dp[index][remainingWeight];
     }
 
     // USE MAX OF (T[i-1][j], T[i][j-w[i-1]] + v[i-1])
@@ -966,6 +1002,7 @@ public class DP {
     }
 
 
+    // IMP
     //https://leetcode.com/problems/minimum-cost-for-tickets/
     public int mincostTickets(int[] days, int[] costs) {
         Set<Integer> set = new HashSet<>();
@@ -988,20 +1025,6 @@ public class DP {
         }
 
     return dp[lastDay];
-    }
-    
-
-    //21 June
-    void allSubsets(int[] arr, int[] subset, int index){
-        if(index == arr.length) {
-            utilCustom.Utility.print1DMatrix(subset);
-            System.out.println();
-            return;
-        }
-        subset[index] = 0;
-        allSubsets(arr, subset, index+1);
-        subset[index] = arr[index];
-        allSubsets(arr, subset, index+1);
     }
 
 
@@ -1036,24 +1059,7 @@ public class DP {
         dp[row][col] = sum;
     }
 
-    // INCLUDE EXCLUDE
-    // https://leetcode.com/problems/target-sum/
-    int sumCount = 0;
-    public int findTargetSumWays(int[] nums, int target) {
-        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
-        f(nums, 0, target);
-        return sumCount;
-    }
     
-    void f(int[] nums, int index, int sum){
-        if(index==nums.length) {
-            if(sum ==0) sumCount++; 
-            return;
-        }
-        
-        f(nums, index+1, sum+nums[index]);
-        f(nums, index+1, sum-nums[index]);
-    }
 
     /**this problem and the one below it are complementary
      * one is to find if a subset exists with given sum
@@ -1264,6 +1270,7 @@ public class DP {
     } 
         
 
+    ////////////////////////////// MINI-MAX
     /** how to think about this?
      * first use recursion. if i select start, then player 2 has to select either
      * start+1 or end. 
@@ -1329,6 +1336,7 @@ public class DP {
         return false;
     }
 
+    //////////////////////////MATRIX DP
     /** IMPORTANT here the difference between the element shuld be 1,
      * so pass arr[i][j] - 1 as prev, not infinity
     */
@@ -1876,7 +1884,7 @@ public class DP {
 
     /** 
      * POINTS :
-     * 1 USE A D P OF SIZE m+1, n+1
+     * 1 USE A DP OF SIZE m+1, n+1
      * IT'S DIFFICULT TO HANDLE CASES OF INSGKLE ROW CONTAINING 1
      * 2 if(matrix[i-1][j-1] == '1')
      * 3 RESULT IS MAX OF ALL VALUES
@@ -1904,6 +1912,12 @@ public class DP {
         System.out.println(result);
         return result*result;
     }
+
+    // MIN CUTS, PALINDROME, ROD CUT
+    // DFS MATRIX GOLDMINE
+    // RECURSION INCLUDE EXCLUDE MEMO
+    // TRAIN TICKET
+    // DEL AND EARN
         
     // SIMILAR MCM
     // https://leetcode.com/problems/burst-balloons/
