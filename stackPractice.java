@@ -3,6 +3,11 @@ import java.util.*;
 public class StackPractice {
     
     /** 
+     * 
+     * LARGEST RECT, VALID PARENTHESIS
+     * REVERSE USING RECURSION, STOCK SPAN
+     * DECODE STRING, SUM OF SUBARRAY MINS
+     * 
      * TEMPLATES :
      * 1 ALWAYS STORE INDEX
      * BASIC TEMPLATE

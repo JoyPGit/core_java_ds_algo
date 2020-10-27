@@ -720,6 +720,12 @@ public class Tree {
         });
      * 
      * 4    
+     * 
+     * sort by x, if x matches sort by y
+     * for sorting by x use pq, as map doesn't store in a sorted fashion
+     * for sorting by y, use comparator.
+     * TRICKY IF MAP DOESN'T CONTAIN X, ADD TO Q,
+     * so no need to add all values of map to q after dfs
      */
     // https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/
     class Order{
@@ -735,6 +741,10 @@ public class Tree {
         List<List<Integer>> res = new ArrayList<>();
         
         dfs(map, q, root, 0, 0);
+
+        // for(Map.Entry<Integer, List<Dist>> entry : map.entrySet()){
+        //     pq.add(entry.getKey()); 
+        // }
         while(q.size()!=0){
             List<Order> curr = map.get(q.remove());
             Collections.sort(curr,(a, b)->{
@@ -754,6 +764,7 @@ public class Tree {
         if(root == null) return;
         List<Order> curr = new ArrayList<>();
         
+        // add to map
         if(map.containsKey(x)){
             curr = map.get(x);
             curr.add(new Order(x, y, root.val));
@@ -768,7 +779,123 @@ public class Tree {
     }
 
 
-    ///////////////////////HEIGHT AND RECURSION LEFT, RIGHT
+    /** 
+     * BFS -> CUSTOM CLASS
+     * POINTS :
+     * 1 USE BFS
+     * 2 STORE PARENTS IN MAP
+     * 3 BFS : 
+     * ADD TO Q, WHILE REMOVING ADD TO VISITED
+     * DISTANCE WILL ST0RE DISTANCE, BUT IN MODIFIED BFS
+     * AND VISITED SET WON'T BE USED, REFER GRAPHS
+     */
+    class DistK{
+        TreeNode node; int dist;
+        DistK(TreeNode n, int d){
+            this.node = n; 
+            this.dist = d;
+        }
+    }
+    public List<Integer> distanceKBFS(TreeNode root, TreeNode target, int K) {
+        // build hashmap
+        // start bfs from target using q
+        HashMap<TreeNode, TreeNode> map = new HashMap<>();
+        Deque<DistK> q = new LinkedList<>();
+        HashSet<TreeNode> visited = new HashSet<>();
+        
+        List<Integer> res = new ArrayList<>(); 
+        if(root == null) return res;
+        
+        dfs(root, root.left, map);
+        dfs(root, root.right, map);
+        
+        q.addLast(new DistK(target, 0));
+        // visited.add(target);
+        // BFS
+        while(q.size()!=0){
+            DistK curr = q.removeFirst();
+            // System.out.println(curr.node.val);
+            if(visited.contains(curr.node)) continue;
+            visited.add(curr.node);
+            if(curr.dist == K) {
+                res.add(curr.node.val);
+                continue;
+            }
+            
+            TreeNode parent = map.getOrDefault(curr.node, null);
+            if(parent != null) q.addLast(new DistK(parent, curr.dist+1)); 
+            if(curr.node.left != null) 
+                q.addLast(new DistK(curr.node.left, curr.dist+1)); 
+            if(curr.node.right != null) 
+                q.addLast(new DistK(curr.node.right, curr.dist+1));
+        }
+        return res;
+    }
+    
+    void dfs(TreeNode parent, TreeNode child, HashMap<TreeNode, TreeNode> map){
+        if(parent == null || child == null) return;
+        map.put(child, parent);
+        dfs(child, child.left, map);
+        dfs(child, child.right, map);
+    }
+
+    // FOREST FIRE 
+    // MICROSOFT
+    /**
+     * POINTS:
+     * 1 SIMILAR TO NODES AT DISTANCE K
+     * 2 MAINTAIN A AMAP TO STORE PARENTS
+     * 3 USE BFS
+     * 
+    */
+    void forestFire(TreeNode node) {
+        int arr[] = new int[12];
+        TreeNode parent = null;
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.add(node);
+        while (!q.isEmpty()) {
+            TreeNode removed = q.remove();
+            System.out.print(removed.key + ", ");
+            arr[removed.key] = -1;
+            parent = findParent(root, removed);
+            if (parent != null && arr[parent.key] != -1) {
+                q.add(parent);
+                arr[parent.key] = -1;
+                // parent.key = -1;
+            }
+            if (removed.left != null && arr[removed.left.key] != -1) {
+                q.add(removed.left);
+                arr[removed.left.key] = -1;
+                // removed.left.key = -1;
+            }
+            if (removed.right != null && arr[removed.right.key] != -1) {
+                q.add(removed.right);
+                arr[removed.right.key] = -1;
+                // removed.right.key = -1;
+            }
+        }
+    }
+    
+    // can be replaced by hashmap, see above
+    TreeNode findParent(TreeNode root, TreeNode node) {
+        TreeNode left = null;
+        TreeNode right = null;
+        if (root == node)
+            return null;
+        if (root.left == node || root.right == node) {
+            // this.parent = root;
+            // System.out.println("parent "+root.key);
+            return root;
+        } else {
+            if (node.left != null)
+                left = findParent(root, node.left);
+            if (node.right != null)
+                right = findParent(root, node.right);
+            return (left != null) ? left : right;
+        }
+    }
+
+    /////////////////////// HEIGHT AND RECURSION LEFT, RIGHT
     // find height of tree
     int height(TreeNode root) {
         if (root == null) return 0;
@@ -1684,55 +1811,6 @@ public class Tree {
         }
         return true;
     }
-
-    // FOREST FIRE 
-    // MICROSOFT
-    void forestFire(TreeNode node) {
-        int arr[] = new int[12];
-        TreeNode parent = null;
-        Queue<TreeNode> q = new LinkedList<TreeNode>();
-        q.add(node);
-        while (!q.isEmpty()) {
-            TreeNode removed = q.remove();
-            System.out.print(removed.key + ", ");
-            arr[removed.key] = -1;
-            parent = findParent(root, removed);
-            if (parent != null && arr[parent.key] != -1) {
-                q.add(parent);
-                arr[parent.key] = -1;
-                // parent.key = -1;
-            }
-            if (removed.left != null && arr[removed.left.key] != -1) {
-                q.add(removed.left);
-                arr[removed.left.key] = -1;
-                // removed.left.key = -1;
-            }
-            if (removed.right != null && arr[removed.right.key] != -1) {
-                q.add(removed.right);
-                arr[removed.right.key] = -1;
-                // removed.right.key = -1;
-            }
-        }
-    }
-
-    TreeNode findParent(TreeNode root, TreeNode node) {
-        TreeNode left = null;
-        TreeNode right = null;
-        if (root == node)
-            return null;
-        if (root.left == node || root.right == node) {
-            // this.parent = root;
-            // System.out.println("parent "+root.key);
-            return root;
-        } else {
-            if (node.left != null)
-                left = findParent(root, node.left);
-            if (node.right != null)
-                right = findParent(root, node.right);
-            return (left != null) ? left : right;
-        }
-    }
-
     
 
     // IMP

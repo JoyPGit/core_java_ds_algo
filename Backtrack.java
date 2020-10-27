@@ -77,7 +77,6 @@ public class Backtrack {
      *  btk(res, list, nums, 0);
      *  return res;
      * 
-     
      * 
      * 2 ALWAYS PASS A NEW ARRAYLIST AS AN ARG AFTER INITIALIZATION 
      * 

@@ -19,11 +19,13 @@ import java.util.*;
  * SMALLEST
 */
 
-/** hash stores key value pairs by adding an extra hash value for the key which is used to compute the index
+/** hash stores key value pairs by adding an extra hash value for 
+ * the key which is used to compute the index
  * key->hash->value
  * the value returned with get is the value of the key
  * 
- * HASHSET FOR SINGLE VALUE., add method , HASMAP FOR KEY VALUE PAIR put method
+ * HASHSET FOR SINGLE VALUE., add method , HASMAP FOR KEY VALUE PAIR 
+ * put method
  * */
 
 
@@ -571,16 +573,17 @@ public class HashPractice{
      * the tricky thing is for each team we create a scoreboard of size
      * n, (n = no of positions, not the length of array).
      * 
+     * MAP IS UED TO CREATE THE SCOREBOARD OF SIZE N (WORD SIZE)
     */
     // https://leetcode.com/problems/rank-teams-by-votes/
     public String rankTeams(String[] votes) {
         HashMap<Character, int[]> map = new HashMap<>();
         
-        int places = votes[0].length();
+        int n = votes[0].length();
         
         for(String s : votes){
             for(int i =0; i<s.length(); i++){
-                int[] curr = map.getOrDefault(s.charAt(i), new int[places]);
+                int[] curr = map.getOrDefault(s.charAt(i), new int[n]);
                 curr[i]++; // 1
                 map.put(s.charAt(i), curr);
             }

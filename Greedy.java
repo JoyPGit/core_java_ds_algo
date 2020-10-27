@@ -14,6 +14,8 @@ class Greedy{
      * 2 ORGANIZE STRING
      * 3 TASK SCHEDULER
      * 4 MAX PERF OF TEAM
+     * 
+     * RECONSTRUCT QUEUE
      */
 
      /**

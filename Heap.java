@@ -2,9 +2,24 @@ import java.util.*;
 
 public class Heap {
     /** 
-     * IMP POINT :
-     * ONCE A NODE HAS BEEN ADDED TO PQ, EVEN IF ITS VALUE IS CHANGED IN THE CORREPONDING,
-     * IT WON'T AFFECT THE POSITION IN THE PQ
+     * HEAPSORT, SMALLEST RANGE, MEDIAN
+     * 
+     * IMP POINTS :
+     * 1 WHILE COMPARING VALUES, IF A HASHMAP IS USED, DON'T
+     * STORE THE WHOLE OBJECT, STORE ONLY CHARS OR INTEGERS
+     * AND USE MAP TO SORT, BUT BE VERY CAREFUL IN SOME CASES
+     * IT IT REQD TO SOTRE THE WHOLE CLASS
+     * 
+     * PriorityQueue<Character> q = new PriorityQueue<>((x,y)->{
+     *     int[] a = map.get(x); int[] b = map.get(y);
+     *      for(int i =0; i<a.length; i++){
+     *          if(a[i]!=b[i]) return b[i]-a[i]; // 2 max heap
+     *     }
+     *     return x-y;
+     * });
+     * 
+     * 2 ONCE A NODE HAS BEEN ADDED TO PQ, EVEN IF ITS VALUE IS CHANGED 
+     * IN THE CORREPONDING MAP, IT WON'T AFFECT THE POSITION IN THE PQ
      * THAT'S WHY NETWORK DELAY QUES WAS FAILING
      * 
      * */
