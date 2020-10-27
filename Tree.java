@@ -788,6 +788,8 @@ public class Tree {
      * ADD TO Q, WHILE REMOVING ADD TO VISITED
      * DISTANCE WILL ST0RE DISTANCE, BUT IN MODIFIED BFS
      * AND VISITED SET WON'T BE USED, REFER GRAPHS
+     * 
+     * * TIME CAN BE STORED IN VISITED OR CUSTOM CLASS
      */
     class DistK{
         TreeNode node; int dist;

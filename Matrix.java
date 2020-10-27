@@ -15,8 +15,49 @@ class Matrix {
      * 4 UNIQUE PATHS
      * 
      * 
+     * // TO ITERATE IN 4 DIRECTIONS
+     * 1 CHECK ONLY IN ISSAFE
+     * 2 MARK VISITED AFTER IS SAFE IN HELPER
+     * 
+     * int[] rows = new int[]{-1,0,0,1};
+     * int[] cols = new int[]{0,-1,1,0};
+     * 
+     * void dfs(int[][] graph){
+     *  int m = graph.length; int n = graph[0].length;
+     *  int[][] visited = new int[m][n];
+     * 
+     *  for(int i =0; i<n; i++){
+     *      for(int j = 0; j<m; j++){
+     *          if(visited[i][j] == 1) continue;
+     *          dfsUtil(graph, i, j, visited);
+     *      }
+     *  }
+     * }
+     *    
+     * void dfsUtil(int[][] arr, int row, int col, int[][] visited){
+     *  if(isSafedfs(arr, row, col, visited)) {
+     *      visited[row][col] = 1;
+     *  
+     *      System.out.println(arr[row][col]);
+     *      for(int k =0; k<rows.length; k++){
+     *          int newX = row + rows[k];
+     *          int newY = col + cols[k];
+     *          // if(visited[newX][newY] == 1) continue; // dont check here; out of bounds
+     *          dfsUtil(arr, newX, newY, visited);
+     *      }
+     *  }
+     * } 
+     * 
+     * boolean isSafedfs(int[][] arr,int row, int col, int[][] visited){
+     *    if(row>=0 && row<arr.length
+     *    && col>=0 && col<arr[0].length
+     *    && visited[row][col] == 0) return true;
+     *    return false;
+     * }
+     * 
+     * ///////
      * ONE MAJOR ISSUE IS INFINITE LOOP BY VISITING LEFT AND THEN RIGHT
-     * VISITED ARRAY, OR PASS PREV, OR DP
+     * USE -> VISITED ARRAY, OR PASS PREV, OR DP
      * 
      * FRIEND CIRCLE, NO OF ISLANDS
      * BASIC COUNT TEMPLATE 
@@ -29,7 +70,6 @@ class Matrix {
      *    }
      * }
      * return count;
-     * 
      * 
      * DFS WITH RETURN TEMPLATE
      * 
@@ -81,7 +121,7 @@ class Matrix {
      * 
      * 
      * 
-     * AVOIDING INF LOOP USING VISITED ARR
+     * AVOIDING INF LOOP USING VISITED ARR PACIFIC ATLANTIC
      * void dfs(int[][] matrix, int row, int col, int[][] arr, int prev){
      *    if(row>=0 && row<matrix.length
      *    && col>=0 && col<matrix[0].length
@@ -98,159 +138,105 @@ class Matrix {
      *    }
      * }
      * 
-     * 
-     * 
     */
+
     // DFS TEMPLATE
-    void dfs(int[][] arr){
-        int n = arr.length; int m = arr[0].length;
-        int[][] visited = new int[n][m];
+    /**  
+     * POINTS :
+     * 1 VISITED CHECK IN FOR LOOP BEFORE DFS START
+     * 2 VISITED CHECK IN ISSAFE
+     * 3 MARK VISITED IN HELPER
+    */
+    // TO ITERATE IN 4 DIRECTIONS
+    int[] rows = new int[]{-1,0,0,1};
+    int[] cols = new int[]{0,-1,1,0};
+
+    void dfs(int[][] graph){
+        int m = graph.length; int n = graph[0].length;
+        int[][] visited = new int[m][n];
 
         for(int i =0; i<n; i++){
             for(int j = 0; j<m; j++){
-                dfsUtil(arr, i, j, visited);
+                if(visited[i][j] == 1) continue; // visited check
+                dfsUtil(graph, i, j, visited);
             }
         }
     }
-
+   
     void dfsUtil(int[][] arr, int row, int col, int[][] visited){
-        if(isSafedfs(arr, row, col)) {
-            if(visited[row][col]==0){
-                visited[row][col] = 1;
-                System.out.println(arr[row][col]);
-                dfsUtil(arr, row+1, col, visited);
-                dfsUtil(arr, row, col+1, visited);
-                dfsUtil(arr, row-1, col, visited);
-                dfsUtil(arr, row, col-1, visited);
+        if(isSafeDFS(arr, row, col, visited)) {
+            visited[row][col] = 1; // 2 mark visited
+
+            System.out.println(arr[row][col]);
+            for(int k =0; k<rows.length; k++){
+                int newX = row + rows[k];
+                int newY = col + cols[k];
+                // if(visited[newX][newY] == 1) continue; // dont check here; out of bounds
+                dfsUtil(arr, newX, newY, visited);
             }
         }
     }
 
-    boolean isSafedfs(int[][] arr,int row, int col){
+    boolean isSafeDFS(int[][] arr,int row, int col, int[][] visited){
         if(row>=0 && row<arr.length
-        && col>=0 && col<arr[0].length) return true;
+        && col>=0 && col<arr[0].length
+        && visited[row][col] == 0) return true; // visited check
         return false;
     }
 
-    /** all 0s surrounded by 1s will be marked 1 */
-    void floodFill(int[][] arr) {
-        int m = arr.length; int n = arr[0].length;
-        int[][] visited = new int[m][n];
+    ///////////////////// FLOOD FILL, MARKING AS VISITED IN THE SAME GRAPH
 
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < (arr[0].length); j++) {
-                visited[i][j] = 0;
-            }
-        }
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                floodFillUtil(arr, visited, i, j);
-            }
-        }
-    }
-
-    void floodFillUtil(int[][] arr, int[][] visited, int rowIndex, int colIndex) {
-        if (isSafe29Apr(arr, rowIndex, colIndex)) {
-            if (visited[rowIndex][colIndex] != 1) {
-                arr[rowIndex][colIndex] = 1;
-                visited[rowIndex][colIndex] = 1;
-                floodFillUtil(arr, visited, rowIndex + 1, colIndex);
-                floodFillUtil(arr, visited, rowIndex + 1, colIndex);
-                floodFillUtil(arr, visited, rowIndex, colIndex + 1);
-                floodFillUtil(arr, visited, rowIndex, colIndex - 1);
-            }
-        }
-    }
-
-    boolean isSafe29Apr(int[][] arr, int rowIndex, int colIndex) {
-        if (rowIndex >= 0 && rowIndex < arr.length 
-        && colIndex >= 0 && colIndex < arr[0].length
-        && arr[rowIndex][colIndex] == 0) 
-            return true; 
-
-        return false;
-    }
-
-
-     // https://leetcode.com/problems/surrounded-regions
-     public void solve(char[][] board) {
-
-        for(int i =0; i<board.length; i++){
-            for(int j=0; j<board[0].length; j++){
-                if(i ==0 || i == board.length-1 || j == 0 || j == board[0].length-1){
-                    dfsSurrounded(board, i, j);
-                }
-            }
-        }
+     /** 
+     * DFS MATRIX VS GRAPH
+     * 1 VISITED CHECKS ARE IN 2 PLACES, IN FOR LOOP OF DFS AND IN ISSAFE
+     * IN GRAPH WE CHECK IN FOR LOOP OF HELPER AS NO ISSAFE METHOD EXISTS
+     * 
+     * 2 MARK VISITED IN HELPER 
+     * MATRIX -> 1 AND 2
+     * GRAPH -> 1 AND 4
+     * 
+     * 3 MARKING ASVISITED SAME IN BOTH
+     */
     
-        for(int i =0; i<board.length; i++){
-            for(int j=0; j<board[0].length; j++){
-                if(board[i][j]=='O') board[i][j] = 'X';
-            }
-        }
+    /** 
+	 * POINTS : 
+	 * 1 RUN 2 CHECKS IN FOR LOOP; BEFORE STARTING DFS AND IN ISSAFE
+	 * 2 MARK VISITED IN HELPER AFTER ISSAFE
+	 * 3 INCREMENT COUNT
+     * 
+     * CAN SPEED UP, IF POSSIBLE USING //3 USED IN GRAPH
+	 * */
+	// DFS TEMPLATE
+    // https://leetcode.com/problems/friend-circles
+    public int findCircleNum(int[][] M) {
+        int n = M.length;
+        int[] visited = new int[n];
+        Arrays.fill(visited, Integer.MAX_VALUE);
         
-        for(int i =0; i<board.length; i++){
-            for(int j=0; j<board[0].length; j++){
-                if(board[i][j] == 'Y') board[i][j] = 'O';
-            }
+        int count = 0;
+        for(int i =0; i<n; i++){
+            if(visited[i] != Integer.MAX_VALUE) continue; // 1
+            dfs(i, M, visited);
+            count++; 
         }
+        return count;
     }
     
-    void dfsSurrounded(char[][] board, int row, int col){
-        if(row>=0 && row<board.length
-          && col>=0 && col<board[0].length
-          && board[row][col] == 'O'){
-            board[row][col] = 'Y';
-            dfs(board, row+1, col);
-            dfs(board, row-1, col);
-            dfs(board, row, col+1);
-            dfs(board, row, col-1);
-        }
-    }
-
-    // 19 APR
-    /* package whatever //do not write package name here */
-
-    // code
-
-    int maxCount = 0;
-    int count = 0;
-
-    int findMaxOnesRegion(int[][] arr) {
-
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (arr[i][j] == 1) {
-                    findMaxOnesRegionHelper(arr, i, j);
-                    maxCount = maxCount < count ? count : maxCount;
-                }
-                count = 0;
+    void dfs(int start, int[][] g,int[] visited){
+        if(isSafeFriend(visited, start)){
+            visited[start] = 1;                             // 3
+            for(int i = 0; i<g.length; i++){
+                // if(visited[i] != Integer.MAX_VALUE) continue; // 4
+                if(i!=start && g[start][i] == 1) dfs(i, g, visited);
             }
-        }
-
-        return maxCount;
+        } 
     }
-
-    void findMaxOnesRegionHelper(int[][] arr, int rowIndex, int colIndex) {
-        if (isSafe(arr, rowIndex, colIndex)) {
-            count++;
-            arr[rowIndex][colIndex] = 2;
-            int[] row = { -1, -1, -1, 0, 0, 1, 1, 1 };
-            int[] col = { -1, 0, 1, -1, 1, -1, 0, 1 };
-            for (int k = 0; k < row.length; k++) {
-                findMaxOnesRegionHelper(arr, rowIndex + row[k], colIndex + col[k]);
-            }
-        }
-    }
-
-    boolean isSafe(int[][] arr, int rowIndex, int colIndex) {
-        if (rowIndex >= 0 && rowIndex < arr.length 
-        && colIndex >= 0 && colIndex < arr[0].length
-        && arr[rowIndex][colIndex] == 1) return true;
+    
+    boolean isSafeFriend(int[] visited, int index){
+        if(visited[index] == Integer.MAX_VALUE) return true; // 2
         return false;
     }
-    
+
 
     // https://leetcode.com/problems/number-of-islands
     public int numIslands(char[][] grid) {
@@ -272,10 +258,12 @@ class Matrix {
           && col>=0 && col<grid[0].length
           && grid[row][col] == '1'){
             grid[row][col] = '0';
-            dfs(grid, row+1, col);
-            dfs(grid, row-1, col);
-            dfs(grid, row, col+1);
-            dfs(grid, row, col-1);
+
+            for(int k = 0; k<rows.length; k++){
+                int newX = row + rows[k];
+                int newY = col + cols[k];
+                dfs(grid, newX, newY);
+            }
         }
     }
 
@@ -315,9 +303,47 @@ class Matrix {
         }
     }
 
+
+    // https://leetcode.com/problems/surrounded-regions
+    public void solve(char[][] board) {
+
+        for(int i =0; i<board.length; i++){
+            for(int j=0; j<board[0].length; j++){
+                if(i ==0 || i == board.length-1 || j == 0 || j == board[0].length-1){
+                    dfsSurrounded(board, i, j);
+                }
+            }
+        }
+    
+        for(int i =0; i<board.length; i++){
+            for(int j=0; j<board[0].length; j++){
+                if(board[i][j]=='O') board[i][j] = 'X';
+            }
+        }
+        
+        for(int i =0; i<board.length; i++){
+            for(int j=0; j<board[0].length; j++){
+                if(board[i][j] == 'Y') board[i][j] = 'O';
+            }
+        }
+    }
+    
+    void dfsSurrounded(char[][] board, int row, int col){
+        if(row>=0 && row<board.length
+          && col>=0 && col<board[0].length
+          && board[row][col] == 'O'){
+            board[row][col] = 'Y';
+            dfs(board, row+1, col);
+            dfs(board, row-1, col);
+            dfs(board, row, col+1);
+            dfs(board, row, col-1);
+        }
+    }
+    
+
      /**
      * THE BASIC TEMPLATE IS CHANGED A BIT,
-     * WE DON'T RECUR FOR ALL POINTS IN THE GRAPH ,RATHER ONLY FOR THE
+     * WE DON'T RECUR FOR ALL POINTS IN THE GRAPH, RATHER ONLY FOR THE
      * BOUNDARY POINTS.
      * 
      * ONLY IN THE isSafe method a diff condn "matrix[r][c]>=prev"
@@ -342,7 +368,7 @@ class Matrix {
         List<List<Integer>> res= new ArrayList<>();
         
         int m = matrix.length;
-        if(m==0) return res;
+        if(m == 0) return res;
         
         int n = matrix[0].length;
         
@@ -392,32 +418,12 @@ class Matrix {
     }
 
 
-    // why -2? we are taking into acount the oundary of the upper cell
-    // -2 one for each cell
-    // https://leetcode.com/problems/island-perimeter/
-    public int islandPerimeter(int[][] grid) {
-        int m = grid.length; int n = grid[0].length;
-        int perimeter = 0;
-        
-        for(int i =0; i<m; i++){
-            for(int j=0; j<n; j++){
-                
-                if(grid[i][j] == 1) {
-                    perimeter += 4;
-                    
-                    if(i>0 && grid[i-1][j] == 1) perimeter -= 2;
-                    if(j>0 && grid[i][j-1] == 1) perimeter -= 2;
-                }
-            }
-        }
-        return perimeter;
-    }
-
+    /////////////// RETURN VALUE
 
     /**  
      * TRY TO RETURN THE DFS VALUE
      * SAME AS IN LONGEST PATH
-     * ALSO MARK TEH VISITED, SO NO EXTRA VISITED
+     * ALSO MARK THE VISITED, SO NO EXTRA VISITED
     */
     // https://leetcode.com/problems/max-area-of-island
     public int maxAreaOfIsland(int[][] grid) {
@@ -432,21 +438,28 @@ class Matrix {
         return max;
     }
     
+    int[] rowsArea = {-1,0,0,1};
+    int[] colsArea = {0,-1,1,0};
+    
     int dfsArea(int[][] grid, int r, int c){
-        if(r>=0 && r<grid.length
-          && c>=0 && c<grid[0].length
-          && grid[r][c] == 1){
+        if(isSafeArea(grid, r, c)){
             // so we don't visit again
             grid[r][c] = 0;
-
-            int val = dfsArea(grid, r+1, c)
-            + dfsArea(grid, r-1, c)
-            + dfsArea(grid, r, c+1)
-            + dfsArea(grid, r, c-1) + 1;
+            
+            int val = 1;       // 1
+            for(int k=0;k<rows.length; k++){
+                val+=dfsArea(grid, r + rowsArea[k], c + colsArea[k]); // 2
+            }
             
             return val;
         }
         return 0;
+    }
+    boolean isSafeArea(int[][] grid, int r, int c){
+        if(r>=0 && r<grid.length
+          && c>=0 && c<grid[0].length
+          && grid[r][c] == 1) return true;
+        return false;
     }
 
 
@@ -505,163 +518,55 @@ class Matrix {
     }
 
     
-
-    
-
-    public int sumGold = 0;
-    public int currSumGold = 0;
-
-    public int getMaximumGold(int[][] grid) {
-
-        int[][] visited = new int[grid.length][grid[0].length];
-        int i, j;
-        for (i = 0; i < grid.length; i++) {
-            for (j = 0; j < grid[0].length; j++) {
-                getMaxHelper(grid, i, j, 0, visited);
-                if (currSumGold > sumGold)
-                    sumGold = currSumGold;
-                currSumGold = 0;
-                initializeToZero(visited);
-            }
-        }
-        return sumGold;
-    }
-
-    void getMaxHelper(int[][] grid, int rowIndex, int colIndex, int sum, int[][] visited) {
-        if (rowIndex >= 0 && colIndex >= 0 && rowIndex < grid.length && colIndex < grid[0].length
-                && grid[rowIndex][colIndex] != 0 && visited[rowIndex][colIndex] == 0) {
-
-            System.out.println("sum " + sum);
-            System.out.println("currSumGold " + currSumGold);
-            System.out.println("value " + grid[rowIndex][colIndex]);
-            visited[rowIndex][colIndex] = 1;
-            int[] row = { -1, 0, 0, 1 };
-            int[] col = { 0, -1, 1, 0 };
-
-            currSumGold = sum;
-            for (int k = 0; k < row.length; k++) {
-                getMaxHelper(grid, rowIndex + row[k], colIndex + col[k], sum + grid[rowIndex][colIndex], visited);
-            }
-        }
-    }
-
-    void initializeToZero(int[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                arr[i][j] = 0;
-            }
-        }
-    }
-
-    //////////////////////////// 7 jun dp applied
     /**
-     * 1 pass -9999 
-     * 2 pass current value for subsequent 3 math.max for max
+     * 1 pass Integer.MAX_VALUE AS prev, TO START FIRST DFS 
+     * 2 pass current value for subsequent 
+     * 3 DON'T ADD DP CONDITION IN IN ISSAFE
      */
     void goldMine(int[][] grid) {
         int max = -1;
-        int[][] dp = new int[grid.length][grid[0].length];
+        int m = grid.length; int n =grid[0].length; 
+        int[][] dp = new int[m][n];
+        
         int j, i;
         for (i = 0; i < grid.length; i++) {
             for (j = 0; j < grid[0].length; j++) {
-                max = Math.max(goldMineHelper(grid, i, j, dp, -9999), max);
+                max = Math.max(max,
+                    goldMineHelper(grid, i, j, dp, Integer.MIN_VALUE)); // 1 min_value
             }
         }
         System.out.println("max gold is " + max);
     }
 
-    int goldMineHelper(int[][] grid, int rowIndex, int colIndex, int[][] dp, int prev) {
+    int goldMineHelper(int[][] grid, int row, int col, int[][] dp, int prev) {
 
-        if (rowIndex >= 0 && rowIndex < grid.length 
-        && colIndex >= 0 && colIndex < grid[0].length
-        && prev < grid[rowIndex][colIndex] 
-        && grid[rowIndex][colIndex] != 0) {
-            if (dp[rowIndex][colIndex] != 0)
-                return dp[rowIndex][colIndex];
+        if (isSafeGold(grid, row, col, prev)) { 
+            if (dp[row][col] != 0) return dp[row][col]; // 2
 
-            int curr = grid[rowIndex][colIndex];
+            int curr = grid[row][col]; // 3
 
-            int left = goldMineHelper(grid, rowIndex, colIndex - 1, dp, curr);
-            int right = goldMineHelper(grid, rowIndex, colIndex + 1, dp, curr);
-            int up = goldMineHelper(grid, rowIndex - 1, colIndex, dp, curr);
-            int down = goldMineHelper(grid, rowIndex + 1, colIndex, dp, curr);
+            int left = goldMineHelper(grid, row, col - 1, dp, curr);
+            int right = goldMineHelper(grid, row, col + 1, dp, curr);
+            int up = goldMineHelper(grid, row - 1, col, dp, curr);
+            int down = goldMineHelper(grid, row + 1, col, dp, curr);
 
-            dp[rowIndex][colIndex] = Math.max(left, Math.max(right, Math.max(up, down))) + curr;
-            System.out.println("dp[" + rowIndex + "][" + colIndex + "] " + dp[rowIndex][colIndex]);
-            return dp[rowIndex][colIndex];
-        } else
-            return 0;
+            dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down))) + curr; // 4
+
+            System.out.println("dp[" + row + "][" + col + "] " + dp[row][col]);
+            return dp[row][col]; // 5
+        } 
+        return 0;
     }
 
-
+    boolean isSafeGold(int[][] grid, int row, int col, int prev){
+        if(row>=0 && row<grid.length
+        && col>=0 && col<grid[0].length
+        && grid[row][col] > prev) return true; // 5 >prev
+        return false;
+    }
     // https://www.techiedelight.com/probability-alive-after-taking-n-steps-island/
     
     /** the -1s are inaccessible; reduce 99 to lowest dist from 0 */
-
-    void wallsAndGates(int[][] grid) {
-        int[][] dp = new int[grid.length][grid[0].length];
-        int[][] visited = new int[grid.length][grid[0].length];
-
-        int i, j;
-
-        for (i = 0; i < grid.length; i++) {
-            for (j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == -1) {
-                    dp[i][j] = grid[i][j];
-                }
-            }
-        }
-
-        for (i = 0; i < grid.length; i++) {
-            for (j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == 99) {
-                    dp[i][j] = wallsAndGatesHelper(grid, i, j, dp, visited);
-                    initializeToZero(visited);
-                }
-            }
-        }
-
-        for (i = 0; i < grid.length; i++) {
-            for (j = 0; j < grid[0].length; j++) {
-                System.out.print(dp[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
-
-    /** this is like keeping a trck of the cells traversed */
-    /**
-     * finally found a technique for dfs, use visited array and add a check for that
-     * visited!=1, and assign to dp outside the helper
-     */
-
-    int wallsAndGatesHelper(int[][] grid, int row, int col, int[][] dp, int[][] visited) {
-        if (row > -1 && row < grid.length && col > -1 && col < grid[0].length && grid[row][col] != -1
-                && visited[row][col] != 1) {
-            if (dp[row][col] != 0)
-                return dp[row][col];
-            if (grid[row][col] == 0)
-                return 0;
-            System.out.println("row " + row + " ,col " + col);
-            visited[row][col] = 1;
-
-            // if(grid[row][col]==-1) return 99;
-            int left = wallsAndGatesHelper(grid, row, col - 1, dp, visited);
-            int right = wallsAndGatesHelper(grid, row, col + 1, dp, visited);
-            int up = wallsAndGatesHelper(grid, row - 1, col, dp, visited);
-            int down = wallsAndGatesHelper(grid, row + 1, col, dp, visited);
-
-            System.out.println("left " + left + ", right " + right + ", up " + up + ", down " + down);
-            // dp[row][col] = Math.min(left, Math.min(right, Math.min(up, down)))+1;
-            // System.out.println("dp[" +row+"]["+col+"] "+ dp[row][col]);
-            System.out.println("visited[" + row + "][" + col + "] " + visited[row][col]);
-            int val = Math.min(left, Math.min(right, Math.min(up, down))) + 1;
-            System.out.println("val " + val);
-            return val;
-
-        } else
-            return 90;
-    }
 
     /**
      * we are starting from each zero and keeping a counter, if the grid[i][j] >
@@ -698,9 +603,10 @@ class Matrix {
 
     // try using BFS
     void wallsAndGatesHelperKevin(int[][] grid, int row, int col, int[][] dp, int count) {
-        if (row > -1 && row < grid.length && col > -1 && col < grid[0].length && grid[row][col] != -1 && count >= 0 // &&
-                                                                                                                    // count<99
-                && grid[row][col] >= count) {
+        if (row > -1 && row < grid.length 
+        && col > -1 && col < grid[0].length 
+        && grid[row][col] != -1 && count >= 0 // &&
+        && grid[row][col] >= count) {
             grid[row][col] = count;
             wallsAndGatesHelperKevin(grid, row, col + 1, dp, count + 1);
             wallsAndGatesHelperKevin(grid, row, col - 1, dp, count + 1);
@@ -708,7 +614,6 @@ class Matrix {
             wallsAndGatesHelperKevin(grid, row - 1, col, dp, count + 1);
         }
     }
-
 
 
     ////////////////////////////////  PATHS WITH OBSTACLES
@@ -754,7 +659,6 @@ class Matrix {
 
 
 
-
     ///////////////////////////////////////
     /** 
      * DIFFERENCE B/W BFS IN A MATRIX AND A GRAPH :
@@ -767,6 +671,8 @@ class Matrix {
      * 
      * 2 IN MATRIX A GRAPH NEED NOT BE CREATED SEPARATELY
     */
+
+    // BFS, USING VISITED -> MODIFIED BFS DOESN'T USE VISITED, RATHER DISTANCE
     class BFSNode {
         int node;
         int x;
@@ -777,12 +683,11 @@ class Matrix {
             this.x = rowIndex;
             this.y = colIndex;
         }
-
     }
 
     void BFSMatrix(int[][] graph) {
-
-        HashSet<Integer> visited = new HashSet<>();
+        int m = graph.length; int n = graph[0].length;
+        int[][] visited = new int[m][n];
 
         // starting from 0
         BFSNode node = new BFSNode(0, 0, graph[0][0]);
@@ -795,21 +700,23 @@ class Matrix {
 
         while (!bfsQueue.isEmpty()) {
             BFSNode curr = bfsQueue.removeFirst();
-            visited.add(curr.node);
+            visited[curr.x][curr.y] = 1;
+
             System.out.print(curr.node + ", ");
             for(int k=0; k<row.length; k++){
                 int newX = curr.x + row[k];
                 int newY = curr.y + col[k];
-                if(isSafeBFS(graph, newX, newY)) 
+                if(isSafeBFS(graph, newX, newY, visited)) 
                     bfsQueue.addLast(new BFSNode(graph[newX][newY], newX, newY));
             }
             
         }
     }
 
-    boolean isSafeBFS(int[][] graph, int row, int col){
+    boolean isSafeBFS(int[][] graph, int row, int col, int[][] visited){
         if(row>=0 && row<graph.length
-        && col>=0 && col<graph[0].length) return true;
+        && col>=0 && col<graph[0].length
+        && visited[row][col]!=0) return true;
         return false;
     }
 
@@ -1172,6 +1079,7 @@ class Matrix {
         else
             return binsearch(arr, row, num, mid + 1, end);
     }
+
 
     ///////// WORD SEARCH
     /**

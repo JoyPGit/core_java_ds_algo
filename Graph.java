@@ -50,16 +50,25 @@ import java.util.*;
  *      }
  *  }
  * 
+ * ///////////////////////////////
+ * DFS WITH MARKING NO OF ISLANDS
+ * LOOP : COURSE SCHEDULE, TERMINAL STATES
  * 
  * //////////////////////////////////////////////
  * BFS :
+ * 
+ * ADD ONLY IF UNVISITED
  * 2 THINGS : VISITED, Q
  * 
- * USE CUSTOM CLASS AS ALWAYS IN BFS
- * ADD TO Q, WHILE REMOVING ADD TO VISITED
- * VISITED CAN ST0RE DISTANCE TOO
+ * DISCONNECTED : IS BIPARTITE
  * 
- * LOOP : COURSE SCHEDULE, TERMINAL STATES
+ * 
+ * MODIFIED BFS :
+ * NO VISITED, ONLY DISTANCE ARRAY
+ * USE CUSTOM CLASS AS ALWAYS IN BFS
+ * ADD TO Q, WHILE REMOVING ADD TO DISTANCE
+ * 
+ * N/W DELAY, CHEAPEST FLIGHTS
  * 
  * ///////////////////////////////////////////////////
  * QUES 
@@ -77,6 +86,11 @@ import java.util.*;
  * GRAPH REPRESENTATION: 
  * 1 HASHSET AND HASHMAP<INTEGER, ARRAYLIST> (ADJ LIST) 
  * 2 HASHSET AND INT[][] G (ADJ MATRIX)
+ * 
+ * WHENEVER EDGE WEIGHTS NEED TO BE CONSIDERED USE ADJ MATRIX
+ * TIME TO INFORM, SHORTEST PATH
+ * 
+ * FOR BIPARTITE, COLORING, USE ADJ LIST
  * 
  * 2 FOR BFS FINDING TIME OR DIST, USE ADJ MATRIX, AS VISITED ARRAY CAN ALSO
  * STORE THE DIST OR TIME, USE DIJKSTRA IF POSSIBLE.
@@ -155,11 +169,11 @@ class Graph {
 
 		for (int i = 0; i < V; i++) {
 			if(set.contains(i)) continue;
-			dfsHelper(i, set, g);
+			dfsAdjListHelper(i, set, g);
 		}
 	}
 
-	void dfsHelper(int curr, HashSet<Integer> set, 
+	void dfsAdjListHelper(int curr, HashSet<Integer> set, 
 	HashMap<Integer, ArrayList<Integer>> g ) {
 
 		System.out.println("dfs " + curr);
@@ -169,14 +183,18 @@ class Graph {
 		ArrayList<Integer> list = g.get(curr);
 		for (int i : list) {
 			if (set.contains(i)) continue;
-			dfsHelper(i, set, g);
+			dfsAdjListHelper(i, set, g);
 		}
 	}
 
+
+	// fill graph with -1 to account for 0 wt edges
 	List<Integer> dfsAdjMatrix(int[][] graph) {
 		int n = graph.length;
+		for(int[] i: graph) Arrays.fill(i, -1);
+
 		int[] visited = new int[n];
-		Arrays.fill(visited, Integer.MAX_VALUE);
+		Arrays.fill(visited, Integer.MAX_VALUE); // like BFS
 		List<Integer> res = new ArrayList<>();
 		for(int i =0; i<n; i++) {
 			// needed for disconnected graphs
@@ -188,18 +206,17 @@ class Graph {
 	}
 
 
-	// visited check is once if dfs for loop
-	// and once in for of dfs helper
+	// visited check is once in dfs for loop
+	// and once in dfs helper for loop
 	// not at start
 	void dfsAdjMatHelper(int[][] graph, int start, int[] visited, 
 	List<Integer> res){
-		// if(visited[start] != Integer.MAX_VALUE) return;
-		visited[start] = 1;
+		visited[start] = 1; // 1
 		res.add(start);
 		for (int i = start; i < graph.length; i++) {
 			if (i!=start 
-			&& graph[start][i] != 0
-			&& visited[i] == Integer.MAX_VALUE){ // unvisited
+			&& graph[start][i] != -1               // 2  
+			&& visited[i] == Integer.MAX_VALUE){   // unvisited
 				dfsAdjMatHelper(graph, i, visited, res);
 			}
 		}
@@ -208,64 +225,206 @@ class Graph {
 	
 	/** 
 	 * POINTS : 
-	 * 1 ADD A NODE TO SET
-	 * 2 RUN DFS FOR ALL ITS ADJACENT NODES
-	 * 3 INCREMENT COEUNT
+	 * 1 RUN 2 CHECKS IN FOR BEFORE STARTING DFS AND IN ISSAFE
+	 * 2 MARK VISITED IN HELPER AFTER ISSAFE
+	 * 3 INCREMENT COUNT
+     * 
+     * CAN SPEED UP, IF POSSIBLE USING //3 USED IN GRAPH
+	 * 
+	 * MATRIX -> 1 AND 2
+     * GRAPH -> 1 AND 3
 	 * */
-	// https://leetcode.com/problems/friend-circles
+	// DFS TEMPLATE
+	/** 
+	 * for(){
+	 * 	 if(visited) continue
+	 *   dfs();
+	 *   count++;
+	 * }
+	*/
+    // https://leetcode.com/problems/friend-circles
     public int findCircleNum(int[][] M) {
-        int count = 0;
         int n = M.length;
-        HashSet<Integer> set = new HashSet<>();
+        int[] visited = new int[n];
+        Arrays.fill(visited, Integer.MAX_VALUE);
         
+        int count = 0;
         for(int i =0; i<n; i++){
-            if(set.contains(i)) continue;
-            set.add(i);
-            for(int j = 0; j<n; j++){
-                if(M[i][j]!=0 && !set.contains(j)){
-                    dfs(M, j, set);
-                }
-            }
+            if(visited[i] != Integer.MAX_VALUE) continue; // 1
+            dfs(i, M, visited);
             count++;
         }
         return count;
     }
     
-    void dfs(int[][] graph, int start, HashSet<Integer> set){
-        set.add(start);
-        for(int i=0; i<graph.length; i++){
-            if(graph[start][i]!=0 && !set.contains(i)) dfs(graph, i, set);
+    void dfs(int start, int[][] g,int[] visited){
+        // if(visited[start] != Integer.MAX_VALUE) return; 
+        visited[start] = 1;                                // 2
+        for(int i = 0; i<g.length; i++){
+            if(visited[i] != Integer.MAX_VALUE) continue;  // 3 
+            if(i!=start && g[start][i] == 1) dfs(i, g, visited);
         }
-	}
+    }
 	
-	// https://leetcode.com/problems/number-of-islands/
-	int numberOfIslands(int[][] arr) {
-        int i = 0;
-        int j = 0;
+
+	// https://leetcode.com/problems/number-of-islands
+	public int numIslands(char[][] grid) {
         int count = 0;
-        for (i = 0; i < arr.length; i++) {
-            for (j = 0; j < arr[0].length; j++) {
-                if (arr[i][j] == 1) {
-                    dfsIslandHelper(arr, i, j);
+        
+        for(int i =0; i<grid.length; i++){
+            for(int j =0; j<grid[0].length; j++){
+                if(grid[i][j] == '1') {
+                    dfs(grid, i, j); 
                     count++;
                 }
             }
         }
         return count;
     }
+	
+	int[] rows = new int[]{-1,0,0,1};
+	int[] cols = new int[]{0,-1,1,0};
+	
+    void dfs(char[][] grid, int row, int col){
+        if(row>=0 && row<grid.length
+          && col>=0 && col<grid[0].length
+          && grid[row][col] == '1'){
+            grid[row][col] = '0';
 
-    void dfsIslandHelper(int[][] arr, int rowIndex, int colIndex) {
-        int[] row = { 0, 0, -1, 1, -1, -1, 1, 1 };
-        int[] col = { -1, 1, 0, 0, -1, 1, -1, 1 };
-		if (rowIndex >= 0 && rowIndex < arr.length 
-		&& colIndex >= 0 && colIndex < arr[0].length) {
-            if (arr[rowIndex][colIndex] == 1) {
-                arr[rowIndex][colIndex] = 2;
-                for (int k = 0; k < row.length; k++) {
-                    dfsIslandHelper(arr, rowIndex + row[k], colIndex + col[k]);
-                }
+            for(int k = 0; k<rows.length; k++){
+                int newX = row + rows[k];
+                int newY = col + cols[k];
+                dfs(grid, newX, newY);
             }
         }
+	}
+	
+	/** 
+	 * FIND TOTAL NO OF COMPONENTS AND THEN CHECK MST PORPERTY
+	 * edges = n-1
+	 * HERE EACH EDGE IS COUNTED TWICE, DIRECTED (0->1, 1->0)
+	 * SO (edges/2).
+	 * 
+	 * IMP :
+	 * return (edges/2)>=n-1?components-1:-1;
+	 * 
+	 * 
+	 * SAME AS COUNTING FRIEND CIRCLES
+	 * for(){
+	 *   dfs();
+	 *   count++;
+	 * }
+	*/
+	// https://leetcode.com/problems/number-of-operations-to-make-network-connected
+    public int makeConnected(int n, int[][] graph) {
+        int components = 0; int edges = 0;
+        
+        HashSet<Integer> visited = new HashSet<>();
+        // HashSet<Integer> currParents = new HashSet<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        
+        for(int i = 0; i<graph.length; i++){
+            List<Integer> curr = map.getOrDefault(graph[i][0],new ArrayList<>());
+            curr.add(graph[i][1]);
+            edges++;
+            map.put(graph[i][0], curr);
+            
+            List<Integer> curr1 = map.getOrDefault(graph[i][1],new ArrayList<>());
+            curr1.add(graph[i][0]);
+            edges++;
+            map.put(graph[i][1], curr1);
+        }
+    
+        for(int i =0; i<n; i++){
+            if(visited.contains(i)) continue; // 1 check visited
+            dfs(i, map, visited);
+            components++;
+        }
+       
+        return (edges/2)>=n-1?components-1:-1;
+    }
+    
+    void dfs(int node, HashMap<Integer, List<Integer>> map, HashSet<Integer> visited){
+        visited.add(node);
+        if(!map.containsKey(node)) return;
+        List<Integer> curr = map.get(node);
+        for(int i =0; i<curr.size(); i++){
+            if(visited.contains(curr.get(i))) continue; // 3 check visited
+            dfs(curr.get(i), map, visited);
+        }
+	}
+	
+
+	/**
+	 * POINTS : 
+	 * 1 CREATE A GRAPH USING ADJ LIST
+	 * 2 DFS 
+	 * 3 FOR TIME THERE ARE 2 WAYS,
+	 * 3.1 ADD TIME BEFORE ENTERING CHILD, IF THE CHILD DOESN'T HAVE 
+	 * ANY FURTHER CHILDREN IT JUST RETURNS THE TIME. 
+	 * IT WORKS BECAUSE ONLY NODES HAVING CHIDREN ARE IN MAP, 
+	 * SO IF NODE IS IN MAP, THEN IT MUST HAVE CHILD NODE(S), HENCE
+	 * ADDING INFORM TIME BEFORE HAND IS OK.
+	 * 
+	 * 3.2 USE F(ROOT) = INFORMTIME[ROOT] + F(CHILD); SET FLAG TO ZERO IN EACH
+	 * ITERATION AND RETURN MAX MAX(MINUTES, INFORMTIME[ROOT]+DFS(CHILD))
+	 * 
+	 * 4 USE DP TO STORE VALUE IN ANOTHER MAP (TIMEHOLDER)
+	 * 
+	 */
+	int minutes = Integer.MIN_VALUE;
+	HashMap<Integer, Integer> timeHolder = new HashMap<>();
+
+	public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
+
+		for (int i = 0; i < manager.length; i++) {
+			if (manager[i] == -1)
+				continue;
+			else if (map.containsKey(manager[i])) {
+				List<Integer> c = map.get(manager[i]);
+				c.add(i);
+				map.put(manager[i], c);
+			} else {
+				ArrayList<Integer> c = new ArrayList<>();
+				c.add(i);
+				map.put(manager[i], c);
+			}
+		}
+
+		// System.out.println(map);
+		dfsNumMinutes(map, headID, informTime, 0);
+		// return dfsNumMinutes(map, headID, informTime, 0);
+		return minutes;
+	}
+
+	/**
+	 * works but added informtime beforehand 
+	 * void dfsNumMinutes(HashMap<Integer,
+	 * ArrayList<Integer>> map, int start, int[] informTime, int time){
+	 * if(!map.containsKey(start)) return 0
+	 * 
+	 * minutes = Math.max(minutes, time); 
+	 * return;
+	 * 
+	 * time+=informTime[start]; // System.out.println(time); 
+	 *  for(int i : map.get(start))
+	 *   { dfsNumMinutes(map, i, informTime, time);} 
+	 * }
+	 */
+
+	int dfsNumMinutes(HashMap<Integer, List<Integer>> map, int start, int[] informTime, int time) {
+		int minutes = 0;
+		if (!map.containsKey(start))
+			return 0;
+		// System.out.println(time);
+		for (int i : map.get(start)) {
+			if (timeHolder.containsKey(i))
+				return timeHolder.get(i);
+			minutes = Math.max(minutes, informTime[start] + dfsNumMinutes(map, i, informTime, time));
+			timeHolder.put(i, minutes);
+		}
+		return minutes;
 	}
 
 	/** 
@@ -344,167 +503,8 @@ class Graph {
 		currParents.remove(node);
 	}
 	
-	/** 
-	 * FIND COMPONENTS AND THEN CHECK MST PORPERTY
-	 * edges = n-1
-	 * HERE EACH EDGE IS COUNTED TWICE, DIRECTED (0->1, 1->0)
-	 * SO (edges/2).
-	 * 
-	 * return (edges/2)>=n-1?components-1:-1;
-	*/
-	// https://leetcode.com/problems/number-of-operations-to-make-network-connected
-    public int makeConnected(int n, int[][] graph) {
-        int components = 0; int edges = 0;
-        
-        HashSet<Integer> visited = new HashSet<>();
-        // HashSet<Integer> currParents = new HashSet<>();
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        
-        for(int i = 0; i<graph.length; i++){
-            List<Integer> curr = map.getOrDefault(graph[i][0],new ArrayList<>());
-            curr.add(graph[i][1]);
-            edges++;
-            map.put(graph[i][0], curr);
-            
-            List<Integer> curr1 = map.getOrDefault(graph[i][1],new ArrayList<>());
-            curr1.add(graph[i][0]);
-            edges++;
-            map.put(graph[i][1], curr1);
-        }
-    
-        for(int i =0; i<n; i++){
-            if(visited.contains(i)) continue;
-            dfs(i, map, visited);
-            components++;
-        }
-       
-        return (edges/2)>=n-1?components-1:-1;
-    }
-    
-    void dfs(int node, HashMap<Integer, List<Integer>> map, HashSet<Integer> visited){
-        if(visited.contains(node)) return;
-        visited.add(node);
-        if(!map.containsKey(node)) return;
-        List<Integer> curr = map.get(node);
-        for(int i =0; i<curr.size(); i++){
-            if(visited.contains(curr.get(i))) continue;
-            dfs(curr.get(i), map, visited);
-        }
-    }
-
-	/**
-	 * TECHNIQUE : 1 CREATE A GRAPH USING HASHMAP 
-	 * 2 DFS 
-	 * 3 FOR TIME THERE ARE 2 WAYS,
-	 * 3.1 ADD TIME BEFORE ENTERING CHILD, IF THE CHILD DOESN'T HAVE 
-	 * ANY FURTHER CHILDREN IT JUST RETURNS THE TIME. 
-	 * IT WORKS BECAUSE ONLY NODES HAVING CHIDREN ARE IN MAP, 
-	 * SO IF NODE IS IN MAP, THEN IT MUST HAVE CHILD NODE(S), HENCE
-	 * ADDING INFORM TIME BEFORE HAND IS OK.
-	 * 
-	 * 3.2 USE F(ROOT) = INFORMTIME[ROOT] + F(CHILD); SET FLAG TO ZERO IN EACH
-	 * ITERATION AND RETURN MAX MAX(MINUTES, INFORMTIME[ROOT]+DFS(CHILD))
-	 * 
-	 * 4 USE DP TO STORE VALUE IN ANOTHER MAP (TIMEHOLDER)
-	 * 
-	 */
-	int minutes = Integer.MIN_VALUE;
-	HashMap<Integer, Integer> timeHolder = new HashMap<>();
-
-	public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
-		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
-
-		for (int i = 0; i < manager.length; i++) {
-			if (manager[i] == -1)
-				continue;
-			else if (map.containsKey(manager[i])) {
-				ArrayList<Integer> c = map.get(manager[i]);
-				c.add(i);
-				map.put(manager[i], c);
-			} else {
-				ArrayList<Integer> c = new ArrayList<>();
-				c.add(i);
-				map.put(manager[i], c);
-			}
-		}
-
-		// System.out.println(map);
-		dfsNumMinutes(map, headID, informTime, 0);
-		// return dfsNumMinutes(map, headID, informTime, 0);
-		return minutes;
-	}
-
-	/**
-	 * works but added informtime beforehand 
-	 * void dfsNumMinutes(HashMap<Integer,
-	 * ArrayList<Integer>> map, int start, int[] informTime, int time){
-	 * if(!map.containsKey(start)) return 0
-	 * 
-	 * minutes = Math.max(minutes, time); 
-	 * return;
-	 * 
-	 * time+=informTime[start]; // System.out.println(time); 
-	 *  for(int i : map.get(start))
-	 *   { dfsNumMinutes(map, i, informTime, time);} 
-	 * }
-	 */
-
-	int dfsNumMinutes(HashMap<Integer, ArrayList<Integer>> map, int start, int[] informTime, int time) {
-		int minutes = 0;
-		if (!map.containsKey(start))
-			return 0;
-		// System.out.println(time);
-		for (int i : map.get(start)) {
-			if (timeHolder.containsKey(i))
-				return timeHolder.get(i);
-			minutes = Math.max(minutes, informTime[start] + dfsNumMinutes(map, i, informTime, time));
-			timeHolder.put(i, minutes);
-		}
-		return minutes;
-	}
-
 	
 	// https://leetcode.com/problems/path-with-maximum-probability/
-
-	// DFS EXAMPLE
-
-	/**
-	 * 1 the indexes are the vertices, int j : graph[curr] curr is int and references
-	 * to the particular row index
-	 * 
-	 * 2 use a helper 
-	 * 
-	 * 3 MOST IMP : ALWAYS USE List<List<Integer>> res = new
-	 * ArrayList<>(); List<Integer> temp = new ArrayList<>();
-	 * 
-	 * AND PASS THIS temp IN dfs; dfs (res, temp, graph, 0);
-	 * 
-	 * 4 while adding the result clone it into a new ArrayList
-	 * 
-	 */
-	// https://leetcode.com/problems/all-paths-from-source-to-target/
-	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-
-		List<List<Integer>> res = new ArrayList<>();
-		List<Integer> list = new ArrayList<>();
-
-		list.add(0);
-		dfs(res, list, graph, 0);
-		return res;
-	}
-
-	void dfs(List<List<Integer>> res, List<Integer> list, int[][] graph, int curr) {
-		if (curr == graph.length - 1) {
-			// temp.add(curr);
-			res.add(new ArrayList<>(list));
-			return;
-		}
-		for (int j : graph[curr]) {
-			list.add(j);
-			dfs(res, list, graph, j);
-			list.remove(list.size() - 1);
-		}
-	}
 
 
 	////////////////////////////////////// TOPOLOGICAL SORT
@@ -527,7 +527,7 @@ class Graph {
 	 */
 	int[] tpsStart(int N) {
 		// iterate over the graph in argument to create hashmap graph
-		HashMap<Integer, ArrayList> g = new HashMap<>();
+		HashMap<Integer, List<Integer>> g = new HashMap<>();
 		HashSet<Integer> set = new HashSet<>();
 		Deque<Integer> q = new LinkedList<>();
 		int n = N;
@@ -543,7 +543,8 @@ class Graph {
 		return res;
 	}
 
-	void tps(int curr, HashMap<Integer, ArrayList> map, HashSet<Integer> set, Deque<Integer> q) {
+	void tps(int curr, HashMap<Integer, List<Integer>> map, HashSet<Integer> set, 
+	Deque<Integer> q) {
 		set.add(curr);
 		if (map.containsKey(curr)) {
 			List<Integer> list = map.get(curr);
@@ -571,7 +572,7 @@ class Graph {
 
 	boolean detectLoopUndirected(){
 		HashSet<Integer> visited = new HashSet<>();
-		HashMap<Integer, ArrayList> map = new HashMap<>(); 
+		HashMap<Integer, List<Integer>> map = new HashMap<>(); 
 		for (int i = 0; i < this.V; i++) {
 			if (loop) return loop;
 			if (!visited.contains(i)) detectLoopUHelper(i, visited, map);
@@ -579,10 +580,10 @@ class Graph {
 		return loop;
 	} 
 
-	void detectLoopUHelper(int curr, HashSet<Integer> visited, HashMap<Integer, ArrayList> map){
+	void detectLoopUHelper(int curr, HashSet<Integer> visited, HashMap<Integer, List<Integer>> map){
 		visited.add(curr);
 		if (!map.containsKey(curr)) return;
-		ArrayList<Integer> list = map.get(curr);
+		List<Integer> list = map.get(curr);
 		for(int i : list){
 			if(visited.contains(i)) {
 				loop = true; 
@@ -591,6 +592,7 @@ class Graph {
 			detectLoopUHelper(curr, visited, map);
 		}
 	}
+
 
 	/**  DETECT LOOP IN DAG (BACTRACKING)
 	* 1 CREATE GRAPH 2 USE 2 HASHSETS ONE FOR VISITED, ONE FOR
@@ -611,7 +613,7 @@ class Graph {
 	* */
 	boolean detectLoopDirected() {
 		// int[] visited = new int[this.V];
-		HashMap<Integer, ArrayList> map = new HashMap<>();
+		HashMap<Integer, List<Integer>> map = new HashMap<>();
 		HashSet<Integer> visited = new HashSet<>();
 		HashSet<Integer> currParents = new HashSet<>();
 
@@ -623,10 +625,11 @@ class Graph {
 		return loop;
 	}
 
-	void detectLoopUtil(int curr, HashSet<Integer> visited, HashSet<Integer> currParents, HashMap<Integer, ArrayList> map) {
+	void detectLoopUtil(int curr, HashSet<Integer> visited, HashSet<Integer> currParents, 
+	HashMap<Integer, List<Integer>> map) {
 		visited.add(curr);
 		if(!map.containsKey(curr)) return;
-		ArrayList<Integer> list = map.get(curr);
+		List<Integer> list = map.get(curr);
 		currParents.add(curr);
 		for(int i : list){
 			if (currParents.contains(i)) {
@@ -770,7 +773,7 @@ class Graph {
 	// https://leetcode.com/problems/minimum-height-trees/
 
 	
-	////////////////////////////////  BFS
+	////////////////////////////////////////// BFS
 
 	/**
 	 * BFS 
@@ -781,6 +784,8 @@ class Graph {
 	 * 4 ADD STARTING VERTEX, AND RUN LOOP FOR Q EMPTY 
 	 * 5 UPDATE DISTANCE[STARTING INDEX] = 
 	 * 6 
+	 * 
+	 * * TIME CAN BE STORED IN VISITED OR CUSTOM CLASS
 	 */
 
 	 /** 
@@ -820,10 +825,6 @@ class Graph {
 	 * while(q.size()!=0){
 	 * curr = q.removeFirst();
 	 * 
-	 * // THIS CHECKS IF VISITED, NEED TO AVOID
-	 * if(distance[curr.node] != Integer.MAX) continue;
-	 * //
-	 * 
 	 * for(int i =0; i<n; i++){
 	 * if(
 	 * 5 g[curr.node][i] != -1
@@ -837,110 +838,157 @@ class Graph {
 	 * 
 	*/
 
-	// https://leetcode.com/problems/rotting-oranges/
-	/**
-	 * POINTS : 1 USE A CUSTOM CLASS 
-	 * 2 USE A QUEUE AND ADD ALL 2s 
-	 * 3 THE TRICKY THING
-	 * IS TO KEEP TRACK OF VISITED INDEXES, 
-	 * CAN BE HANDLED VIA IS SAFE CHECKER AND
-	 * MARKING THE ORIGINAL GRAPH INDEX AS 2.
-	 * 
-	 * WE ADD ONLY 2, WE CHECK FOR SURROUNDING INDEXES, 
-	 * IF SAFE MARK THEM AS 2 AND INCREMENT TIME;
-	 * 
-	 * 
-	 * imp : 
-	 * 1 modify the original graph
-	 * 2 no distance arr, so hold time too
-	 */
-	class Orange {
-		int row, col, val, time;
-
-		Orange(int r, int c, int v, int t) {
-			this.row = r;
-			this.col = c;
-			this.val = v;
-			this.time = t;
-		}
+	/** 
+	 * BFS
+	 * 1 AS GRAPH IS DISCONNECTED, RUN BFS FOR ALL NODES
+	 * 2 MAINTAIN A VISITED ARRAY
+	 * 3 START BY ASSIGNING COLOR 1AND THEN CHECK IF ADJACENT NODES HAVE 
+	 * SAME COLOR. 
+	 * IF DIFFERENT, CONTINUE.
+	 * IF NOT VISITED, ASSIGN visited[list.get(i)] = color==1?2:1;
+	*/
+	// https://leetcode.com/problems/is-graph-bipartite
+    boolean isBipartite = true;
+    public boolean isBipartite(int[][] graph) {
+        // BFS
+        // no edge wt worries, so adj list
+        // disconnected graph
+        // so run BFS for all nodes
+        int n = graph.length;
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        for(int i = 0; i<n; i++){
+            List<Integer> list = g.getOrDefault(i, new ArrayList<>());
+            for(int j = 0; j<graph[i].length; j++){
+                list.add(graph[i][j]);
+            }
+            g.put(i, list);
+        }
+        
+        int[] visited = new int[n];
+         // 1 and 2; 0 unvisited
+        Deque<Integer> q = new LinkedList<>();
+        
+        for(int i =0; i<n; i++) {
+            // bfs only for unvisited
+            if(visited[i]==0 && graph[i].length>0) {
+                // it is unvisited, so disconnected
+                // start from color 1 same as 0th node
+                visited[i] = 1;
+                q.addLast(i);
+                bfsHelper(q, g, visited);
+            }
+        }
+        // for(int i =0;i<n; i++) System.out.println(visited[i]);
+        return isBipartite;
+    }
+    
+    void bfsHelper(Deque<Integer> q, HashMap<Integer, List<Integer>> g, int[] visited){
+        while(q.size()!=0){
+            int curr = q.removeFirst();
+            int color = visited[curr];
+            // System.out.println(curr+" "+color);
+            if(!g.containsKey(curr)) continue;
+            List<Integer> list = g.get(curr);
+            for(int i = 0; i<list.size(); i++){
+                if(visited[list.get(i)] == color) {
+                    isBipartite = false;
+                    return;
+                }
+                if(visited[list.get(i)]!=0) continue;
+                visited[list.get(i)] = color==1?2:1;
+                q.addLast(list.get(i));
+            }
+        }
 	}
 
-	public int orangesRotting(int[][] grid) {
-		Deque<Orange> q = new LinkedList<>();
-		int maxTime = 0;
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 2) q.add(new Orange(i, j, 2, 0));
-			}
-		}
-
-		int[] rows = { -1, 0, 0, 1 };
-		int[] cols = { 0, -1, 1, 0 };
-		while (q.size() != 0) {
-			Orange curr = q.removeFirst();
-
-			for (int i = 0; i < rows.length; i++) {
-				int newX = curr.row + rows[i];
-				int newY = curr.col + cols[i];
-				if (isSafeOrange(grid, newX, newY)) {
-					grid[newX][newY] = 2;
-					q.addLast(new Orange(newX, newY, 2, curr.time + 1));
-					maxTime = curr.time + 1;
-				}
-			}
-		}
-
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 1)
-					return -1;
-			}
-		}
-		return maxTime;
+	/** 
+	 * POINTS :
+	 * 1 MODIFIED BFS
+	 * 2 RUN FOR ALL INDICES OF THE GRAPH
+	 * 3 VISITED CHECK
+	 * 
+	 * VISITED ARRAY HELPS AVOID VIVITED COMPONENTS, EVEN THOUGH THERE MIGHT BE 
+	 * DISCONNECTED COMPS, VISITED ARRAY HELPS AVOID VISITING THE CONNECTED
+	 * COMPONENTS AGAIN 
+	 * 
+	 * 4 THE QUEUE IS INITIALISED FOR EACH ELEMENT AS THERE CAN BE DISCONNECTED 
+	 * COMPONENTS TOO
+	 * 
+	 * 5 CHECKING FOR ALL NEIGHBORS
+	 * 
+	 * 6 ADD ONLY IF NOT VISITED
+	 * 
+	 * 7 FINAL CHECK FOR ALREADY VISITED ONES
+	*/
+	// https://leetcode.com/problems/is-graph-bipartite/
+	public boolean isBipartite2(int[][] graph) {
+        // BFS
+        // 0(not visited), 1(black), 2(white)
+        int[] visited = new int[graph.length];
+        
+		for (int i = 0; i < graph.length; i++) {//2
+			//3 VISITED CHECK AND FOR THIS TYPE OF FIRST ARRAY [[], [1,2]]
+            if (graph[i].length != 0 && visited[i] == 0) {
+                visited[i] = 1;
+                Deque<Integer> q = new LinkedList<>();//4
+                q.addLast(i);//5
+                while(!q.isEmpty()) {
+                    int current = q.removeFirst();
+                    for (int c : graph[current]) {
+						if (visited[c] != 0 && visited[c] == visited[current]) {
+							return false;//6
+						}
+						
+                        if (visited[c] == 0) {//7
+                            visited[c] = (visited[current] == 1) ? 2 : 1;
+                            q.addLast(c);//
+                        } 
+                        
+                    }
+                }                        
+            }
+        }
+        
+        return true;
 	}
-
-	boolean isSafeOrange(int[][] grid, int row, int col) {
-		if (row >= 0 && row < grid.length 
-		&& col >= 0 && col < grid[0].length 
-		&& grid[row][col] == 1) return true;
-		return false;
-	}
-	
-
 
 	/**  
 	 * NOT MODIFYING THE ORIGINAL GRAPH
+	 * 
+	 * ADD ONLY IF UNVISITED(CHECK ISSAFE)
 	 * 
 	 * 1 A CUSTOM CLASS AND A DISTANCE ARRAY
 	 * 2 ISSAFE CHECKS IF INDEX HAS BEEN VISITED OR NOT
 	 * 3 WHILE FINDING MAX CHECK IF VISITED == INF AND NOT 0
 	 * 0 CAN'T BE VISITED, SO DIST WILL BE INF 
 	 * 
+	 * TIME CAN BE STORED BOTH IN VISITED OR CUSTOM CLASS
+	 * 
 	 * grid[r][c] == 1 && distance[r][c] == Integer.MAX_VALUE)
 	*/
 
-	class Orange1{
+	class Orange{
         int x; int y;
-        Orange1(int x, int y){
+        Orange(int x, int y){
             this.x = x; 
             this.y = y;
         }
     }
     
-    public int orangesRotting1(int[][] grid) {
+    public int orangesRotting(int[][] grid) {
         int m = grid.length;
         int n = grid[0].length;
         
         int[][] distance = new int[m][n];
         for(int i =0; i<m; i++) Arrays.fill(distance[i], Integer.MAX_VALUE);
         
-        Deque<Orange1> q = new LinkedList<>();
+        Deque<Orange> q = new LinkedList<>();
         
         for(int i =0; i<m; i++){
             for(int j =0; j<n; j++){
                 if(grid[i][j] == 2) {
                     distance[i][j] = 0;
-                    q.addLast(new Orange1(i,j));
+                    q.addLast(new Orange(i,j));
                     // no break; //can be multiple 2s
                 }
             }
@@ -949,13 +997,13 @@ class Graph {
         int[] rows = new int[]{0,0,-1,1};
         int[] cols = new int[]{-1,1,0,0};
         while(q.size()!=0){
-            Orange1 curr = q.removeFirst();
+            Orange curr = q.removeFirst();
             // System.out.println(curr.x+" "+curr.y);
-            for(int k = 0; k<4; k++){
+            for(int k = 0; k<rows.length; k++){
                 int newX = curr.x + rows[k];
                 int newY = curr.y + cols[k];
                 if(isSafe(grid, distance, newX, newY)) {
-                    q.addLast(new Orange1(newX, newY));
+                    q.addLast(new Orange(newX, newY));
                     distance[newX][newY] = distance[curr.x][curr.y]+1;
                 }
             }
@@ -980,11 +1028,80 @@ class Graph {
 			// 1 not 0 can be visited
 			&& grid[r][c] == 1 
 			// unvisited
-            && distance[r][c] == Integer.MAX_VALUE) return true; // visited or not?
+            && distance[r][c] == Integer.MAX_VALUE) return true; 
         return false;
     }
 
+	
+	// https://leetcode.com/problems/rotting-oranges/
+	/**
+	 * POINTS : 1 USE A CUSTOM CLASS 
+	 * 2 USE A QUEUE AND ADD ALL 2s 
+	 * 
+	 * 3 THE TRICKY THING IS TO KEEP TRACK OF VISITED INDEXES, 
+	 * CAN BE HANDLED VIA IS SAFE CHECKER AND
+	 * MARKING THE ORIGINAL GRAPH INDEX AS 2.
+	 * 
+	 * WE ADD ONLY 2, WE CHECK FOR SURROUNDING INDEXES, 
+	 * IF SAFE MARK THEM AS 2 AND INCREMENT TIME;
+	 * 
+	 * 
+	 * imp : 
+	 * 1 modify the original graph
+	 * 2 no distance arr, so hold time too
+	 */
+	class Orange1 {
+		int row, col, val, time;
 
+		Orange1(int r, int c, int v, int t) {
+			this.row = r;
+			this.col = c;
+			this.val = v;
+			this.time = t;
+		}
+	}
+
+	public int orangesRotting1(int[][] grid) {
+		Deque<Orange1> q = new LinkedList<>();
+		int maxTime = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 2) q.add(new Orange1(i, j, 2, 0));
+			}
+		}
+
+		int[] rows = { -1, 0, 0, 1 };
+		int[] cols = { 0, -1, 1, 0 };
+		while (q.size() != 0) {
+			Orange1 curr = q.removeFirst();
+
+			for (int i = 0; i < rows.length; i++) {
+				int newX = curr.row + rows[i];
+				int newY = curr.col + cols[i];
+				if (isSafeOrange(grid, newX, newY)) {
+					grid[newX][newY] = 2;
+					q.addLast(new Orange1(newX, newY, 2, curr.time + 1));
+					maxTime = curr.time + 1;
+				}
+			}
+		}
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1)
+					return -1;
+			}
+		}
+		return maxTime;
+	}
+
+	boolean isSafeOrange(int[][] grid, int row, int col) {
+		if (row >= 0 && row < grid.length 
+		&& col >= 0 && col < grid[0].length 
+		&& grid[row][col] == 1) return true;
+		return false;
+	}
+	
 
 	// see if edge wt can be 0, initialize with -1;
 	// distance will store dist
@@ -1013,7 +1130,7 @@ class Graph {
         }
         
         int[] distance = new int[n];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+        Arrays.fill(distance, Integer.MAX_VALUE); 
         distance[headID] = informTime[headID];
         
         Deque<Emp> q = new LinkedList<>();
@@ -1035,6 +1152,7 @@ class Graph {
         for(int i =0; i<n; i++) max = Math.max(max, distance[i]);
         return max;
     }
+
 
 	// https://leetcode.com/problems/time-needed-to-inform-all-employees/
 	// AMAZON, USED BFS
@@ -1140,6 +1258,7 @@ class Graph {
 	 * UPDATE DISTANCE ARRAY AND ADD THE CUSTOM CLASS WITH UPDATED STOPS 
 	 * BACK TO Q.
 	 * 
+	 * imp------------------->
 	 * 4 IMP HERE INCORRECT DISTANCES MIGHT BE STORED IN DISTANCE ARRAY
 	 * SO USE CURR.DIST
 	 * distance[i] > curr.dist + g[curr.node][i]
@@ -1188,56 +1307,7 @@ class Graph {
 		return distance[dest]==Integer.MAX_VALUE?-1:distance[dest];//6
 	}
 
-
-	/** 
-	 * POINTS :
-	 * 1 MODIFIED BFS
-	 * 2 RUN FOR ALL INDICES OF THE GRAPH
-	 * 3 VISITED CHECK
-	 * 
-	 * VISITED ARRAY HELPS AVOID VIVITED COMPONENTS, EVEN THOUGH THERE MIGHT BE 
-	 * DISCONNECTED COMPS, VISITED ARRAY HELPS AVOID VISITING THE CONNECTED
-	 * COMPONENTS AGAIN 
-	 * 
-	 * 4 THE QUEUE IS INITIALISED FOR EACH ELEMENT AS THERE CAN BE DISCONNECTED 
-	 * COMPONENTS TOO
-	 * 
-	 * 5 CHECKING FOR ALL NEIGHBORS
-	 * 
-	 * 6 ADD ONLY IF NOT VISITED
-	 * 
-	 * 7 FINAL CHECK FOR ALREADY VISITED ONES
-	*/
-	// https://leetcode.com/problems/is-graph-bipartite/
-	public boolean isBipartite(int[][] graph) {
-        // BFS
-        // 0(not visited), 1(black), 2(white)
-        int[] distance = new int[graph.length];
-        
-		for (int i = 0; i < graph.length; i++) {//2
-			//3 VISITED CHECK AND FOR THIS TYPE OF FIRST ARRAY [[], [1,2]]
-            if (graph[i].length != 0 && distance[i] == 0) {
-                distance[i] = 1;
-                Deque<Integer> q = new LinkedList<>();//4
-                q.addLast(i);//5
-                while(!q.isEmpty()) {
-                    int current = q.removeFirst();
-                    for (int c : graph[current]) {
-						if (distance[c]!=0 && distance[c] == distance[current]) return false;//6
-						
-                        if (distance[c] == 0) {//7
-                            distance[c] = (distance[current] == 1) ? 2 : 1;
-                            q.addLast(c);//
-                        } 
-                        
-                    }
-                }                        
-            }
-        }
-        
-        return true;
-	}
-
+	
 	// https://leetcode.com/problems/possible-bipartition/
 	
 	// https://www.techiedelight.com/print-k-colorable-configurations-graph-vertex-coloring-graph
@@ -1289,9 +1359,9 @@ class Graph {
 	 * BFS VS DIJKSTRA
 	 * 1 QUEUE VS PQUEUE
 	 * 2 NO SET TO TRACK VISITED (in both)
-	 * 3 BFS CAN WORKS WITH LOOPS
+	 * 3 MODFIED BFS CAN'T WORK WITH LOOPS
 	 * 
-	 * BUT THERE'S A CATCH, BFS CAN'T PROVIDE OPTMUM DIST IF WE MAINTAIN
+	 * BUT THERE'S A CATCH, BFS CAN'T PROVIDE OPTIMUM DIST IF WE MAINTAIN
 	 * A VISITED SET, AS DIST CAN'T BE UPDATED EVEN IF WE FIND A SHORTER
 	 * PATH. SO MODIFIED BFS(USED TO FIND DIST) DOESN'T WORK WITH LOOPS.
 	 * 
@@ -1466,6 +1536,8 @@ class Graph {
 
 
 	/**
+	 * ALWAYS CUSTOM CLASS FOR PQ SORTING
+	 * 
 	 * POINTS : 
 	 * 1 4 THINGS : CUSTOM CLASS, DIST ARRAY, PARENT ARRAY, HASHSET, PQ
 	 * 2 DIST[START] = 0, PARENT[START] = -1 
@@ -1489,7 +1561,7 @@ class Graph {
 			this.time = t;
 		}
 	}
-	// no src noe is needed as MST
+	// no src node is needed as MST 
 	void prim(int[][] graph, int n) {
 		int[][] g = new int[n][n];
 		for(int[] i: g) Arrays.fill(i, -1);
@@ -1528,18 +1600,18 @@ class Graph {
 	void primServer(int[][] graph) {
 		int n = 0;
 		// counting no of edges
-		HashSet<Integer> set = new HashSet<>();
+		HashSet<Integer> visited = new HashSet<>();
 		for (int i = 0; i < graph.length; i++) {
-			if (!set.contains(graph[i][0])) {
-				set.add(graph[i][0]);
+			if (!visited.contains(graph[i][0])) {
+				visited.add(graph[i][0]);
 				n++;
 			}
-			if (!set.contains(graph[i][1])) {
-				set.add(graph[i][1]);
+			if (!visited.contains(graph[i][1])) {
+				visited.add(graph[i][1]);
 				n++;
 			}
 		}
-		set.clear();
+		visited.clear();
 		// creating adj matrix
 		int[][] g = new int[n][n];
 		for(int[] i: g) Arrays.fill(i, -1);
@@ -1564,9 +1636,9 @@ class Graph {
 		while (pq.size() != 0) {
 			// System.out.println("curr "+curr);
 			Prim curr = pq.remove();
-			set.add(curr.node);
+			visited.add(curr.node);
 			for (int j = 0; j < n; j++) {
-				if (!set.contains(j) 
+				if (!visited.contains(j) 
 				&& g[curr.node][j] != -1 && curr.node!= j
 				&& distance[j] > g[curr.node][j]) {
 					distance[j] = g[curr.node][j];
@@ -1581,6 +1653,32 @@ class Graph {
 
 
 	/////////////////////////////////// BACKTRACKING
+
+
+	// https://leetcode.com/problems/all-paths-from-source-to-target/
+	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+
+		List<List<Integer>> res = new ArrayList<>();
+		List<Integer> list = new ArrayList<>();
+
+		list.add(0);
+		dfs(res, list, graph, 0);
+		return res;
+	}
+
+	void dfs(List<List<Integer>> res, List<Integer> list, int[][] graph, int curr) {
+		if (curr == graph.length - 1) {
+			// temp.add(curr);
+			res.add(new ArrayList<>(list));
+			return;
+		}
+		for (int j : graph[curr]) {
+			list.add(j);
+			dfs(res, list, graph, j);
+			list.remove(list.size() - 1);
+		}
+	}
+	
 	/**
 	 * basically same as backtracking.. a vertex is continually assigned colors from
 	 * 1 till n, and we check if it's safe, then we recur, else we go back to
@@ -1630,6 +1728,63 @@ class Graph {
 		}
 		return true;
 	}
+
+
+	///////// WORD SEARCH
+    /**
+     * POINTS : 
+     * 1 start a dfs whenever the ch[i][j] matches the starting char of string
+     * 2 USE THE WORD, DON'T USE CHAR ARRAY
+     * 3 NO NEED TO MAINTAIN VISITED ARRAY, USE BACKTRACKING
+     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE CHECKS
+     * FOR ALL POSSIBLE STARTS AND DOESN'T RETURN TRUE TILL ALL POSSIBILITIES
+     * ARE EXHAUSTED, WHICH RESULTS IN TLE
+     * 5 
+     * 
+     */
+    // backtracking
+    // mark as ' '
+    // pass the char, not word and index both
+    // return boolean not void 
+    // https://leetcode.com/problems/word-search/
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                if(board[i][j] == word.charAt(0)) {
+                    if(dfs(board, i, j, word, 0)) return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    boolean dfs(char[][] board, int row, int col, String word, int index){
+        // proceed till index == word.length() 
+        if(index == word.length()) return true;
+        
+        if(isSafeBoard(board, row, col, word.charAt(index))){
+            char temp = word.charAt(index);
+            board[row][col] = ' '; // 2
+            boolean found = dfs(board, row+1, col, word, index+1) // 3
+            ||dfs(board, row-1, col, word, index+1)
+            ||dfs(board, row, col+1, word, index+1)
+            ||dfs(board, row, col-1, word, index+1);
+            if(found) return true; // 4
+            board[row][col] = temp; // 5
+        }
+        return false;
+    }
+    
+    boolean isSafeBoard(char[][] board, int row, int col, char ch){
+        if(row>=0 && row<board.length
+          && col>=0 && col<board[0].length
+          && board[row][col] == ch) return true;
+        return false;
+	}
+	
 
 	/** 
 	 * POINTS : 

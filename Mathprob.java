@@ -274,6 +274,27 @@ public class Mathprob {
         return list.get(0);
     }
 
+    // why -2? we are taking into acount the oundary of the upper cell
+    // -2 one for each cell
+    // https://leetcode.com/problems/island-perimeter/
+    public int islandPerimeter(int[][] grid) {
+        int m = grid.length; int n = grid[0].length;
+        int perimeter = 0;
+        
+        for(int i =0; i<m; i++){
+            for(int j=0; j<n; j++){
+                
+                if(grid[i][j] == 1) {
+                    perimeter += 4;
+                    
+                    if(i>0 && grid[i-1][j] == 1) perimeter -= 2;
+                    if(j>0 && grid[i][j-1] == 1) perimeter -= 2;
+                }
+            }
+        }
+        return perimeter;
+    }
+    
     // https://leetcode.com/problems/maximum-swap/
     // https://leetcode.com/problems/next-permutation/
     // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
