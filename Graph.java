@@ -16,7 +16,6 @@ import java.util.*;
  * 
  * 
  * 
- * 
  * TEMPLATES :
  * DFS
  * 
@@ -34,7 +33,6 @@ import java.util.*;
  *         
  *      int count = 0;
  *      for(int i =0; i<n; i++){
- * 		   // for disconnected graphs
  *         if(visited[i] != Integer.MAX_VALUE) continue;  // 2
  *         dfs(i, M, visited);
  *         count++;
@@ -45,14 +43,38 @@ import java.util.*;
  *  void dfs(int start, int[][] g,int[] visited){
  *      visited[start] = 1;                               // 3
  *      for(int i = 0; i<g.length; i++){
- *          if(visited[i] != Integer.MAX_VALUE) continue;
+ *          if(visited[i] != Integer.MAX_VALUE) continue; // 4
  *          if(i!=start && g[start][i] == 1) dfs(i, g, visited);
  *      }
  *  }
  * 
+ * 
+ * 
  * ///////////////////////////////
  * DFS WITH MARKING NO OF ISLANDS
  * LOOP : COURSE SCHEDULE, TERMINAL STATES
+ * 
+ * 
+ * ////////////////////////////////////////////
+ * TOPO SORT WITH LOOP TEMPLATE :
+ * 
+ * 1 ADD TO CURRPARENTS AND REMOVE
+ * 2 ADD TO Q AT THE END
+ * 
+ *  visited.add(curr);
+ * 	if(!map.containsKey(curr)) return;
+ * 	List<Integer> list = map.get(curr);
+ * 	currParents.add(curr);                 // 1
+ *  for(int i : list){
+ * 		if (currParents.contains(i)) {
+ * 			this.loop = true;
+ * 			System.out.println("loop detected");
+ * 			break;
+ * 		}
+ * 		detectLoopUtil(i, visited, currParents, map);
+ * 	}
+ * 	currParents.remove(curr);              // 2
+ *  q.addLast(curr);                       // 3
  * 
  * //////////////////////////////////////////////
  * BFS :
@@ -69,6 +91,43 @@ import java.util.*;
  * ADD TO Q, WHILE REMOVING ADD TO DISTANCE
  * 
  * N/W DELAY, CHEAPEST FLIGHTS
+ * 
+ * IN MODIFIED BFS, NO VISITED CHECK
+ * 
+ *  BFS TEMPLATE:
+ * 1 Custom class
+ * 2 adj matrix, q, visited arr(set can be used but arr can store dist)
+ * 
+ * int[][] g = new int[n][n];
+ * 3 fill edges with -1
+ * fill g from graph
+ * EDGES ARE FILLED ONLY IN CASES WHERE EDGE WTS CAN BE 0, ELSE NOT REQD
+ * 
+ * distance will hold dist
+ * distance[]
+ * 4 fill distance with Max_Value
+ * q.addLast(head);
+ * while(q.size()!=0){
+ * curr = q.removeFirst();
+ * 
+ * for(int i =0; i<n; i++){
+ * if(
+ * 5 g[curr.node][i] != -1
+ * 6 distance[i] > distance[curr.node] + g[curr.node][i]
+ * for FLIGHTS, USE CURR.DISTANCE, WHY? 
+ * 
+ * 7 update distance[i]
+ * 8 add to q
+ * )
+ * }
+ * }
+ * 
+ * 
+ * ///////////////////////////////////////////////
+ * FOR DIJKSTRA
+ * SAME AS BFS, BUT USE PQUEUE
+ * USE CUSTOM CLASS FOR SORTING
+ * DON'T USE VISITED
  * 
  * ///////////////////////////////////////////////////
  * QUES 
@@ -92,8 +151,8 @@ import java.util.*;
  * 
  * FOR BIPARTITE, COLORING, USE ADJ LIST
  * 
- * 2 FOR BFS FINDING TIME OR DIST, USE ADJ MATRIX, AS VISITED ARRAY CAN ALSO
- * STORE THE DIST OR TIME, USE DIJKSTRA IF POSSIBLE.
+ * 2 FOR BFS FINDING TIME OR DIST, USE ADJ MATRIX, AS EDGE WTS CAN BE 
+ * ACCESSED EASILY, USE DIJKSTRA IF POSSIBLE.
  * 
  * 3 FOR TOPO SORT PREFER ADJLIST OVER MATRIX AS ENTRY EXISTS ONLY IF NODE HAS
  * OUTGOING EDGES(DAG) AND NO NEED TO ADD AND REMOVE.
@@ -155,20 +214,22 @@ class Graph {
 	/** 
 	 * DFS
 	 * 1 HASHSET(VISITED)
-	 * 2 FOR LOOP
+	 * 2 ONLY ADD IF UNVISITED
 	 * 3 SET.ADD AT THE START OF HELPER
-	 * 4 2 CHECKS 
+	 * 4 IF NO ADJACENT NODES, RETURN
+	 * 
+	 * 2 CHECKS 
 	 * IF(SET.CONTAINS) CONTINUE; DFSHELPER
 	 * IF(SET.CONTAINS) CONTINUE;
 	 * 
 	*/
 	void dfs() {
 		// boolean[] visited = new boolean[g.V];
-		HashSet<Integer> set = new HashSet<>();
+		HashSet<Integer> set = new HashSet<>();    // 1 
 		HashMap<Integer, ArrayList<Integer>> g = new HashMap<>();
 
 		for (int i = 0; i < V; i++) {
-			if(set.contains(i)) continue;
+			if(set.contains(i)) continue;          // 2
 			dfsAdjListHelper(i, set, g);
 		}
 	}
@@ -176,13 +237,11 @@ class Graph {
 	void dfsAdjListHelper(int curr, HashSet<Integer> set, 
 	HashMap<Integer, ArrayList<Integer>> g ) {
 
-		System.out.println("dfs " + curr);
-		// if(set.contains(curr)) return;
-		set.add(curr);
-		if (!map.containsKey(curr)) return;// extra in adj list
+		set.add(curr);                             // 3
+		if (!map.containsKey(curr)) return;        // 4
 		ArrayList<Integer> list = g.get(curr);
 		for (int i : list) {
-			if (set.contains(i)) continue;
+			if (set.contains(i)) continue;          // 5
 			dfsAdjListHelper(i, set, g);
 		}
 	}
@@ -300,8 +359,8 @@ class Graph {
 	}
 	
 	/** 
-	 * FIND TOTAL NO OF COMPONENTS AND THEN CHECK MST PORPERTY
-	 * edges = n-1
+	 * FIND TOTAL NO OF COMPONENTS AND THEN CHECK MST PROPERTY
+	 * edges MUST BE n-1
 	 * HERE EACH EDGE IS COUNTED TWICE, DIRECTED (0->1, 1->0)
 	 * SO (edges/2).
 	 * 
@@ -512,33 +571,33 @@ class Graph {
 	/**
 	 * POINTS : 
 	 * 1 RUN A FOR LOOP, IF NOT VISITED CALL TPS 
-	 * 2 IN TPS ADD TO SET(VISITED) 
+	 * 2 IN TPS ADD TO VISITED
 	 * 3 CHECK IF VERTEX HAS LIST 
 	 * 4 IF YES, THEN ITERATE 
-	 * 5 IF SET CONTAINS VERTEX, CONTINUE 
+	 * 5 IF VISITED CONTAINS VERTEX, CONTINUE 
 	 * 6 ELSE CALL TPS WITH i 
 	 * 7 ADD TO Q(STACK)
 	 * 
 	 * VISITED CHECK IS DONE TWICE, ONCE IN MAIN FN, ONCE IN TPS
 	 * 
-	 * TO CHECK FOR LOOP IN TPS, MAINTAIN A CURRPARENT SET, ADD AT THE START OF
-	 * EVERY CALL, REMOVE AT THE END;
+	 * TO CHECK FOR LOOP IN TPS, MAINTAIN A CURRPARENT SET, 
+	 * ADD AT THE START OF EVERY CALL, REMOVE AT THE END;
 	 * REFER COURSE-SCHEDULE-ii
 	 */
-	int[] tpsStart(int N) {
+	List<Integer> tpsStart(int N) {
 		// iterate over the graph in argument to create hashmap graph
 		HashMap<Integer, List<Integer>> g = new HashMap<>();
 		HashSet<Integer> set = new HashSet<>();
 		Deque<Integer> q = new LinkedList<>();
 		int n = N;
-		int[] res = new int[n];
+		List<Integer> res = new ArrayList<>();
 
 		for (int i = 0; i < n; i++) {
 			if (!set.contains(i)) tps(i, g, set, q);
 		}
 
 		int s = q.size();
-		for (int i = 0; i < s; i++) res[i] = q.removeLast();
+		for (int i = 0; i < s; i++) res.add(q.removeLast());
 
 		return res;
 	}
@@ -546,12 +605,11 @@ class Graph {
 	void tps(int curr, HashMap<Integer, List<Integer>> map, HashSet<Integer> set, 
 	Deque<Integer> q) {
 		set.add(curr);
-		if (map.containsKey(curr)) {
-			List<Integer> list = map.get(curr);
-			for (int i : list) {
-				if (set.contains(i)) continue;
-				tps(i, map, set, q);
-			}
+		if (!map.containsKey(curr)) return;
+		List<Integer> list = map.get(curr);
+		for (int i : list) {
+			if (set.contains(i)) continue;
+			tps(i, map, set, q);
 		}
 		q.addLast(curr);
 	}
@@ -594,23 +652,28 @@ class Graph {
 	}
 
 
-	/**  DETECT LOOP IN DAG (BACTRACKING)
-	* 1 CREATE GRAPH 2 USE 2 HASHSETS ONE FOR VISITED, ONE FOR
-	* CURR PARENTS 3 ADD TO VISITED AT START, ADD TO Q AT END 
-	* 
-	* 4 2 CHECKS : 
-	* ONE FOR VISITED(SET.CONTAINS) 
-	* ONE FOR CURRPARENTS (LOOP) 
-	* 6 CURRPARENTS.ADD(), CURRPARENTS.REMOVE()
-	* 
-	* TO DETECT LOOP WE KEEP OF TRACK OF CURRENT PARENTS IN EVERY ITERATION
-	* AND REMOVE AT THE END OF THE ITERATION
-	* 
-	* 2 HASHSETS ARE USED. ONE IS TO DETECT THE VERTEX IS VISITED OR NOT
-	* CURRPARENTS HOLDS THE CURRENTLY VISITED NODES IN THIS ITERATION,
-	* IT IS CLEARED AT THE END.
-	* VISITED SPEEDS UP AS WE DON'T VISIT THE VISITED NODES AGAIN.
-	* */
+	/**  
+	 * DETECT LOOP IN DAG (BACTRACKING)
+	 * 
+	 * 1 CREATE GRAPH 
+	 * 2 USE 2 HASHSETS ONE FOR VISITED, ONE FOR CURR PARENTS 
+	 * 3 ADD TO VISITED AT START,
+	 * 
+	 * 4 2 CHECKS : 
+	 * ONE FOR VISITED(SET.CONTAINS) 
+	 * ONE FOR CURRPARENTS (LOOP) 
+	 * 6 CURRPARENTS.ADD(), CURRPARENTS.REMOVE()
+	 * 7 ADD TO Q AT END 
+	 * 
+	 * TO DETECT LOOP WE KEEP OF TRACK OF CURRENT PARENTS IN EVERY ITERATION
+	 * AND REMOVE AT THE END OF THE ITERATION
+	 * 
+	 * 2 HASHSETS ARE USED. ONE IS TO DETECT THE VERTEX IS VISITED OR NOT
+	 * CURRPARENTS HOLDS THE CURRENTLY VISITED NODES IN THIS ITERATION,
+	 * IT IS CLEARED AT THE END.
+	 * VISITED SAME AS DFS
+	 * 
+	 * */
 	boolean detectLoopDirected() {
 		// int[] visited = new int[this.V];
 		HashMap<Integer, List<Integer>> map = new HashMap<>();
@@ -639,31 +702,51 @@ class Graph {
 			}
 			detectLoopUtil(i, visited, currParents, map);
 		}
-		// visited[vertex] = 0;
 		currParents.remove(curr);
 	}
 
 
-	// https://leetcode.com/problems/course-schedule/
 	/**
 	 * FOR TOPO SORT USE ADJ LIST AS 
 	 * 1 IT HELPS WHEN ANY NODE DOESN'T HAVE ANY
-	 * OUTGOING EDGE, THE MAP.CONTAINS CHECK HELPS REMOVE IT QUICKER AND NOT ITERATE
-	 * AND ADD UNNECESSARILY. 
+	 * OUTGOING EDGE, THE MAP.CONTAINS CHECK HELPS REMOVE IT QUICKER 
+	 * AND NOT ITERATE AND ADD UNNECESSARILY. 
+	 * 
 	 * 2 ALSO IT IS FASTER AS IN ADJMATRIX WE ITERATE OVER EACH LOOP
 	 * 
-	 * set and currParenst both are needed, set is not necessary bit speeds up a lot
-	 * currParents is like backtracking, add at the start and remove at the end.
+	 * set and currParents both are needed :
+	 * currParents is like backtracking, 
+	 * add at the start and remove at the end.
 	 * 
 	 * STEPS : 
 	 * 1 USE CURRPARENTS, DON'T ADD IN MAIN, ALWAYS ADD TO currParents IN DFS
 	 * 2 ADD, LOOP CHECK, DFS AND REMOVE
 	 * ALDR
+	 * 
+	 * same as dfs
+	 * for(){
+	 *   if(visited) continue;
+	 * 	 helper()
+	 * }
+	 * 
+	 * helper(){
+	 *   visited.add();
+	 *   if(!map.contains()) return;
+	 *   currparents.add()
+	 *   for(){
+	 *   }
+	 *   currParents.remove();
+	 *   q.addLast
+	 * 
+	 * }
+	 * 
+	 * 
 	 */
+	// https://leetcode.com/problems/course-schedule/
 	boolean loopC1 = false;
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
-        HashSet<Integer> set = new HashSet<>();
+        HashSet<Integer> visited = new HashSet<>();
         HashSet<Integer> currParents = new HashSet<>();
         
         for(int i =0; i<prerequisites.length; i++){
@@ -676,21 +759,23 @@ class Graph {
         
         for(int i = 0; i<numCourses; i++){
             // if(loop) return false; 
-            if(!set.contains(i)) dfs(i, map, set, currParents);//1
+            if(!visited.contains(i)) dfs(i, map, visited, currParents); // 1
         }
         return !loopC1;
     }
     
-	void dfs(int curr, HashMap<Integer, ArrayList<Integer>> map, HashSet<Integer> set, 
-	HashSet<Integer> currParents){
-        set.add(curr);
-        if(!map.containsKey(curr)) return;
+	void dfs(int curr, HashMap<Integer, ArrayList<Integer>> map, 
+	HashSet<Integer> visited, HashSet<Integer> currParents){
+
+        visited.add(curr);
+		if(!map.containsKey(curr)) return;
+		
         currParents.add(curr);
         ArrayList<Integer> list = map.get(curr);
         for(int i : list) {
             //return is required here
             if(currParents.contains(i)) {loopC1 = true; return;}
-            dfs(i, map, set, currParents);
+            dfs(i, map, visited, currParents);
             
         }
         currParents.remove(curr);
@@ -700,7 +785,6 @@ class Graph {
 	// https://stackoverflow.com/questions/38578995/how-to-cast-object-to-int-java
 	// USING ADJ MATRIX doesn't work for all cases
 
-	// https://leetcode.com/problems/course-schedule-ii/
 	/**
 	 * BASIC DAG WITH LOOP TEMPLATE 
 	 * 1 CREATE GRAPH 
@@ -710,7 +794,7 @@ class Graph {
 	 * 5 WHILE BACKTRACKING, ADD AND REMOVE
 	 * 
 	 */
-
+	// https://leetcode.com/problems/course-schedule-ii/
 	boolean isLoop = false;
 
 	public int[] findOrder(int numCourses, int[][] prerequisites) {
@@ -719,7 +803,7 @@ class Graph {
 	    HashSet<Integer> currParents = new HashSet<>();
 		Deque<Integer> q = new LinkedList<>();
 
-        //3, [[1,0]] chk this case
+        // 3, [[1,0]] chk this case
 		if (numCourses == 2 && prerequisites.length == 1)
 			return new int[] { prerequisites[0][1], prerequisites[0][0] };
 
@@ -828,8 +912,9 @@ class Graph {
 	 * for(int i =0; i<n; i++){
 	 * if(
 	 * 5 g[curr.node][i] != -1
-	 * USE CURR.DISTANCE, WHY? SEE FLIGHTS
-	 * 6 distance[i] > curr.dist + g[curr.node][i]
+	 * 6 distance[i] > distance[curr.node] + g[curr.node][i]
+	 * for FLIGHTS, USE CURR.DISTANCE, WHY? 
+	 * 
 	 * 7 update distance[i]
 	 * 8 add to q
 	 * )
@@ -1248,7 +1333,11 @@ class Graph {
 
 	
 	/** 
-	 * VARIATION : DFS WITH INVALID DISTANCES
+	 * VARIATION : BFS WITH INVALID DISTANCES
+	 * DISTANCE ARRAY MIGHT BE UPDATED BUT STOPS MIGHT
+	 * NIT BE AVAILABLE, SO CORRECT DIST IS IN THE CUSTOM
+	 * OBJECT IIN PQ
+	 * 
 	 * 
 	 * POINTS :
 	 * 1 USE A CUSTOM CLASS TO STORE THE NODE, DIST AND STOPS 
@@ -1427,9 +1516,9 @@ class Graph {
 	// graph src, dest, edge wt : [[2,1,1],[2,3,1],[3,4,1]]
 	class Shortest {
 		int node, time;
-		Shortest(int v, int d) {
-			this.node = v;
-			this.time = d;
+		Shortest(int n, int t) {
+			this.node = n;
+			this.time = t;
 		}
 	}
 	int dijkstra(int[][] graph, int head, int n) {
@@ -1453,7 +1542,7 @@ class Graph {
 			Shortest curr = pq.remove();
 
 			for(int i =0; i<n; i++){
-				if(distance[i]> distance[curr.node] + graph[curr.node][i]){
+				if(distance[i] > distance[curr.node] + graph[curr.node][i]){
 					distance[i] = distance[curr.node] + graph[curr.node][i];
 					pq.add(new Shortest(i, distance[i]));
 				}
@@ -1470,7 +1559,6 @@ class Graph {
 
 
 	/** 
-	 * 
 	 * 
 	 * MAJOR PINTS OF FAILURE:
 	 * 1 0 WT EDGES, SO g[curr.node][i]!=0 FAILS
@@ -1769,9 +1857,9 @@ class Graph {
             char temp = word.charAt(index);
             board[row][col] = ' '; // 2
             boolean found = dfs(board, row+1, col, word, index+1) // 3
-            ||dfs(board, row-1, col, word, index+1)
-            ||dfs(board, row, col+1, word, index+1)
-            ||dfs(board, row, col-1, word, index+1);
+            || dfs(board, row-1, col, word, index+1)
+            || dfs(board, row, col+1, word, index+1)
+            || dfs(board, row, col-1, word, index+1);
             if(found) return true; // 4
             board[row][col] = temp; // 5
         }
