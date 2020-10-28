@@ -152,6 +152,30 @@ public class DP {
         return ans;
     }
 
+    // IMP
+    //https://leetcode.com/problems/minimum-cost-for-tickets/
+    public int mincostTickets(int[] days, int[] costs) {
+        Set<Integer> set = new HashSet<>();
+        for (int day : days) set.add(day);
+
+        int lastDay = days[days.length-1], dp[] = new int[lastDay+1];
+        for (int i = 1; i <= lastDay; i++) {
+            if (!set.contains(i)) {
+                dp[i] = dp[i-1];
+            }
+            else {
+                dp[i] = dp[i-1]+costs[0];
+
+                int j = (i >= 7) ? i-7 : 0;
+                dp[i] = Math.min(dp[i], dp[j] + costs[1]);
+
+                j = (i >= 30) ? i-30 : 0;
+                dp[i] = Math.min(dp[i], dp[j] + costs[2]);
+            }
+        }
+
+    return dp[lastDay];
+    }
 
     // https://leetcode.com/explore/featured/card/
     // october-leetcoding-challenge/560/week-2-october-8th-october-14th/3494/
@@ -702,12 +726,75 @@ public class DP {
         for (int val : dp) max = Math.max(val, max);
         return max;
     }
-        
-
     
 
-    ////////////////////////KNAPSACK TYPE
-    int rodCutting(int[] price, int size){ //size is for fixing the for loop iteration number
+    ////////////////////////// KNAPSACK TYPE
+
+    int knapsack(int[] val, int[] wt, int remainingWeight, int index){
+        if(remainingWeight <0) return Integer.MIN_VALUE;
+        if(index<=0) return 0; //removing equal to causes problems
+        // if(remainingWeight == 0 || index == val.length) return ;
+        int incl = val[index] + knapsack(val, wt, remainingWeight-wt[index], index);
+        int excl = knapsack(val, wt, remainingWeight, index-1);
+
+        return Math.max(incl, excl);
+    }
+
+    // REMEMBER BOUNDARY CONDITIONS
+    //
+    
+    // WITH MEMOIZATION
+    int knapsackMemo(int[] val, int[] wt, int remainingWeight, int currVal, int index, int[][] dp){
+        if(remainingWeight<0 || index>=val.length) return 0;
+        // System.out.println("index "+index+" currVal "+ currVal);
+        if(remainingWeight == 0) return dp[index][remainingWeight] = currVal;
+        
+        // if(dp[index][remainingWeight]!=0) return dp[index][remainingWeight];
+        utilCustom.Utility.printMatrix(dp);
+
+        dp[index][remainingWeight] = 
+        Math.max(
+        knapsackMemo(val, wt, remainingWeight - wt[index], currVal + val[index], index, dp),
+        knapsackMemo(val, wt, remainingWeight, currVal, index+1, dp));
+        // boundary conditions are remainingWeight - wt[index] and index+1
+        return dp[index][remainingWeight];
+    }
+
+    // USE MAX OF (T[i-1][j], T[i][j-w[i-1]] + v[i-1])
+    // above and same row but with reduced weight
+    public int knapSackDP(int[] v, int[] w, int W)
+	{
+		// T[i][j] stores the maximum value of knapsack having weight less
+		// than equal to j with only first i items considered.
+		int[][] T = new int[v.length + 1][W + 1];
+
+		// do for ith item
+		for (int i = 1; i <= v.length; i++)
+		{
+			// consider all weights from 0 to maximum capacity W
+			for (int j = 1; j <= W; j++)
+			{
+				// don't include ith element if capacity is less than w[i-1]
+				if (w[i-1] > j) T[i][j] = T[i-1][j];
+				else {
+					// find maximum value we get by excluding or including the ith item
+                    int excl = T[i-1][j];
+                    // same row T[i], if no repitition, T[i-1]
+					int incl = T[i][j-w[i-1]] + v[i-1]; 
+					// System.out.println("for i = "+i+", j = "+j +"; excl "+excl+ ", incl "+incl);
+					T[i][j] = Math.max(excl, incl);
+				}
+			}
+		}
+
+		// return maximum value
+		utilCustom.Utility.printMatrix(T);	
+		return T[v.length][W];
+    }
+
+
+    int rodCutting(int[] price, int size){ 
+        //size is for fixing the for loop iteration number
         if(size <=0) return 0;
 
         int max = Integer.MIN_VALUE;
@@ -867,6 +954,7 @@ public class DP {
         return dp[n][amount] == Integer.MAX_VALUE-100?-1:dp[n][amount];
     }
 
+
     public int coinChangeSingleArrayDP(int[] coins, int amount) {
         int[] ans = new int[amount + 1];
         ans[0] = 0;
@@ -879,6 +967,7 @@ public class DP {
         }
         return ans[amount] == Integer.MAX_VALUE-1? -1:ans[amount];
     }
+
 
     // FIRST COL -> 1
     // COINS CAN BE REUSED
@@ -904,67 +993,7 @@ public class DP {
 
     }
 
-    int knapsack(int[] val, int[] wt, int remainingWeight, int index){
-        if(remainingWeight <0) return Integer.MIN_VALUE;
-        if(index<=0) return 0; //removing equal to causes problems
-        // if(remainingWeight == 0 || index == val.length) return ;
-        int incl = val[index] + knapsack(val, wt, remainingWeight-wt[index], index);
-        int excl = knapsack(val, wt, remainingWeight, index-1);
-
-        return Math.max(incl, excl);
-    }
-
-    // REMEMBER BOUNDARY CONDITIONS
-    //
     
-    // WITH MEMOIZATION
-    int knapsackMemo(int[] val, int[] wt, int remainingWeight, int currVal, int index, int[][] dp){
-        if(remainingWeight<0 || index>=val.length) return 0;
-        // System.out.println("index "+index+" currVal "+ currVal);
-        if(remainingWeight == 0) return dp[index][remainingWeight] = currVal;
-        
-        // if(dp[index][remainingWeight]!=0) return dp[index][remainingWeight];
-        utilCustom.Utility.printMatrix(dp);
-
-        dp[index][remainingWeight] = 
-        Math.max(
-        knapsackMemo(val, wt, remainingWeight - wt[index], currVal + val[index], index, dp),
-        knapsackMemo(val, wt, remainingWeight, currVal, index+1, dp));
-        // boundary conditions are remainingWeight - wt[index] and index+1
-        return dp[index][remainingWeight];
-    }
-
-    // USE MAX OF (T[i-1][j], T[i][j-w[i-1]] + v[i-1])
-    // above and same row but with reduced weight
-    public int knapSackDP(int[] v, int[] w, int W)
-	{
-		// T[i][j] stores the maximum value of knapsack having weight less
-		// than equal to j with only first i items considered.
-		int[][] T = new int[v.length + 1][W + 1];
-
-		// do for ith item
-		for (int i = 1; i <= v.length; i++)
-		{
-			// consider all weights from 0 to maximum capacity W
-			for (int j = 1; j <= W; j++)
-			{
-				// don't include ith element if capacity is less than w[i-1]
-				if (w[i-1] > j) T[i][j] = T[i-1][j];
-				else {
-					// find maximum value we get by excluding or including the ith item
-                    int excl = T[i-1][j];
-                    // same row T[i], if no repitition, T[i-1]
-					int incl = T[i][j-w[i-1]] + v[i-1]; 
-					// System.out.println("for i = "+i+", j = "+j +"; excl "+excl+ ", incl "+incl);
-					T[i][j] = Math.max(excl, incl);
-				}
-			}
-		}
-
-		// return maximum value
-		utilCustom.Utility.printMatrix(T);	
-		return T[v.length][W];
-    }
 
     // IMP CHECK WHY dp[0][0] = 1 was required
     // https://leetcode.com/problems/perfect-squares/
@@ -999,32 +1028,6 @@ public class DP {
         }
         utilCustom.Utility.printMatrix(dp);
         return dp[limit-1][n];
-    }
-
-
-    // IMP
-    //https://leetcode.com/problems/minimum-cost-for-tickets/
-    public int mincostTickets(int[] days, int[] costs) {
-        Set<Integer> set = new HashSet<>();
-        for (int day : days) set.add(day);
-
-        int lastDay = days[days.length-1], dp[] = new int[lastDay+1];
-        for (int i = 1; i <= lastDay; i++) {
-            if (!set.contains(i)) {
-                dp[i] = dp[i-1];
-            }
-            else {
-                dp[i] = dp[i-1]+costs[0];
-
-                int j = (i >= 7) ? i-7 : 0;
-                dp[i] = Math.min(dp[i], dp[j] + costs[1]);
-
-                j = (i >= 30) ? i-30 : 0;
-                dp[i] = Math.min(dp[i], dp[j] + costs[2]);
-            }
-        }
-
-    return dp[lastDay];
     }
 
 
@@ -1271,9 +1274,10 @@ public class DP {
         
 
     ////////////////////////////// MINI-MAX
+
     /** how to think about this?
-     * first use recursion. if i select start, then player 2 has to select either
-     * start+1 or end. 
+     * first use recursion. if i select start, then player 2 has to select 
+     * either start+1 or end. 
      * if he selects start+1, then
      * i have the min from start+2 till end. 
      * or if he goes for end, i have the min from start+1 till end.
@@ -1336,7 +1340,7 @@ public class DP {
         return false;
     }
 
-    //////////////////////////MATRIX DP
+    //////////////////////////////// MATRIX DP
     /** IMPORTANT here the difference between the element shuld be 1,
      * so pass arr[i][j] - 1 as prev, not infinity
     */
@@ -1429,7 +1433,62 @@ public class DP {
         return min;
     }
 
+
+    // [[-19,57],[-40,-5]]     
+    // https://leetcode.com/problems/minimum-falling-path-sum/
+    public int minFallingPathSumDP(int[][] A) {
+        int m = A.length;
+        int n = A[0].length;
+        int[][] dp = new int[m][n];
+  
+        int min = Integer.MAX_VALUE; 
+        for(int i =0; i<n; i++){
+            min = Math.min(min, dfs(A, 0, i, dp, Integer.MIN_VALUE));
+        }
+        return min;
+    }
     
+    int dfs(int[][] arr, int row, int col, int[][] dp, int prev){
+        if(isSafe(arr, row, col, prev)){
+            // if(row == arr.length-1) return arr[row][col];
+            if(dp[row][col]!=0) return dp[row][col];
+            
+            int curr = arr[row][col];
+            int lowerLeft = 0; int lowerRight = 0; int lower = 0;
+            int min = Integer.MAX_VALUE;
+            if(col == 0) {
+                lower = dfs(arr, row+1, col, dp, curr);
+                lowerRight = dfs(arr, row+1, col+1, dp, curr);
+                min = Math.min(lower, lowerRight);
+            }
+            else if(col == arr[0].length-1){
+                lower = dfs(arr, row+1, col, dp, curr);
+                lowerLeft = dfs(arr, row+1, col-1, dp, curr);
+                min = Math.min(lower, lowerLeft);
+            }
+            else {
+                lower = dfs(arr, row+1, col, dp, curr);
+                lowerLeft = dfs(arr, row+1, col-1, dp, curr);
+                lowerRight = dfs(arr, row+1, col+1, dp, curr);
+                min = Math.min(lowerLeft, Math.min(lowerRight, lower));
+            }
+            
+            if(min == Integer.MAX_VALUE) min = 0;
+            // don't find min here, always 0
+            dp[row][col] = min + arr[row][col];
+            // System.out.println(dp[row][col]);
+            return dp[row][col];
+        }
+        return Integer.MAX_VALUE;
+    }
+    
+    boolean isSafe(int[][] arr, int row, int col, int prev){
+        if(row>=0 && row<arr.length
+          && col>=0 && col<arr[0].length
+          // && arr[row][col]>=prev
+          ) return true;
+        return false;
+    }
 
     // public int maxSumDivThree(int[] nums) {
     //     int n = nums.length;   
@@ -1489,6 +1548,7 @@ public class DP {
 
 
     ////////////////////////STRING DP
+
     // https://leetcode.com/problems/decode-ways/discuss/
     // 30358/Java-clean-DP-solution-with-explanation
 
@@ -2104,7 +2164,8 @@ public class DP {
         // System.out.println("longest path in matrix is "+dp.longestPathMatrix(mat));
 
         int[][] fallingSum = {{1,2,3},{4,5,6},{7,8,9}};
-        // dp.minFallingPathSum(fallingSum);
+        dp.minFallingPathSum(fallingSum);
+        dp.minFallingPathSumDP(fallingSum);
 
         int[] apSeq = //{3,6,9,10};
         {44,46,22,68,45,66,43,9,37,30,50,67,32,47,44,11,15,4,11,6,
@@ -2117,7 +2178,7 @@ public class DP {
         // dp.minCutDP(palinCut);
 
         String str1 = "abac", str2 = "cab";
-        dp.shortestCommonSupersequence(str1, str2);
+        // dp.shortestCommonSupersequence(str1, str2);
 
 
         int matrixMul[] = {1,2,3,4};
@@ -2133,7 +2194,7 @@ public class DP {
 
         String s= "iam"; List<String> wordDict = new ArrayList<>();
         wordDict.add("i");  wordDict.add("a"); wordDict.add("am"); wordDict.add("ace");
-        dp.wordBreak(s, wordDict);
+        // dp.wordBreak(s, wordDict);
 
         char[][] square =
         {{'1','0','1','0','0'},

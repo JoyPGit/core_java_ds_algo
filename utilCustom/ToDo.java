@@ -15,18 +15,21 @@ public class ToDo {
      * WORD LADDER
      * RECONSTRUCT QUEUE
      * SPIRAL PRINT
-     * 
+     * TIME TO INFORM DFS
+     * EVENTUAL SAFE STATES
+     * UNIQUE PATH WITH OBSTACLES
+     * LINKED LIST REVERSE
+     * RECURSION TO DP(INC EXC)
+     * DP
      * 
      * TRIE
+     * LRU CACHE
      * ITINERARY
      * SUDOKU
      * MEDIAN
     
-     * PATH WITH OBSTACLES (UNIQUE PATHS)
      * WORD SEARCH
-     * RECURSION TO DP(INC EXC)
      * SUBSETS, SUBSETS WITH DUPLICATES
-     * LINKED LIST REVERSE
      * SORTING
      * LARGEST RECT IN HISTOGRAM, 
      * VALID PARENTHESIS
@@ -34,7 +37,6 @@ public class ToDo {
      * STOCK SPAN
      * DECODE STRING, 
      * SUM OF SUBARRAY MINS
-     * LRU CACHE
      * 
      * 
      * string, recursion, dp, backtracking

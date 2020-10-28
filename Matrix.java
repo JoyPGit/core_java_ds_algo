@@ -1314,54 +1314,36 @@ class Matrix {
 
 
     //////////////////////////////////////////
-
-    // Java program to find the row
-    // with maximum number of 1s
-
-    static int R = 5, C = 5;
-
-    // Function to find the index of first index
-    // of 1 in a boolean row-wise sorted array arr[]
-    int first(int arr[], int low, int high) {
-        if (high >= low) {
-            // Get the middle index
-            int mid = low + (high - low) / 2;
-
-            // Check if the element at middle index is first 1 or the mid index has reached
-            // 0
-            if ((mid == 0 || (arr[mid - 1] == 0)) && arr[mid] == 1)
-                return mid;
-
-            // If the element is 0, recur for right side
-            else if (arr[mid] == 0)
-                return first(arr, (mid + 1), high);
-
-            // If element is not first 1, recur for left side
-            else
-                return first(arr, low, (mid - 1));
-        }
-        return -1;
-    }
-
-    // Function that returns index of row
-    // with maximum number of 1s.
-    int rowWithMax1s(int mat[][]) {
-        // Initialize max values
-        int max_row_index = 0, max = -1;
-
-        // Traverse for each row and count number of
-        // 1s by finding the index of first 1
-        int i, index;
-        for (i = 0; i < R; i++) {
-            index = first(mat[i], 0, C - 1);
-            System.out.println("mid " + index);
-            if (index != -1 && C - index > max) {
-                max = C - index;
-                max_row_index = i;
+    // https://practice.geeksforgeeks.org/problems/row-with-max-1s0023/1
+    int rowWithMaximumOnes(int[][] matrix){
+        int m = matrix.length;
+        int min = -1; int first = Integer.MAX_VALUE;
+        for(int i = 0; i<m; i++){
+            int currFirst = findFirstOne(matrix, i);
+            if(currFirst!=-1 && currFirst<first){
+                first = currFirst;
+                min = i;
             }
         }
+        System.out.println("ones "+min);
+        return min;
+    }
 
-        return max_row_index;
+    int findFirstOne(int[][] arr, int row){
+        int n = arr[0].length;
+        int lo = 0; int hi = n-1;
+        int index = -1;
+        while(lo<=hi){
+            int mid = lo+ (hi-lo)/2;
+            if(arr[row][mid] == 1){
+                index = mid;
+                hi = mid-1; // hi = mid causes TLE
+            }
+            else {
+                lo = mid+1;
+            }
+        }
+        return index;
     }
 
 
@@ -1397,7 +1379,7 @@ class Matrix {
     }
 
 
-    ///////// WORD SEARCH
+    ///////////////////////////////// WORD SEARCH
     /**
      * POINTS : 
      * 1 start a dfs whenever the ch[i][j] matches the starting char of string
@@ -1483,9 +1465,20 @@ class Matrix {
         int[][] arr28Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } };
         int[][] arr29Apr = { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
         // matrix.printSpiral29Apr(arr29Apr);
-        // int[][] onesArray =
-        // {{0,0,0,1,1},{0,1,1,1,1},{0,0,1,1,1},{1,1,1,1,1},{0,0,0,0,0}};
+
+        int[][] onesArray = 
+                            {{0,0,0,0,1},
+                             {0,0,0,0,0},
+                             {0,0,0,0,0},
+                             {0,0,0,0,0}};
+                            // {{0,0,0,1,1},
+                            //  {0,1,1,1,1},
+                            //  {0,0,1,1,1},
+                            //  {1,1,1,1,1},
+                            //  {0,0,0,0,0}};
+
         // System.out.println("row index of max1s " + matrix.rowWithMax1s(onesArray));
+        matrix.rowWithMaximumOnes(onesArray);
 
         // int[][] floodFillArray = {{1,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
         // matrix.floodFill(floodFillArray);
@@ -1515,12 +1508,13 @@ class Matrix {
                                 { pInf, -1, pInf, -1 }, 
                                 { 0, -1, pInf, pInf } };
         // matrix.wallsAndGatesKevin(wallsAndGates);
-        matrix.wallsAndGates1(wallsAndGates);
+        // matrix.wallsAndGates1(wallsAndGates);
         // matrix.wallsAndGatesBFS(wallsAndGates);
 
         // matrix.antiDiaPrint(twoDimArr);
 
-        int[][] matRowColSorted = { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 }, { 32, 33, 39, 50 } };
+        int[][] matRowColSorted = 
+        { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 }, { 32, 33, 39, 50 } };
         int num = 100;
 
         // System.out.println(matrix.searchRowColSortedMatrix(matRowColSorted, num));

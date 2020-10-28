@@ -473,13 +473,13 @@ class Graph {
 	 */
 
 	int dfsNumMinutes(HashMap<Integer, List<Integer>> map, int start, int[] informTime, int time) {
+		if (!map.containsKey(start)) return 0;
 		int minutes = 0;
-		if (!map.containsKey(start))
-			return 0;
+		
 		// System.out.println(time);
 		for (int i : map.get(start)) {
-			if (timeHolder.containsKey(i))
-				return timeHolder.get(i);
+			if (timeHolder.containsKey(i)) return timeHolder.get(i);
+
 			minutes = Math.max(minutes, informTime[start] + dfsNumMinutes(map, i, informTime, time));
 			timeHolder.put(i, minutes);
 		}
@@ -1364,7 +1364,7 @@ class Graph {
 
 	
 	/** 
-	 * VARIATION : BFS WITH INVALID DISTANCES
+	 * VARIATION : MODIFIED BFS WITH INVALID DISTANCES
 	 * DISTANCE ARRAY MIGHT BE UPDATED BUT STOPS MIGHT
 	 * NIT BE AVAILABLE, SO CORRECT DIST IS IN THE CUSTOM
 	 * OBJECT IIN PQ
@@ -1432,40 +1432,46 @@ class Graph {
 	
 	// https://www.techiedelight.com/print-k-colorable-configurations-graph-vertex-coloring-graph
 
-	// https://leetcode.com/problems/network-delay-time
+
+	// USING MODIFIED BFS, NO VISITED, ONLY DISTANCE ARRAY
+    // edges can be 0, so need to initialize with -1
+    class Network{
+        int node, time;
+        Network(int n, int t){
+            this.node = n;
+            this.time = t;
+        }
+    }
     public int networkDelayTimeBFS(int[][] times, int N, int K) {
         int n = N+1;
         
         int[][] g = new int[n][n];
-		
-		// to account for 0 wt edges
-		for(int i =0; i<n; i++) Arrays.fill(g[i], -1);
-		
-        for(int i =0; i<times.length; i++){
-            g[times[i][0]][times[i][1]] = times[i][2];
-        }
+        for(int[] i: g) Arrays.fill(i, -1);
+        
+        for(int[] i : times) g[i[0]][i[1]] = i[2];
+            
+        int[] distance = new int[n];
+        Arrays.fill(distance, Integer.MAX_VALUE); // 1
+        
+        distance[K] = 0; // 2
         
         Deque<Network> q = new LinkedList<>();
-        int[] distance = new int[n];
-        Arrays.fill(distance, Integer.MAX_VALUE);//
         
-        distance[K] = 0;
-        q.addLast(new Network(K,0));
+        q.add(new Network(K, 0));
         while(q.size()!=0){
             Network curr = q.removeFirst();
-            // System.out.println(curr.time);
-            // if(visited[curr.node]!=Integer.MAX_VALUE) continue;
+            // visited.add(curr.node);
             for(int i =0; i<n; i++){
-				// avoids self loops and non existent edges(-1)
                 if(i!=curr.node && g[curr.node][i]!=-1 
-                   && distance[i] > g[curr.node][i]+distance[curr.node]){
-                    distance[i] = g[curr.node][i]+distance[curr.node];
+                   && distance[i] > distance[curr.node] + g[curr.node][i]){
+                    distance[i] = distance[curr.node] + g[curr.node][i]; // 3
                     q.addLast(new Network(i, distance[i]));
                 }
             }
         }
+        
         int max = -1;
-        for(int i =1; i<distance.length; i++){// 0
+        for(int i =1; i<n; i++){
             if(distance[i] == Integer.MAX_VALUE) return -1;
             max = Math.max(max, distance[i]);
         }
@@ -1473,7 +1479,7 @@ class Graph {
 	}
 	
 	
-	////////////////////////// DIJKSTRA
+	/////////////////////////////// DIJKSTRA
 
 	/** 
 	 * BFS VS DIJKSTRA
@@ -1609,13 +1615,6 @@ class Graph {
 	 */
 	// use dijkstra as single source shortest path, not bfs
 	// https://leetcode.com/problems/network-delay-time/
-    class Network{
-        int node, time;
-        Network(int n, int t){
-            this.node = n;
-            this.time = t;
-        }
-    }
     public int networkDelayTime(int[][] times, int N, int K) {
         int n = N+1;
         int[][] g = new int[n][n];

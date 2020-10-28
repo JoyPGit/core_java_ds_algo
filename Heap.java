@@ -428,13 +428,13 @@ public class Heap {
 
         for(int i =0; i<nums.size(); i++){
             q.add(new KListNode(0, nums.get(i).get(0) ,i));
-            max = Math.max(max, nums.get(i).get(0));
+            max = Math.max(max, nums.get(i).get(0)); // 1
         }
         int start = -1;
         int end = -1;
         int range = Integer.MAX_VALUE;
 
-        while(q.size() == nums.size()){
+        while(q.size() == nums.size()){  // 2
             KListNode curr = q.remove();
             System.out.println(curr.val);
             if(max-curr.val < range){

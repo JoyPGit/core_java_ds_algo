@@ -1942,9 +1942,9 @@ class StringPractice {
      * 2 CREATE A CUSTOM CLASS TO STORE STRING AND CORR FREQ
      * 3 USE A PQUEUE TO SSORT STRINGS
      * ((x,y)->{
-            if(x.freq == y.freq) return x.str.compareTo(y.str);
-            return y.freq - x.freq;
-        })
+     *     if(x.freq == y.freq) return x.str.compareTo(y.str);
+     *     return y.freq - x.freq;
+     * })
      * 
     */
 
@@ -1985,16 +1985,13 @@ class StringPractice {
     public String rankTeams(String[] votes) {
         HashMap<Character, int[]> map = new HashMap<>();
         
-        int places = votes[0].length();
+        int n = votes[0].length();
         
         for(String s : votes){
             for(int i =0; i<s.length(); i++){
-                if(map.containsKey(s.charAt(i))) map.get(s.charAt(i))[i]++;
-                else {
-                    int[] curr = new int[places];
-                    curr[i]++;
-                    map.put(s.charAt(i), curr);
-                }
+                int[] curr = map.getOrDefault(s.charAt(i), new int[n]);
+                curr[i]++; // 1
+                map.put(s.charAt(i), curr);
             }
         }
         
