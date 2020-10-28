@@ -572,11 +572,11 @@ class Graph {
 	 * POINTS : 
 	 * 1 RUN A FOR LOOP, IF NOT VISITED CALL TPS 
 	 * 2 IN TPS ADD TO VISITED
-	 * 3 CHECK IF VERTEX HAS LIST 
+	 * 3 CHECK IF VERTEX HAS ADJACENT NODES 
 	 * 4 IF YES, THEN ITERATE 
 	 * 5 IF VISITED CONTAINS VERTEX, CONTINUE 
 	 * 6 ELSE CALL TPS WITH i 
-	 * 7 ADD TO Q(STACK)
+	 * 7 ADD TO Q (RES)
 	 * 
 	 * VISITED CHECK IS DONE TWICE, ONCE IN MAIN FN, ONCE IN TPS
 	 * 
@@ -620,8 +620,8 @@ class Graph {
 	 * 2 2 HASHSETS
 	 * 
 	 * 
-	 * /** it's almost impossible to detect loop using ADJ MATRIX AND WITHOUT USING
-	 * KAHN'S ALGO (KEEP INDEGREE COUNT). 
+	 * /** it's almost impossible to detect loop using ADJ MATRIX 
+	 * AND WITHOUT USING KAHN'S ALGO (KEEP INDEGREE COUNT). 
 	 * FOR LOOP USE BACKTRACKING APPROACH FOR DAG 	 
 	 * */
 
@@ -865,35 +865,46 @@ class Graph {
 	 * 1 CREATE MAP FROM A MATRIX 
 	 * 2 FILL WITH EDGE WT -1 IF 0 EDGE WTS ARE PRESENT
 	 * 3 CREATE A DISTANCE ARRAY OF SIZE n+1
-	 * 4 ADD STARTING VERTEX, AND RUN LOOP FOR Q EMPTY 
-	 * 5 UPDATE DISTANCE[STARTING INDEX] = 
-	 * 6 
+	 * 4 DISTANCE[STARTING INDEX] = 0
+	 * 5 ADD STARTING VERTEX, AND RUN LOOP FOR Q EMPTY 
+	 * 6 UPDATE DIST ONLY AFTER ISSAFE
+	 * 
+	 * CHECK NORMAL VS MODIFIED BFS FOR DIFFERENCES IN ISSAFE
 	 * 
 	 * * TIME CAN BE STORED IN VISITED OR CUSTOM CLASS
 	 */
 
-	 /** 
-	 * BFS (NO VISITED SET, CAN'T PROVIDE OPTIMUM DIST)
-	 * MODIFIED BFS (W/O VISITED SET, WORKS W/O LOOPS)
-	 */
 	/** 
-	 * IMP FINDINGS
+	 * IMP FINDINGS :
+	 * 
 	 * BFS CAN WORK WITH LOOPS, NEED TO MAINTAIN VISITED SET
 	 * BUT WON'T PROVIDE OPTIMUM DIST
 	 * 
 	 * WHEN TO USE BFS TO FIND DISTANCE?
 	 * BFS CAN GIVE THE SHORTEST TIME ONLY IF THERE ARE NO LOOPS
-	 * SO VISITED SET CAN'T BE USED, BECAUSE THE DISTANCES WON'T BE 
-	 * UPDATED EVEN IF WE FIND A SHORTER DIST.
+	 * AND VISITED SET ISN'T USED, BECAUSE THE DISTANCES WON'T BE 
+	 * UPDATED EVEN IF WE FIND A SHORTER DIST (if we don't revisit).
 	 * 
-	 * SO VISITED SET IS NOT USED, THE LOOPING IS AVOIDED BY
-	 * THE CONDN OF UPDATNG ONLY WHEN THE NEW DIST IS SHORTER
 	 * 
-	 * CHECK N/W DELAY
-	 * */ 
+     * 2 BFSs NORMAL vs MODIFIED : 
+     * 
+     * NORMAL (USING VISITED), MODIFIED(W/O VISITED)
+     * 1 IN NORMAL BFS THE EDGE WTS ARE IMMATERIAL AND HENCE THERE IS 
+	 * NO PROBLEM OF FINDING A SHORTER PATH, NO CONFLICTS
+	 * (CHECK orangesRotting1)
+     * 
+     * IN MODIFIED, WE MAINTAIN DISTANCE ONLY AND NOT VISITED
+     * SO DIST CAN BE UPDATED.(ONLY IF GREATER)
+     * 
+     * 2 THE DIFFERENCE IS IN INSAFE
+	 * IN NORMAL WE ADD TO Q ONLY IF UNVISITED
+	 * IN MODIFIED, WE ADD IF NODE'S DIST > CURRDIST + EDGEWT
+     * 
+     */
 
 	/**
-	 *  BFS TEMPLATE:
+	 * BFS TEMPLATE:
+	 * 
 	 * 1 Custom class
 	 * 2 adj matrix, q, visited arr(set can be used but arr can store dist)
 	 * 
@@ -921,220 +932,38 @@ class Graph {
 	 * }
 	 * }
 	 * 
+	 * IN NORMAL (diff only in isSafe condn)
+	 * if(
+	 * visited[i] != 1
+	 * )
+	 * 
 	*/
 
-	/** 
-	 * BFS
-	 * 1 AS GRAPH IS DISCONNECTED, RUN BFS FOR ALL NODES
-	 * 2 MAINTAIN A VISITED ARRAY
-	 * 3 START BY ASSIGNING COLOR 1AND THEN CHECK IF ADJACENT NODES HAVE 
-	 * SAME COLOR. 
-	 * IF DIFFERENT, CONTINUE.
-	 * IF NOT VISITED, ASSIGN visited[list.get(i)] = color==1?2:1;
-	*/
-	// https://leetcode.com/problems/is-graph-bipartite
-    boolean isBipartite = true;
-    public boolean isBipartite(int[][] graph) {
-        // BFS
-        // no edge wt worries, so adj list
-        // disconnected graph
-        // so run BFS for all nodes
-        int n = graph.length;
-        HashMap<Integer, List<Integer>> g = new HashMap<>();
-        for(int i = 0; i<n; i++){
-            List<Integer> list = g.getOrDefault(i, new ArrayList<>());
-            for(int j = 0; j<graph[i].length; j++){
-                list.add(graph[i][j]);
-            }
-            g.put(i, list);
-        }
-        
-        int[] visited = new int[n];
-         // 1 and 2; 0 unvisited
-        Deque<Integer> q = new LinkedList<>();
-        
-        for(int i =0; i<n; i++) {
-            // bfs only for unvisited
-            if(visited[i]==0 && graph[i].length>0) {
-                // it is unvisited, so disconnected
-                // start from color 1 same as 0th node
-                visited[i] = 1;
-                q.addLast(i);
-                bfsHelper(q, g, visited);
-            }
-        }
-        // for(int i =0;i<n; i++) System.out.println(visited[i]);
-        return isBipartite;
-    }
-    
-    void bfsHelper(Deque<Integer> q, HashMap<Integer, List<Integer>> g, int[] visited){
-        while(q.size()!=0){
-            int curr = q.removeFirst();
-            int color = visited[curr];
-            // System.out.println(curr+" "+color);
-            if(!g.containsKey(curr)) continue;
-            List<Integer> list = g.get(curr);
-            for(int i = 0; i<list.size(); i++){
-                if(visited[list.get(i)] == color) {
-                    isBipartite = false;
-                    return;
-                }
-                if(visited[list.get(i)]!=0) continue;
-                visited[list.get(i)] = color==1?2:1;
-                q.addLast(list.get(i));
-            }
-        }
-	}
 
-	/** 
-	 * POINTS :
-	 * 1 MODIFIED BFS
-	 * 2 RUN FOR ALL INDICES OF THE GRAPH
-	 * 3 VISITED CHECK
-	 * 
-	 * VISITED ARRAY HELPS AVOID VIVITED COMPONENTS, EVEN THOUGH THERE MIGHT BE 
-	 * DISCONNECTED COMPS, VISITED ARRAY HELPS AVOID VISITING THE CONNECTED
-	 * COMPONENTS AGAIN 
-	 * 
-	 * 4 THE QUEUE IS INITIALISED FOR EACH ELEMENT AS THERE CAN BE DISCONNECTED 
-	 * COMPONENTS TOO
-	 * 
-	 * 5 CHECKING FOR ALL NEIGHBORS
-	 * 
-	 * 6 ADD ONLY IF NOT VISITED
-	 * 
-	 * 7 FINAL CHECK FOR ALREADY VISITED ONES
-	*/
-	// https://leetcode.com/problems/is-graph-bipartite/
-	public boolean isBipartite2(int[][] graph) {
-        // BFS
-        // 0(not visited), 1(black), 2(white)
-        int[] visited = new int[graph.length];
-        
-		for (int i = 0; i < graph.length; i++) {//2
-			//3 VISITED CHECK AND FOR THIS TYPE OF FIRST ARRAY [[], [1,2]]
-            if (graph[i].length != 0 && visited[i] == 0) {
-                visited[i] = 1;
-                Deque<Integer> q = new LinkedList<>();//4
-                q.addLast(i);//5
-                while(!q.isEmpty()) {
-                    int current = q.removeFirst();
-                    for (int c : graph[current]) {
-						if (visited[c] != 0 && visited[c] == visited[current]) {
-							return false;//6
-						}
-						
-                        if (visited[c] == 0) {//7
-                            visited[c] = (visited[current] == 1) ? 2 : 1;
-                            q.addLast(c);//
-                        } 
-                        
-                    }
-                }                        
-            }
-        }
-        
-        return true;
-	}
-
-	/**  
-	 * NOT MODIFYING THE ORIGINAL GRAPH
-	 * 
-	 * ADD ONLY IF UNVISITED(CHECK ISSAFE)
-	 * 
-	 * 1 A CUSTOM CLASS AND A DISTANCE ARRAY
-	 * 2 ISSAFE CHECKS IF INDEX HAS BEEN VISITED OR NOT
-	 * 3 WHILE FINDING MAX CHECK IF VISITED == INF AND NOT 0
-	 * 0 CAN'T BE VISITED, SO DIST WILL BE INF 
-	 * 
-	 * TIME CAN BE STORED BOTH IN VISITED OR CUSTOM CLASS
-	 * 
-	 * grid[r][c] == 1 && distance[r][c] == Integer.MAX_VALUE)
-	*/
-
-	class Orange{
-        int x; int y;
-        Orange(int x, int y){
-            this.x = x; 
-            this.y = y;
-        }
-    }
-    
-    public int orangesRotting(int[][] grid) {
-        int m = grid.length;
-        int n = grid[0].length;
-        
-        int[][] distance = new int[m][n];
-        for(int i =0; i<m; i++) Arrays.fill(distance[i], Integer.MAX_VALUE);
-        
-        Deque<Orange> q = new LinkedList<>();
-        
-        for(int i =0; i<m; i++){
-            for(int j =0; j<n; j++){
-                if(grid[i][j] == 2) {
-                    distance[i][j] = 0;
-                    q.addLast(new Orange(i,j));
-                    // no break; //can be multiple 2s
-                }
-            }
-        }
-        
-        int[] rows = new int[]{0,0,-1,1};
-        int[] cols = new int[]{-1,1,0,0};
-        while(q.size()!=0){
-            Orange curr = q.removeFirst();
-            // System.out.println(curr.x+" "+curr.y);
-            for(int k = 0; k<rows.length; k++){
-                int newX = curr.x + rows[k];
-                int newY = curr.y + cols[k];
-                if(isSafe(grid, distance, newX, newY)) {
-                    q.addLast(new Orange(newX, newY));
-                    distance[newX][newY] = distance[curr.x][curr.y]+1;
-                }
-            }
-        }
-        
-        int max = 0;
-        for(int i =0; i<m; i++){
-            for(int j =0; j<n; j++){
-                if(distance[i][j] == Integer.MAX_VALUE){
-					// if not 0
-                    if(grid[i][j] != 0) return -1;
-                }
-                else max = Math.max(max, distance[i][j]);
-            }
-        }
-        return max;
-    }
-    
-    boolean isSafe(int[][] grid, int[][] distance, int r, int c){
-        if(r>=0 && r<grid.length
-			&& c>=0 && c<grid[0].length
-			// 1 not 0 can be visited
-			&& grid[r][c] == 1 
-			// unvisited
-            && distance[r][c] == Integer.MAX_VALUE) return true; 
-        return false;
-    }
-
-	
-	// https://leetcode.com/problems/rotting-oranges/
 	/**
-	 * POINTS : 1 USE A CUSTOM CLASS 
-	 * 2 USE A QUEUE AND ADD ALL 2s 
+	 * NORMAL BFS
 	 * 
-	 * 3 THE TRICKY THING IS TO KEEP TRACK OF VISITED INDEXES, 
-	 * CAN BE HANDLED VIA IS SAFE CHECKER AND
-	 * MARKING THE ORIGINAL GRAPH INDEX AS 2.
+	 * POINTS : 
+	 * 1 ONLY VISITED ARRAY
+	 * 2 AFTER ISSAFE(VALID INDEXES AND UNVISITED), 
+	 * MARK VISITED AND ADD TO Q.
 	 * 
-	 * WE ADD ONLY 2, WE CHECK FOR SURROUNDING INDEXES, 
-	 * IF SAFE MARK THEM AS 2 AND INCREMENT TIME;
+	 * WHY DOES THIS WORK? ONLY UPDATING MAX?
+	 * WHAT OIF THERE IS A SHORTER PATH?
 	 * 
+	 * IN BFS THERE CAN NEVER BE A CONFLICT OF SHORTER PATH.
+	 * AS ALL NODES ARE ADDED TO Q IN SORTED ORDER.
+	 * SO NODES WHICH ARE CLOSER WILL UPDATE THEIR NEIGHBOURS
+	 * IN DFS THERE CAN BE CONFLICT, BUT HERE ALL EQUIDISTANT
+	 * NOES ARE UPDATED BEFORE ANY NODE WITH GREATER DISTANCE.
 	 * 
-	 * imp : 
-	 * 1 modify the original graph
-	 * 2 no distance arr, so hold time too
+	 * we add alls 2s, so all 2s will update neighbouring 1s at 
+	 * teh same time. so there won't be a case where a 1 farther
+	 * is updated first.
+	 * 
 	 */
+	// https://leetcode.com/problems/rotting-oranges/
+	// NORMAL BFS
 	class Orange1 {
 		int row, col, val, time;
 
@@ -1173,8 +1002,7 @@ class Graph {
 
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 1)
-					return -1;
+				if (grid[i][j] == 1) return -1;
 			}
 		}
 		return maxTime;
@@ -1183,8 +1011,211 @@ class Graph {
 	boolean isSafeOrange(int[][] grid, int row, int col) {
 		if (row >= 0 && row < grid.length 
 		&& col >= 0 && col < grid[0].length 
+		// checking only if not visited
 		&& grid[row][col] == 1) return true;
 		return false;
+	}
+	
+
+	/** 
+     * MODIFIED BFS
+     * 
+     * POINTS : 
+     * 1 THIS IS MODIFIED BFS, WHERE ONLY DISTANCE IS STORED, NOT VISITED
+     * 2 INITIALIZE DISTANCE TO INF, BUT CHANGE IT TO 0 
+     * FOR 2s AND 0s.
+     * 
+     * 3 MARK ALL 1s AS 3. WHY? 
+     * THAT'S HOW UNREACHABLE 1s CAN BE TRACED.
+     * 
+     * 4 WHY WE DON'T MAINTAIN VISITED? BECAUSE IF WE DON'T REVISIT
+     * VISITED NODES, WE WON'T BE ABLE TO UPDATE WITH SHORTER DIST.
+     * 
+     * 5 THE ISSAFE METHOD HELPS AVOID INF LOOP
+     * NODES ARE ADDED TO Q, ONLY IF DIST IS GREATER THAN PREV(CURR+1)
+     * 
+     */
+    // [[2,2],[1,1],[0,0],[2,0]]
+    // https://leetcode.com/problems/rotting-oranges
+    class Orange {
+		int row, col, val, time;
+
+		Orange(int r, int c, int v, int t) {
+			this.row = r;
+			this.col = c;
+			this.time = t;
+		}
+	}
+
+	public int orangesRotting(int[][] grid) {
+		Deque<Orange> q = new LinkedList<>();
+		int maxTime = 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] distance = new int[m][n];
+        for(int[] i : distance) Arrays.fill(i, Integer.MAX_VALUE);
+            
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 2) {
+                    q.add(new Orange(i, j, 2, 0));
+                    distance[i][j] = 0;
+                }
+                if(grid[i][j] == 0) distance[i][j] = 0;
+			}
+		}
+
+		int[] rows = { -1, 0, 0, 1 };
+		int[] cols = { 0, -1, 1, 0 };
+        
+		while (q.size() != 0) {
+            // 2s have already been added
+			Orange curr = q.removeFirst();
+
+            for (int i = 0; i < rows.length; i++) {
+				int newX = curr.row + rows[i];
+				int newY = curr.col + cols[i];
+				if (isSafeOrange(grid, newX, newY, distance, curr.time+1)){
+                    // marking 3 to keep track of unvisited 1s
+                    grid[newX][newY] = 3;
+                    distance[newX][newY] = curr.time+1;
+					q.addLast(new Orange(newX, newY, 2, curr.time + 1));
+				}
+			}
+		}
+
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) return -1;
+                maxTime = Math.max(maxTime, distance[i][j]);
+			}
+		}
+		return maxTime;
+	}
+
+	boolean isSafeOrange(int[][] grid, int row, int col, int[][] dist, int prev) {
+		if (row >= 0 && row < grid.length 
+        && col >= 0 && col < grid[0].length 
+        // if 1 or 3 there might be a shorter dist
+        && (grid[row][col] == 1 || grid[row][col] == 3)
+        // this condn stops inf loop
+        && dist[row][col] > prev) return true;
+		return false;
+	}
+
+	// MODIFIED BFS
+    // use custom class
+    // can store distance in class or DISTANCE array
+	// but we have to update the matrix itself, so custom class can hold
+	/** 
+	 * WHENEVER THE SHORTEST DIST NEEDS TO BE FOUND, USE MODIFIED BFS
+	 * USE DISTANCE ARRAY AND ADD TO Q ONLY IF CURR DIST > PREV+1
+	 */
+    class Wall{
+        int x; int y; int dist;
+        Wall(int x, int y, int d){
+            this.x = x; 
+            this.y = y;
+            this.dist = d;
+        }
+    }
+    void wallsAndGatesBFS(int[][] matrix){
+        int m = matrix.length; int n = matrix[0].length;
+        Deque<Wall> q = new LinkedList<>();
+
+        for(int i =0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(matrix[i][j] == 0) q.addLast(new Wall(i,j,0));
+            }
+        }
+
+        while(q.size()!=0){
+            Wall curr = q.removeFirst();
+
+            for(int k =0; k<rows.length; k++){
+                int newX = curr.x + rows[k];
+                int newY = curr.y + cols[k];
+                if(isSafeWallBFS(matrix, newX, newY, curr.dist+1)){
+					// udpate after isSafe
+					matrix[newX][newY] = curr.dist+1;
+                    q.addLast(new Wall(newX, newY, curr.dist+1));
+                }
+            }
+        }
+        System.out.println("bfs wall : ");
+        utilCustom.Utility.printMatrix(matrix);
+    }
+
+    boolean isSafeWallBFS(int[][] matrix, int r, int c, int prev){
+        if(r>=0 && r<matrix.length
+        && c>=0 && c<matrix[0].length
+        && matrix[r][c] != -1
+        && (prev == 0 || matrix[r][c] > prev)) return true;
+        return false;
+	}
+
+	/** 
+	 * NORMAL BFS
+	 * 1 AS GRAPH IS DISCONNECTED, RUN BFS FOR ALL NODES
+	 * 2 MAINTAIN A VISITED ARRAY
+	 * 3 START BY ASSIGNING COLOR 1 AND THEN CHECK IF ADJACENT NODES HAVE 
+	 * SAME COLOR. 
+	 * IF DIFFERENT, CONTINUE.
+	 * IF NOT VISITED, ASSIGN visited[list.get(i)] = color==1?2:1;
+	*/
+	// https://leetcode.com/problems/is-graph-bipartite
+    boolean isBipartite = true;
+    public boolean isBipartite(int[][] graph) {
+        // BFS
+        // no edge wt worries, so adj list
+        // disconnected graph
+        // so run BFS for all nodes
+        int n = graph.length;
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        for(int i = 0; i<n; i++){
+            List<Integer> list = g.getOrDefault(i, new ArrayList<>());
+            for(int j = 0; j<graph[i].length; j++){
+                list.add(graph[i][j]);
+            }
+            g.put(i, list);
+        }
+        
+        int[] visited = new int[n];
+         // 1 and 2; 0 unvisited
+        Deque<Integer> q = new LinkedList<>();
+        
+        for(int i =0; i<n; i++) {
+            // bfs only for unvisited
+            if(visited[i]==0 && graph[i].length>0) {
+                // it is unvisited, so disconnected
+                // start from color 1 same as 0th node
+                visited[i] = 1;
+                q.addLast(i);
+                bfsHelper(q, g, visited);
+            }
+        }
+        return isBipartite;
+    }
+    
+    void bfsHelper(Deque<Integer> q, HashMap<Integer, List<Integer>> g, int[] visited){
+        while(q.size()!=0){
+            int curr = q.removeFirst();
+            int color = visited[curr];
+            // System.out.println(curr+" "+color);
+            if(!g.containsKey(curr)) continue;
+            List<Integer> list = g.get(curr);
+            for(int i = 0; i<list.size(); i++){
+				// is safe check
+                if(visited[list.get(i)] == color) {
+                    isBipartite = false;
+                    return;
+                }
+				if(visited[list.get(i)]!=0) continue;
+				// update
+                visited[list.get(i)] = color==1?2:1;
+                q.addLast(list.get(i));
+            }
+        }
 	}
 	
 
@@ -1225,7 +1256,7 @@ class Graph {
             Emp curr = q.removeFirst();
             for(int i =0; i<n; i++){
                 // edge must exist
-                if(curr.node!=i && g[curr.node][i]!=-1
+                if(curr.node!=i && g[curr.node][i] != -1
                   && distance[i] > g[curr.node][i] + distance[curr.node]){
                     distance[i] = g[curr.node][i] + distance[curr.node];
                     q.addLast(new Emp(i, distance[i]));

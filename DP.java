@@ -1866,7 +1866,7 @@ public class DP {
         for(int l=1; l<=n; l++){//2
             for(int i =0; l+i-1<n; i++){
                 if(l==1 && set.contains(s.substring(i,i+1))){
-                     dp[i][i] = true; continue; //3painter
+                     dp[i][i] = true; continue; // 3 painter
                 }
                 int j = i+l-1;
                 if(set.contains(s.substring(i,j+1))) {//4
@@ -2132,8 +2132,8 @@ public class DP {
 
 
         String s= "iam"; List<String> wordDict = new ArrayList<>();
-        // wordDict.add("i");  wordDict.add("a"); wordDict.add("am"); wordDict.add("ace");
-        // dp.wordBreak(s, wordDict);
+        wordDict.add("i");  wordDict.add("a"); wordDict.add("am"); wordDict.add("ace");
+        dp.wordBreak(s, wordDict);
 
         char[][] square =
         {{'1','0','1','0','0'},

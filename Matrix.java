@@ -206,7 +206,10 @@ class Matrix {
      * 
      * CAN SPEED UP, IF POSSIBLE USING //3 USED IN GRAPH
 	 * */
-	// DFS TEMPLATE
+    // DFS TEMPLATE
+    
+    ////////////////////////////////////// COUNTING TYPE
+
     // https://leetcode.com/problems/friend-circles
     public int findCircleNum(int[][] M) {
         int n = M.length;
@@ -268,10 +271,13 @@ class Matrix {
     }
 
 
+    /////////////////////////////////////// BOUNDARY DFS
+    
     // https://leetcode.com/problems/number-of-closed-islands
     public int closedIsland(int[][] grid) {
         int count = 0;
         
+        // boundary marking
         for(int i =0; i<grid.length; i++){
             for(int j=0; j<grid[0].length; j++){
                 if(i ==0 || i == grid.length-1 || j == 0 || j == grid[0].length-1){
@@ -280,6 +286,7 @@ class Matrix {
             }
         }
     
+        // counting islands
         for(int i =0; i<grid.length; i++){
             for(int j=0; j<grid[0].length; j++){
                 if(grid[i][j]==0){
@@ -304,6 +311,13 @@ class Matrix {
     }
 
 
+    /**
+     * CAPTURE ALL Os SURROUNDED BY Xs.
+     * 
+     * RUN A DFS FROM BOUNDARY AND MARK THE Os AS Ys
+     * THEN RUN A SIMPLE FOR LOOP AND MARK ALL 0s as Xs.
+     * THEN REVERT ALL Ys TO Os.
+     */
     // https://leetcode.com/problems/surrounded-regions
     public void solve(char[][] board) {
 
@@ -321,6 +335,7 @@ class Matrix {
             }
         }
         
+        // revert back
         for(int i =0; i<board.length; i++){
             for(int j=0; j<board[0].length; j++){
                 if(board[i][j] == 'Y') board[i][j] = 'O';
@@ -418,12 +433,13 @@ class Matrix {
     }
 
 
-    /////////////// RETURN VALUE
+    ////////////////////////////////////////// RETURN VALUE
 
     /**  
-     * TRY TO RETURN THE DFS VALUE
-     * SAME AS IN LONGEST PATH
-     * ALSO MARK THE VISITED, SO NO EXTRA VISITED
+     * POINTS : 
+     * 1 MARK THE VISITED
+     * 2 
+     * 
     */
     // https://leetcode.com/problems/max-area-of-island
     public int maxAreaOfIsland(int[][] grid) {
@@ -446,7 +462,7 @@ class Matrix {
             // so we don't visit again
             grid[r][c] = 0;
             
-            int val = 1;       // 1
+            int val = 1;     // 1
             for(int k=0;k<rows.length; k++){
                 val+=dfsArea(grid, r + rowsArea[k], c + colsArea[k]); // 2
             }
@@ -471,6 +487,10 @@ class Matrix {
      * 3 PASS PREV AS MIN TO START THE PROCESS
      * 4 PASS CURR MATRIX VAL
      * 5 TAKE MAX+1, DON'T SUM UP
+     * 
+     * DP CAN ONLY BE APPLIED IF VALUES ARE INCREASING
+     * IF SAME THE INF LOOP AS (matrix[row][col] > prev) fails
+     * 
     */
     // https://leetcode.com/problems/longest-increasing-path-in-a-matrix
     public int longestIncreasingPath(int[][] matrix) {
@@ -502,7 +522,7 @@ class Matrix {
                     Math.max(dfsInc(matrix, row+1, col, dp, matrix[row][col]),
                     Math.max(dfsInc(matrix, row-1, col, dp, matrix[row][col]),
                     Math.max(dfsInc(matrix, row, col+1, dp, matrix[row][col]),
-                    + dfsInc(matrix, row, col-1, dp, matrix[row][col]))))+1; // imp
+                    + dfsInc(matrix, row, col-1, dp, matrix[row][col])))) +1; // imp
                 return dp[row][col];
             }
         }
@@ -561,62 +581,179 @@ class Matrix {
     boolean isSafeGold(int[][] grid, int row, int col, int prev){
         if(row>=0 && row<grid.length
         && col>=0 && col<grid[0].length
-        && grid[row][col] > prev) return true; // 5 >prev
+        && grid[row][col] > prev) return true; // 5 > prev
         return false;
     }
     // https://www.techiedelight.com/probability-alive-after-taking-n-steps-island/
     
-    /** the -1s are inaccessible; reduce 99 to lowest dist from 0 */
+
+
+    ///////////////////////////////////// OBSTACLE BASED
+    // WALLS AND GATES
 
     /**
      * we are starting from each zero and keeping a counter, if the grid[i][j] >
      * counter, we update it
      */
     void wallsAndGatesKevin(int[][] matrix) {
-        int i, j;
 
-        int[][] dp = new int[matrix.length][matrix[0].length];
-
-        for (i = 0; i < matrix.length; i++) {
-            for (j = 0; j < matrix[0].length; j++) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
                 if (matrix[i][j] == 0) {
-                    wallsAndGatesHelperKevin(matrix, i, j, dp, 0);
+                    helperK(matrix, i, j, 0);
                 }
             }
         }
-
-        for (i = 0; i < matrix.length; i++) {
-            for (j = 0; j < matrix[0].length; j++) {
-                System.out.print(matrix[i][j] + ", ");
-            }
-            System.out.println();
-        }
-
+        utilCustom.Utility.printMatrix(matrix);
     }
 
-    /**
-     * here the tricky thing is to choose the initial value of count while making
-     * the first call to helper we assign value to matrix if the count is lesser
-     * than it's current value, but we use grid[row][col]>=count, equal to is used
-     * to bypass the base condition
-     */
-
-    // try using BFS
-    void wallsAndGatesHelperKevin(int[][] grid, int row, int col, int[][] dp, int count) {
+    void helperK(int[][] grid, int row, int col, int count) {
         if (row > -1 && row < grid.length 
         && col > -1 && col < grid[0].length 
         && grid[row][col] != -1 && count >= 0 // &&
         && grid[row][col] >= count) {
             grid[row][col] = count;
-            wallsAndGatesHelperKevin(grid, row, col + 1, dp, count + 1);
-            wallsAndGatesHelperKevin(grid, row, col - 1, dp, count + 1);
-            wallsAndGatesHelperKevin(grid, row + 1, col, dp, count + 1);
-            wallsAndGatesHelperKevin(grid, row - 1, col, dp, count + 1);
+            helperK(grid, row, col + 1, count + 1);
+            helperK(grid, row, col - 1, count + 1);
+            helperK(grid, row + 1, col, count + 1);
+            helperK(grid, row - 1, col, count + 1);
         }
     }
 
+    /**
+     * WALLS AND GATES
+     * WALL -1, GATE 0
+     * FIND SHORTEST DIST TO 0 FROM INDEX WHILE AVOIDING WALLS
+     * 
+     * APPROACHES : 
+     * 1 USE DFS FROM inf INDEXES //fails. Why?
+     * 2 USE DFS FROM 0
+     * HOW TO AVOID INF LOOP?
+     *  MAINTAIN VISITED?
+     *  USE PREV?
+     * 
+     * 3 USE BFS
+     *  
+     */
 
-    ////////////////////////////////  PATHS WITH OBSTACLES
+    /** 
+     * DFS VS BFS 
+     * UPDATE THE CURR VALUE IN MATRIX AFTRE ISSAFE CHECK
+     * 
+    */
+
+    /**  
+     * STARTING FROM INF DOESN'T WORK FOR THE SAME REASON MODIFIED BFS WAS USED
+     * ONCE MARKED VISITED, THE INDEX CAN'T BE UPDATED OR ACCESSED AGAIN.
+     * SO A GATE CAN BE ACCESSED AT MAX ONCE.
+     */ 
+
+    /**
+     * DP CAN'T BE APPLIED HERE AS WE RUN INTO A COMPARISON OF 
+     * INF WITH INF WIHICH RUNS INTO AN INF LOOP
+     * DP WORKS WITH GOLD MINE AS INDEX VALUES ARE INCREASING, 
+     * IF WE USE SAME ADJACENT VALUES IT WILL RUN INTO INF LOOP
+     * 
+     *   
+     * STARTING FROM 0
+     * 1 INITIAL PREV IS Integer.MIN_VALUE
+     * 2 IS SAFE curr>prev
+     * 3 UPDATE ONLY IF NOT ZERO AND GREATER
+     * if(matrix[r][c]!=0 && matrix[r][c] > prev) matrix[r][c] = prev;
+     * 
+     *
+     */ 
+    void wallsAndGates1(int[][] matrix){
+        int m = matrix.length; int n = matrix[0].length;
+
+        for(int i =0; i<m; i++){
+            for(int j =0; j<n; j++){
+                if(matrix[i][j] == 0) 
+                    dfsWall(matrix, i, j, Integer.MIN_VALUE);
+            }
+        }
+        System.out.println("walls 1 from 0 :");
+        utilCustom.Utility.printMatrix(matrix);
+    } 
+
+
+    void dfsWall(int[][] matrix, int r, int c, int prev){
+        if(isSafeWall(matrix, r, c, prev)){
+            // same as marking viisted after isSafe in dfs
+            // assign if not 0, shorter dist as check's been done in isSafe
+            if(matrix[r][c]!=0) matrix[r][c] = prev;
+
+            for(int k =0; k<rows.length; k++){
+                int curr = matrix[r][c];
+                dfsWall(matrix, r + rows[k], c + cols[k], curr+1);
+            }
+        }
+    }
+
+    // -1 is handled automatically as -1 can never be > 0
+    boolean isSafeWall(int[][] matrix, int row, int col, int prev){
+        if(row>=0 && row<matrix.length
+        && col>=0 && col<matrix[0].length
+        && matrix[row][col] > prev) return true;
+        return false;
+    }
+
+
+    // BFS
+    // use custom class
+    // can store distance in class or visited array
+    // but we have to update the matrix itself, so custom class can hold dist
+    /** 
+     * UPDATE AFTER ISSAFE, NOT AFTER REMOVAL
+     * ALSO USE THE CURR.DIST TO CHECK FOR DISTANCE
+     * (prev == 0 || matrix[r][c] > prev))
+    */
+    class Wall{
+        int x; int y; int dist;
+        Wall(int x, int y, int d){
+            this.x = x; 
+            this.y = y;
+            this.dist = d;
+        }
+    }
+    void wallsAndGatesBFS(int[][] matrix){
+        int m = matrix.length; int n = matrix[0].length;
+        Deque<Wall> q = new LinkedList<>();
+
+        for(int i =0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(matrix[i][j] == 0) q.addLast(new Wall(i,j,0));
+            }
+        }
+
+        while(q.size()!=0){
+            Wall curr = q.removeFirst();
+
+            for(int k =0; k<rows.length; k++){
+                int newX = curr.x + rows[k];
+                int newY = curr.y + cols[k];
+                if(isSafeWallBFS(matrix, newX, newY, curr.dist+1)){
+                    matrix[newX][newY] = curr.dist+1;
+                    q.addLast(new Wall(newX, newY, curr.dist+1));
+                }
+            }
+        }
+        System.out.println("bfs wall : ");
+        utilCustom.Utility.printMatrix(matrix);
+    }
+
+    boolean isSafeWallBFS(int[][] matrix, int r, int c, int prev){
+        if(r>=0 && r<matrix.length
+        && c>=0 && c<matrix[0].length
+        && matrix[r][c] != -1
+        // && (prev == 0 || 
+        && matrix[r][c] > prev) return true;
+        return false;
+    }
+
+    // https://leetcode.com/problems/shortest-distance-from-all-buildings/
+    
+    //////////////////////////////////// PATHS WITH OBSTACLES
     int countPath;
     // https://leetcode.com/problems/unique-paths-ii/
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
@@ -659,20 +796,36 @@ class Matrix {
 
 
 
-    ///////////////////////////////////////
+    //////////////////////////////////////// BFS
+    /**
+      * 2 BFS NORMAL vs MODIFIED : 
+     * 
+     * NORMAL (USING VISITED), MODIFIED(W/O VISITED)
+     * 1 IN NORMAL BFS THE EDGE WTS ARE IMMATERIAL AND HENCE THERE IS 
+	 * NO PROBLEM OF FINDING A SHORTER PATH, NO CONFLICTS
+	 * (CHECK orangesRotting1)
+     * 
+     * IN MODIFIED, WE MAINTAIN DISTANCE ONLY AND NOT VISITED
+     * SO DIST CAN BE UPDATED.(ONLY IF GREATER)
+     * 
+     * 2 THE DIFFERENCE IS IN INSAFE
+	 * IN NORMAL WE ADD TO Q ONLY IF UNVISITED
+	 * IN MODIFIED, WE ADD IF NODE'S DIST > CURRDIST + EDGEWT
+     * 
+     */
+
     /** 
      * DIFFERENCE B/W BFS IN A MATRIX AND A GRAPH :
      * 
-     * 1 IN MATRIX, WE JUST CHECK FOR THE SURROUNDING INDEXES,
-     * AND IF VALID ADD TO Q,
+     * 1 THE ISSAFE METHOD CHANGES
+     * IN MATRIX ONLY NODES IN 4 DIRECTIONS, IN GRAPH ALL ADJACENT EDGES
      * 
-     * IN GRAPH REPRESENTATION USING ADJ-MATRIX, WE ITERATE OVER ALL
-     * VERTICES HOPING TO FIND A VALID EDGE AND ADD TO Q.
-     * 
-     * 2 IN MATRIX A GRAPH NEED NOT BE CREATED SEPARATELY
+     * 2 IN BOTH, NODES ARE ADDED TO Q ONLY IF DIST IS GREATER
+     * (USING PREV, TO AVOID INF LOOPS) OR IS UNVISITED
+     *
     */
 
-    // BFS, USING VISITED -> MODIFIED BFS DOESN'T USE VISITED, RATHER DISTANCE
+    // NORMAL BFS
     class BFSNode {
         int node;
         int x;
@@ -716,10 +869,173 @@ class Matrix {
     boolean isSafeBFS(int[][] graph, int row, int col, int[][] visited){
         if(row>=0 && row<graph.length
         && col>=0 && col<graph[0].length
+
+        // only checking if unvisited
         && visited[row][col]!=0) return true;
         return false;
     }
 
+    /**
+	 * NORMAL BFS
+	 * 
+	 * POINTS : 
+	 * 1 ONLY VISITED ARRAY
+	 * 2 AFTER ISSAFE(VALID INDEXES AND UNVISITED), 
+	 * MARK VISITED AND ADD TO Q.
+	 * 
+	 * WHY DOES THIS WORK? ONLY UPDATING MAX?
+	 * WHAT OIF THERE IS A SHORTER PATH?
+	 * 
+	 * IN BFS THERE CAN NEVER BE A CONFLICT OF SHORTER PATH.
+	 * AS ALL NODES ARE ADDED TO Q IN SORTED ORDER.
+	 * SO NODES WHICH ARE CLOSER WILL UPDATE THEIR NEIGHBOURS
+	 * IN DFS THERE CAN BE CONFLICT, BUT HERE ALL EQUIDISTANT
+	 * NOES ARE UPDATED BEFORE ANY NODE WITH GREATER DISTANCE.
+	 * 
+	 * we add alls 2s, so all 2s will update neighbouring 1s at 
+	 * teh same time. so there won't be a case where a 1 farther
+	 * is updated first.
+	 * 
+	 */
+	// https://leetcode.com/problems/rotting-oranges/
+	// NORMAL BFS
+	class Orange1 {
+		int row, col, val, time;
+
+		Orange1(int r, int c, int v, int t) {
+			this.row = r;
+			this.col = c;
+			this.val = v;
+			this.time = t;
+		}
+	}
+
+	public int orangesRotting1(int[][] grid) {
+		Deque<Orange1> q = new LinkedList<>();
+		int maxTime = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 2) q.add(new Orange1(i, j, 2, 0));
+			}
+		}
+
+		int[] rows = { -1, 0, 0, 1 };
+		int[] cols = { 0, -1, 1, 0 };
+		while (q.size() != 0) {
+			Orange1 curr = q.removeFirst();
+
+			for (int i = 0; i < rows.length; i++) {
+				int newX = curr.row + rows[i];
+				int newY = curr.col + cols[i];
+				if (isSafeOrange(grid, newX, newY)) {
+					grid[newX][newY] = 2;
+					q.addLast(new Orange1(newX, newY, 2, curr.time + 1));
+					maxTime = curr.time + 1;
+				}
+			}
+		}
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 1) return -1;
+			}
+		}
+		return maxTime;
+	}
+
+	boolean isSafeOrange(int[][] grid, int row, int col) {
+		if (row >= 0 && row < grid.length 
+		&& col >= 0 && col < grid[0].length 
+		// checking only if not visited
+		&& grid[row][col] == 1) return true;
+		return false;
+	}
+
+    /** 
+     * MODIFIED BFS
+     * 
+     * POINTS : 
+     * 1 THIS IS MODIFIED BFS, WHERE ONLY DISTANCE IS STORED, NOT VISITED
+     * 2 INITIALIZE DISTANCE TO INF, BUT CHANGE IT TO 0 
+     * FOR 2s AND 0s.
+     * 
+     * 3 MARK ALL 1s AS 3. WHY? 
+     * THAT'S HOW UNREACHABLE 1s CAN BE TRACED.
+     * 
+     * 4 WHY WE DON'T MAINTAIN VISITED? BECAUSE IF WE DON'T REVISIT
+     * VISITED NODES, WE WON'T BE ABLE TO UPDATE WITH SHORTER DIST.
+     * 
+     * 5 THE ISSAFE METHOD HELPS AVOID INF LOOP
+     * NODES ARE ADDED TO Q, ONLY IF DIST IS GREATER THAN PREV(CURR+1)
+     * 
+     */
+    // [[2,2],[1,1],[0,0],[2,0]]
+    // https://leetcode.com/problems/rotting-oranges
+    class Orange {
+		int row, col, val, time;
+
+		Orange(int r, int c, int v, int t) {
+			this.row = r;
+			this.col = c;
+			this.time = t;
+		}
+	}
+
+	public int orangesRotting(int[][] grid) {
+		Deque<Orange> q = new LinkedList<>();
+		int maxTime = 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] distance = new int[m][n];
+        for(int[] i : distance) Arrays.fill(i, Integer.MAX_VALUE);
+            
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 2) {
+                    q.add(new Orange(i, j, 2, 0));
+                    distance[i][j] = 0;
+                }
+                if(grid[i][j] == 0) distance[i][j] = 0;
+			}
+		}
+
+		int[] rows = { -1, 0, 0, 1 };
+		int[] cols = { 0, -1, 1, 0 };
+        
+		while (q.size() != 0) {
+            // 2s have already been added
+			Orange curr = q.removeFirst();
+
+            for (int i = 0; i < rows.length; i++) {
+				int newX = curr.row + rows[i];
+				int newY = curr.col + cols[i];
+				if (isSafeOrange(grid, newX, newY, distance, curr.time+1)){
+                    // marking 3 to keep track of unvisited 1s
+                    grid[newX][newY] = 3;
+                    distance[newX][newY] = curr.time+1;
+					q.addLast(new Orange(newX, newY, 2, curr.time + 1));
+				}
+			}
+		}
+
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) return -1;
+                maxTime = Math.max(maxTime, distance[i][j]);
+			}
+		}
+		return maxTime;
+	}
+
+	boolean isSafeOrange(int[][] grid, int row, int col, int[][] dist, int prev) {
+		if (row >= 0 && row < grid.length 
+        && col >= 0 && col < grid[0].length 
+        // if 1 or 3 there might be a shorter dist
+        && (grid[row][col] == 1 || grid[row][col] == 3)
+        // this condn stops inf loop, checking for dist too
+        && dist[row][col] > prev) return true;
+		return false;
+	}
 
     // all paths from a to b 
     // https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/
@@ -1193,9 +1509,15 @@ class Matrix {
 
         // System.out.println("max gold is "+matrix.GoldMine7Jun(goldArray, 3, 3));
 
-        int[][] wallsAndGates = { { 99, -1, 0, 99 }, { 99, 99, 99, -1 }, { 99, -1, 99, -1 }, { 0, -1, 99, 99 } };
-        // matrix.wallsAndGates(wallsAndGates);
+        int pInf = Integer.MAX_VALUE;
+        int[][] wallsAndGates =  { { pInf, -1, 0, 0 }, 
+                                { pInf, pInf, pInf, -1 }, 
+                                { pInf, -1, pInf, -1 }, 
+                                { 0, -1, pInf, pInf } };
         // matrix.wallsAndGatesKevin(wallsAndGates);
+        matrix.wallsAndGates1(wallsAndGates);
+        // matrix.wallsAndGatesBFS(wallsAndGates);
+
         // matrix.antiDiaPrint(twoDimArr);
 
         int[][] matRowColSorted = { { 10, 20, 30, 40 }, { 15, 25, 35, 45 }, { 27, 29, 37, 48 }, { 32, 33, 39, 50 } };
