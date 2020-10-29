@@ -2389,10 +2389,11 @@ class StringPractice {
         // string.genBinPerm01s(4);
         // string.recPalindrome("abba");
 
-        char[][] grid = { { 'A', 'C', 'P', 'R', 'C' }, { 'X', 'S', 'O', 'P', 'C' }, { 'V', 'O', 'V', 'N', 'I' },
-                { 'W', 'G', 'F', 'M', 'N' }, // 'F','O','R','G','E','E','K','S'},
-                // {'G','E','E','K','S','Q','U','I','Z','G','E','E','K'},
-                { 'Q', 'A', 'T', 'I', 'T' } };// ,'P','R','A','C','T','I','C','E'}};
+        char[][] grid = {{ 'A', 'C', 'P', 'R', 'C' }, 
+                        { 'X', 'S', 'O', 'P', 'C' }, 
+                        { 'V', 'O', 'V', 'N', 'I' },
+                        { 'W', 'G', 'F', 'M', 'N' }, 
+                        { 'Q', 'A', 'T', 'I', 'T' } };
 
         String word = "MICROSOFT";
         // string.findWordInGrid(grid, word);

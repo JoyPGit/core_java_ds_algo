@@ -786,8 +786,7 @@ public class Tree {
      * 2 STORE PARENTS IN MAP
      * 3 BFS : 
      * ADD TO Q, WHILE REMOVING ADD TO VISITED
-     * DISTANCE WILL ST0RE DISTANCE, BUT IN MODIFIED BFS
-     * AND VISITED SET WON'T BE USED, REFER GRAPHS
+     * DISTANCE CAN BE FOUND USING A GENERIC COUNTER
      * 
      * * TIME CAN BE STORED IN VISITED OR CUSTOM CLASS
      */
@@ -830,6 +829,50 @@ public class Tree {
                 q.addLast(new DistK(curr.node.left, curr.dist+1)); 
             if(curr.node.right != null) 
                 q.addLast(new DistK(curr.node.right, curr.dist+1));
+        }
+        return res;
+    }
+    
+
+    public List<Integer> distKnoClass(TreeNode root, TreeNode target, int K) {
+        // build hashmap
+        // start bfs from target using q
+        HashMap<TreeNode, TreeNode> map = new HashMap<>();
+        Deque<TreeNode> q = new LinkedList<>();
+        HashSet<TreeNode> visited = new HashSet<>();
+        
+        List<Integer> res = new ArrayList<>(); 
+        if(root == null) return res;
+        
+        dfs(root, root.left, map);
+        dfs(root, root.right, map);
+        
+        q.addLast(target);//new DistK(target, 0));
+        
+        int distance = 0; // generic counter
+        // visited.add(target);
+        // BFS
+        while(q.size()!=0){
+            int size = q.size();
+            for(int k =0; k<size; k++){
+                TreeNode curr = q.removeFirst();
+                
+                // System.out.println(curr.val);
+                if(visited.contains(curr)) continue;
+                visited.add(curr);
+                
+                if(distance == K) {
+                    res.add(curr.val);
+                    continue;
+                }
+               
+                TreeNode parent = map.getOrDefault(curr, null);
+                if(parent != null) q.addLast(parent); 
+                if(curr.left != null) q.addLast(curr.left); 
+                if(curr.right != null) q.addLast(curr.right);
+            } 
+            distance++;
+            // System.out.println("dist "+distance);
         }
         return res;
     }

@@ -9,18 +9,18 @@ public class ToDo {
      * 2 map string and freq, add all values to pQueue
      * and sort on the basis of req and s.charAt() smaller
      * 
+     * dp - walls, time to inform, n/w delay, eventual safe
      * REORG STRING
      * TASK SCHEDULER
      * SMALLEST RANGE K LISTS
      * WORD LADDER
      * RECONSTRUCT QUEUE
      * SPIRAL PRINT
-     * TIME TO INFORM DFS
-     * EVENTUAL SAFE STATES
      * UNIQUE PATH WITH OBSTACLES
      * LINKED LIST REVERSE
      * RECURSION TO DP(INC EXC)
      * DP
+     * SUM SUBARRAY MINS
      * 
      * TRIE
      * LRU CACHE
@@ -28,6 +28,7 @@ public class ToDo {
      * SUDOKU
      * MEDIAN
     
+     * TREE FROM INORDER AND PREORDER
      * WORD SEARCH
      * SUBSETS, SUBSETS WITH DUPLICATES
      * SORTING

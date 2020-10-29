@@ -85,14 +85,6 @@ import java.util.*;
  * DISCONNECTED : IS BIPARTITE
  * 
  * 
- * MODIFIED BFS :
- * NO VISITED, ONLY DISTANCE ARRAY
- * USE CUSTOM CLASS AS ALWAYS IN BFS
- * ADD TO Q, WHILE REMOVING ADD TO DISTANCE
- * 
- * N/W DELAY, CHEAPEST FLIGHTS
- * 
- * IN MODIFIED BFS, NO VISITED CHECK
  * 
  *  BFS TEMPLATE:
  * 1 Custom class
@@ -431,6 +423,7 @@ class Graph {
 	 * 4 USE DP TO STORE VALUE IN ANOTHER MAP (TIMEHOLDER)
 	 * 
 	 */
+	// https://leetcode.com/problems/time-needed-to-inform-all-employees
 	int minutes = Integer.MIN_VALUE;
 	HashMap<Integer, Integer> timeHolder = new HashMap<>();
 
@@ -857,21 +850,20 @@ class Graph {
 	// https://leetcode.com/problems/minimum-height-trees/
 
 	
-	////////////////////////////////////////// BFS
+	/////////////////////////////////// BFS
 
 	/**
 	 * BFS 
-	 * USING Q 
-	 * 1 CREATE MAP FROM A MATRIX 
-	 * 2 FILL WITH EDGE WT -1 IF 0 EDGE WTS ARE PRESENT
-	 * 3 CREATE A DISTANCE ARRAY OF SIZE n+1
-	 * 4 DISTANCE[STARTING INDEX] = 0
-	 * 5 ADD STARTING VERTEX, AND RUN LOOP FOR Q EMPTY 
-	 * 6 UPDATE DIST ONLY AFTER ISSAFE
+	 * USING Q
+	 * 1 CUSTOM CLAS TO HOLD INDEX OR NODE 
+	 * 2 CREATE MAP FROM A MATRIX 
+	 * 3 FILL WITH EDGE WT -1 IF 0 EDGE WTS ARE PRESENT
+	 * 4 CREATE A VISITED ARRAY OF SIZE n+1
+	 * 5 VISITED[STARTING INDEX] = 1
+	 * 6 ADD STARTING VERTEX, AND RUN LOOP FOR Q EMPTY 
+	 * 7 MAINTAIN A GENERIC COUNTER
+	 * 8 IF UNVISITED, MARK VISITED
 	 * 
-	 * CHECK NORMAL VS MODIFIED BFS FOR DIFFERENCES IN ISSAFE
-	 * 
-	 * * TIME CAN BE STORED IN VISITED OR CUSTOM CLASS
 	 */
 
 	/** 
@@ -886,48 +878,38 @@ class Graph {
 	 * UPDATED EVEN IF WE FIND A SHORTER DIST (if we don't revisit).
 	 * 
 	 * 
-     * 2 BFSs NORMAL vs MODIFIED : 
-     * 
-     * NORMAL (USING VISITED), MODIFIED(W/O VISITED)
-     * 1 IN NORMAL BFS THE EDGE WTS ARE IMMATERIAL AND HENCE THERE IS 
-	 * NO PROBLEM OF FINDING A SHORTER PATH, NO CONFLICTS
-	 * (CHECK orangesRotting1)
-     * 
-     * IN MODIFIED, WE MAINTAIN DISTANCE ONLY AND NOT VISITED
-     * SO DIST CAN BE UPDATED.(ONLY IF GREATER)
-     * 
-     * 2 THE DIFFERENCE IS IN INSAFE
-	 * IN NORMAL WE ADD TO Q ONLY IF UNVISITED
-	 * IN MODIFIED, WE ADD IF NODE'S DIST > CURRDIST + EDGEWT
-     * 
      */
 
 	/**
 	 * BFS TEMPLATE:
 	 * 
-	 * 1 Custom class
-	 * 2 adj matrix, q, visited arr(set can be used but arr can store dist)
+	 * 1 Custom class to hold indexes
+	 * 2 adj matrix, q, visited arr(set can be used)
 	 * 
 	 * int[][] g = new int[n][n];
 	 * 3 fill edges with -1
 	 * fill g from graph
 	 * EDGES ARE FILLED ONLY IN CASES WHERE EDGE WTS CAN BE 0
 	 * 
-	 * distance will hold dist
-	 * distance[]
-	 * 4 fill distance with Max_Value
+	 * visited will check
+	 * 4 visited[], no distance array
+	 * 
 	 * q.addLast(head);
 	 * while(q.size()!=0){
+	 * 5 use q size
+	 * int size = q.size();
+	 * 
+	 * 6 for(i =0; i<size; i++)
 	 * curr = q.removeFirst();
 	 * 
 	 * for(int i =0; i<n; i++){
 	 * if(
-	 * 5 g[curr.node][i] != -1
-	 * 6 distance[i] > distance[curr.node] + g[curr.node][i]
+	 * 7 g[curr.node][i] != -1
+	 * 8 visited[i] = 1
 	 * for FLIGHTS, USE CURR.DISTANCE, WHY? 
 	 * 
-	 * 7 update distance[i]
-	 * 8 add to q
+	 * 9 add to q
+	 * 10 use generic counter time++
 	 * )
 	 * }
 	 * }
@@ -940,177 +922,22 @@ class Graph {
 	*/
 
 
-	/**
-	 * NORMAL BFS
-	 * 
-	 * POINTS : 
-	 * 1 ONLY VISITED ARRAY
-	 * 2 AFTER ISSAFE(VALID INDEXES AND UNVISITED), 
-	 * MARK VISITED AND ADD TO Q.
-	 * 
-	 * WHY DOES THIS WORK? ONLY UPDATING MAX?
-	 * WHAT OIF THERE IS A SHORTER PATH?
-	 * 
-	 * IN BFS THERE CAN NEVER BE A CONFLICT OF SHORTER PATH.
-	 * AS ALL NODES ARE ADDED TO Q IN SORTED ORDER.
-	 * SO NODES WHICH ARE CLOSER WILL UPDATE THEIR NEIGHBOURS
-	 * IN DFS THERE CAN BE CONFLICT, BUT HERE ALL EQUIDISTANT
-	 * NOES ARE UPDATED BEFORE ANY NODE WITH GREATER DISTANCE.
-	 * 
-	 * we add alls 2s, so all 2s will update neighbouring 1s at 
-	 * teh same time. so there won't be a case where a 1 farther
-	 * is updated first.
-	 * 
-	 */
-	// https://leetcode.com/problems/rotting-oranges/
-	// NORMAL BFS
-	class Orange1 {
-		int row, col, val, time;
-
-		Orange1(int r, int c, int v, int t) {
-			this.row = r;
-			this.col = c;
-			this.val = v;
-			this.time = t;
-		}
-	}
-
-	public int orangesRotting1(int[][] grid) {
-		Deque<Orange1> q = new LinkedList<>();
-		int maxTime = 0;
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 2) q.add(new Orange1(i, j, 2, 0));
-			}
-		}
-
-		int[] rows = { -1, 0, 0, 1 };
-		int[] cols = { 0, -1, 1, 0 };
-		while (q.size() != 0) {
-			Orange1 curr = q.removeFirst();
-
-			for (int i = 0; i < rows.length; i++) {
-				int newX = curr.row + rows[i];
-				int newY = curr.col + cols[i];
-				if (isSafeOrange(grid, newX, newY)) {
-					grid[newX][newY] = 2;
-					q.addLast(new Orange1(newX, newY, 2, curr.time + 1));
-					maxTime = curr.time + 1;
-				}
-			}
-		}
-
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 1) return -1;
-			}
-		}
-		return maxTime;
-	}
-
-	boolean isSafeOrange(int[][] grid, int row, int col) {
-		if (row >= 0 && row < grid.length 
-		&& col >= 0 && col < grid[0].length 
-		// checking only if not visited
-		&& grid[row][col] == 1) return true;
-		return false;
-	}
-	
-
-	/** 
-     * MODIFIED BFS
+	// BFS
+    // use custom class
+    // can store distance in class or visited array
+    // but we have to update the matrix itself, so custom class can hold dist
+    /** 
+     * POINTS :
      * 
-     * POINTS : 
-     * 1 THIS IS MODIFIED BFS, WHERE ONLY DISTANCE IS STORED, NOT VISITED
-     * 2 INITIALIZE DISTANCE TO INF, BUT CHANGE IT TO 0 
-     * FOR 2s AND 0s.
+     * 1 ALWAYS USE Q SIZE FOR BFS, HELPS KEEP TRACK OF DISTANCE
+     * UNIFORMLY, SAME AS IN WORD LADDER
      * 
-     * 3 MARK ALL 1s AS 3. WHY? 
-     * THAT'S HOW UNREACHABLE 1s CAN BE TRACED.
+     * 2 ONLY CHECK IF UNVISITED, NO NEED TO CHECK FOR DISTANCE
+     * BFS SO NO CONFLICT OF FINDING A SHORTER PATH
      * 
-     * 4 WHY WE DON'T MAINTAIN VISITED? BECAUSE IF WE DON'T REVISIT
-     * VISITED NODES, WE WON'T BE ABLE TO UPDATE WITH SHORTER DIST.
-     * 
-     * 5 THE ISSAFE METHOD HELPS AVOID INF LOOP
-     * NODES ARE ADDED TO Q, ONLY IF DIST IS GREATER THAN PREV(CURR+1)
+     * 3 UPDATE AFTER ISSAFE, NOT AFTER REMOVAL
      * 
      */
-    // [[2,2],[1,1],[0,0],[2,0]]
-    // https://leetcode.com/problems/rotting-oranges
-    class Orange {
-		int row, col, val, time;
-
-		Orange(int r, int c, int v, int t) {
-			this.row = r;
-			this.col = c;
-			this.time = t;
-		}
-	}
-
-	public int orangesRotting(int[][] grid) {
-		Deque<Orange> q = new LinkedList<>();
-		int maxTime = 0;
-        int m = grid.length;
-        int n = grid[0].length;
-        int[][] distance = new int[m][n];
-        for(int[] i : distance) Arrays.fill(i, Integer.MAX_VALUE);
-            
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 2) {
-                    q.add(new Orange(i, j, 2, 0));
-                    distance[i][j] = 0;
-                }
-                if(grid[i][j] == 0) distance[i][j] = 0;
-			}
-		}
-
-		int[] rows = { -1, 0, 0, 1 };
-		int[] cols = { 0, -1, 1, 0 };
-        
-		while (q.size() != 0) {
-            // 2s have already been added
-			Orange curr = q.removeFirst();
-
-            for (int i = 0; i < rows.length; i++) {
-				int newX = curr.row + rows[i];
-				int newY = curr.col + cols[i];
-				if (isSafeOrange(grid, newX, newY, distance, curr.time+1)){
-                    // marking 3 to keep track of unvisited 1s
-                    grid[newX][newY] = 3;
-                    distance[newX][newY] = curr.time+1;
-					q.addLast(new Orange(newX, newY, 2, curr.time + 1));
-				}
-			}
-		}
-
-		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				if (grid[i][j] == 1) return -1;
-                maxTime = Math.max(maxTime, distance[i][j]);
-			}
-		}
-		return maxTime;
-	}
-
-	boolean isSafeOrange(int[][] grid, int row, int col, int[][] dist, int prev) {
-		if (row >= 0 && row < grid.length 
-        && col >= 0 && col < grid[0].length 
-        // if 1 or 3 there might be a shorter dist
-        && (grid[row][col] == 1 || grid[row][col] == 3)
-        // this condn stops inf loop
-        && dist[row][col] > prev) return true;
-		return false;
-	}
-
-	// MODIFIED BFS
-    // use custom class
-    // can store distance in class or DISTANCE array
-	// but we have to update the matrix itself, so custom class can hold
-	/** 
-	 * WHENEVER THE SHORTEST DIST NEEDS TO BE FOUND, USE MODIFIED BFS
-	 * USE DISTANCE ARRAY AND ADD TO Q ONLY IF CURR DIST > PREV+1
-	 */
     class Wall{
         int x; int y; int dist;
         Wall(int x, int y, int d){
@@ -1122,6 +949,7 @@ class Graph {
     void wallsAndGatesBFS(int[][] matrix){
         int m = matrix.length; int n = matrix[0].length;
         Deque<Wall> q = new LinkedList<>();
+        int distance = 0;
 
         for(int i =0; i<m; i++){
             for(int j=0; j<n; j++){
@@ -1130,29 +958,179 @@ class Graph {
         }
 
         while(q.size()!=0){
-            Wall curr = q.removeFirst();
+            int size= q.size();
+           
+            for(int i=0; i<size; i++){
+                Wall curr = q.removeFirst();
+                System.out.println(curr.x+" "+curr.y+" "+curr.dist);
 
-            for(int k =0; k<rows.length; k++){
-                int newX = curr.x + rows[k];
-                int newY = curr.y + cols[k];
-                if(isSafeWallBFS(matrix, newX, newY, curr.dist+1)){
-					// udpate after isSafe
-					matrix[newX][newY] = curr.dist+1;
-                    q.addLast(new Wall(newX, newY, curr.dist+1));
+                for(int k =0; k<rows.length; k++){
+                    int newX = curr.x + rows[k];
+                    int newY = curr.y + cols[k];
+                    if(isSafeWallBFS(matrix, newX, newY)){
+                        matrix[newX][newY] = distance+1;
+                        q.addLast(new Wall(newX, newY, distance+1));
+                    }
                 }
             }
+            distance++;
         }
         System.out.println("bfs wall : ");
         utilCustom.Utility.printMatrix(matrix);
     }
 
-    boolean isSafeWallBFS(int[][] matrix, int r, int c, int prev){
+    boolean isSafeWallBFS(int[][] matrix, int r, int c){
         if(r>=0 && r<matrix.length
         && c>=0 && c<matrix[0].length
-        && matrix[r][c] != -1
-        && (prev == 0 || matrix[r][c] > prev)) return true;
+        // if unvisited
+        && matrix[r][c] == Integer.MAX_VALUE) return true;
         return false;
+    }
+
+
+	/**
+	 * NORMAL BFS
+	 * 
+	 * POINTS : 
+	 * 1 ONLY VISITED ARRAY
+	 * 2 ISSAFE ONLY CHECKS IF VISITED OR NOT
+	 * 3 AFTER ISSAFE, MARK VISITED AND ADD TO Q.
+	 * 
+	 * WHY DOES THIS WORK? ONLY UPDATING MAX?
+	 * WHAT OIF THERE IS A SHORTER PATH?
+	 * 
+	 * IN BFS THERE CAN NEVER BE A CONFLICT OF SHORTER PATH.
+	 * AS ALL NODES ARE ADDED TO Q IN SORTED ORDER.
+	 * SO NODES WHICH ARE CLOSER WILL UPDATE THEIR NEIGHBOURS
+	 * 
+	 * IN DFS THERE CAN BE CONFLICT, BUT HERE ALL EQUIDISTANT
+	 * NOES ARE UPDATED BEFORE ANY NODE WITH GREATER DISTANCE.
+	 * 
+	 * we add alls 2s, so all 2s will update neighbouring 1s at 
+	 * teh same time. so there won't be a case where a 1 farther
+	 * is updated first.
+	 * 
+	 */
+	// https://leetcode.com/problems/rotting-oranges/
+	// NORMAL BFS
+	// [[2,2],[1,1],[0,0],[2,0]]
+    // what if rotting from 2 sources? isSafe can handle that    
+    // in bfs, only visited, a generic counter
+    class Orange1{
+        int x; int y; 
+        Orange1(int x, int y){
+            this.x = x; this.y = y;
+        }
+    }
+	public int orangesRotting(int[][] grid) {
+		Deque<Orange1> q = new LinkedList<>();
+        int m = grid.length;
+        int n = grid[0].length;
+        
+        int[][] visited = new int[m][n];
+            
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 2) q.add(new Orange1(i, j));
+			}
+		}
+        
+        int time = -1; // 1
+
+		int[] rows = { -1, 0, 0, 1 };
+		int[] cols = { 0, -1, 1, 0 };
+        
+		while (q.size() != 0) {
+            int size = q.size();
+            for(int i =0; i < size; i++){
+                Orange1 curr = q.removeFirst();
+                // System.out.println(curr.x+" "+curr.y);
+                for (int k = 0; k < rows.length; k++) {
+                    int newX = curr.x + rows[k];
+                    int newY = curr.y + cols[k];
+                    if (isSafeOrange(grid, newX, newY, visited)) {
+                        grid[newX][newY] = 2;
+                        visited[newX][newY] = time+1; 
+                        q.addLast(new Orange1(newX, newY));
+                    }
+                }
+			}
+			// after a complete iteration
+            time++; // 2
+            // System.out.println("time "+time);
+		}
+
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) return -1;
+			}
+		}
+		return time<0?0:time; // 3
 	}
+
+	boolean isSafeOrange(int[][] grid, int row, int col, int[][] visited) {
+		if (row >= 0 && row < grid.length 
+		&& col >= 0 && col < grid[0].length
+		// only 1 can be rotted further 
+		&& grid[row][col] == 1 
+		// only unvisited
+        && visited[row][col] == 0) return true;
+		return false;
+	}
+
+    // [[2,2],[1,1],[0,0],[2,0]]
+    // https://leetcode.com/problems/rotting-oranges
+	// ONLY USING A COUNTER, NO VISTED ARRAY AND CUSTOM CLASS
+	public int orangesRotting1(int[][] grid) {
+		Deque<Orange1> q = new LinkedList<>();
+        int m = grid.length;
+        int n = grid[0].length;
+                    
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				if (grid[i][j] == 2) q.add(new Orange1(i, j));
+			}
+		}
+        
+        int time = -1; // 1
+
+		int[] rows = { -1, 0, 0, 1 };
+		int[] cols = { 0, -1, 1, 0 };
+        
+		while (q.size() != 0) {
+            int size = q.size();
+            for(int i =0; i < size; i++){
+                Orange1 curr = q.removeFirst();
+                // System.out.println(curr.x+" "+curr.y);
+                for (int k = 0; k < rows.length; k++) {
+                    int newX = curr.x + rows[k];
+                    int newY = curr.y + cols[k];
+                    if (isSafeOrange1(grid, newX, newY)) {
+                        grid[newX][newY] = 2;
+                        q.addLast(new Orange1(newX, newY));
+                    }
+                }
+            }
+            time++;
+            // System.out.println("time "+time);
+		}
+
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				if (grid[i][j] == 1) return -1;
+			}
+		}
+		return time<0?0:time;
+	}
+
+	boolean isSafeOrange1(int[][] grid, int row, int col) {
+		if (row >= 0 && row < grid.length 
+		&& col >= 0 && col < grid[0].length 
+		// only unvisited
+		&& grid[row][col] == 1 ) return true;
+		return false;
+	}
+
 
 	/** 
 	 * NORMAL BFS
@@ -1219,152 +1197,58 @@ class Graph {
 	}
 	
 
-	// see if edge wt can be 0, initialize with -1;
-	// distance will store dist
-	// ADJ MATRIX MLE, SO ADJ LIST USED BELOW
-    // https://leetcode.com/problems/time-needed-to-inform-all-employees
-    class Emp{
-        int node; int time;
-        Emp(int n, int t){
-            this.node = n;
-            this.time = t;
-        }
-    }
-	public int numOfMinutesADJMatrix(int n, int headID, int[] manager, 
-	int[] informTime) {
-
-        int[][] g = new int[n][n];
-        
-        // fill -1
-        for(int[] i:g) Arrays.fill(i, -1);
-        
-        // create graph
-        for(int i =0; i<n; i++) {
-            // manager -1
-            if(manager[i] == -1) continue;
-            g[manager[i]][i] = informTime[i];    
-        }
-        
-        int[] distance = new int[n];
-        Arrays.fill(distance, Integer.MAX_VALUE); 
-        distance[headID] = informTime[headID];
-        
-        Deque<Emp> q = new LinkedList<>();
-        q.addLast(new Emp(headID, 0));
-        
-        while(q.size()!=0){
-            Emp curr = q.removeFirst();
-            for(int i =0; i<n; i++){
-                // edge must exist
-                if(curr.node!=i && g[curr.node][i] != -1
-                  && distance[i] > g[curr.node][i] + distance[curr.node]){
-                    distance[i] = g[curr.node][i] + distance[curr.node];
-                    q.addLast(new Emp(i, distance[i]));
-                }
-            }
-        }
-        
-        int max = 0;
-        for(int i =0; i<n; i++) max = Math.max(max, distance[i]);
-        return max;
-    }
-
-
-	// https://leetcode.com/problems/time-needed-to-inform-all-employees/
-	// AMAZON, USED BFS
-	public int numOfMinutesBFSADJList(int n, int headID, int[] manager, 
-	int[] informTime) {
-        int[] distance = new int[n];
-        // initialize all to max value
-        Arrays.fill(distance, Integer.MAX_VALUE);
-        
-        //set headID to it's informTime
-        distance[headID] = informTime[headID];
-        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
-        
-        // create graph
-        for(int i=0; i<manager.length; i++) {
-            ArrayList<Integer> curr = map.getOrDefault(manager[i], new ArrayList<>());
-            curr.add(i);
-            map.put(manager[i], curr);
-        }
-        
-        Deque<Integer> q= new LinkedList<>();
-        q.addLast(headID);
-        while(q.size()!=0){
-            int node = q.removeFirst();
-            if(distance[node]!=Integer.MAX_VALUE && map.containsKey(node)){
-                ArrayList<Integer> list = map.get(node);
-                for(int i =0; i<list.size(); i++){
-                    if(distance[list.get(i)] > distance[node]+informTime[list.get(i)]){
-                        distance[list.get(i)] = distance[node]+informTime[list.get(i)];
-                        q.addLast(list.get(i));
-                    }
-                }
-            }
-        }
-        
-        int max = 0;
-        for(int j =0; j<distance.length; j++){
-            // if visited[j] == Integer.mAX_VALUE return -1;
-            max = Math.max(max, distance[j]);
-        }
-        return max;
-	}
-
-
-	int[] res;
-	// https://leetcode.com/problems/redundant-connection/
-	public int[] findRedundantConnection(int[][] edges) {
-		HashSet<Integer> set = new HashSet<>();
-		for (int i = 0; i < edges.length; i++) {
-			for (int j = 0; j < edges[i].length; j++) {
-				if (!set.contains(edges[i][j]))
-					set.add(edges[i][j]);
-			}
-		}
-		int n = set.size();
-		System.out.println("size n " + n);
-		int[][] g = new int[n + 1][n + 1];
-
-		for (int i = 0; i < n; i++) {
-			g[edges[i][0]][edges[i][1]] = 1;
-			g[edges[i][1]][edges[i][0]] = 1;
-		}
-		utilCustom.Utility.printMatrix(g);
-		// System.out.println(g[2][3]);
-		set.clear();
-		set.add(edges[0][0]);
-		Deque<Integer> q = new LinkedList<>();
-		q.add(edges[0][0]);
-		bfs(q, g, set);
-		return res;
-	}
-
-	void bfs(Deque<Integer> q, int[][] g, HashSet<Integer> set) {
-
-		while (q.size() != 0) {
-			int curr = q.removeFirst();
-			System.out.println("curr " + curr);
-			System.out.println(set);
-			for (int i = curr + 1; i < g.length; i++) {
-				System.out.println("iterate " + i);
-				if (curr != i && g[curr][i] != 0 && !set.contains(i)) {
-					q.addLast(i);
-					set.add(i);
-					System.out.println(q);
-				} else if (curr != i && g[curr][i] != 0 && set.contains(i)) {
-					res = new int[] { curr, i };
-					utilCustom.Utility.print1DMatrix(res);
-					return;
-				}
-			}
-		}
-	}
-
-	
 	/** 
-	 * VARIATION : MODIFIED BFS WITH INVALID DISTANCES
+	 * POINTS : 
+	 * 1 HERE BFS IS USED, BUT FOR ALL STRINGS IN THE QUEUE AT A TIME, 
+	 * THE NEXT STRING IS FOUND AND STORED. SO MIN DIST CAN BE FOUND
+	 * WHENEVER THE END WORD COMES AS WE INCREMENTING BY UNIT DIST FOR ALL 
+	 * TRANSFORMATIONS.
+	 * 
+	 * 2 for(char c ='a'; c<='z'; c++) curr[i] == c
+	 * create a new string and check if it exist in the set
+	 * 
+	 * 3 CHANGE BACK THE STRING char holder = curr[i]; curr[i] = holder;
+	 * 
+	 * 4 ONCE AN ITERATION IS DONE, distance++;
+	 * 
+	 */	
+	// https://leetcode.com/problems/word-ladder
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if(!set.contains(endWord)) return 0;
+        int distance = 1;
+        
+        Deque<String> q = new LinkedList<>();
+        q.addLast(beginWord);
+        while(q.size()!=0){
+            int size = q.size();            
+            // all words in the same go, helps maintain smallest dist
+            for(int k =0; k<size; k++){//1
+                char[] curr = (q.removeFirst()).toCharArray();
+                
+                for(int i =0; i<curr.length; i++){
+                    char holder = curr[i];//2
+                    
+                    for(char c ='a'; c<='z'; c++){
+                        if(c == holder) continue;//3
+                        curr[i] = c;
+                        String after = String.valueOf(curr);
+                        if(after.equals(endWord)) return distance+1;
+                        if(set.contains(after)) {
+                            // System.out.print(after+", ");
+                            q.addLast(after); set.remove(after);//4
+                        }
+                    }
+                    curr[i] = holder;//5
+                }   
+            }
+            distance++;//6
+        }
+        return 0;
+	}
+		
+	/** 
+	 * VARIATION : MODIFIED BFS WITH PRUNING
 	 * DISTANCE ARRAY MIGHT BE UPDATED BUT STOPS MIGHT
 	 * NIT BE AVAILABLE, SO CORRECT DIST IS IN THE CUSTOM
 	 * OBJECT IIN PQ
@@ -1386,6 +1270,10 @@ class Graph {
 	 * 
 	 * n = 4, src 0, dest 3, stops 1
 	 * [[0,1,1],[0,2,5],[1,2,1],[2,3,1]]
+	 * 
+	 * https://leetcode.com/problems/cheapest-flights-within-k-stops/discuss/
+	 * 834942/Faster-than-99-modified-Dijkstra-used-Deque-instead-of-PQueue
+	 * 
 	*/
 	// https://leetcode.com/problems/cheapest-flights-within-k-stops/
 	class Flight{
@@ -1428,80 +1316,25 @@ class Graph {
 	}
 
 	
+
 	// https://leetcode.com/problems/possible-bipartition/
 	
 	// https://www.techiedelight.com/print-k-colorable-configurations-graph-vertex-coloring-graph
 
 
-	// USING MODIFIED BFS, NO VISITED, ONLY DISTANCE ARRAY
-    // edges can be 0, so need to initialize with -1
-    class Network{
-        int node, time;
-        Network(int n, int t){
-            this.node = n;
-            this.time = t;
-        }
-    }
-    public int networkDelayTimeBFS(int[][] times, int N, int K) {
-        int n = N+1;
-        
-        int[][] g = new int[n][n];
-        for(int[] i: g) Arrays.fill(i, -1);
-        
-        for(int[] i : times) g[i[0]][i[1]] = i[2];
-            
-        int[] distance = new int[n];
-        Arrays.fill(distance, Integer.MAX_VALUE); // 1
-        
-        distance[K] = 0; // 2
-        
-        Deque<Network> q = new LinkedList<>();
-        
-        q.add(new Network(K, 0));
-        while(q.size()!=0){
-            Network curr = q.removeFirst();
-            // visited.add(curr.node);
-            for(int i =0; i<n; i++){
-                if(i!=curr.node && g[curr.node][i]!=-1 
-                   && distance[i] > distance[curr.node] + g[curr.node][i]){
-                    distance[i] = distance[curr.node] + g[curr.node][i]; // 3
-                    q.addLast(new Network(i, distance[i]));
-                }
-            }
-        }
-        
-        int max = -1;
-        for(int i =1; i<n; i++){
-            if(distance[i] == Integer.MAX_VALUE) return -1;
-            max = Math.max(max, distance[i]);
-        }
-        return max;
-	}
-	
-	
-	/////////////////////////////// DIJKSTRA
+	///////////////////////////////// DIJKSTRA
 
 	/** 
 	 * BFS VS DIJKSTRA
 	 * 1 QUEUE VS PQUEUE
-	 * 2 NO SET TO TRACK VISITED (in both)
-	 * 3 MODFIED BFS CAN'T WORK WITH LOOPS
-	 * 
-	 * BUT THERE'S A CATCH, BFS CAN'T PROVIDE OPTIMUM DIST IF WE MAINTAIN
-	 * A VISITED SET, AS DIST CAN'T BE UPDATED EVEN IF WE FIND A SHORTER
-	 * PATH. SO MODIFIED BFS(USED TO FIND DIST) DOESN'T WORK WITH LOOPS.
+	 * 2 VISITED VS DISTANCE
+	 * 3 Q SIZE AND AN EXTRA LOOP WITH GENERIC COUNTER
+	 * IN DIJKSTRA, WE CHECK FOR SHORTER DIST AND IF EDGE EXISTS
 	 * 
 	*/ 
 
 
 	/** 
-	 * DIJKSTRA 
-	 * 
-	 * IDEA : 
-	 * WE ADD THE HEAD TO A PQ AND SIMULTANEOUSLY TO A SET,
-	 * THEN REMOVE THE SMALLEST FROM PQ, ADD TO SET AND UPDATE ITS NEIGHBOURS
-	 * IF SET CONTAINS A NEIGHBOUR, IT HAS BEEN RELAXED ALREADY, CONTINUE
-	 * IF DIST[I] > EDGE + DIST[CURR], UPDATE AND ADD TO PQ
 	 * 
 	 * ///////////
 	 * https://www.quora.com/In-Dijkstra-would-using-a-visited-array
@@ -1516,40 +1349,24 @@ class Graph {
 	 * inserted is larger than current (already computed in the first visit) 
 	 * value of dist[u]. Hence additional visited[u] is not needed.
 	 * 
-	 */ ///////////
-	
-	 /* REQUISITES : CUSTOM CLASS, ADJ MATRIX, PQUEUE, SET, DISTANCE[] //5
-	 *  1 class Network{
-     *    int node, time;
-     *    Network(int n, int t){
-     *       this.node = n;
-     *       this.time = t;
-     *    }
-     *  } 
-	 * 2 USE ADJ MATRIX AS IT CAN STORE EDGE WT, DIFFICULT WITH ADJ LIST
-	 * 3 USE A PQ, TO FETCH THE LEAST DIST NODE
-	 * 4 USE A SET TO MAINTAIN VISITED NODES
-	 * 5 USE DIST[] TO FETCH DIST AT THE END
-	 * 
-	 * 1 SAME AS BFS, ALWAYS USE A CUSTOM CLASS
-	 * 2 FILL THE GRAPH WITH Integer.MAX_VALUE (AS THERE MIGHT BE 0 WT EDGES)
-	 * 
-	 * 3 USE A PQ
-	 * PriorityQueue<Network> pq = new PriorityQueue<>((x,y)->x.time - y.time);
-	 * 
-	 * 4 ADD TO SET ONLY WHEN REMOVING FROM PQ
-	 * 
-	 * 5 if(!set.contains(curr.node) 
-	 * && distance[i] > distance[curr.node] + g[curr.node][i])
-	 * ENSURE NEIGHBOR HASN'T BEEN RELAXED (NOT IN VISITED SET)
-	 * 
-	 * TIME IS NOT USED FOR COMPARISON, VISITED CAN BE USED
-	 * TIME IN Shortest CLASS IS USED TO SORT THE PQ
 	 * 
 	 * https://cs.stackexchange.com/questions/10047/
 	 * is-dijkstras-algorithm-just-bfs-with-a-priority-queue 
+	 */ ///////////
+	
+	/**
+	 *  * DIJKSTRA 
+	 * STEPS:
+	 * 1 USE DISTANCE ARRAY
+	 * INITIALISE TO INF
+	 * 2 DISTANCE[SRC] = 0;
+	 * 3 REMOVE FROM Q
+	 * IF(!g.containsKey(src)) continue;
 	 * 
-	*/
+	 * 5 if(distance[i] > distance[curr.node] + graph[curr.node][i])
+	 * UPDATE AND ADD TO Q
+	 * 
+	 */ 
 	// graph src, dest, edge wt : [[2,1,1],[2,3,1],[3,4,1]]
 	class Shortest {
 		int node, time;
@@ -1562,23 +1379,20 @@ class Graph {
 		int[][] g = new int[n][n];
 		for(int[] i :g) Arrays.fill(i, Integer.MAX_VALUE);
 
-		for(int[] i: graph){
-			g[i[0]][i[1]] = i[2];
-		}
+		for(int[] i: graph) g[i[0]][i[1]] = i[2];
 
 		int[] distance = new int[n];
-        Arrays.fill(distance, Integer.MAX_VALUE);
+        Arrays.fill(distance, Integer.MAX_VALUE); // 1
         distance[head] = 0;
 
         PriorityQueue<Shortest> pq = new PriorityQueue<>((x,y)->x.time - y.time);
-
-		pq.add(new Shortest(head, 0));
-		distance[head] = 0;
+		pq.add(new Shortest(head, 0)); // 2
 
 		while(pq.size()!=0){
 			Shortest curr = pq.remove();
 
 			for(int i =0; i<n; i++){
+				// 3
 				if(distance[i] > distance[curr.node] + graph[curr.node][i]){
 					distance[i] = distance[curr.node] + graph[curr.node][i];
 					pq.add(new Shortest(i, distance[i]));
@@ -1588,6 +1402,7 @@ class Graph {
 		}
 		int maxTime = 0;
         for(int i=1; i<n; i++){
+			// if unvisited
             if(distance[i] == Integer.MAX_VALUE) return -1;
             maxTime = Math.max(maxTime, distance[i]);
         }
@@ -1596,6 +1411,10 @@ class Graph {
 
 
 	/** 
+	 * WHY NOT BFS? BECAUSE BFS CAN'T GUARANTEE SHORTEST TIME AS IT
+	 * DOESN'T MAINTAIN DISTANCES, ONLY VISITED ARRAY.
+	 * SO SHORTER PATH MINGHT BE FOUND BUT NOT UPATED AS
+	 * NODE AHS ALREADY BEEN VISITED
 	 * 
 	 * MAJOR PINTS OF FAILURE:
 	 * 1 0 WT EDGES, SO g[curr.node][i]!=0 FAILS
@@ -1615,6 +1434,14 @@ class Graph {
 	 */
 	// use dijkstra as single source shortest path, not bfs
 	// https://leetcode.com/problems/network-delay-time/
+	class Network {
+		int node, time;
+		Network(int n, int t) {
+			this.node = n;
+			this.time = t;
+		}
+	}
+
     public int networkDelayTime(int[][] times, int N, int K) {
         int n = N+1;
         int[][] g = new int[n][n];
@@ -1634,6 +1461,7 @@ class Graph {
         
         while(pq.size()!=0){
 			Network curr = pq.remove();
+			// no visited business, update neighbours if egde present and dist greater
             for(int i = 1; i<n; i++){
 				if(curr.node!=i 
 				&& g[curr.node][i]!=-1 // 0 wt edges
@@ -1653,6 +1481,53 @@ class Graph {
     }
 
 
+	// https://leetcode.com/problems/time-needed-to-inform-all-employees
+    class Emp{
+        int node; int time;
+        Emp(int n, int t){
+            this.node = n; 
+            this.time = t;
+        }
+    }
+    // dijkstra distance 
+    public int numOfMinutesDijk(int n, int headID, int[] manager, int[] informTime) {
+        HashMap<Integer, List<Integer>>g = new HashMap<>();
+        
+        // create graph
+        for(int i =0; i<n; i++){
+            if(manager[i] == -1) continue;
+            List<Integer> list = g.getOrDefault(manager[i], new ArrayList<>());
+            list.add(i);
+            g.put(manager[i], list);
+        }
+        
+        //distance
+        int[] distance = new int[n];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[headID] = informTime[headID];
+        int max = distance[headID];
+        
+        PriorityQueue<Emp> pq = new PriorityQueue<>((x,y)->x.time - y.time);
+        pq.add(new Emp(headID, distance[headID]));
+        while(pq.size()!=0){
+            Emp curr = pq.remove();
+            
+            if(!g.containsKey(curr.node)) continue;
+            
+            List<Integer> list = g.get(curr.node);
+            for(int i :list){
+                if(distance[i] > distance[curr.node] + informTime[i]){
+                    distance[i] = distance[curr.node] + informTime[i];
+                    max = Math.max(max, distance[i]);
+                    pq.add(new Emp(i, distance[i]));
+                }
+            }
+        }
+        return max;
+	}
+	
+
+	//////////////////////////// PRIM
 	/**
 	 * ALWAYS CUSTOM CLASS FOR PQ SORTING
 	 * 
@@ -1665,7 +1540,7 @@ class Graph {
 	 * 
 	 * DIJKSTRA VS PRIM
 	 * 1 WE DON'T USE VISITED SET IN DIJKSTRA
-	 * 2 WE UPDATE ONLY EDGE WEIGHTS
+	 * 2 WE UPDATE ONLY EDGE WEIGHTS IN PRIM
 	 * (distance[i] > distance[curr.node] + g[curr.node][i])
 	 * vs
 	 * (!set.contains(j) && distance[j] > graph[curr.node][j])
@@ -1902,57 +1777,58 @@ class Graph {
           && board[row][col] == ch) return true;
         return false;
 	}
-	
 
-	/** 
-	 * POINTS : 
-	 * 1 HERE BFS IS USED, BUT FOR ALL STRINGS IN THE QUEUE AT A TIME, 
-	 * THE NEXT STRING IS FOUND AND STORED. SO MIN DIST CAN BE FOUND
-	 * WHENEVER THE END WORD COMES AS WE INCREMENTING BY UNIT DIST FOR ALL 
-	 * TRANSFORMATIONS.
-	 * 
-	 * 2 for(char c ='a'; c<='z'; c++) curr[i] == c
-	 * create a new string and check if it exist in the set
-	 * 
-	 * 3 CHANGE BACK THE STRING char holder = curr[i]; curr[i] = holder;
-	 * 
-	 * 4 ONCE AN ITERATION IS DONE, distance++;
-	 * 
-	 */	
-	// https://leetcode.com/problems/word-ladder
-    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        HashSet<String> set = new HashSet<>(wordList);
-        if(!set.contains(endWord)) return 0;
-        int distance = 1;
-        
-        Deque<String> q = new LinkedList<>();
-        q.addLast(beginWord);
-        while(q.size()!=0){
-            int size = q.size();            
-            // all words in the same go, helps maintain smallest dist
-            for(int k =0; k<size; k++){//1
-                char[] curr = (q.removeFirst()).toCharArray();
-                
-                for(int i =0; i<curr.length; i++){
-                    char holder = curr[i];//2
-                    
-                    for(char c ='a'; c<='z'; c++){
-                        if(c==holder) continue;//3
-                        curr[i] = c;
-                        String after = String.valueOf(curr);
-                        if(after.equals(endWord)) return distance+1;
-                        if(set.contains(after)) {
-                            // System.out.print(after+", ");
-                            q.addLast(after); set.remove(after);//4
-                        }
-                    }
-                    curr[i] = holder;//5
-                }   
-            }
-            distance++;//6
-        }
-        return 0;
+
+	int[] res;
+	//UNION FIND, ALL AOTHER APPROACHES FAIL
+	// https://leetcode.com/problems/redundant-connection/
+	public int[] findRedundantConnection(int[][] edges) {
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < edges.length; i++) {
+			for (int j = 0; j < edges[i].length; j++) {
+				if (!set.contains(edges[i][j]))
+					set.add(edges[i][j]);
+			}
+		}
+		int n = set.size();
+		System.out.println("size n " + n);
+		int[][] g = new int[n + 1][n + 1];
+
+		for (int i = 0; i < n; i++) {
+			g[edges[i][0]][edges[i][1]] = 1;
+			g[edges[i][1]][edges[i][0]] = 1;
+		}
+		utilCustom.Utility.printMatrix(g);
+		// System.out.println(g[2][3]);
+		set.clear();
+		set.add(edges[0][0]);
+		Deque<Integer> q = new LinkedList<>();
+		q.add(edges[0][0]);
+		bfs(q, g, set);
+		return res;
 	}
+
+	void bfs(Deque<Integer> q, int[][] g, HashSet<Integer> set) {
+
+		while (q.size() != 0) {
+			int curr = q.removeFirst();
+			System.out.println("curr " + curr);
+			System.out.println(set);
+			for (int i = curr + 1; i < g.length; i++) {
+				System.out.println("iterate " + i);
+				if (curr != i && g[curr][i] != 0 && !set.contains(i)) {
+					q.addLast(i);
+					set.add(i);
+					System.out.println(q);
+				} else if (curr != i && g[curr][i] != 0 && set.contains(i)) {
+					res = new int[] { curr, i };
+					utilCustom.Utility.print1DMatrix(res);
+					return;
+				}
+			}
+		}
+	}
+
 
 	// https://www.techiedelight.com/print-k-colorable-configurations-graph-vertex-coloring-graph/
 	// https://leetcode.com/problems/path-with-maximum-probability/
