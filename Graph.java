@@ -1,13 +1,11 @@
 import java.util.*;
 
 /**
- * TREE FORST FIRE OPTIMIZE
- * DFS INFORM TIME, EVENTUAL SAFE STATES
- * FIND REDUNDANT
+ * DFS INFORM TIME,
  * 
  * ROTTING, BIPARTITE, TIME TO INFORM BFS, LADDER LENGTH
- * BFS NO CHECK AFTER REMOVAL
- * 
+ * FLIGHTS
+ *  
  * TOPO SORT, SAFE STATES
  * 
  * PRIM, REMOVE GET MIN INDEX, USE PQ
@@ -408,152 +406,47 @@ class Graph {
 
 	/**
 	 * POINTS : 
-	 * 1 CREATE A GRAPH USING ADJ LIST
-	 * 2 DFS 
-	 * 3 FOR TIME THERE ARE 2 WAYS,
-	 * 3.1 ADD TIME BEFORE ENTERING CHILD, IF THE CHILD DOESN'T HAVE 
-	 * ANY FURTHER CHILDREN IT JUST RETURNS THE TIME. 
-	 * IT WORKS BECAUSE ONLY NODES HAVING CHIDREN ARE IN MAP, 
-	 * SO IF NODE IS IN MAP, THEN IT MUST HAVE CHILD NODE(S), HENCE
-	 * ADDING INFORM TIME BEFORE HAND IS OK.
+	 * 1 CREATE A GRAPH USING ADJ LIST, NO NEED TO HOLD EDGE WEIGHTS 
+	 * AS INFORMTIME CAN FETCH THAT,
+	 * HENCE DIDN'T USE ADJ MATRIX
 	 * 
-	 * 3.2 USE F(ROOT) = INFORMTIME[ROOT] + F(CHILD); SET FLAG TO ZERO IN EACH
-	 * ITERATION AND RETURN MAX MAX(MINUTES, INFORMTIME[ROOT]+DFS(CHILD))
+	 * 2 DFS 
+	 * if (no neighbours) return 0;
+	 * 
+	 * 3 
 	 * 
 	 * 4 USE DP TO STORE VALUE IN ANOTHER MAP (TIMEHOLDER)
 	 * 
 	 */
 	// https://leetcode.com/problems/time-needed-to-inform-all-employees
-	int minutes = Integer.MIN_VALUE;
-	HashMap<Integer, Integer> timeHolder = new HashMap<>();
-
-	public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
-		HashMap<Integer, List<Integer>> map = new HashMap<>();
-
-		for (int i = 0; i < manager.length; i++) {
-			if (manager[i] == -1)
-				continue;
-			else if (map.containsKey(manager[i])) {
-				List<Integer> c = map.get(manager[i]);
-				c.add(i);
-				map.put(manager[i], c);
-			} else {
-				ArrayList<Integer> c = new ArrayList<>();
-				c.add(i);
-				map.put(manager[i], c);
-			}
-		}
-
-		// System.out.println(map);
-		dfsNumMinutes(map, headID, informTime, 0);
-		// return dfsNumMinutes(map, headID, informTime, 0);
-		return minutes;
-	}
-
-	/**
-	 * works but added informtime beforehand 
-	 * void dfsNumMinutes(HashMap<Integer,
-	 * ArrayList<Integer>> map, int start, int[] informTime, int time){
-	 * if(!map.containsKey(start)) return 0
-	 * 
-	 * minutes = Math.max(minutes, time); 
-	 * return;
-	 * 
-	 * time+=informTime[start]; // System.out.println(time); 
-	 *  for(int i : map.get(start))
-	 *   { dfsNumMinutes(map, i, informTime, time);} 
-	 * }
-	 */
-
-	int dfsNumMinutes(HashMap<Integer, List<Integer>> map, int start, int[] informTime, int time) {
-		if (!map.containsKey(start)) return 0;
-		int minutes = 0;
-		
-		// System.out.println(time);
-		for (int i : map.get(start)) {
-			if (timeHolder.containsKey(i)) return timeHolder.get(i);
-
-			minutes = Math.max(minutes, informTime[start] + dfsNumMinutes(map, i, informTime, time));
-			timeHolder.put(i, minutes);
-		}
-		return minutes;
-	}
-
-	/** 
-	 * POINTS :
-	 * 1 TWO PARTS, 
-	 * FIND THE SET OF NODES THAT CAN VISIT THE TERMINAL EDGES,
-	 * FIND THE NODES THAT HAVE SELF LOOP
-	 * 
-	 * REMOVE ALL THOSE WHICH HAVE LOOP FROM TERMINAL SET AND RETURN RES
-	 * 
-	 * 2 HOW TO KNOW IF A NODE CAN REACH TERMINAL NODES? 
-	 * I USED A GLOBAL PARENT VAR WHICH IS ASSIGNED THE NODE NO AT THE 
-	 * START OF DFS AND ADDED TO TERMINAL IF DFS REACHES TERMINAL.
-	 * 
-	 * 3 WE DON'T STOP AFTER REACHING TERMINAL AS WE NEED TO FIND IF
-	 * LOOP EXISTS
-	 * 
-	 * 
-	 * 4 WHY VISITED IS NOT USED? PARENT IS GLOBAL SO VISITED
-	 * NODES CAN'T BE TRACKED IF THEY CAN REACH TERMINAL.
-	 * 
-	 */
-
-	// DOESN'T WORK, BECAUSE OF SELF LOOPS, ELSE WORKS WITH LOOPS TOO
-	// https://leetcode.com/problems/find-eventual-safe-states/
-    int parent = -1;
-    HashSet<Integer> currParents = new HashSet<>();
-    HashSet<Integer> loopNodes = new HashSet<>();
-    HashSet<Integer> terminal = new HashSet<>();
-    public List<Integer> eventualSafeNodes(int[][] graph) {
-        HashMap<Integer, List<Integer>> map = new HashMap<>();
-        
-        for(int i = 0; i<graph.length; i++){
-            List<Integer> curr = new ArrayList<>();
-            for(int j =0; j<graph[i].length; j++){
-                curr.add(graph[i][j]);
-            }
-            if(curr.size() == 0) terminal.add(i);
-            else map.put(i, curr);
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        for(int i =0; i<n; i++){
+            if(manager[i] == -1) continue;
+            List<Integer> list = g.getOrDefault(manager[i], new ArrayList<>());
+            list.add(i);
+            g.put(manager[i], list);   
         }
+        int[] dp = new int[n];
         
-        for(int i =0; i<graph.length; i++){
-            if(!map.containsKey(i)) continue;
-            parent = i;//2
-            dfs(i, map);
-            currParents.clear();
-        }
-        
-        System.out.println(loopNodes);
-        System.out.println(terminal);
-		List<Integer> res = new ArrayList<Integer>(terminal);
-		for(Integer node : terminal){
-			// Exception in thread "main" java.util.ConcurrentModificationException
-			// if(loopNodes.contains(node)) terminal.remove(node);
-			if(loopNodes.contains(node)) res.remove(node);//3
-		}
-		System.out.println(res);
-        return res;
+        return dfs(headID, g, dp, manager, informTime);
     }
     
-    // check if terminal is reacheable
-    // check for loop
-    
-    void dfs(int node, HashMap<Integer, List<Integer>> map){
-        if(terminal.contains(node)) terminal.add(parent);//
-        if(!map.containsKey(node)) return;//
-        currParents.add(node);
-        List<Integer> curr = map.get(node);
-        for(int i =0; i<curr.size(); i++){
-            if(currParents.contains(curr.get(i))) {
-                loopNodes.add(curr.get(i));
-                return;
-            }
-            dfs(curr.get(i), map);
-		}
-		currParents.remove(node);
-	}
+    int dfs(int src, HashMap<Integer, List<Integer>> g, int[] dp, int[] manager, int[] informTime){
+        
+        if(dp[src]!=0) return dp[src];
+        if(!g.containsKey(src)) return 0;
+        // System.out.println("src "+src);
+        int max = 0; // 1
+        List<Integer> curr = g.get(src);
+		
+		// tree structure ,so max gives the time to inform the farthest emp
+		// also no conflict so, we don't compare
+        for(int i : curr) max = Math.max(max, dfs(i, g, dp, manager, informTime));
+        dp[src] = max + informTime[src];
+        // System.out.println(src +" "+dp[src]);
+        return dp[src];
+    }
 	
 	
 	// https://leetcode.com/problems/path-with-maximum-probability/
@@ -701,13 +594,15 @@ class Graph {
 
 	/**
 	 * FOR TOPO SORT USE ADJ LIST AS 
+	 * 
 	 * 1 IT HELPS WHEN ANY NODE DOESN'T HAVE ANY
 	 * OUTGOING EDGE, THE MAP.CONTAINS CHECK HELPS REMOVE IT QUICKER 
 	 * AND NOT ITERATE AND ADD UNNECESSARILY. 
 	 * 
-	 * 2 ALSO IT IS FASTER AS IN ADJMATRIX WE ITERATE OVER EACH LOOP
+	 * 2 ALSO IT IS FASTER AS IN ADJMATRIX WE ITERATE OVER THE MATRIX LENGTH
+	 * FOR EACH NODE
 	 * 
-	 * set and currParents both are needed :
+	 * currParents IS IMP, visited IS FOR SPEED UP
 	 * currParents is like backtracking, 
 	 * add at the start and remove at the end.
 	 * 
@@ -727,51 +622,62 @@ class Graph {
 	 *   if(!map.contains()) return;
 	 *   currparents.add()
 	 *   for(){
+	 * 		if(visited.contains(i)) continue;
 	 *   }
 	 *   currParents.remove();
 	 *   q.addLast
 	 * 
 	 * }
 	 * 
+	 * HOW VISITED WORKS?
+	 * visited keeps track of nodes that have been visited, while
+	 * currParents keeps track of nodes that are preceding the ith node
+	 * in this dfs.
 	 * 
 	 */
 	// https://leetcode.com/problems/course-schedule/
-	boolean loopC1 = false;
+	// https://leetcode.com/problems/course-schedule/
+    boolean isLoop = false;
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        int n = prerequisites.length;
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        
+        for(int i =0; i<n; i++){
+            List<Integer> list = g.getOrDefault(prerequisites[i][1], new ArrayList<>());
+            list.add(prerequisites[i][0]);
+            g.put(prerequisites[i][1], list);
+        }
+        
         HashSet<Integer> visited = new HashSet<>();
         HashSet<Integer> currParents = new HashSet<>();
-        
-        for(int i =0; i<prerequisites.length; i++){
-            ArrayList<Integer> curr = 
-                map.getOrDefault(prerequisites[i][1], new ArrayList<Integer>());
-            
-            curr.add(prerequisites[i][0]);
-            map.put(prerequisites[i][1], curr);
+        for(HashMap.Entry<Integer, List<Integer>> e : g.entrySet()){
+            if(isLoop) return false;
+            currParents.clear();
+            if(visited.contains(e.getKey())) continue;
+            tps(e.getKey(), g, visited, currParents);
+                        
         }
-        
-        for(int i = 0; i<numCourses; i++){
-            // if(loop) return false; 
-            if(!visited.contains(i)) dfs(i, map, visited, currParents); // 1
-        }
-        return !loopC1;
+        return true;
     }
     
-	void dfs(int curr, HashMap<Integer, ArrayList<Integer>> map, 
-	HashSet<Integer> visited, HashSet<Integer> currParents){
-
-        visited.add(curr);
-		if(!map.containsKey(curr)) return;
+    void tps(int src, HashMap<Integer, List<Integer>> g, HashSet<Integer> visited,
+    HashSet<Integer> currParents){
+		visited.add(src);
 		
-        currParents.add(curr);
-        ArrayList<Integer> list = map.get(curr);
-        for(int i : list) {
-            //return is required here
-            if(currParents.contains(i)) {loopC1 = true; return;}
-            dfs(i, map, visited, currParents);
-            
+        if(!g.containsKey(src)) return;
+		List<Integer> list = g.get(src);
+		
+        currParents.add(src); // 
+        for(int i : list){
+            if(currParents.contains(i)) {
+                isLoop = true;
+                return;
+            }
+            // the node has been visited but has a diff set of children
+            if(visited.contains(i)) continue; // 
+            tps(i, g, visited, currParents);
         }
-        currParents.remove(curr);
+        currParents.remove(src); // 
     }
 
 
@@ -779,17 +685,14 @@ class Graph {
 	// USING ADJ MATRIX doesn't work for all cases
 
 	/**
+	 * IMP ADD TO Q AT END
+	 * 
 	 * BASIC DAG WITH LOOP TEMPLATE 
 	 * 1 CREATE GRAPH 
-	 * 2 USE 2 HASHSETS ONE FOR VISITED, ONE FOR CURR PARENTS 
-	 * 3 DON'T ADD IN THE MAIN FUNC, ADD INSIDE DFS
-	 * 4 ADD TO SET AT START, BACKTRACK, ADD TO Q AT END 
-	 * 5 WHILE BACKTRACKING, ADD AND REMOVE
-	 * 
+	 * 2 ADD TO Q
 	 */
 	// https://leetcode.com/problems/course-schedule-ii/
-	boolean isLoop = false;
-
+	boolean isLoop2 = false;
 	public int[] findOrder(int numCourses, int[][] prerequisites) {
 		HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
 		HashSet<Integer> set = new HashSet<>();
@@ -812,38 +715,113 @@ class Graph {
 			if (!set.contains(i)) tps(i, map, set, q, currParents);
 		}
         
-        if (isLoop) return new int[] {};
+        if (isLoop2) return new int[] {};
         
         int i = 0;
-		int[] resCourse1 = new int[q.size()];
-        while(q.size()!=0) resCourse1[i++] = q.removeLast();
+		int[] res = new int[q.size()];
+        while(q.size()!=0) res[i++] = q.removeLast();
 		// utilCustom.Utility.print1DMatrix(resCourse1);
-		return resCourse1;
+		return res;
 	}
+
 
 	void tps(int curr, HashMap<Integer, ArrayList<Integer>> map, HashSet<Integer> set, 
 	Deque<Integer> q, HashSet<Integer> currParents) {
-		set.add(curr);//1
+		set.add(curr); // 1
         //smacps
-		if (map.containsKey(curr)) {//2
+		if (map.containsKey(curr)) { // 2
             
-			currParents.add(curr);//3 add
+			currParents.add(curr); // 3 add
 			ArrayList<Integer> list = map.get(curr);
 			for (int i : list) {
-				if (currParents.contains(i)) {//4
-					isLoop = true;
+				if (currParents.contains(i)) { // 4
+					isLoop2 = true;
 					return;
 				}
                 
-				if (set.contains(i)) continue;//5
-				tps(i, map, set, q, currParents);//6
+				if (set.contains(i)) continue; // 5
+				tps(i, map, set, q, currParents); // 6
 			}
-			currParents.remove(curr);//7 remove
+			currParents.remove(curr); // 7 remove
 		}
-
         q.addLast(curr);
 	}
 
+	/** 
+	 * POINTS : 
+	 * 1 currParents is the most imp set, visited is just for speeding up
+	 * 2 currParents CHECKS IF THE NODE HAS BEEN SEN PREVIOUSLY, IF YES
+	 * THEN A LOOP EXISTS
+	 * 3 IF A NODE HAS LOOP TO ITSELF, IT IS UNSAFE, RMEOVE FROM RES
+	 * 4 ALSO IF UNSAFE NODE IS REACHED, ADD ALL THE PARENTS IN THIS DFS
+	 * TO UNSAFE LIST.
+	 * 
+	 */
+
+	// FAILS FOR 
+	// [[4,9],[3,5,7],[0,3,4,5,6,8],[7,8,9],[5,6,7,8],[6,7,8,9],[7,9],[8,9],[9],[]]
+	// PASSES 80/111
+	// https://leetcode.com/problems/find-eventual-safe-states/
+    HashSet<Integer> unsafe = new HashSet<>();
+    public List<Integer> eventualSafeNodes1(int[][] graph) {
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+    	List<Integer> res = new ArrayList<>();
+        
+        int n = graph.length;
+        for(int i=0; i<n; i++){
+            if(graph[i].length == 0) {
+                res.add(i);
+                continue;
+            }
+            List<Integer> list = g.getOrDefault(i, new ArrayList<>());
+            
+            for(int j =0; j<graph[i].length; j++){
+                if(graph[i] == graph[j]) unsafe.add(i);
+                list.add(graph[i][j]);
+            }
+            g.put(i, list); 
+            res.add(i);
+        }
+        
+        System.out.println(res);
+        // topo
+        HashSet<Integer> visited = new HashSet<>();
+        HashSet<Integer> currParents = new HashSet<>();
+        for(int i =0; i<n; i++){
+            // if(res.contains(i)) continue;
+            // if(!visited.contains(i))
+            currParents.clear();
+                tps(i, g, visited, currParents ,res);
+        }
+        return res;
+    }
+    
+	void tps(int start, HashMap<Integer, List<Integer>> g, HashSet<Integer> visited, 
+	HashSet<Integer> currParents, List<Integer> res){
+        // if(visited.contains(start)) return;
+        // visited.add(start);
+        if(!g.containsKey(start)) return;
+        currParents.add(start);
+        
+        List<Integer> list = g.get(start);
+        for(int i :list){
+            System.out.println(i+" "+unsafe);
+            if(unsafe.contains(i)){
+                for(int k : currParents){
+                    res.remove(Integer.valueOf(k));
+                }
+                return;
+            }
+            if(currParents.contains(i)){
+                res.remove(Integer.valueOf(i));
+                unsafe.add(i);
+                return;
+            }
+            if(res.size() ==9)System.out.println(res);
+            tps(i, g, visited, currParents, res);
+        }
+        currParents.remove(start);
+	}
 	
 	// https://leetcode.com/problems/redundant-connection-ii/ CAN BFS BE USED?
 	// https://leetcode.com/problems/critical-connections-in-a-network/
@@ -879,7 +857,6 @@ class Graph {
 	 * 
 	 * 
      */
-
 	/**
 	 * BFS TEMPLATE:
 	 * 
@@ -914,10 +891,6 @@ class Graph {
 	 * }
 	 * }
 	 * 
-	 * IN NORMAL (diff only in isSafe condn)
-	 * if(
-	 * visited[i] != 1
-	 * )
 	 * 
 	*/
 
@@ -958,7 +931,7 @@ class Graph {
         }
 
         while(q.size()!=0){
-            int size= q.size();
+            int size = q.size();
            
             for(int i=0; i<size; i++){
                 Wall curr = q.removeFirst();
@@ -1246,75 +1219,6 @@ class Graph {
         }
         return 0;
 	}
-		
-	/** 
-	 * VARIATION : MODIFIED BFS WITH PRUNING
-	 * DISTANCE ARRAY MIGHT BE UPDATED BUT STOPS MIGHT
-	 * NIT BE AVAILABLE, SO CORRECT DIST IS IN THE CUSTOM
-	 * OBJECT IIN PQ
-	 * 
-	 * 
-	 * POINTS :
-	 * 1 USE A CUSTOM CLASS TO STORE THE NODE, DIST AND STOPS 
-	 * 2 DON'T USE VISITED SET, ONLY DISTANCE ARRAY WILL DO
-	 * 3 CALCULATE STOPS USING CUSTOM CLASS
-	 * 
-	 * UPDATE DISTANCE ARRAY AND ADD THE CUSTOM CLASS WITH UPDATED STOPS 
-	 * BACK TO Q.
-	 * 
-	 * imp------------------->
-	 * 4 IMP HERE INCORRECT DISTANCES MIGHT BE STORED IN DISTANCE ARRAY
-	 * SO USE CURR.DIST
-	 * distance[i] > curr.dist + g[curr.node][i]
-	 * 
-	 * 
-	 * n = 4, src 0, dest 3, stops 1
-	 * [[0,1,1],[0,2,5],[1,2,1],[2,3,1]]
-	 * 
-	 * https://leetcode.com/problems/cheapest-flights-within-k-stops/discuss/
-	 * 834942/Faster-than-99-modified-Dijkstra-used-Deque-instead-of-PQueue
-	 * 
-	*/
-	// https://leetcode.com/problems/cheapest-flights-within-k-stops/
-	class Flight{
-		int node, dist, stops;
-		Flight(int n, int d, int k){ 
-			this.node = n; 
-			this.dist = d; 
-			this.stops = k;
-		}
-	}
-
-	public int findCheapestPrice(int n, int[][] flights, int src, int dest, int k) {
-		int[] distance = new int[n];
-		int[][] g = new int[n][n];
-		
-		for(int[] i: g) Arrays.fill(i, -1);
-		for(int i =0; i < flights.length; i++){
-			g[flights[i][0]][flights[i][1]] = flights[i][2];//1
-		}
-		
-		Arrays.fill(distance, Integer.MAX_VALUE); 
-        distance[src] = 0;//2
-		
-		Deque<Flight> q = new LinkedList<>();//3
-		q.addLast(new Flight(src, 0, 0)); distance[src] = 0;//4
-		
-		while(q.size()!=0){
-			Flight curr = q.removeFirst();
-            
-			for(int i =0; i < n; i++){
-				if(g[curr.node][i] != -1 && curr.stops <= k 
-				&& distance[i] > curr.dist + g[curr.node][i]){
-
-					distance[i] = curr.dist + g[curr.node][i];
-					q.addLast(new Flight(i, distance[i], curr.stops+1));//5
-				}
-			}
-		}
-		return distance[dest]==Integer.MAX_VALUE?-1:distance[dest];//6
-	}
-
 	
 
 	// https://leetcode.com/problems/possible-bipartition/
@@ -1330,9 +1234,9 @@ class Graph {
 	 * 2 VISITED VS DISTANCE
 	 * 3 Q SIZE AND AN EXTRA LOOP WITH GENERIC COUNTER
 	 * IN DIJKSTRA, WE CHECK FOR SHORTER DIST AND IF EDGE EXISTS
+	 * (PRUNING)
 	 * 
 	*/ 
-
 
 	/** 
 	 * 
@@ -1526,6 +1430,79 @@ class Graph {
         return max;
 	}
 	
+
+	/** 
+	 * VARIATION : MODIFIED DIJKSTRA WITH PRUNING
+	 * DISTANCE ARRAY MIGHT BE UPDATED BUT STOPS MIGHT
+	 * NOT BE AVAILABLE, SO CORRECT DIST IS IN THE CUSTOM
+	 * OBJECT IN PQ
+	 * BASICALLY WE CHECK FOR ALL POSSIBILITIES, SO DEQUE
+	 * 
+	 * 
+	 * POINTS :
+	 * 1 USE A CUSTOM CLASS TO STORE THE NODE, DIST AND STOPS 
+	 * 2 DON'T USE VISITED SET, ONLY DISTANCE ARRAY WILL DO
+	 * 3 CALCULATE STOPS USING CUSTOM CLASS
+	 * 
+	 * UPDATE DISTANCE ARRAY AND ADD THE CUSTOM CLASS WITH UPDATED STOPS 
+	 * BACK TO Q.
+	 * 
+	 * imp------------------->
+	 * 4 IMP HERE INCORRECT DISTANCES MIGHT BE STORED IN DISTANCE ARRAY
+	 * SO USE CURR.DIST
+	 * distance[i] > curr.dist + g[curr.node][i]
+	 * 
+	 * 
+	 * n = 4, src 0, dest 3, stops 1
+	 * [[0,1,1],[0,2,5],[1,2,1],[2,3,1]]
+	 * 
+	 * https://leetcode.com/problems/cheapest-flights-within-k-stops/discuss/
+	 * 834942/Faster-than-99-modified-Dijkstra-used-Deque-instead-of-PQueue
+	 * 
+	 * 
+	 * BASICALLY A BRUTE FORCE, AS WE CHECK ALL POSSIBILITIES
+	 * WITH PRUNING, ONLUY UPDATE IF DISTANCE IS LESSER AND stops <= K
+	 * 
+	*/
+	// https://leetcode.com/problems/cheapest-flights-within-k-stops/
+	class Flight{
+		int node, dist, stops;
+		Flight(int n, int d, int k){ 
+			this.node = n; 
+			this.dist = d; 
+			this.stops = k;
+		}
+	}
+
+	public int findCheapestPrice(int n, int[][] flights, int src, int dest, int k) {
+		int[] distance = new int[n];
+		int[][] g = new int[n][n];
+		
+		for(int[] i: g) Arrays.fill(i, -1);
+		for(int i =0; i < flights.length; i++){
+			g[flights[i][0]][flights[i][1]] = flights[i][2];//1
+		}
+		
+		Arrays.fill(distance, Integer.MAX_VALUE); 
+        distance[src] = 0;//2
+		
+		Deque<Flight> q = new LinkedList<>();//3
+		q.addLast(new Flight(src, 0, 0)); distance[src] = 0;//4
+		
+		while(q.size()!=0){
+			Flight curr = q.removeFirst();
+            
+			for(int i =0; i < n; i++){
+				if(g[curr.node][i] != -1 && curr.stops <= k 
+				&& distance[i] > curr.dist + g[curr.node][i]){
+
+					distance[i] = curr.dist + g[curr.node][i];
+					q.addLast(new Flight(i, distance[i], curr.stops+1));//5
+				}
+			}
+		}
+		return distance[dest]==Integer.MAX_VALUE?-1:distance[dest];//6
+	}
 
 	//////////////////////////// PRIM
 	/**
