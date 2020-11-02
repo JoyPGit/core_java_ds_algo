@@ -284,9 +284,9 @@ public class Backtrack {
         if(remain < 0) return;
         else if(remain == 0) res.add(new ArrayList<>(list));
         else{ 
-            for(int i = start; i < nums.length; i++){
+            for(int i = start; i < nums.length; i++){ //
                 list.add(nums[i]);
-                backtrack(res, list, nums, remain - nums[i], i); 
+                backtrack(res, list, nums, remain - nums[i], i); // 
                 // not i + 1 because we can reuse same elements
                 list.remove(list.size() - 1);
             }
@@ -531,10 +531,10 @@ public class Backtrack {
      */
     void nQueen4jul(int n) {
         int[][] board = new int[n][n];
-        helper(board, 0);
+        helper4jul(board, 0);
     }
 
-    void helper(int[][] board, int row) {
+    void helper4jul(int[][] board, int row) {
         if (row == board.length) {
             System.out.println("found");
             utilCustom.Utility.printMatrix(board);
@@ -542,7 +542,7 @@ public class Backtrack {
         } else {
             for (int i = 0; i < board.length; i++) {
                 board[row][i] = 1;
-                if (isValid(board, row, i)) helper(board, row + 1);
+                if (isValid(board, row, i)) helper4jul(board, row + 1);
                 board[row][i] = 0;
             }
         }
@@ -1060,48 +1060,48 @@ public class Backtrack {
     // https://leetcode.com/problems/path-sum-iii/submissions/
     int count = 0;
     int target = 0;
-    public int pathSumDFS(TreeNode root, int sum) {
-        target = sum;
-        dfsExclude(root);
-        return count;
-    }
+    // public int pathSumDFS(TreeNode root, int sum) {
+    //     target = sum;
+    //     dfsExclude(root);
+    //     return count;
+    // }
     
     
-    void dfsExclude(TreeNode root){        
-        if(root == null) return;
-        dfsInclude(root, 0);// not root.val
-        dfsExclude(root.left);
-        dfsExclude(root.right);
-    }
+    // void dfsExclude(TreeNode root){        
+    //     if(root == null) return;
+    //     dfsInclude(root, 0);// not root.val
+    //     dfsExclude(root.left);
+    //     dfsExclude(root.right);
+    // }
     
-    void dfsInclude(TreeNode root, int currSum){
-        if(root == null) return;
-        currSum+=root.val;
-        if(currSum == target) count++;
-        dfsInclude(root.left, currSum);
-        dfsInclude(root.right, currSum);
-    }
+    // void dfsInclude(TreeNode root, int currSum){
+    //     if(root == null) return;
+    //     currSum+=root.val;
+    //     if(currSum == target) count++;
+    //     dfsInclude(root.left, currSum);
+    //     dfsInclude(root.right, currSum);
+    // }
 
-    HashMap<Integer, Integer> map = new HashMap<>();
+    // HashMap<Integer, Integer> map = new HashMap<>();
     
-    public int pathSum(TreeNode root, int sum) {
-        target = sum;
-        map.put(0,1);
-        helper(root, 0);
-        return count;
-    }
+    // public int pathSum(TreeNode root, int sum) {
+    //     target = sum;
+    //     map.put(0,1);
+    //     helper(root, 0);
+    //     return count;
+    // }
     
-    void helper(TreeNode root, int sum){
-        if(root == null) return;
-        sum+=root.val;
-        count+=map.getOrDefault(sum-target, 0);
-        map.put(sum, map.getOrDefault(sum, 0)+1);
-        helper(root.left, sum);
-        helper(root.right, sum);
-        // this is for leaf nodes, removing left leaf for right path
-        map.put(sum, map.getOrDefault(sum, 0)-1);
+    // void helper(TreeNode root, int sum){
+    //     if(root == null) return;
+    //     sum+=root.val;
+    //     count+=map.getOrDefault(sum-target, 0);
+    //     map.put(sum, map.getOrDefault(sum, 0)+1);
+    //     helper(root.left, sum);
+    //     helper(root.right, sum);
+    //     // this is for leaf nodes, removing left leaf for right path
+    //     map.put(sum, map.getOrDefault(sum, 0)-1);
         
-    }
+    // }
 
     // https://www.techiedelight.com/find-total-number-unique-paths-maze-source-destination/
         
@@ -1113,6 +1113,28 @@ public class Backtrack {
 
     // https://leetcode.com/problems/knight-probability-in-chessboard/discuss/
     // 113954/Evolve-from-recursive-to-dpbeats-94
+
+    public List<List<Integer>> combinationSum5(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        
+        btk5(res, curr, candidates, target, 0, 0);
+        System.out.println("res "+res);
+        return res;
+    }
+    
+    
+    void btk5(List<List<Integer>> res, List<Integer> curr, int[] arr, int target, int start, int sum){
+        if(sum == target){
+            if(!res.contains(new ArrayList<>(curr))) res.add(new ArrayList<>(curr));
+        }
+        
+        for(int i = start; i<arr.length; i++){
+            curr.add(arr[i]);
+            btk(res, curr, arr, target, i+1, sum+arr[i]);
+            curr.remove(curr.size()-1);
+        }
+    }
     public static void main(String[] args) {
         Backtrack pcs = new Backtrack();
 
@@ -1155,5 +1177,8 @@ public class Backtrack {
         {'.','.','.','.','8','.','.','7','9'}};
         // pcs.solveSudoku(sudoku);
 
+        int[] candidates = new int[]{2,3,5,7};
+        int target = 7;
+        pcs.combinationSum5(candidates, target);
     }
 }

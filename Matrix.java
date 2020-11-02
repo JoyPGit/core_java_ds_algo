@@ -1381,6 +1381,48 @@ class Matrix {
             return binsearch(arr, row, num, mid + 1, end);
     }
 
+    // TRY YSING BINARY SEARCH
+    // duplicates too
+    // [[1,1]], 2
+    // [[1,1],[2,2]], 3
+    // https://leetcode.com/problems/search-a-2d-matrix/
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        if(m==0) return false;
+                
+        int n = matrix[0].length;
+        if(m==1 && n==0) return false;
+        if(m==1 && n==1) return matrix[0][0] == target;
+        
+        if(m==1) {
+            int i = 0; 
+            while(i<n){
+                if(matrix[0][i] == target) return true;
+                i++;
+            } 
+            return false;
+        }
+        if(n==1) {
+            int i = 0; 
+            while(i<m){
+                if(matrix[i][0] == target) return true;
+                i++;
+            } 
+            return false;
+        }
+        int i = m-1;  int j = n-1;
+        boolean res = false;
+        while(i>=0 && matrix[i][j]>=target){
+            i--;
+        }
+        if(i<m-1)i++;
+        while(j>=0 && matrix[i][j]>= target){
+            if(matrix[i][j] == target) res= true;
+            j--;
+            if(j<0) return res;
+        }
+        return res;
+    }
 
     ///////////////////////////////// WORD SEARCH
     /**

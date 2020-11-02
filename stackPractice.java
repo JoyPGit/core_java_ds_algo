@@ -412,9 +412,8 @@ public class StackPractice {
         return sb.toString();
     }
 
-    // https://leetcode.com/problems/longest-valid-parentheses/
     /**  
-     * ADD EL DEL
+     * ADD (EL) D(EL)
      * OPEN ADD
      * E EMPTY
      * L LEFT UPDATE(j+1)
@@ -427,23 +426,39 @@ public class StackPractice {
      * if ) -> if empty left = j+1;                 E,L
      *      -> else pop -> empty : max, j-left+1    DEL, E, L 
      *                  -> not : max j-getLast      
-    */                  
+     * 
+     * 1 we only store index of opening brackets
+     * 2 if closed comes and queue is empty, no point in keeping track
+     * of this index,hence left = i+1
+     * 3 if queue is empty, use left
+     * 4 else use top el after removal.
+     * do a trial run with "(()()"
+     * 
+    */       
+    // "(()()"           
+    // https://leetcode.com/problems/longest-valid-parentheses/
     public int longestValidParentheses(String s) {
         Deque<Integer> q = new LinkedList<Integer>();
         int max=0;
         int left = 0;
-        for(int j=0;j<s.length();j++){
-            if(s.charAt(j)=='(') q.addLast(j);            
+        for(int i=0;i<s.length();i++){
+            System.out.println(q);
+            // stack stores index of only opening brackets
+            if(s.charAt(i)=='(') q.addLast(i);            
             else {
-                // first char is ')'
-                if (q.isEmpty()) left=j+1;
+                // first char is ')', so left can't start from here
+                // possibly from next index
+                if (q.isEmpty()) left=i+1;
                 else{
                     q.removeLast();
-                    if(q.isEmpty()) max=Math.max(max,j-left+1);
-                    else max = Math.max(max,j-q.getLast());
+                    // if empty, use left
+                    if(q.isEmpty()) max = Math.max(max,i-left+1);
+                    // if not empty, peek will be last opening bracket
+                    else max = Math.max(max,i-q.getLast());
                 }
             }
         }
+        System.out.println("longest valid parenthesis length "+ max);
         return max;
     }
 
@@ -672,7 +687,7 @@ public class StackPractice {
         // stack.stockSpan(price);
 
         int[] heights = new int[]{2,1,5,6,2,3};
-        stack.largestRectangleArea(heights);
+        // stack.largestRectangleArea(heights);
 
         int[] nums = // {7, 2, 4};
         {9,10,9,-7,-4,-8,2,-6};
@@ -680,7 +695,7 @@ public class StackPractice {
                 // { 1, -1 };
         // {1,3,-1,-3,5,3,6,7};
         int k = 5;//1;// 3;//2
-        stack.maxSlidingWindow(nums, k);
+        // stack.maxSlidingWindow(nums, k);
 
 
         int[] stackMin = {2,3,1,4,5,2};
@@ -696,6 +711,9 @@ public class StackPractice {
         String bracketReverse = "(ed(et(oc))el)";//co octe leetcode 
         // stack.reverseParentheses(bracketReverse);
 
+        String brackets = ")(())())";
+        stack.longestValidParentheses(brackets);
+;
         String decode = "100[leetcode]";// "3[a2[c]]";//"3[a]2[bc]";
         // stack.decodeString(decode);
 

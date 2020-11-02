@@ -34,6 +34,51 @@ public class Sorting {
         }
     }
 
+     //////////////////////////////////////////////
+     void heapSort25Apr(int[] arr) {
+        int n = arr.length;
+        int mid = arr.length / 2 - 1;
+        for (int i = mid; i >= 0; i--) {
+            heapify25Apr(arr, arr.length, i);
+        }
+
+        utilCustom.Utility.print1DMatrix(arr);
+        System.out.println();
+
+        for (int i = n - 1; i > n - 2 - 1; i--) {
+            utilCustom.Utility.swap(arr, i, 0);
+            // int temp =arr[0];
+            // arr[0] = arr[i];
+            // arr[i] = temp;
+
+            heapify25Apr(arr, i, 0);
+        }
+    }
+
+    void heapify25Apr(int[] arr, int n, int index) {
+        int max = index;
+        int left;
+        int right;
+
+        if ((2 * index + 1) < n) {
+            left = 2 * index + 1;
+            if (arr[max] > arr[left])
+                max = left;
+        }
+        if ((2 * index + 2) < n) {
+            right = 2 * index + 2;
+            if (arr[max] > arr[right])
+                max = right;
+        }
+
+        if (max != index) {
+            utilCustom.Utility.swap(arr, index, max);
+            heapify25Apr(arr, n, max);
+        }
+    }
+
+
+
     void quickSelect(int[] arr){
         
     }
@@ -93,7 +138,8 @@ public class Sorting {
     // in place merge sort
     // merge sort linked list
 
-    /** POINTS : (IMP INDEX VAR)
+    /** 
+     * POINTS : (IMP INDEX VAR)
      * 1 ADD a(TO BE SORTED) TO A MAP
      * 2 ITERATE OVER B AND ADD THE ELS TO A 'FREQ' NO OF TIMES
      * 3 KEEP AN INDEX VAR TO KEEP TRACK OF WHERE TO ADD IN A
@@ -129,41 +175,51 @@ public class Sorting {
     /**
      * QUICKSORT
      * sort(){
-     *  x= partition()
-     *  sort(x-1); sort(x+1);
+     *  mid = partition()
+     *  sort(lo, mid-1); sort(mid+1, hi);
      * }
      * 
      * 1 USE LAST EL AS PIVOT
-     * 2 ALWAYS START i FROM LOW-1;
+     * 2 ALWAYS USE lo and hi;
      * 
      */
-    // https://leetcode.com/problems/sort-an-array/submissions/
+    // https://leetcode.com/problems/sort-an-array
     public int[] sortArray(int[] nums) {
         int n = nums.length;
         if(n==0 || n==1) return nums;
-        sort(nums, 0, n-1);//1 restructure
-        // Arrays.sort(nums);
+        int index = (int)Math.random()*n;
+        swap(nums, index, n-1); // 1
+        quickSort(nums, 0, n-1);
         return nums;
     }
     
-    void sort(int[] arr, int low, int high){
-        if(low < high){ // 2 
-            int x = partition(arr, low, high);
-            sort(arr, low, x-1); // 3 x-1, x+1
-            sort(arr, x+1, high);
-        }
+    void quickSort(int[] nums, int lo, int hi){
+        // lo == hi; single el so must be at correct posn
+        // no need to find pivot
+        if(lo>=hi) return; 
+        int pivot = partition(nums, lo, hi);
+        // System.out.println("pivot "+pivot);
+        quickSort(nums, lo, pivot-1);
+        quickSort(nums, pivot+1, hi);
     }
     
-    int partition(int[] arr, int low, int high){
-        int pivot = arr[high];
-        int i = low-1; // 4 most imp
-        for(int j = low; j<high; j++){
-            if(arr[j]<=pivot) utilCustom.Utility.swap(arr, ++i, j); //5 
+    int partition(int[] arr, int lo , int hi){
+        // if(lo == hi) return lo;
+        int i = lo; int j = lo; int compare = arr[hi];
+        while(i<=hi){
+            if(arr[i] < compare) swap(arr, i++, j++);
+            else i++;
         }
-        utilCustom.Utility.swap(arr, ++i, high);
-        return i;
+        swap(arr, j, hi);
+        
+        return j;
     }
     
+    void swap(int[] arr, int a ,int b){
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
 
     /** MERGE SORT ON LINKED LIST 
      * similar structure as quickSort
@@ -210,20 +266,24 @@ public class Sorting {
 
   
 
+    /**
+     * POINTS :
+     * 1 START FROM MID AND RIGHT AND ADD FROM BOTH ALTERNATELY
+     * 2 DO ODD EVEN CHECK AS ADDING SIMULTANEOULSY FAISL FOR
+     * ODD LENGTH ARRAY
+     * MID = (n-1)/2  ; lo + (hi-lo)/2;
+     * 
+     */
+    // [1,1,2,1,2,2,1]
     public void wiggleSort(int[] nums) {
-        Arrays.sort(nums);
         int n = nums.length;
+        Arrays.sort(nums);
         int[] res = new int[n];
-        int mid = (n-1)/2; int right = n-1; int count = 0;
+        int mid = (n-1)/2; int right = n-1;
         
-        while(mid>=0 || right>(n-1)/2) {
-            if(count%2 == 0){
-                res[count]=nums[mid--];
-            }
-            if(count%2 != 0){
-                res[count]=nums[right--];
-            }
-            count++;
+        for(int i =0; i<n; i++){
+            if(i%2 == 0) res[i] = nums[mid--];
+            else res[i] = nums[right--];
         }
         
         for(int i =0; i<n; i++){
@@ -234,32 +294,43 @@ public class Sorting {
 
     // https://leetcode.com/problems/diagonal-traverse-ii/
 
+    ///////////////////// SORT 0s1s2s
+
+    // same as dutch national below, if 1, increment, else swap
+    void sort01(int[] nums){
+        int n = nums.length;
+        int lo = 0; int i =0;
+        while(i<n){
+            if(nums[i] == 0) utilCustom.Utility.swap(nums, lo++, i++);
+            else i++;
+        }
+    }
+
+
     /** 
-     * POINTS
-     * 1 a HOLDS INDEX OF FIRST 1
-     * 2 b HOLDS INDEX OF 2
-     * 3 CHECK QUICKSORT (A DIFF SOLN TO CLRS IF POSSIBLE)
-     * 4 IF 0, SWAP, i++, a++;
-     *   IF 1, i++
-     *   IF 2, SWAP, b--;
-     * */
-    // https://leetcode.com/problems/sort-colors
+     * DUTCH NATIONAL FLAG
+     * it's a bit tricky, concept of quicksort partition
+     * points:
+     * 1 use while not for
+     * 2 2 pointers needed 
+     * 3 when 0 is seen increment both
+     * 4 when 2 only decrement h; hence while is used
+     *  as for will increment i in all cases
+     * 
+     * if 1 is seen we increment i
+     * so if we see 2, then swap and check the same i, so same i
+     */
+    // [2,0,1]
+    // https://leetcode.com/problems/sort-colors/
     public void sortColors(int[] nums) {
         int n = nums.length;
-        int a = 0, i = 0, b = nums.length-1;
-        while(i<=b){
-            if(nums[i] == 0) {
-                utilCustom.Utility.swap(nums, i, a);
-                i++;
-                a++;
-            }
-            else if(nums[i] == 1) i++;
-            else if(nums[i] == 2) {
-                utilCustom.Utility.swap(nums, i, b);
-                b--;
-            }
+        int lo = 0; int hi = n-1;
+        int i = 0 ;
+        while(i<=hi){ // 1
+            if(nums[i] == 0) utilCustom.Utility.swap(nums, lo++, i++); // 2
+            else if(nums[i] == 2) utilCustom.Utility.swap(nums, hi--, i); // 3
+            else i++;
         }
-        // System.out.println(a);
     }
 
     // https://www.geeksforgeeks.org/nearly-sorted-algorithm/

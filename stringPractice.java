@@ -1724,6 +1724,7 @@ class StringPractice {
             this.freq = f;
         }
     }
+
     public String reorganizeString1(String S) {
         HashMap<Character, Integer> map = new HashMap<>();
         
@@ -1770,6 +1771,40 @@ class StringPractice {
         return res;
     }
 
+    String reorganizeString2(String str, int k){
+        if(str.length() == 0 || str.length() == 1) return str;
+        HashMap<Character, Integer> map = new HashMap<>();
+
+        for(char c : str.toCharArray()){
+            map.put(c, map.getOrDefault(c, 0)+1);
+        }
+
+        PriorityQueue<StringFreq> pq = new PriorityQueue<>();
+        for(HashMap.Entry<Character, Integer> e: map.entrySet()){
+            pq.add(new StringFreq(e.getKey(), e.getValue()));
+        }
+
+        String res = "";
+        String temp = "";
+        while(pq.size()!=0){
+            for(int i =0; i<k; i++){
+                StringFreq curr = pq.remove();
+                res+=curr.c;
+    
+                if(map.get(curr.c) == 1) map.remove(curr.c);
+                map.put(curr.c, map.get(curr.c) -1);
+                temp+=curr.c;
+            }
+    
+            for(char c: temp.toCharArray()) pq.add(new StringFreq(c, map.get(c)));
+            res+=temp;
+            temp = "";
+        }
+        return res;
+    }
+
+    // https://leetcode.com/discuss/interview-question/558379/
+    
     /** 
      * POINTS :
      * 1 dp size [m+1][n+1]

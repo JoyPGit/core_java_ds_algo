@@ -601,6 +601,7 @@ class Greedy{
         return res;
     }
 
+    // https://leetcode.com/discuss/interview-question/558379/
 
     // https://leetcode.com/problems/partition-labels/
     public List<Integer> partitionLabels(String S) {

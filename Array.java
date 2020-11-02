@@ -3,6 +3,13 @@ import java.util.*;
 class Array {
 
     /** 
+     * 
+     * summary, 3sum, wiggle, equalLeftAndRightSum (paytm), 
+     * single el in sorted array, 
+     * product except self, rainwater
+     * 
+     * 
+     * 
      * int, float and other primitive data types ar passed by value
      * object by reference, like array, arraylist, pQueue etc.
      * the object name points to the same entity
@@ -10,8 +17,6 @@ class Array {
      * Arrays class in Java doesn’t have reverse method. 
      * We can use Collections.reverse() to reverse an array also.
      * 
-     * IMP: TO FIND MIDDLE ALWAYS USE (N-1)/2; NOT N/2
-     * IF LENGTH=6 MID = 2, NOT 3
      * USE ARRAYS.EQUALS
      * 
      * IMP HOW TO CONVERT HASHMAP TO ARRAY  
@@ -26,6 +31,7 @@ class Array {
      * Arrays.asList(yourArray).contains(yourValue)
      * 
      * REMOVE DUPLICATES CHECK 3 SUM
+     * 
     
      // https://www.geeksforgeeks.org/number-subarrays-sum-exactly-equal-k/
 
@@ -41,22 +47,6 @@ class Array {
      * 8 CIRCULAR ARRAY 
      */
    
-    // https://leetcode.com/problems/two-sum/
-    public int[] twoSum(int[] nums, int target) {
-        int n = nums.length;
-        int[] res = new int[2];
-        // Arrays.sort(nums);
-        
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int i =0; i<nums.length; i++){
-            if(map.containsKey(target - nums[i])) {
-                res[0] = i; res[1] = map.get(target - nums[i]);
-                break;
-            }     
-            else map.put(nums[i], i);
-        }
-        return res;
-    }
 
     // { 9, 7, 1, 8, 5, 6 };
     void findMountain(int[] arr) {
@@ -92,6 +82,163 @@ class Array {
         return max;
     }
 
+    // [1,2,34,3,4,5,7,23,12]
+    // [1,2,1,1]
+    // https://leetcode.com/problems/three-consecutive-odds
+    public boolean threeConsecutiveOdds(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 2; i++) {
+            if (arr[i] % 2 != 0) {
+                if (i + 1 < n && arr[i + 1] % 2 != 0) {
+                    if (i + 2 < n && arr[i + 2] % 2 != 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+
+    // https://leetcode.com/problems/first-missing-positive/
+    // inaccurate soln but works for tougher ques
+    public int firstMissingPositive(int[] nums) {
+        int holder = 1;
+        Arrays.sort(nums);
+        for(int i : nums) if(i==holder) holder++;
+        return holder;
+    }
+
+
+    /**
+     * 3 TECHNIQUES:
+     * 1 SORT AND FIND
+     * 2 USE COUNT ARRAY
+     * 3 MARK INDEX
+     */
+    // https://www.geeksforgeeks.org/find-a-repeating-and-a-missing-number/
+    void findMissingAndRepeated(int[] arr) {
+
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+            if (arr[i] == -1) {
+                System.out.println("the repeated number is " + (i + 1));
+                // break;
+                System.out.println(arr[i]);
+
+            } else
+                arr[arr[i] - 1] = -1;
+        }
+    }
+
+
+    // PIVOT
+    // https://leetcode.com/problems/find-pivot-index/
+    public int pivotIndex(int[] nums) {
+        int n = nums.length;
+        int left = 0; int sum =0;
+        
+        for(int i=0; i<n; i++){
+            sum+=nums[i];
+        }
+        
+        for(int i =0; i<n; i++){
+            if(sum-left-nums[i] == left) return i;
+            left += nums[i];
+        }
+        return -1;
+    }
+
+
+    /** 
+     *  Given an array, find all the subarrays (contiguous) of even length which 
+     * have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
+     * answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
+     * 
+     * find sum from i to j.
+     * Check if any sum from i till k (k<j) = sum/2;
+     * THIS MEANS THE OTHER HALF(k+1 to j)) MUST HAVE SUM = SUM/2.
+     * 
+    /** similar to dp ques, use l and i+l-1 =j; palindrome type */
+    // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
+    int equalLeftAndRightSum(int[] arr){
+        int count = 0;
+        int n = arr.length;
+        for(int l=2; l<n; l++){
+            for(int i = 0; l+i-1<n; i++){
+                int j = i+l-1;
+                // checking for length 2, if both els match
+                if(l==2 && arr[i] == arr[j]) count++;
+                else if(l%2==0){
+                    int sum = sum(arr,i,j);
+                    for(int k = i;k<j; k++){
+                        if(sum(arr,i, k) == sum/2){
+                            System.out.println("i "+i+" k "+k);
+                            // System.out.println("in here "+sum(arr, i, k));
+                            count++;
+                        }
+                    }
+                }                
+            }
+        }
+        System.out.println("count of equal left and right sums' partition "+count);
+        return count;
+    }
+
+    int sum(int[] arr, int start, int end){
+        int sum =0;
+        for(int i =start; i<=end; i++){
+            sum+=arr[i];
+        }
+        return sum;
+    }
+
+    
+    /** POINTS :
+     * 1 USE WHILE LOOP, AS FOR DUPLICATES
+     * 2 j = i+1, TO FIND CONSECUTIVES, USE THIS TRICK
+     * nums[j]-nums[i] == j-i
+     * 3 USUAL BOUNDARY CONDNS j<n
+     * 4 DON'T FORGET i = j
+    */
+    // https://leetcode.com/problems/summary-ranges/
+    public List<String> summaryRanges(int[] nums) {
+        int n = nums.length;
+        if(n==0) return new ArrayList<>();
+        List<String> res = new ArrayList<>(); String curr = "";
+        
+        int i =0;
+        while(i<n){
+            int j = i+1;
+            while(j<n && nums[j]-nums[i] == j-i) j++; //only j++ will do
+            if(j==i+1) curr = nums[i]+"";  //single el
+            else curr = nums[i]+"->"+nums[j-1];
+            res.add(curr);
+            i = j;
+        }
+        return res;
+    }
+
+    /////////////////////////////// DUPLICATES
+    
+    /** 
+     * 1 nums[i] can be negative but 
+     * nums[nums[i]], if negative determines duplicate
+     * 2 return nums[i]
+     * 
+     * nums[Math.abs(nums[i])]
+     * 
+    */
+    // [1,2,2], [1,3,4,2,2]
+    // https://leetcode.com/problems/find-the-duplicate-number/
+    public int findDuplicate(int[] nums) {
+        int n = nums.length;
+        for(int i =0; i<n; i++){
+            if(nums[Math.abs(nums[i])]<0) return Math.abs(nums[i]);
+            else if(nums[Math.abs(nums[i])]>0) nums[Math.abs(nums[i])]*=-1;
+        }
+        return 0;
+    }
 
     /**
      * MARKING VALUES OF VISITED INDICES AS -VE
@@ -109,22 +256,64 @@ class Array {
         return list;
     }
 
-    // https://leetcode.com/problems/single-element-in-a-sorted-array/
-    // [1,1,2,3,3,4,4,8,8]
+    /**
+     * go till n-1, 
+     * if ADJACENTS ARE SAME i++;
+     * the i++ of for loop will incremwnt once again so i will jump
+     * by 2 places, 0->2
+     * for last single el return nums[n-1]
+     * 
+     * [1,1,3,3,4,4,8]
+     */
+    // https://leetcode.com/problems/single-element-in-a-sorted-array
     public int singleNonDuplicate(int[] nums) {
         int n = nums.length;
-        int j = 0; int i = 0;
-        while(i<n-1){//out of bounds error
-            while(nums[j] == nums[i]) j++;
-            j--;// get back to curr el as j goes to next el
-            if(j == i) return nums[i];
-            // System.out.println("j "+j+" i "+i);
-            i = ++j;//move i and j both to next el
+        for(int i =0; i<n-1; i++){
+            if(nums[i] == nums[i+1]) i++;
+            else return nums[i];
         }
-        //if here, the last el must be the single el which is returned
         return nums[n-1];
     }
 
+    /**
+     *  We want the first element of the middle pair,
+     * which should be at an even index if the left part is sorted.
+     * https://leetcode.com/problems/single-element-in-a-sorted-array
+     * /discuss/100754/Java-Binary-Search-short-(7l)-O(log(n))-w-explanations
+     * 
+     * IMP : IF NO SINGLE EL, LAST INDEX OF PAIR WILL BE ODD.
+     * 
+     * 1,1,2 -> mid 1,  mid is odd, arr[mid] == arr[mid+1]
+     * 0,1,1,2,2  ->  2,  mid is even, arr[mid] != arr[mid+1]
+     * 0,0,1,1,2  ->  2,  mid is odd, arr[mid] == arr[mid+1]
+     * 
+     * if mid is even and arr[mid] != arr[mid+1], the pair
+     * end at even index, so the disturbance must be on the left side
+     * 
+     * not equal here signifies we have the last index of the pair
+     * and it is at even posn, but for no disturbance, last must
+     * be at an odd posn. So hi = mid;
+     * 
+     * If equal, no disturbance, move right by 2 as this is a pair.
+     * 
+     * return nums[lo]
+     */ 
+    // https://leetcode.com/problems/single-element-in-a-sorted-array
+    public int singleNonDuplicateBinary(int[] nums) {
+        int n = nums.length;
+        int lo = 0; int hi = n-1;
+        
+        while(lo<hi){
+            int mid = lo + (hi-lo)/2;
+            if(mid%2!=0) mid--; // 
+            
+            // el on left
+            if(nums[mid] != nums[mid+1]){ // 
+                hi = mid;
+            }else lo = mid+2; // 
+        }
+        return nums[lo]; // 
+    }
     
     /**
      * It is somewhat similar to QUICKSORT partition, 
@@ -163,34 +352,8 @@ class Array {
         return ++j;
     }
 
-
-    // https://leetcode.com/discuss/interview-question/558379/
     
-    /** POINTS :
-     * 1 USE WHILE LOOP, AS FOR DUPLICATES
-     * 2 j = i+1, TO FIND CONSECUTIVES, USE THIS TRICK
-     * nums[j]-nums[i] == j-i
-     * 3 USUAL BOUNDARY CONDNS j<n
-     * 4 DON'T FORGET i = j
-    */
-    // https://leetcode.com/problems/summary-ranges/
-    public List<String> summaryRanges(int[] nums) {
-        int n = nums.length;
-        if(n==0) return new ArrayList<>();
-        List<String> res = new ArrayList<>(); String curr = "";
-        
-        int i =0;
-        while(i<n){
-            int j = i+1;
-            while(j<n && nums[j]-nums[i] == j-i) j++; //only j++ will do
-            if(j==i+1) curr = nums[i]+"";  //single el
-            else curr = nums[i]+"->"+nums[j-1];
-            res.add(curr);
-            i = j;
-        }
-        return res;
-    }
-    
+    ////////////////////////// 2 SUM, 3 SUM
 
     /**  
      * IF REPEATED AND NOT SORTED, USE HASHMAP
@@ -237,6 +400,23 @@ class Array {
     }
 
 
+    // https://leetcode.com/problems/two-sum/
+    public int[] twoSum(int[] nums, int target) {
+        int n = nums.length;
+        int[] res = new int[2];
+        // Arrays.sort(nums);
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i =0; i<nums.length; i++){
+            if(map.containsKey(target - nums[i])) {
+                res[0] = i; res[1] = map.get(target - nums[i]);
+                break;
+            }     
+            else map.put(nums[i], i);
+        }
+        return res;
+    }
+
     /** IMP 
      * POINTS : 
      * 1 USE BIDIRECTIONAL SEARCH (WORKS ON SORTED)
@@ -266,7 +446,8 @@ class Array {
                 int sum = nums[i]+nums[low]+nums[high];
                 if(sum == 0){
                     // List<Integer> curr = new ArrayList<>();
-                    // curr.add(nums[i]); curr.add(nums[low]); curr.add(nums[high]);
+                    // curr.add(nums[i]); curr.add(nums[low]); 
+                    // curr.add(nums[high]);
                     // res.add(curr);
                     
                     res.add(Arrays.asList(nums[i], nums[low], nums[high]));
@@ -283,122 +464,58 @@ class Array {
         return res;
     }
 
-    // https://leetcode.com/problems/three-consecutive-odds/
-    /** 
-     * FOR QUES LIKE THESE WHERE WE HAVE TO CHECK FOR SOME
-     * SERIES SATRTING FROM AN INDEX
-     * USE 2 LOOPS. HERE AS WE HAVE TO LOOK FOR 2 
-     * WE CAN USE NESTED IF TWICE
-     * 
-     * else for values >3
-        for(int i =0; i<n-1; i++){
-            if(arr[i]%2!=0){
-                int j =0;
-                while(j<2){
-                    if((++i)==n || arr[i]%2==0) break;
-                    j++;
-                }
-                if(j==2) return true;                
-            }
-        }
-     * 
-     * 
-     * THE TRICK IS TO INCREMENT i IN THE INNER LOOP SO THAT 
-     * WE DON'T LOOP AGAIN OVER SAME ELEMENT.
-     * 
-     * 
-     * optimizations: run till n-1
-     * replace nested if with &&
-     * if (arr[i]%2 != 0) && (++i)!= n && arr[i]%2 != 0) &&
-                (++i) != n && arr[i]% 2 != 0)
-                        return true;
-     * 
-     */
-    public boolean threeConsecutiveOdds(int[] arr) {
-        int n = arr.length;
-        for (int i = 0; i < n; i++) {
-            if (arr[i] % 2 != 0) {
-                if ((++i) != n && arr[i] % 2 != 0) {
-                    if ((++i) != n && arr[i] % 2 != 0)
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
+
+    
 
 
+    
    
 
     PriorityQueue<Integer> pQueue = new PriorityQueue<Integer>();
     
     void mergekSortedArrays(int[] arr1, int[] arr2, int[] arr3) {
-        int holder1, holder2, holder3 = 0;
-
-        // max function needed for max of k elements
-        // int smallest = max(arr1[holder1], arr2[holder2], arr3[holder3]);
-
-        // can use a priority queue or a min heap
 
     }
 
-    void findMissingAndRepeated(int[] arr) {
+    ///////////////////// SORT 0s1s2s
 
-        for (int i = 0; i < arr.length; i++) {
-            System.out.println(arr[i]);
-            if (arr[i] == -1) {
-                System.out.println("the repeated number is " + (i + 1));
-                // break;
-                System.out.println(arr[i]);
-
-            } else
-                arr[arr[i] - 1] = -1;
+    // same as dutch national below, if 1, increment, else swap
+    void sort01(int[] nums){
+        int n = nums.length;
+        int lo = 0; int i =0;
+        while(i<n){
+            if(nums[i] == 0) utilCustom.Utility.swap(nums, lo++, i++);
+            else i++;
         }
     }
 
-    void zeroOneSort(int[] arr) {
-        int j = -1;
-        int pivot = arr.length - 1;
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == 0) {
-                j++;
-                utilCustom.Utility.swap(arr, i, j);
-            }
-            // System.out.println("j "+ arr[j]);
-        }
 
-        utilCustom.Utility.swap(arr, j + 1, pivot);
-    }
-
-    public void sort0s1s(int[] nums) {
-        int index = -1;
-        for(int i =0; i<nums.length; i++){
-            if(nums[i] != 0){
-                index++;
-                utilCustom.Utility.swap(nums, index, i);
-            }
-        }
-    }
-    
-
-    /** it's a bit tricky, concept of quicksort partition
+    /** 
+     * DUTCH NATIONAL FLAG
+     * it's a bit tricky, concept of quicksort partition
      * points:
      * 1 use while not for
      * 2 2 pointers needed 
      * 3 when 0 is seen increment both
      * 4 when 2 only decrement h; hence while is used
      *  as for will increment i in all cases
+     * 
+     * if 1 is seen we increment i
+     * so if we see 2, then swap and check the same i, so same i
      */
-    public void dutchNational(int[] nums) {
+    // [2,0,1]
+    // https://leetcode.com/problems/sort-colors/
+    public void sortColors(int[] nums) {
         int n = nums.length;
-        int l = 0, h = n - 1, i = 0;
-        while( i <= h ) {
-            if(nums[i] == 0 ) utilCustom.Utility.swap(nums, l++, i++);
-            else if(nums[i] == 2) utilCustom.Utility.swap(nums, h--, i);    
+        int lo = 0; int hi = n-1;
+        int i = 0 ;
+        while(i<=hi){ // 1
+            if(nums[i] == 0) utilCustom.Utility.swap(nums, lo++, i++); // 2
+            else if(nums[i] == 2) utilCustom.Utility.swap(nums, hi--, i);
             else i++;
         }
-        utilCustom.Utility.print1DMatrix(nums);
     }
+
 
     void insertionSort(int[] arr) {
         // int i =0;
@@ -505,42 +622,7 @@ class Array {
     void sortByFrequency(int[] arr) {}
 
 
-    void quickSortArray24Apr(int[] arr, int low, int high) {
-        if (low < high) {
-            int pivot = partition24Apr(arr, low, high);
-            System.out.println("pivot " + pivot);
-            // if(pivot!=-1){
-            quickSortArray24Apr(arr, low, pivot - 1);
-            quickSortArray24Apr(arr, pivot + 1, high);
-            // }
-            /**
-             * when it comes to single element of array, then the element violates the
-             * condition of start<end and hence recursion stops
-             */
-        }
-    }
-
-    int partition24Apr(int[] arr, int start, int end) {
-        // if (start < end) {
-        System.out.print("low index " + start + ", value " + arr[start] + " ,");
-        System.out.println("high index " + end + ", value " + arr[end]);
-
-        int i = start - 1;
-        int j = 0;
-        int key = arr[end];
-
-        for (j = start; j < end; j++) {
-            if (arr[j] < key) {
-                i++;
-                utilCustom.Utility.swap(arr, i, j);
-            }
-        }
-        utilCustom.Utility.swap(arr, i + 1, end);// 8,9 maintain position
-        return i + 1;
-        // }
-        // if(start == end) return start;
-        // return -1;
-    }
+    
 
     // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree
     /** SIMILARITIES WITH QUICKSORT
@@ -562,140 +644,6 @@ class Array {
     //     return root;
     // }
 
-    //////////////////////////////////////////////
-    void heapSort25Apr(int[] arr) {
-        int n = arr.length;
-        int mid = arr.length / 2 - 1;
-        for (int i = mid; i >= 0; i--) {
-            heapify25Apr(arr, arr.length, i);
-        }
-
-        utilCustom.Utility.print1DMatrix(arr);
-        System.out.println();
-
-        for (int i = n - 1; i > n - 2 - 1; i--) {
-            utilCustom.Utility.swap(arr, i, 0);
-            // int temp =arr[0];
-            // arr[0] = arr[i];
-            // arr[i] = temp;
-
-            heapify25Apr(arr, i, 0);
-        }
-    }
-
-    void heapify25Apr(int[] arr, int n, int index) {
-        int max = index;
-        int left;
-        int right;
-
-        if ((2 * index + 1) < n) {
-            left = 2 * index + 1;
-            if (arr[max] > arr[left])
-                max = left;
-        }
-        if ((2 * index + 2) < n) {
-            right = 2 * index + 2;
-            if (arr[max] > arr[right])
-                max = right;
-        }
-
-        if (max != index) {
-            utilCustom.Utility.swap(arr, index, max);
-            heapify25Apr(arr, n, max);
-        }
-    }
-
-    int findFirstOne(int[] arr, int start, int end) {
-        if (end >= start) {
-            int mid = start + (end - start) / 2;
-
-            if (arr[mid] == 1) {
-                if ((mid - 1) >= 0 && arr[mid - 1] == 1)
-                    return findFirstOne(arr, start, mid - 1);
-                return mid;
-            }
-            if (arr[mid] == 0) {
-                return findFirstOne(arr, mid + 1, end);
-            }
-
-            else {
-                return findFirstOne(arr, start, mid - 1);
-            }
-        }
-
-        else
-            return -1;
-
-    }
-
-    // return mid;
-
-    void whileCheck(int[] arr) {
-        int i = 0;
-        while (i < 2) {
-            System.out.println(i);
-            i++;
-        }
-        zeroSetter(i);
-    }
-
-    void zeroSetter(int i) {
-        i = 0;
-    }
-
-    // boolean dead = false;
-    // int count = 0;
-    // void goDeeper(){
-    // if(dead == true) return;
-    // System.out.println(count++);//goes till 8612
-    // goDeeper();
-    // }
-
-    // public int pivotIndex(int[] nums) {
-    // int left =0; int leftSum =nums[left];
-    // int right =nums.length-1; int rightSum=nums[right];
-
-    // boolean found = false;
-    // while(!found){
-    // if(left>=right || right-left==1) return -1;
-    // if(leftSum > rightSum) rightSum += nums[--right];
-    // else if(leftSum<rightSum) leftSum += nums[++left];
-    // else {
-    // found = true;
-    // System.out.println(rightSum);
-    // }
-    // }
-    // System.out.println("left "+left);
-    // System.out.println("right "+right);
-    // return left+1;
-    // }
-
-
-    int maxIndex(int[] arr) {
-        int maxDiff = 0;
-
-        for (int i = 1; i < arr.length; i++) {
-            for (int j = 0; j < i; j++) {
-                if (arr[j] < arr[i] && (i - j) > maxDiff) {
-                    maxDiff = i - j;
-                }
-            }
-        }
-        System.out.println(maxDiff);
-        return maxDiff;
-    }
-
-    int smallestPositiveMissing(int[] arr) {
-        int min = 1;
-
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == min)
-                min++;
-        }
-        System.out.println("smallest +ve missing ");
-        System.out.println(min);
-        return min;
-    }
 
     // KADANE' ALGO
     // int [] a = {-2, -3, 4, -1, -2, 1, 5, -3};
@@ -857,88 +805,56 @@ class Array {
         return sum;
     }
 
-    // https://leetcode.com/problems/first-missing-positive/
-    // inaccurate soln but works for tougher ques
-    public int firstMissingPositive(int[] nums) {
-        int holder = 1;
-        Arrays.sort(nums);
-        for(int i : nums) if(i==holder) holder++;
-        return holder;
-    }
-
-    // PIVOT
-    // https://leetcode.com/problems/find-pivot-index/
-    public int pivotIndex(int[] nums) {
+    // Hashing, Prefix Sum
+    // https://leetcode.com/problems/subarray-sum-equals-k
+    public int subarraySum(int[] nums, int k) {
         int n = nums.length;
-        int left = 0; int sum =0;
+        if(n==0) return 0;
         
-        for(int i=0; i<n; i++){
-            sum+=nums[i];
-        }
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0,1); // tricky, don't forget
+
+        int sum = 0; int count = 0;
         
-        for(int i =0; i<n; i++){
-            if(sum-left-nums[i] == left) return i;
-            left += nums[i];
+        for(int i : nums){
+            sum+=i;
+            count+=map.getOrDefault(sum-k,0);
+            map.put(sum, map.getOrDefault(sum, 0)+1);
         }
-        return -1;
-    }
-    // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
-    // Given an array, find all the subarrays (contiguous) of even length which 
-    // have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
-    // answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
-    /** similar to dp ques, use l and i+l-1 =j; palindrome type */
-    int equalLeftAndRightSum(int[] arr){
-        int count = 0;
-        int n = arr.length;
-        for(int l=2; l<n; l++){
-            for(int i = 0; l+i-1<n; i++){
-                int j = i+l-1;
-                if(l==2 && arr[i] == arr[j]) count++;
-                else if(l%2==0){
-                    int sum = sum(arr,i,j);
-                    for(int k = i;k<j; k++){
-                        if(sum(arr,i, k) == sum/2){
-                            System.out.println("i "+i+" k "+k);
-                            // System.out.println("in here "+sum(arr, i, k));
-                            count++;
-                        }
-                    }
-                }                
-            }
-        }
-        System.out.println("count of equal left and right sums' partition "+count);
         return count;
     }
 
-    int sum(int[] arr, int start, int end){
-        int sum =0;
-        for(int i =start; i<=end; i++){
-            sum+=arr[i];
+    // Microsoft
+    // aaaa, aabbcc
+    /** 
+     * just compare adjacent chars and take min cost
+     */
+    // https://leetcode.com/discuss/interview-question/558379/
+    public int removeCharCost(String S, int[] C){
+        // write your code here
+        int cost = 0;
+        for(int i = 1; i<S.length(); i++){
+            if(S.charAt(i) == S.charAt(i-1)) {
+                cost+= Math.min(C[i], C[i-1]);
+            }
         }
-        return sum;
+        System.out.println("char removal cost "+cost);
+        return cost;
     }
 
     // https://leetcode.com/problems/next-permutation/
-    // https://leetcode.com/problems/subarray-sum-equals-k/
 
     // CIRCULAR ARRAY 
     // https://leetcode.com/problems/next-greater-element-ii/
 
-    // https://www.geeksforgeeks.org/paytm-interview-experience-set-9/
-    // Given an array, find all the subarrays (contiguous) of even 
-    // length which 
-    // have equal left and right sums. Ex:- [2,4,6,6,4,2,10], 
-    // answer is 4, i.e. [2,4,6,6,4,2],[4,6,6,4,2,10],[4,6,6,4],[6,6]
-
     
     public static void main(String[] args) {
-        // code
+        Array test = new Array();
 
         int[] arr2 = new int[] { 9, 7, 1, 8, 5, 6 };
-        Array test = new Array();
         int[] duplicates = {1,1,2,2,2,3};
         // test.findMountain(arr2);
-        test.removeDuplicates(duplicates);
+        // test.removeDuplicates(duplicates);
         int[] arr = new int[] { 1, 2, 5, 4, 3 };
         // test.findMissingAndRepeated(arr);
 
@@ -955,7 +871,11 @@ class Array {
         // System.out.println("---");
         // test.showArray(arr2);
         // test.findKthMax(arr2, 3);
-        int[] zeroArr = { 1, 9, 8, 4, 2, 7, 0, 0 };
+        // int[] zeroArr = { 1, 9, 8, 4, 2, 7, 0, 0 };
+
+        int[] zeroOneArr = { 0, 1, 1, 1, 1, 1 };
+        test.sort01(zeroOneArr);
+        utilCustom.Utility.print1DMatrix(zeroOneArr);
         // test.moveAllZeroesToEnd(zeroArr);
         // test.quickSortArray24Apr(zeroArr, 0, zeroArr.length-1);
         // test.print1DMatrix(zeroArr);
@@ -967,7 +887,6 @@ class Array {
 
         // int[] zeroOneArr = {0,0,0,0,0};
         // int[] zeroOneArr = {0,0,1,1,1};
-        int[] zeroOneArr = { 0, 1, 1, 1, 1, 1 };
         // int[] zeroOneArr = {1,1,1,1,1};
         // System.out.println( test.findFirstOne(zeroOneArr, 0, zeroOneArr.length-1));
         // test.whileCheck(zeroArr);
@@ -1012,6 +931,12 @@ class Array {
 
         int[] equalLeftAndRight = {2,4,6,6,4,2,10};
         // test.equalLeftAndRightSum(equalLeftAndRight);
+
+        // String S = "aaaa"; int[] C = new int[]{3,4,5,6}; // 12
+        // String S = "ababa"; int[] C = new int[]{10,5,10,5,10}; //0
+        String S = "aabbcc"; int[] C = new int[]{1,2,1,2,1,2}; // 3
+        test.removeCharCost(S, C);
+
     }
 
 }

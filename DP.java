@@ -20,47 +20,113 @@ public class DP {
 
     public int factorial(int n){
         if(n==0 || n==1) return 1;
-        int[] dp = new int[n+1];
-        if(dp[n]==0){
-            dp[n] = n*factorial(n-1);
-            return dp[n];
-        }
-        else return dp[n];
+        return n*factorial(n-1);
     }
 
     public int factorialDP(int n){
-        // if(n==0 || n==1) return 1;
         int[] dp = new int[n+1];
         dp[0] = 1;
         dp[1] = 1;
         for(int i =2; i<=n; i++){
-            // if(dp[n]==0){
-                dp[i] = i*dp[i-1];
-                // return dp[n];
-            // }
+            dp[i] = i*dp[i-1];
         }
         return dp[n];
     }
 
-    // INCLUDE EXCLUDE
-    // https://leetcode.com/problems/target-sum/
-    int sumCount = 0;
-    public int findTargetSumWays(int[] nums, int target) {
-        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
-        f(nums, 0, target);
-        return sumCount;
+    public int factorialMemoize(int n){
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        if(dp[n]!=0) return dp[n];
+
+        dp[n] = n * factorialDP(n-1);
+        return dp[n];
     }
+
     
-    void f(int[] nums, int index, int sum){
-        if(index==nums.length) {
-            if(sum ==0) sumCount++; 
+
+    //////////////////
+
+    int uniquePathCount = 0;
+    int noOfUniquePaths(int[][] arr) {
+        int count = 0;
+        int[] path = new int[7];
+        noOfUniquePathsHelper(arr, 0, 0, path, 0);
+        return uniquePathCount;
+    }
+
+    void noOfUniquePathsHelper(int[][] arr, int row, int col, int[] path, int pathIndex) {
+        if (row >= arr.length || col >= arr[0].length)
+            return;
+        // if(pathIndex>=path.length) return;
+        path[pathIndex] = arr[row][col];
+        if (row == arr.length - 1 && col == arr[0].length - 1) {
+            uniquePathCount++;
+            utilCustom.Utility.print1DMatrix(path);
+            System.out.println();
             return;
         }
-        
-        f(nums, index+1, sum+nums[index]);
-        f(nums, index+1, sum-nums[index]);
+        int path_index = pathIndex++;
+        noOfUniquePathsHelper(arr, row + 1, col, path, path_index);
+        noOfUniquePathsHelper(arr, row, col + 1, path, path_index);
     }
-    // TRY TO ADD MEMOIZATION
+
+    /** points:
+     * 1 initialize first row and col
+     * 2 can be done in 2 ways either top down or bottom up
+     */
+    int uniquePathsDP(int m, int n) {
+        int[][] dp = new int[m][n];
+        
+        dp[0][0] = 1;
+        
+        for(int i =0; i<m; i++) dp[i][0] = 1;
+        for(int j =0; j<n; j++) dp[0][j] = 1;
+        
+        for(int i = 1; i<m; i++){
+            for(int j =1; j<n; j++){
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        System.out.println(dp[m-1][n-1]);
+        return dp[m-1][n-1];
+    }
+
+    int minJumpCount = Integer.MAX_VALUE;// 1
+
+    //this is the recursive approach
+    int minJumps(int[] arr) {
+        int[] dp = new int[arr.length];
+        minJumpHelper(arr, dp, 0, 0);
+        return dp[dp.length-1];
+        // return minJumpCount;
+    }
+
+    void minJumpHelper(int[] arr, int[] dp, int index, int count) {
+        // int jump = minJumpCount;
+        // System.out.println("line 359 "+index);
+        if (index >= arr.length){
+            return;// 2
+        }
+        if(dp[index]!=0) {
+            // minJumpCount = dp[index];
+            // return;
+            // if()
+        }
+        if (index == arr.length - 1) {// 3
+            // if(jump<minJumpCount) minJumpCount = jump;
+            minJumpCount = Math.min(minJumpCount, count);
+            dp[index] = minJumpCount;
+            System.out.println("final count " + count);
+            return;
+        }
+        for (int i = 1; i <= arr[index]; i++) {// 4 start from i=1
+            minJumpHelper(arr, dp, index + i, count + 1);
+        }
+
+    }
+
 
     /**
      * points: only right and down movements, else visited matrix would have
@@ -152,6 +218,24 @@ public class DP {
         return ans;
     }
 
+    /////////////////////////
+
+    // https://leetcode.com/problems/coin-change/solution/
+    public int coinChange1D(int[] coins, int amount) {
+        int max = amount + 1;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, max);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                }
+            }
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+
     // IMP
     //https://leetcode.com/problems/minimum-cost-for-tickets/
     public int mincostTickets(int[] days, int[] costs) {
@@ -160,9 +244,7 @@ public class DP {
 
         int lastDay = days[days.length-1], dp[] = new int[lastDay+1];
         for (int i = 1; i <= lastDay; i++) {
-            if (!set.contains(i)) {
-                dp[i] = dp[i-1];
-            }
+            if (!set.contains(i)) dp[i] = dp[i-1];
             else {
                 dp[i] = dp[i-1]+costs[0];
 
@@ -177,104 +259,35 @@ public class DP {
     return dp[lastDay];
     }
 
-    // https://leetcode.com/explore/featured/card/
-    // october-leetcoding-challenge/560/week-2-october-8th-october-14th/3494/
-    public int deleteAndEarn(int[] arr) {
-        int n = arr.length;
-        int i = 0, j = 0;
-        if (n == 0)
-            return 0;
-        if (n == 1)
-            return arr[0];
-
-        ArrayList<Integer> list = new ArrayList<>();
-
-        int sum = 0;
-        for (i = 1; i < arr.length; i++) {
-            if (arr[i] == arr[i - 1])
-                sum += arr[i];
-            else {
-                list.add(sum);
-                sum = arr[i];
-            }
+    /** 
+     * POINTS :
+     * 1 TRY TO CONVERT TO HOUSE ROBBER
+     * 2 CREATE A NEW ARRAY OF SIZE = max el of arr
+     * 3 TAKE CUMULATIVE SUM
+    */
+    // [3,1]
+    // https://leetcode.com/problems/delete-and-earn/
+    public int deleteAndEarn(int[] nums) {
+        Arrays.sort(nums);
+        
+        if(nums.length == 0) return 0;
+        if(nums.length == 1) return nums[0];
+        // if(nums.length == 2) return Math.max(nums[0], nums[1]);
+        int n = nums[nums.length-1]+1;
+        System.out.println(n);
+        int[] base = new int[n];
+        int[] dp = new int[n];
+        
+        for(int i =0; i<nums.length; i++) base[nums[i]] += nums[i];
+        
+        dp[0] = base[0];
+        dp[1] = Math.max(dp[0], base[1]);
+        
+        for(int i = 2; i<n; i++){
+            dp[i] = Math.max(dp[i-2] + base[i], dp[i-1]);
         }
-
-        sortList(list, list.size() - 1, 0);
-
-        int[] dp = new int[list.size()];
-
-        for (i = 1; i < arr.length; i++) {
-            for (j = 0; j < i; j++) {
-                if (arr[j] < arr[i] && dp[i] < dp[j]) {
-                    dp[i] = dp[j];
-                }
-            }
-            dp[i]++;
-        }
-
-        int max = -1;
-        for (i = 0; i < dp.length; i++) {
-            max = Math.max(max, dp[i]);
-        }
-        return max;
-    }
-
-
-    void sortList(ArrayList<Integer> list, int end, int start) {
-        if (end > start) {
-            int low = start - 1;
-            int pivot = end;
-            int j;
-            for (j = start; j < pivot; j++) {
-                if (list.get(j) < list.get(pivot)) {
-                    low++;
-                    int temp = list.remove(low);
-                    list.add(low, list.get(j));
-                    list.add(j, temp);
-                }
-                if (j == 1)
-                    System.out.println("line 283" + list);
-            }
-            low++;
-            int temp = list.get(low);
-            list.add(low, list.get(j));
-            list.add(j, temp);
-
-            sortList(list, low - 1, start);
-            sortList(list, end, low + 1);
-        }
-    }
-
-
-    int deleteAndEarn9jul(int[] arr){
-        if(arr.length==0) return 0;
-        if(arr.length ==1) return arr[0];
-       
-        int maxEl = 0;
-        for(int i=0; i<arr.length; i++){
-            maxEl = Math.max(maxEl, arr[i]);
-        }
-
-        int[] dp = new int[maxEl+1];
-
-        for(int i =0; i<arr.length; i++){
-            dp[arr[i]]+=arr[i];
-        }
-
-        utilCustom.Utility.print1DMatrix(dp);
-        dp[2] = Math.max(dp[1], dp[2]);
-        for(int i =3; i<dp.length; i++){
-            dp[i] = Math.max(dp[i]+dp[i-2], dp[i-1]);
-        }
-
-        // System.out.println(dp[dp.length-1]);
-        // dp[dp.length-2] = Math.max(dp[dp.length-2],dp[dp.length-1]);
-        // for(int i =dp.length-3; i>0; i--){
-        //     dp[i] = Math.max(dp[i+1], dp[i]+ dp[i+2]);
-        // }
-
-        System.out.println("max is "+dp[1]);
-        return dp[1];
+        
+        return dp[n-1];
     }
 
 
@@ -296,87 +309,6 @@ public class DP {
             if(doubles>=10 && doubles<=26) dp[i] += dp[i-2];
         }
         return dp[n];
-    }
-
-
-    int uniquePathCount = 0;
-    int noOfUniquePaths(int[][] arr) {
-        int count = 0;
-        int[] path = new int[7];
-        noOfUniquePathsHelper(arr, 0, 0, path, 0);
-        return uniquePathCount;
-    }
-
-    void noOfUniquePathsHelper(int[][] arr, int row, int col, int[] path, int pathIndex) {
-        if (row >= arr.length || col >= arr[0].length)
-            return;
-        // if(pathIndex>=path.length) return;
-        path[pathIndex] = arr[row][col];
-        if (row == arr.length - 1 && col == arr[0].length - 1) {
-            uniquePathCount++;
-            utilCustom.Utility.print1DMatrix(path);
-            System.out.println();
-            return;
-        }
-        int path_index = pathIndex++;
-        noOfUniquePathsHelper(arr, row + 1, col, path, path_index);
-        noOfUniquePathsHelper(arr, row, col + 1, path, path_index);
-    }
-
-    /** points:
-     * 1 initialize first row and col
-     * 2 can be done in 2 ways either top down or bottom up
-     */
-    int uniquePathsDP(int m, int n) {
-        int[][] dp = new int[m][n];
-        
-        dp[0][0] = 1;
-        
-        for(int i =0; i<m; i++) dp[i][0] = 1;
-        for(int j =0; j<n; j++) dp[0][j] = 1;
-        
-        for(int i = 1; i<m; i++){
-            for(int j =1; j<n; j++){
-                dp[i][j] = dp[i-1][j] + dp[i][j-1];
-            }
-        }
-        
-        System.out.println(dp[m-1][n-1]);
-        return dp[m-1][n-1];
-    }
-
-    int minJumpCount = Integer.MAX_VALUE;// 1
-
-    //this is the recursive approach
-    int minJumps(int[] arr) {
-        int[] dp = new int[arr.length];
-        minJumpHelper(arr, dp, 0, 0);
-        return dp[dp.length-1];
-        // return minJumpCount;
-    }
-
-    void minJumpHelper(int[] arr, int[] dp, int index, int count) {
-        // int jump = minJumpCount;
-        // System.out.println("line 359 "+index);
-        if (index >= arr.length){
-            return;// 2
-        }
-        if(dp[index]!=0) {
-            // minJumpCount = dp[index];
-            // return;
-            // if()
-        }
-        if (index == arr.length - 1) {// 3
-            // if(jump<minJumpCount) minJumpCount = jump;
-            minJumpCount = Math.min(minJumpCount, count);
-            dp[index] = minJumpCount;
-            System.out.println("final count " + count);
-            return;
-        }
-        for (int i = 1; i <= arr[index]; i++) {// 4 start from i=1
-            minJumpHelper(arr, dp, index + i, count + 1);
-        }
-
     }
 
     /**
@@ -447,7 +379,8 @@ public class DP {
     // https://leetcode.com/problems/unique-paths-ii/
 
     /**
-     * the trick is to convert a recursive relation to a dp relation dfs(r,c) =
+     * the trick is to convert a recursive relation to a dp relation 
+     * dfs(r,c) =
      * dfs(r+1,c)+dfs(r,c+1);
      * 
      * but the relation here for dp is built in bottom up manner
@@ -499,7 +432,8 @@ public class DP {
      * return max of dp
      */
     int longestIncreasingSubsequenceDP(int[] arr) {
-        int[] dp = new int[arr.length];
+        int n = arr.length;
+        int[] dp = new int[n];
         dp[0] = 1;
         for (int i = 1; i < arr.length; i++) {
             for (int j = 0; j < i; j++) {
@@ -511,7 +445,7 @@ public class DP {
         }
 
         int max = -1;
-        for (int i = 0; i < dp.length; i++) {
+        for (int i = 0; i<n; i++) {
             max = Math.max(max, dp[i]);
         }
         return max;
@@ -659,27 +593,29 @@ public class DP {
      */
     int houseRobber(int[] arr) {
         int n = arr.length;
-        if (n == 0)
-            return 0;
-        if (n == 1)
-            return arr[0];
 
-        if (n == 2)
-            return arr[0] > arr[1] ? arr[0] : arr[1];
+        if (n == 0) return 0;
+        if (n == 1) return arr[0];
+        if (n == 2) return arr[0] > arr[1] ? arr[0] : arr[1];
+
         int[] dp = new int[n];
 
         dp[0] = arr[0];
-        dp[1] = arr[0] > arr[1] ? arr[0] : arr[1];
+        dp[1] = Math.max(arr[0], arr[1]);
 
         for (int i = 2; i < arr.length; i++) {
-            dp[i] = (arr[i] + dp[i - 2] > dp[i - 1]) ? (arr[i] + dp[i - 2]) : dp[i - 1];
+            dp[i] = Math.max(arr[i] + dp[i-2], dp[i-1]);
         }
         return dp[dp.length - 1];
     }
+    // https://leetcode.com/explore/featured/card/
+    // october-leetcoding-challenge/560/week-2-october-8th-october-14th/3494/
 
 
     /**
      * Also the masseuse problem, NOT GREEDY BUT DP
+     * IMP : SORT ON THE BASIS OF END TIME AND START FROM
+     * j= i-1 till 0
      * 
      * WEIGHTED JOB SCHEDULING
      * https://leetcode.com/problems/maximum-profit-in-job-scheduling/ 
@@ -868,15 +804,17 @@ public class DP {
      * in rod cutting too, we could take any piece as many times as we wanted
      */
 
-    /***the no of ways to make up a sum if infinite supply of coins of each denomination 
-     * is given*/
+    /**
+     * the no of ways to make up a sum if infinite supply of coins 
+     * of each denomination is given
+     * */
     int coinChange(int[] arr, int sum, int index){
         System.out.println("sum "+sum);
         if(sum==0) return 1;
         if(sum<0) return 0;
-        if(index <=0 && sum>=1) return 0;
+        if(index == arr.length ) return 0;
         // if(index==0) return 1;
-        return coinChange(arr, sum-arr[index-1], index) + coinChange(arr, sum, index-1);
+        return coinChange(arr, sum-arr[index], index) + coinChange(arr, sum, index+1);
     }
 
 
@@ -936,7 +874,7 @@ public class DP {
     // https://leetcode.com/problems/coin-change/submissions/
     public int coinChangeDP(int[] coins, int amount) {
         int n = coins.length;
-        if(n==0) return -1;
+        if(n == 0) return -1;
 
         int[][] dp = new int[n+1][amount+1];
         
@@ -954,24 +892,28 @@ public class DP {
         return dp[n][amount] == Integer.MAX_VALUE-100?-1:dp[n][amount];
     }
 
-
-    public int coinChangeSingleArrayDP(int[] coins, int amount) {
-        int[] ans = new int[amount + 1];
-        ans[0] = 0;
-        for(int i = 1; i <= amount; i++){
-            int min = Integer.MAX_VALUE-1;
-            for(int coin: coins){
-                if(coin<=i) min = Math.min(ans[i-coin]+1, min);
+    // https://leetcode.com/problems/coin-change/solution/
+    public int coinChange1DArr(int[] coins, int amount) {
+        int max = amount + 1;
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, max);
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+        for (int j = 0; j < coins.length; j++) {
+            if (coins[j] <= i) {
+            dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
             }
-            ans[i] = min;
         }
-        return ans[amount] == Integer.MAX_VALUE-1? -1:ans[amount];
+        }
+        return dp[amount] > amount ? -1 : dp[amount];
     }
 
 
     // FIRST COL -> 1
     // COINS CAN BE REUSED
-
+    // [2,1,5] -> indexes [2][1]
+    // remember way to make 0 can also be by not selecting any
+    // https://leetcode.com/problems/coin-change-2
     int coinChangeNumberOfWays(int[] coins, int total){
         int n = coins.length; 
         if(n==0) return 0;
@@ -990,10 +932,8 @@ public class DP {
         }
         utilCustom.Utility.printMatrix(dp);
         return dp[n][total];
-
     }
 
-    
 
     // IMP CHECK WHY dp[0][0] = 1 was required
     // https://leetcode.com/problems/perfect-squares/
@@ -1197,8 +1137,7 @@ public class DP {
         for(int i=1; i<=set.length; i++){
             for(int j =0; j<=target;j++){
                 if(set[i-1]>j) dp[i][j] = dp[i-1][j];
-                //ALWAYS USE ELSE
-                else dp[i][j] = dp[i-1][j]|| dp[i-1][j-set[i-1]];
+                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i-1]];
             }
         }
         utilCustom.Utility.printMatrixBool(dp);
@@ -1272,6 +1211,29 @@ public class DP {
         return Math.abs(firstPart - secondPart);
     } 
         
+    // TRYING TO USE MEMOIZATION
+    // SEE CHEAPEST FLIGHTS WITH DP (ULTIMATE)
+    // INCLUDE EXCLUDE
+    // https://leetcode.com/problems/target-sum/
+    int sumCount = 0;
+    public int findTargetSumWays(int[] nums, int target) {
+        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
+        f(nums, 0, target);
+        return sumCount;
+    }
+    
+    void f(int[] nums, int index, int sum){
+        // need to use all els
+        if(index==nums.length && sum ==0){
+            sumCount++; 
+            return;
+        }
+        
+        f(nums, index+1, sum+nums[index]);
+        f(nums, index+1, sum-nums[index]);
+    }
+    // TRY TO ADD MEMOIZATION
+
 
     ////////////////////////////// MINI-MAX
 
@@ -1325,7 +1287,7 @@ public class DP {
         for(int l=2; l<=n;l++){
             for( i = 0; i+l-1<n;i++){
                 int j = i+l-1;
-                
+                // i and j are adjacent
                 int a = i+1<=j-1?dp[i+1][j-1]:0;
                 int b = i+2<=j?dp[i+2][j]:0;
                 int c = i<=j-2?dp[i][j-2]:0;
@@ -1547,7 +1509,7 @@ public class DP {
     }
 
 
-    ////////////////////////STRING DP
+    ////////////////////////// STRING DP
 
     // https://leetcode.com/problems/decode-ways/discuss/
     // 30358/Java-clean-DP-solution-with-explanation
@@ -1578,6 +1540,16 @@ public class DP {
         return dp[n1][n2];
     }
 
+    
+    /** 
+     * 
+    if (X[m - 1] == Y[n - 1]) {
+        return 1 + lcs(X, Y, m - 1, n - 1);
+    } else {
+        return Math.max(lcs(X, Y, m, n - 1), lcs(X, Y, m - 1, n));
+    } 
+     *
+    */
     /** 
      * the difference b/w longest common subsequence and substring is 
      * in subsequence we take max of [i-1][j] or [i][j-1], but in 
@@ -1674,6 +1646,7 @@ public class DP {
 
     /** PALINDROME QUES */    
     // https://leetcode.com/problems/longest-palindromic-subsequence/
+
     // https://leetcode.com/problems/palindromic-substrings/
     int countPalindromicSubstrings(String s) {
         int n = s.length();
@@ -2090,13 +2063,14 @@ public class DP {
         // System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, 
         // rodLengthArr[rodLengthArr.length-1], rodValArr.length-1));
 
-        // int[] coins = {1,2,3}; int coinSum =4;
-        // System.out.println("coin change ways "+ dp.coinChange(coins, 4, coins.length));
+        int[] coins = {1,2,3}; int coinSum =4;
+        System.out.println("coin change ways "+ dp.coinChange(coins, 4, 0));
         // dp.coinChangeDP(coins, coinSum);
         int[] coinsMin = {1,2,5};
         // {5,6,9};//
         // {25, 10, 5}; 
         int sum  = 11;
+
         // 30;
         // System.out.println("the min of of coins is "+dp.coinChangeDP(coinsMin, sum));
 
@@ -2164,8 +2138,8 @@ public class DP {
         // System.out.println("longest path in matrix is "+dp.longestPathMatrix(mat));
 
         int[][] fallingSum = {{1,2,3},{4,5,6},{7,8,9}};
-        dp.minFallingPathSum(fallingSum);
-        dp.minFallingPathSumDP(fallingSum);
+        // dp.minFallingPathSum(fallingSum);
+        // dp.minFallingPathSumDP(fallingSum);
 
         int[] apSeq = //{3,6,9,10};
         {44,46,22,68,45,66,43,9,37,30,50,67,32,47,44,11,15,4,11,6,

@@ -6,9 +6,10 @@ public class SystemDesign {
     // tic-tac-toe game
     // chess board
     // trie
+
+    // https://leetcode.com/problems/online-stock-span/
     // https://leetcode.com/problems/implement-trie-prefix-tree/
     // https://leetcode.com/problems/lru-cache/
-    // https://leetcode.com/problems/find-median-from-data-stream/
     // https://leetcode.com/discuss/interview-question/874074/
     // Food-Delivery-App-or-Low-Level-Design-or-Interview-Question
 
