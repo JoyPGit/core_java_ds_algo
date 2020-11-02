@@ -11,6 +11,10 @@ public class ToDo {
      * 
      * painter partition, word dict, min cut palindrome partitioning
      * linked list, 3 sum
+     * longest zigzag path
+     * remove zero sum consecutive nodes
+     * merge sort, heap sort, sliding window notes
+     * itinerary
      * REORG STRING
      * TASK SCHEDULER
      * SMALLEST RANGE K LISTS

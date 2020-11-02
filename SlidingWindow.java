@@ -4,6 +4,9 @@ public class SlidingWindow {
 
 
     /** 
+     * basic idea is to reduce the freq of outgoing and 
+     * increase freq of incoming
+     * 
      * IMP FOR SUBSTRING USE SLIDING WINDOW, FOR SUBSEQUENCE,
      * HASHMAP MIGHT BE USED.
      * 
@@ -293,9 +296,11 @@ public class SlidingWindow {
         res.add(count);
         
         for(int i = k; i<n; i++){
+            // decrement outgoing's freq
             map.put(A[i-k], map.get(A[i-k])-1);
             if(map.get(A[i-k]) < 1) count--;
             map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            // new el
             if(map.get(A[i]) == 1) count++;
             res.add(count);
         }
@@ -308,44 +313,38 @@ public class SlidingWindow {
     // use XOR
     
 
+    /** 
+     * HOLD THE FREQ OF INTEGER IN MAP, NOT INDEX, 
+     * INDEX CAN BE KEPT TRACK OF USING LEFT FLAG
+     * 
+     * how to shrink?
+     * once the map size is >= k, 
+     * while loop
+     * compare length
+     * remove left, 
+     * 
+     * repeated eles can cause the length to grow
+     * arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
+     */
     // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
-    void smallestSubArrayWithKDistinct(int[] arr, int k){
+    int smallestSubArrayKDistinct(int[] arr, int k){
+        int n = arr.length; 
+        int left = 0; int length = Integer.MAX_VALUE;
         HashMap<Integer, Integer> map = new HashMap<>();
-        int counter = 0; int left = 0; int min = Integer.MAX_VALUE;
 
-        for(int i =0; i<arr.length; i++){
-            if(map.containsKey(arr[i])){
-                map.put(arr[i], map.get(arr[i])+1);
-            } else map.put(arr[i], 1);
-
-            while(counter>=k){
-                left = getMin(map);
-                // max = i
-                min = Math.min(min, i-left+1);
-                map.remove(arr[left++]);
+        for(int i = 0; i<n; i++){
+            map.put(arr[i], map.getOrDefault(arr[i], 0)+1); 
+            while(map.size()>=k){
+                length = Math.min(length, i- left+1);
+                if(map.get(arr[left]) == 1) map.remove(arr[left]);
+                else map.put(arr[left], map.get(arr[left]) - 1);
+                left++;
             }
         }
+        System.out.println("smallest subarray with "+k+" distinct els has length "+length);
+        return length;
     }
 
-    int getMin(HashMap<Integer, Integer>map){
-        int min = Integer.MAX_VALUE;
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer value = entry.getValue();
-            min = Math.min(min, value);
-        }   
-        // System.out.println("min "+ min); 
-        return min;
-    }
-
-    int getMax(HashMap<Integer, Integer>map){
-        int max = Integer.MIN_VALUE;
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            Integer value = entry.getValue();
-            max = Math.max(max, value);
-        }   
-        // System.out.println("max "+ max); 
-        return max;
-    }
     /////////////////////////// NEXT 3 QUES ARE VERY IMP ////////////////
 
     /** POINTS : 
@@ -564,7 +563,8 @@ public class SlidingWindow {
 
     // https://leetcode.com/problems/find-the-town-judge/
 
-    /** POINTS :
+    /** 
+     * POINTS :
      * 1 WHENEVER A QUES OF MIN SWAPS AND THE DATA SET IS CONTIGOUS
      * USE SLIDING WINDOW
      * 2 HERE WE FIND THE NO OF 1s, THIS DETERMINES THE SIZE OF THE WINDOW

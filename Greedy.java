@@ -472,134 +472,137 @@ class Greedy{
         return set.size();    
     }
 
-        
-    // https://leetcode.com/problems/task-scheduler/
+    //////////////////////// K DISTANCE STYLE
 
-    /** POINTS : 
-     * 1 HASH -> PQUEUE -> LIST(ADD AND REMOVE)
-     * 2 HASHMAP STORES COUNTS
-     * 3 PQUEUE STORES COUNTS IN DESC ORDER
-     * 4 FOR N+1(AS WE ARE WAITING THE FULL N SECONDS) ADD TASKS
-     *   FROM QUEUE TO LIST
-     * 5 THEN FROM LIST ADD THE COUNTS>0 BACK TO QUEUE  
-     * 6 FOR( C : TASKS )
-     * 7 MAP.GETORDEFAULT(C, 0)
-     * 8 ADD A CHECK FOR LIST.SIZE()!=0 WHILE REMOVING
-     * 9 --I>0
-     * 10 MOST IMP HOW CYCLES ARE CALULATED : IF LIST IS NOT EMPTY,
-     *    WE COUNT THE INTERVAL CYCLES, N+1 
-     *    A->B->IDLE  = N+1
-     *    WHEN LIST IS EMPTY WE ADD TEMP SIZE
-     *    ONLY A-> THEN WE ADD +1(TEMP SIZE)
+    /** 
      * 
-     */
-    public int scheduleTasks(char[] tasks, int k) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        for(char c: tasks) map.put(c, map.getOrDefault(c, 0)+1);
-
-        PriorityQueue<Integer> q = new PriorityQueue<>((x,y)->y-x);
-        q.addAll(map.values());
-        int cycles = 0;
-        while(q.size()!=0){
-            ArrayList<Integer> temp = new ArrayList<>();
-            for(int i =0; i<q.size(); i++){
-                if(q.size()!=0) temp.add(q.remove());
-            }
-
-            for(int i : temp){
-                if(--i > 0) q.add(i);
-            }
-            cycles+= q.size()==0?temp.size():k+1;
-        }
-        return cycles;
-    }
-
-    // https://leetcode.com/problems/reorganize-string/
-    class Reorg{
-        char c; int freq;
-        Reorg(char ch, int f){
-            this.c = ch;
-            this.freq = f;
-        }
-    }
-    public String reorganizeString(String s) {
-        char[] ch = s.toCharArray();
-        HashMap<Character, Integer> map = new HashMap<>();
+     * works for k distance, for adjacent use k = 2
+    */
+    // don't use class, use map as class is difficult to hold in list
+    // https://leetcode.com/problems/reorganize-string
+    public String reorganizeString(String S) {
+        int n = S.length();
+        if(n == 0) return ""; String res = "";
         
-        for(int i =0; i<ch.length; i++){
-            if(map.containsKey(ch[i])){
-                map.put(ch[i], map.get(ch[i])+1);
-            }
-            else map.put(ch[i], 1);
+        HashMap<Character, Integer> map = new HashMap<>();
+        for(char c : S.toCharArray()){
+            map.put(c, map.getOrDefault(c, 0)+1);
         }
         
-        PriorityQueue<Reorg> q = new PriorityQueue<>((x,y)-> y.freq-x.freq);
-        for (Map.Entry<Character, Integer> entry : map.entrySet()) 
-            q.add(new Reorg(entry.getKey(), entry.getValue()));
+        PriorityQueue<Character> pq = new PriorityQueue<>((x,y)->{
+            if(map.get(x) == map.get(y)) return x-y; // 1
+            return map.get(y) - map.get(x);
+        });
+        
+        for(HashMap.Entry<Character, Integer> e : map.entrySet()){
+            pq.add(e.getKey());
+        }
         
         int k = 2;
-        String res ="";
-        ArrayList<Reorg> temp = new ArrayList<>();
-        
-        while(q.size()!=0){
-            Reorg curr = q.remove();
-            res+=curr.c;
-            // System.out.println(res);
-            temp.add(new Reorg(curr.c, curr.freq-1));    
-            
-            if(temp.size()<k) continue;
-            Reorg pushBack = temp.remove(0);
-            // System.out.println("pushBack "+pushBack.c+" "+pushBack.freq);
-            if(pushBack.freq>0) q.add(pushBack);
-            
-        }
-        
-        return res.length() == s.length()?res:"";
-    }
-
-    // https://leetcode.com/problems/reorganize-string/
-    class StringFreq{
-        char c; int freq;
-        StringFreq(char ch, int f){
-            this.c = ch;
-            this.freq = f;
-        }
-    }
-    public String reorganizeString1(String S) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        for(char c : S.toCharArray()) 
-            map.put(c, map.getOrDefault(c, 0)+1);
-        int k = map.size();
-        
-        PriorityQueue<StringFreq> pq = new PriorityQueue<>((x,y) -> y.freq - x.freq);
-        for(HashMap.Entry<Character, Integer> e : map.entrySet()){
-            pq.add(new StringFreq(e.getKey(), e.getValue()));
-        }
-        
-        String res = "";
-        while(true){
-            String currentResult = "";
-            int i = 0;
-            while(i<k && pq.size()!=0){
-                
-                StringFreq curr = pq.remove();
-                System.out.println(curr.c);
-                if(currentResult.contains(""+curr.c)) return "";
-                currentResult += curr.c;
-                System.out.println("curr added "+currentResult);
-                                
-                if(map.get(curr.c) == 1) map.remove(curr.c);
-                else map.put(curr.c, map.get(curr.c)-1);
-                i++;
+        int count = 0;
+        while(pq.size()!=0){
+            count = Math.min(n, k); // 2
+            List<Character> list = new ArrayList<>();
+            for(int i=0; i<count; i++){
+                if(pq.size() == 0) return ""; // 3
+                char curr = pq.remove();
+                res += curr; // 4
+                map.put(curr, map.get(curr)-1); // 5
+                n--; // 6
+                // chk for freq here, why add to list if freq<0
+                if(map.get(curr)>0) list.add(curr); // 7
             }
-            for(HashMap.Entry<Character, Integer> e : map.entrySet()){
-                pq.add(new StringFreq(e.getKey(), e.getValue()));
+            for(int i =0; i<list.size(); i++){
+                pq.add(list.get(i));
             }
-            res+=currentResult;
-            if(map.size()==0) break;
+            // list.clear(); //
         }
+        // System.out.println(res);
         return res;
     }
+    
+
+    // [2,3,8,11], 2
+    // https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
+    public boolean isPossibleDivide(int[] nums, int k) {
+        int n = nums.length;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i : nums){
+            map.put(i, map.getOrDefault(i, 0)+1);  
+        }
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>((x,y)->x-y); // 1
+        for(HashMap.Entry<Integer, Integer> e : map.entrySet()) pq.add(e.getKey());
+        
+        List<Integer> res = new ArrayList<>();
+        int count = 0;
+        while(pq.size()!=0){
+            // count = Math.min(count, n); // 2
+            List<Integer> list = new ArrayList<>();
+            
+            for(int i =0; i<k; i++){ /// very imp
+                if(pq.size()==0) return false; // 3
+                int curr = pq.remove(); 
+                res.add(curr);
+                if(i!=0 && res.get(i) - res.get(i-1) != 1) return false;
+                map.put(curr, map.get(curr)-1); // 4
+                if(map.get(curr)>0) list.add(curr); // 5
+                n--; //6
+            }
+            
+            for(int i =0; i<list.size(); i++){
+                pq.add(list.get(i));
+            }
+            res.clear();
+        }
+        return true;
+    }
+
+
+    // https://leetcode.com/problems/task-scheduler/
+    public int leastInterval(char[] tasks, int k) {
+        int n = tasks.length;
+        
+        HashMap<Character, Integer> map = new HashMap<>();
+        for(char c: tasks) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        PriorityQueue<Character> pq = new PriorityQueue<>((x,y)->{
+            if(map.get(x) == map.get(y)) return x-y;
+            return map.get(y)- map.get(x);
+        });
+        
+        for(HashMap.Entry<Character, Integer> e : map.entrySet()){
+            pq.add(e.getKey());
+        }
+        
+        List<Character> res = new ArrayList<>();
+        // int count = 0;
+        while(pq.size()!=0){
+            List<Character> list = new ArrayList<>();
+            for(int i =0; i<k+1; i++){
+                if(pq.size()==0) {
+                    res.add('0'); continue; //1
+                }
+                char c = pq.remove();
+                res.add(c);
+                map.put(c, map.get(c)-1);
+                if(map.get(c)>0) list.add(c);
+            }
+            
+            for(int i =0; i<list.size(); i++){
+                pq.add(list.get(i));
+            }
+        }
+        System.out.println(res);
+        int j = 0;
+        for(int i = res.size()-1; i>=0; i--){
+            if(res.get(i) != '0') break;
+            j++;
+        }
+        return res.size()-j;
+    }
+    
+    ////////////////////////////////////////
 
     // https://leetcode.com/discuss/interview-question/558379/
 
@@ -680,69 +683,7 @@ class Greedy{
         // return list.toArray();
     }
    
-    
-    /** technique :
-     * 1 sort 
-     * 2 add in hashmap
-     * 3 add in pQueue which is sorted in terms of lower key
-     * 4 add to ArrayList(why not map? 
-     *  because in arraylist you can fetch at index, required for 
-     *  putting back to heap)
-     * 
-     * the TRICK is to remove k elements in one go so that we don't get the 
-     * same element again from heap on removal
-     * 
-     * 5 if freq is zero don't put back
-     * 6 final check for consecutive
-     */
-    // https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/
-    class Divide{
-        int key, freq;
-        Divide(int k, int f){
-            this.key = k; this.freq =f;
-        }
-    }
 
-    public boolean isPossibleDivide(int[] nums, int k) {
-        Arrays.sort(nums);
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        for(int i:nums) map.put(i, map.getOrDefault(i, 0)+1);
-
-        PriorityQueue<Divide> heap = new PriorityQueue<Divide>((x,y)->x.key-y.key);
-        for(Map.Entry<Integer, Integer> e : map.entrySet()){
-            heap.add(new Divide(e.getKey(), e.getValue()));
-        }
-
-        ArrayList<Divide> list = new ArrayList<Divide>(k);
-
-        while(heap.size()!=0){
-
-            for(int i =0; i<k; i++){
-                if(heap.size()!=0){
-                    Divide curr = heap.remove();
-                    if((i-1)!=0 && (curr.key - list.get(i-1).key)!=1) return false; 
-                    list.add(new Divide(curr.key, curr.freq));
-                }else return false;
-            }
-            
-            for(int i =0; i<list.size(); i++){
-                Divide retrace = list.get(i); 
-                if(retrace.freq>1) {
-                    heap.add(new Divide(retrace.key, retrace.freq -1));
-                }
-            }
-            
-            // checking for consecutive
-            for(int i=0; i<k; i++){
-                if((list.get(i+1).key - list.get(i).key) !=1) return false;
-            }
-
-            list.clear();
-
-        }
-        return true;
-    }
    
     /** points:
      * 1 -ve no divided by k gives same remainder as (+ve)*(-1)

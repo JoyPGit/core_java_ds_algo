@@ -1710,98 +1710,7 @@ class StringPractice {
         return res.length() == s.length()? res : "";
     }
 
-    // if freq = 1, remove
-    // else add back to pq from map
-    // "vvvlo", how to ensure v comes before l when freq of both is 1? 
-
-    // add to res and the if q is empty return ""
-    // check for size k
-    // https://leetcode.com/problems/reorganize-string/
-    class StringFreq{
-        char c; int freq;
-        StringFreq(char ch, int f){
-            this.c = ch;
-            this.freq = f;
-        }
-    }
-
-    public String reorganizeString1(String S) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        
-        for(char c : S.toCharArray()) 
-            map.put(c, map.getOrDefault(c, 0)+1);
-        
-        int k = 3;
-        
-        PriorityQueue<StringFreq> pq = new PriorityQueue<>((x,y) ->{
-            if(y.freq == x.freq) return (""+x.c).compareTo(""+y.c);
-            return y.freq - x.freq;
-        });
-        
-        for(HashMap.Entry<Character, Integer> e : map.entrySet()){
-            pq.add(new StringFreq(e.getKey(), e.getValue()));
-        }
-        
-        int len = S.length();
-        ArrayList<Character> temp = new ArrayList<>();
-        String res = "";
-        while(pq.size()!=0){
-            int cnt = Math.min(k, len);
-            System.out.println("cnt "+cnt);
-            for(int i =0; i<cnt; i++){
-                if(pq.isEmpty()) return "";
-                StringFreq curr = pq.remove();
-                res += curr.c;
-                
-                map.put(curr.c, map.get(curr.c)-1);
-                System.out.println(map);
-                if(map.get(curr.c)>0) temp.add(curr.c);
-                len--;
-                System.out.println("len "+len);
-            }
-            System.out.println("temp "+temp);
-            // repeat process of populating pq from temp
-            for(int  i =0; i<temp.size(); i++){
-                pq.add(new StringFreq(temp.get(i), map.get(temp.get(i))));
-            }
-            temp.clear();
-            
-        }
-        System.out.println("result "+res);
-        return res;
-    }
-
-    String reorganizeString2(String str, int k){
-        if(str.length() == 0 || str.length() == 1) return str;
-        HashMap<Character, Integer> map = new HashMap<>();
-
-        for(char c : str.toCharArray()){
-            map.put(c, map.getOrDefault(c, 0)+1);
-        }
-
-        PriorityQueue<StringFreq> pq = new PriorityQueue<>();
-        for(HashMap.Entry<Character, Integer> e: map.entrySet()){
-            pq.add(new StringFreq(e.getKey(), e.getValue()));
-        }
-
-        String res = "";
-        String temp = "";
-        while(pq.size()!=0){
-            for(int i =0; i<k; i++){
-                StringFreq curr = pq.remove();
-                res+=curr.c;
     
-                if(map.get(curr.c) == 1) map.remove(curr.c);
-                map.put(curr.c, map.get(curr.c) -1);
-                temp+=curr.c;
-            }
-    
-            for(char c: temp.toCharArray()) pq.add(new StringFreq(c, map.get(c)));
-            res+=temp;
-            temp = "";
-        }
-        return res;
-    }
 
     // https://leetcode.com/discuss/interview-question/558379/
     
@@ -2388,6 +2297,7 @@ class StringPractice {
         return res;
     }
 
+    
     // https://leetcode.com/problems/add-binary/
     // https://leetcode.com/problems/longest-duplicate-substring/
     // https://leetcode.com/problems/next-closest-time/
@@ -2467,8 +2377,9 @@ class StringPractice {
 
         // System.out.println(string.compareVersion("0.1.2", "0.01.2"));
 
-        String reorgStr = "aaabbc";
-        string.reorganizeString1(reorgStr);
+        String reorgStr = "aabbc";
+        // string.reorganizeString1(reorgStr);
+        // string.reorganizeString2(reorgStr);
         String balanceLR = "RLLLLRRRLR";
         // string.balancedStringSplit(balanceLR);
 
@@ -2477,6 +2388,9 @@ class StringPractice {
 
         char[] toCompress = new char[]{'a','a','b','b','c','c','c'};
         // string.compress(toCompress);
+
+        char a = 'a'; char b = 'b';
+        System.out.println(a-b);
 
     }
 }
