@@ -1097,11 +1097,6 @@ class StringPractice {
         return count;
     }
 
-    /**
-     * longest palindrome 1 create a upper triangular dp and keep a flag for max
-     * length 2 using Manacher's concept of EXPANDING AROUND MIDDLE
-     * https://www.youtube.com/watch?v=y2BD4MJqV20&t=768s
-     */
 
     /**
      * technique 1 using upper triangular matrix

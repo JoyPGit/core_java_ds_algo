@@ -950,6 +950,9 @@ class Greedy{
     // https://leetcode.com/discuss/interview-question/350233/Google-or-Summer-Intern-OA-2019-or-Decreasing-Subsequences
 
 
+    //https://www.geeksforgeeks.org/ways-to-arrange-balls-such-that-
+    // adjacent-balls-are-of-different-types/
+
     /** SWAP BASED QUES 
      * https://www.geeksforgeeks.org/minimum-number-of-swaps-required-for-arranging-pairs-adjacent-to-each-other/?ref=rp
      * https://www.techiedelight.com/find-minimum-number-possible-k-swaps/

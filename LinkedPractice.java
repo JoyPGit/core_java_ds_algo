@@ -785,10 +785,12 @@ class LinkedPractice {
     
 
     /**
-     * reverse both lists add and then reverse the final WHILE ADDING (SUM+CARRY)%10
-     * IS NODE VALUE AND CARRY = SUM+CARRY/10 1 add a check for a!= null, b!=null
-     * and carry!=0 2 create a head d = c; c = listnode(0), D WILL BE PASSED FOR
-     * REVERSAL 3 while reversing the final list, pass head.next as the first is 0 4
+     * reverse both lists add and then reverse the final 
+     * WHILE ADDING (SUM+CARRY)%10 IS NODE VALUE 
+     * AND CARRY = SUM+CARRY/10 
+     * 1 add a check for a!= null, b!=null and carry!=0 
+     * 2 create a head d = c; c = listnode(0), D WILL BE PASSED FOR REVERSAL 
+     * 3 while reversing the final list, pass head.next as the first is 0
      */
     // https://leetcode.com/problems/add-two-numbers-ii/submissions/
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -811,7 +813,6 @@ class LinkedPractice {
             c.next = new ListNode((sum + carry) % 10);
             c = c.next;
             carry = (sum + carry) / 10;
-            // else carry =0;
             sum = 0;
         }
 

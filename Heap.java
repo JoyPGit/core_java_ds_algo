@@ -41,109 +41,57 @@ public class Heap {
         heapArray = new int[capacity];
         this.lastIndex = capacity - 1;
     }
+    /** 
+     * 
+     * HEAPSORT(nums)
+     * 1 BUILD-MAX-HEAP(nums)
+     * 2 for i = A:length downto 2
+     * 3 exchange A[1] with A[i]
+     * 4 A.heap-size = A.heap-size-1
+     * 5 MAX-HEAPIFY(A,1)
 
-    void addToheap(int i) {// insert new key at end
-        this.heapArray[lastIndex] = i;
-        // System.out.println("1");
-        heapify(lastIndex);
-        printHeap();
-        System.out.println("-------------");
-    }
+     * The HEAPSORT procedure takes time O.n lg n/, 
+     * since the call to BUILD-MAXHEAP takes time O.n/ 
+     * and each of the n  1 calls to MAX-HEAPIFY takes time O.lg n/.
+    */
 
-    void heapify(int childIndex) {
-        // for(int)
-        if (this.heapArray[lastIndex] > this.heapArray[((lastIndex + 1) / 2) - 1]) {
-            System.out.println("size " + lastIndex + " " + this.heapArray[lastIndex]);
-            System.out
-                    .println("size/2 " + (((lastIndex + 1) / 2) - 1) + " " + this.heapArray[((lastIndex + 1) / 2) - 1]);
-            int temp = this.heapArray[lastIndex];
-            this.heapArray[lastIndex] = this.heapArray[((lastIndex + 1) / 2) - 1];
-            this.heapArray[((lastIndex + 1) / 2) - 1] = temp;
+    // Each call to HEAPIFY costs O(lg n), and HEAPSORT makes O(n)
+    // such calls. Thus, the running time is O(nlg n).
+    void heapSort(int[] nums){
+        int n = nums.length;
+        for(int i = n/2 -1; i>=0; i--){
+            heapify(nums, i);
         }
-
-        if (childIndex / 2 == 0) {
-            return;
-        } else
-            heapify(childIndex / 2);
     }
+    
+    // add left and right index check individually
+    void heapify(int[] nums, int parentIndex){
+        int min = parentIndex;
+        int left = parentIndex*2;
+        int right = parentIndex*2 +1;
+        
+        System.out.println(parentIndex*2);
+        System.out.println(parentIndex*2+1);
+        if(left < nums.length && nums[parentIndex]>nums[left]) min = left;
+        if(right < nums.length && nums[min]>nums[right]) min = right;
+        
+        if(min != parentIndex){
+            swap(nums, parentIndex, min);
+            // heapify(nums, min);
+        }
+    }
+    
+    void swap(int[] arr, int a, int b){
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+
 
     void printHeap() {
         for (int i = 0; i < heapArray.length; i++) {
             System.out.println(this.heapArray[i]);
         }
-    }
-
-    void printMatrix(int[][] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[0].length; j++) {
-                if (i == arr.length - 1 && j == arr[0].length - 1) {
-                    System.out.println(arr[i] + ";");
-                    System.out.println();
-                } else
-                    System.out.print(arr[i][j] + ", ");
-            }
-            System.out.println();
-        }
-    }
-
-    void print1DMatrix(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if (i == arr.length - 1) {
-                System.out.println(arr[i] + ";");
-                System.out.println();
-            } else
-                System.out.print(arr[i] + ", ");
-        }
-    }
-
-    void maxHeapify(int nodeIndex) {
-        // if(heapArray[nodeIndex] != null){
-        if (nodeIndex < heapArray.length) {
-            int leftChild = -1;
-            int rightChild = -1;
-            // for(int i = (heapArray.length)/2-1; i >0; i--){
-            // System.out.println("heapArray.length/2-1 "+ (heapArray.length/2-1));
-            System.out.println("heapArray[nodeIndex] " + heapArray[nodeIndex]);
-            if (nodeIndex * 2 + 1 < heapArray.length) {
-                leftChild = nodeIndex * 2 + 1;
-            }
-            if (nodeIndex * 2 + 1 < heapArray.length) {
-                rightChild = nodeIndex * 2 + 2;
-            }
-
-            int largest;
-            if (leftChild > 0 && rightChild > 0) {
-                System.out.println("leftchild " + leftChild + "  " + heapArray[leftChild]);
-                System.out.println("rightchild " + rightChild + "  " + heapArray[rightChild]);
-
-                if (heapArray[nodeIndex] < heapArray[leftChild]) {
-                    largest = leftChild;
-                } else
-                    largest = nodeIndex;
-                if (heapArray[largest] < heapArray[rightChild]) {
-                    largest = rightChild;
-                }
-                System.out.println("heapArray[largest] " + heapArray[largest]);
-                if (largest != nodeIndex) {
-                    System.out.println("largest " + largest);
-                    System.out.println("nodeIndex " + nodeIndex);
-                    int temp = heapArray[nodeIndex];
-                    heapArray[nodeIndex] = heapArray[largest];
-                    heapArray[largest] = temp;
-
-                    System.out.println("swapped " + heapArray[nodeIndex] + "   " + heapArray[largest]);
-
-                    maxHeapify(largest);
-
-                } else {
-                    System.out.println("no swap");
-                }
-            }
-
-            // }
-        } else
-            return;
-
     }
 
     /**
@@ -175,39 +123,10 @@ public class Heap {
         heapArray[lastIndexDelete] = 0;
 
         printHeap();
-        heapifySinglePath(0);
+        // heapifySinglePath(0);
     }
 
-    void heapifySinglePath(int index) {
-        /** Always the heapify FLOATS DOWN */
-        System.out.println("index " + index);
-        largestSingle = index;
-        if (index < heapArray.length) {
-
-            if (((2 * index) + 1) < heapArray.length) {
-                System.out.println("2*index+1 " + (2 * index) + 1);
-                if (heapArray[largestSingle] < heapArray[(2 * index) + 1]) {
-                    largestSingle = (2 * index) + 1;
-                }
-            }
-
-            if (((2 * index) + 2) < heapArray.length) {
-                System.out.println("2*index+2 " + (2 * index) + 2);
-                if (heapArray[(2 * index) + 2] > heapArray[largestSingle]) {
-                    largestSingle = 2 * index + 2;
-                }
-            }
-
-            if (largestSingle != index) {
-                int temp = heapArray[index];
-                heapArray[index] = heapArray[largestSingle];
-                heapArray[largestSingle] = temp;
-                System.out.println("swapped " + heapArray[index] + "  " + heapArray[largestSingle]);
-                heapifySinglePath(largestSingle);
-            }
-
-        }
-    }
+    
 
     /*
      * * provides O(log(n)) time for the enqueuing and dequeuing methods ({@code
@@ -458,7 +377,7 @@ public class Heap {
     }
 
     /** 
-     * MAX HEAP OF SMALLER ELS HOLDS THE MEDIAN IF ODD NO OF ELS
+     * MAX HEAP OF SMALLER ELs HOLDS THE MEDIAN IF ODD NO OF ELs
      * POINTS :
      * 1 MAX HEAP SMALLER ELES, MIN HEAP OF LARGER ELS,
      * SO THE CLOSEST ELS ARE AT THE TOP

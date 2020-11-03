@@ -34,7 +34,7 @@ public class Sorting {
         }
     }
 
-     //////////////////////////////////////////////
+    //////////////////////////////////////////////
      void heapSort25Apr(int[] arr) {
         int n = arr.length;
         int mid = arr.length / 2 - 1;
