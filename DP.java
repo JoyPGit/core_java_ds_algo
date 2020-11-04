@@ -13,7 +13,7 @@ public class DP {
      *           substr       subseq
      * longest.  i,j+1, 0    i,j+1, max
      * palin.    1,0         i,j+2, max 
-     *           match,n     match,no
+     *           match,no     match,no
      * 
      * 
      * stairs, uniqe paths, train ticket, house robber
@@ -989,7 +989,8 @@ public class DP {
             for(int j =1; j<=amount; j++){
                 if(coins[i-1] > j) dp[i][j] = dp[i-1][j];
                 else{
-                    dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i-1]]+1);//
+                    // 1 + dp[][]
+                    dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i-1]]+1);
                 }
             }
         }
@@ -1168,7 +1169,7 @@ public class DP {
     boolean subsetSumDP(int[] set, int sum){
         // dp[0][0] =true;
         int n = set.length;
-        boolean[][] dp = new boolean[n][sum+1];
+        boolean[][] dp = new boolean[n+1][sum+1];
 
         for(int i=1; i<n; i++){
             if(i == set[0]) dp[0][i] = true;
@@ -2263,10 +2264,8 @@ public class DP {
 
         int[] rodValArr = {1, 5, 8, 9, 10, 17, 17, 20}; 
         int[] rodLengthArr = {1, 2, 3, 4, 5, 6, 7, 8};  
-        System.out.println("rod cutting 2d dp "+dp.rodCutting2dDP(rodValArr, rodLengthArr, 8));
-        System.out.println(dp.rodCutting(rodValArr, rodValArr.length));
-        System.out.println("painter style rod cutting "+
-            dp.rodCuttingIncludeExcludeFrom0(rodValArr, rodLengthArr, 8, 0));
+        // System.out.println("rod cutting 2d dp "+dp.rodCutting2dDP(rodValArr, rodLengthArr, 8));
+        // System.out.println(dp.rodCutting(rodValArr, rodValArr.length));
 
         // System.out.println("the max value of rod cutting is "+dp.rodCuttingDP(rodArr));
         // System.out.println(dp.rodCuttingIncludeExclude(rodValArr, rodLengthArr, 
@@ -2316,9 +2315,9 @@ public class DP {
         // dp.matrixBlockSum(blockSum, 1);
 
         int subSetDP[] = {1,5,5,11};//{3, 34, 16, 12, 5, 2}; 
-        int subsetSum = 36;
-        // dp.subsetSum(set, sum, 0);
-        // dp.subsetSumDP(subSetDP, subsetSum);
+        int subsetSum = 16;
+        dp.subsetSum(subSetDP, sum, 0);
+        dp.subsetSumDP(subSetDP, subsetSum);
         // System.out.println("can be partitioned :"+ dp.canPartition(subSetDP));
         // dp.canPartition2(subSetDP);
 

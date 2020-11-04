@@ -824,23 +824,6 @@ class Array {
         return count;
     }
 
-    // Microsoft
-    // aaaa, aabbcc
-    /** 
-     * just compare adjacent chars and take min cost
-     */
-    // https://leetcode.com/discuss/interview-question/558379/
-    public int removeCharCost(String S, int[] C){
-        // write your code here
-        int cost = 0;
-        for(int i = 1; i<S.length(); i++){
-            if(S.charAt(i) == S.charAt(i-1)) {
-                cost+= Math.min(C[i], C[i-1]);
-            }
-        }
-        System.out.println("char removal cost "+cost);
-        return cost;
-    }
 
     // https://leetcode.com/problems/next-permutation/
 
@@ -874,8 +857,8 @@ class Array {
         // int[] zeroArr = { 1, 9, 8, 4, 2, 7, 0, 0 };
 
         int[] zeroOneArr = { 0, 1, 1, 1, 1, 1 };
-        test.sort01(zeroOneArr);
-        utilCustom.Utility.print1DMatrix(zeroOneArr);
+        // test.sort01(zeroOneArr);
+        // utilCustom.Utility.print1DMatrix(zeroOneArr);
         // test.moveAllZeroesToEnd(zeroArr);
         // test.quickSortArray24Apr(zeroArr, 0, zeroArr.length-1);
         // test.print1DMatrix(zeroArr);
@@ -934,8 +917,6 @@ class Array {
 
         // String S = "aaaa"; int[] C = new int[]{3,4,5,6}; // 12
         // String S = "ababa"; int[] C = new int[]{10,5,10,5,10}; //0
-        String S = "aabbcc"; int[] C = new int[]{1,2,1,2,1,2}; // 3
-        test.removeCharCost(S, C);
 
     }
 

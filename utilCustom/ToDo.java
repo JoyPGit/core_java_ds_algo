@@ -12,6 +12,8 @@ public class ToDo {
      * painter partition, word dict, min cut palindrome partitioning
      * linked list, 3 sum
      * longest zigzag path
+     * search in matrix
+     *
      * remove zero sum consecutive nodes
      * merge sort, heap sort, sliding window notes
      * itinerary
@@ -26,7 +28,6 @@ public class ToDo {
      * RECURSION TO DP(INC EXC)
      * DP
      * SUM SUBARRAY MINS
-     * search in matrix
      * wiggle 
      * 
      * TRIE

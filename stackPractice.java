@@ -189,6 +189,7 @@ public class StackPractice {
      *
      * 3 AREA IS (RIGHT - LEFT) * HEIGHT
      *  
+     * imp fill left with -1 and right with n
     */
     // https://www.youtube.com/watch?v=0do2734xhnU
     // {2,1,5,6,2,3};
@@ -200,7 +201,7 @@ public class StackPractice {
         
         // for end els fill n and -1
         int[] smallerRightIndex = new int[n];
-        Arrays.fill(smallerRightIndex, n);
+        Arrays.fill(smallerRightIndex, n); //
         int[] smallerLeftIndex = new int[n];
         Arrays.fill(smallerLeftIndex, -1);
         
@@ -367,18 +368,38 @@ public class StackPractice {
         return res;
     }
 
-    //TRICK IS TO STORE INDEXES DIRECTLY
-    public int[] dailyTemperatures(int[] temperatures) {
-        Stack<Integer> stack = new Stack<>();
-        int[] ret = new int[temperatures.length];
-        for(int i = 0; i < temperatures.length; i++) {
-            while(!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
-                int idx = stack.pop();
-                ret[idx] = i - idx;
-            }
-            stack.push(i);
+    // Microsoft
+    /**
+     * USE STACK TO COMPARE THE INCOMING EL
+     * IF SAME COMPAE COST
+     * ELSE ADD TO STACK
+     */
+    class Cost{
+        char ch; int cost;
+        Cost(char c, int i){
+            this.ch = c; this.cost = i;
         }
-        return ret;
+    }
+    public int removeCharCostStack(String S, int[] C){
+        int cost = 0;
+
+        Deque<Cost> q = new LinkedList<>();
+        q.addLast(new Cost(S.charAt(0), C[0]));
+
+        for(int i = 1; i<S.length(); i++){
+            // if same cost will increase
+            if(S.charAt(i) == q.getLast().ch) {
+                // if cost at peek is lesser than curr, pop
+                if(q.getLast().cost < C[i]){
+                    cost+= q.removeLast().cost;
+                    q.addLast(new Cost(S.charAt(i), C[i]));
+                }
+                // else don't add
+                else cost+=C[i];
+            }
+            else q.addLast(new Cost(S.charAt(i), C[i]));
+        }
+        return cost;
     }
 
 
@@ -413,13 +434,14 @@ public class StackPractice {
     }
 
     /**  
-     * ADD (EL) D(EL)
+     * ADD DEL REM
      * OPEN ADD
+     * Closed D
      * E EMPTY
      * L LEFT UPDATE(j+1)
-     * D DELETE
-     * E EMPTY 
-     * L MAX USING LEFT
+     * R REMOVE
+     * E EMPTY, USE LEFT 
+     * M UPDATE MAX
      * 
      * left= 0; max = 0; 
      * if ( add index                               ADD
@@ -484,9 +506,9 @@ public class StackPractice {
     
 
     void longestCorrectBracketSubsequence(String s){
-        char[] charArray = s.toCharArray();
         int counter = 0; int maxCounter = 0; int max = 0;
-        for(char c:charArray){
+
+        for(char c:s.toCharArray()){
             if(c=='('){
                 counter++;
             } else{
@@ -673,6 +695,7 @@ public class StackPractice {
         }
     }
 
+
     public static void main(String[] args) {
         StackPractice stack = new StackPractice();
 
@@ -720,6 +743,9 @@ public class StackPractice {
         // System.out.println(stackToReverse);
         // stack.reverseStackUsingRecursion(stackToReverse);
         // System.out.println(stackToReverse);
+
+        String S = "aaaabbcc"; int[] C = new int[]{1,2,1,3,1,2,1,2}; // 3
+        stack.removeCharCostStack(S, C);
     }
 
 }
