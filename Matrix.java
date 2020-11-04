@@ -26,12 +26,12 @@ class Matrix {
      *  int m = graph.length; int n = graph[0].length;
      *  int[][] visited = new int[m][n];
      * 
-     *  for(int i =0; i<n; i++){
+     *   for(int i =0; i<n; i++){
      *      for(int j = 0; j<m; j++){
      *          if(visited[i][j] == 1) continue;
      *          dfsUtil(graph, i, j, visited);
      *      }
-     *  }
+     *   }
      * }
      *    
      * void dfsUtil(int[][] arr, int row, int col, int[][] visited){
@@ -195,7 +195,7 @@ class Matrix {
      * MATRIX -> 1 AND 2
      * GRAPH -> 1 AND 4
      * 
-     * 3 MARKING ASVISITED SAME IN BOTH
+     * 3 MARKING AS VISITED SAME IN BOTH
      */
     
     /** 
@@ -479,7 +479,7 @@ class Matrix {
     }
 
 
-    /////////////////////////////////////////// WITH DP
+    /////////////////////////////////// WITH DP
     /** 
      * POINTS :
      * 1 DP IN MATRIX
@@ -643,6 +643,7 @@ class Matrix {
         return false;
     }
 
+
     ///////////////////////////////////// DIST FROM GATES
 
     // WALLS AND GATES
@@ -705,7 +706,7 @@ class Matrix {
 
     /**
      * DP CAN'T BE APPLIED HERE AS WE RUN INTO A COMPARISON OF 
-     * INF WITH INF WIHICH RUNS INTO AN INF LOOP
+     * INF WITH INF WHICH RUNS INTO AN INF LOOP
      * DP WORKS WITH GOLD MINE AS INDEX VALUES ARE INCREASING, 
      * IF WE USE SAME ADJACENT VALUES IT WILL RUN INTO INF LOOP
      * 
@@ -734,7 +735,7 @@ class Matrix {
 
     void dfsWall(int[][] matrix, int r, int c, int prev){
         if(isSafeWall(matrix, r, c, prev)){
-            // same as marking viisted after isSafe in dfs
+            // same as marking visited after isSafe in dfs
             // assign if not 0, shorter dist as check's been done in isSafe
             if(matrix[r][c]!=0) matrix[r][c] = prev;
 
@@ -755,51 +756,76 @@ class Matrix {
 
     // https://leetcode.com/problems/shortest-distance-from-all-buildings/
     
-    //////////////////////////////////// PATHS WITH OBSTACLES
-    int countPath;
-    // https://leetcode.com/problems/unique-paths-ii/
+    
+    //////////////////////////////// UNIQUE PATHS
+    /**
+     * the trick is to convert a recursive relation to a dp relation 
+     * dfs(r,c) = dfs(r+1,c)+dfs(r,c+1);
+     * 
+     * but the relation here for dp is built in bottom up manner
+     */
+    // https://leetcode.com/problems/unique-paths/
+    int uniquePaths(int[][] arr) {
+        int m = arr.length; int n = arr[0].length;
+        int[][] dp = new int[m][n];
+        
+        for(int i = 0; i<m; i++){
+            for(int j =0; j<n; j++){
+                // top row and left col
+                if(i==0 || j==0) dp[i][j] = 1;
+                else dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+
+
+    /** 
+     * SAME AS ABOVE UNIQUE PATHS
+     * 1 ONLY DIFF IS WHEN FILLING FIRST ROW AND COL
+     * 2 AND WHEN 1 IS SEEN MARK dp[i][j] = 0
+     * 3 CHECK dp[0][0] FOR OBSTACLES TOO
+     * 
+    */
+    // [[1]]
+    // https://leetcode.com/problems/unique-paths-ii/submissions/
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
         int m = obstacleGrid.length;
         int n = obstacleGrid[0].length;
         
-        if(m==0 || n==0) return 1;
-        if(m==1 && n==1) {
-            if(obstacleGrid[m-1][n-1] == 0) return 1;
-            if(obstacleGrid[m-1][n-1] == 1) return 0;
-        }
-        if(obstacleGrid[0][0] == 1) return 0; //1
+        // boundary
+        if(m==0 || n==0) return 0;
         int[][] dp = new int[m][n];
-        dp[0][0] = 1; //2
         
-        for(int i = 1; i<m; i++){
-            if(obstacleGrid[i][0] == 1) dp[i][0] =0; //3
-            else dp[i][0] = dp[i-1][0]; //4
-        }
+        // 
+        dp[0][0] = obstacleGrid[0][0] == 1?0:1;
         
+        //row
         for(int i =1; i<n; i++){
-            if(obstacleGrid[0][i] == 1) dp[0][i] =0;
+            if(obstacleGrid[0][i] == 1) dp[0][i] = 0;
             else dp[0][i] = dp[0][i-1];
         }
-        
+
+        // col
         for(int i =1; i<m; i++){
-            for(int j=1; j<n; j++){
-                if(obstacleGrid[i][j] == 1) dp[i][j] = 0; //5
-                else {
-                    // if(i==0 || j==0) dp[i][j] =1;
-                    // else 
-                        dp[i][j] = dp[i-1][j] + dp[i][j-1];
-                }
+            if(obstacleGrid[i][0] == 1) dp[i][0] = 0;
+            else dp[i][0] = dp[i-1][0];
+        }
+        
+        for(int i = 1; i<m; i++){
+            for(int j =1; j<n; j++){
+                if(obstacleGrid[i][j] == 1) dp[i][j] = 0;
+                else dp[i][j] = dp[i-1][j] + dp[i][j-1];
             }
         }
-        // System.out.println(dp[1][2]);
+        
         return dp[m-1][n-1];
     }
-    // https://leetcode.com/problems/unique-paths-iii/
-
 
 
     //////////////////////////////////////// BFS
-
+    // q size and global counter
     /** 
      * DIFFERENCE B/W BFS IN A MATRIX AND A GRAPH :
      * 
@@ -864,7 +890,7 @@ class Matrix {
         return false;
     }
 
-    // BFS
+    // BFS (q size and global counter)
     // use custom class
     // can store distance in class or visited array
     // but we have to update the matrix itself, so custom class can hold dist
@@ -1011,6 +1037,7 @@ class Matrix {
     // https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/
 
     // https://leetcode.com/problems/shortest-distance-from-all-buildings/
+
 
     ///////////////////////////////// ROTATION
     void rotateMatrix(int m, int n, int[][] arr) {
@@ -1424,7 +1451,63 @@ class Matrix {
         return res;
     }
 
-    ///////////////////////////////// WORD SEARCH
+
+    //////////////////////////////// BACKTRACKING
+    /** 
+     * same as dfs, minor changes
+     * 
+     * f(){
+     *  if(isSafe()){
+     *      mark visited;
+     *      if(f()) return true;
+     *      unmark;
+     *  }
+     *  return false;
+     * }
+     * 
+     * WE RETURN FALSE WHENEVER NOT SAFE
+     * 
+    */
+    // 6 june
+    // multiple jumps allowed
+    // https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
+    boolean solveNJumpsRatMaze(int[][] maze) {
+        int n = maze.length;
+        int[][] visited = new int[n][n];
+        
+        System.out.println("in n rat multiple jumps");
+        if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
+
+        utilCustom.Utility.printMatrix(visited);
+        System.out.println("sol found");
+        return true;
+    }
+
+    boolean solveNRatMazeUtil(int[][] maze, int[][] visited, int row, int col) {
+        if (isNSafeRatMaze(maze, row, col)) {
+            if(row == maze.length-1 && col == maze[0].length-1) return true;
+
+            // same as graph
+            visited[row][col] = 1;
+
+            for (int i = 1; i <= maze[row][col]; i++) {
+                if (solveNRatMazeUtil(maze, visited, row + i, col)) return true;
+                if (solveNRatMazeUtil(maze, visited, row, col + i)) return true;
+            }
+
+            visited[row][col] = 0;// backtrack
+            return false;
+        }
+        return false;
+    }
+
+    boolean isNSafeRatMaze(int[][] grid, int rowIndex, int colIndex) {
+        if(rowIndex >= 0 && rowIndex < grid.length 
+        && colIndex >= 0 && colIndex < grid[0].length
+        && grid[rowIndex][colIndex] != 0) return true;
+        return false;
+    }
+
     /**
      * POINTS : 
      * 1 start a dfs whenever the ch[i][j] matches the starting char of string
@@ -1463,9 +1546,10 @@ class Matrix {
             char temp = word.charAt(index);
             board[row][col] = ' '; // 2
             boolean found = dfs(board, row+1, col, word, index+1) // 3
-            ||dfs(board, row-1, col, word, index+1)
-            ||dfs(board, row, col+1, word, index+1)
-            ||dfs(board, row, col-1, word, index+1);
+            || dfs(board, row-1, col, word, index+1)
+            || dfs(board, row, col+1, word, index+1)
+            || dfs(board, row, col-1, word, index+1);
+
             if(found) return true; // 4
             board[row][col] = temp; // 5
         }

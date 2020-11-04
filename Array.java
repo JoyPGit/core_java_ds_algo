@@ -915,9 +915,6 @@ class Array {
         int[] equalLeftAndRight = {2,4,6,6,4,2,10};
         // test.equalLeftAndRightSum(equalLeftAndRight);
 
-        // String S = "aaaa"; int[] C = new int[]{3,4,5,6}; // 12
-        // String S = "ababa"; int[] C = new int[]{10,5,10,5,10}; //0
-
     }
 
 }

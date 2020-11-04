@@ -194,8 +194,8 @@ public class Backtrack {
         }
     } 
 
-    // Permutations II (contains duplicates) : return all possible unique permutations.
-    // https://leetcode.com/problems/permutations-ii/
+    // Permutations II (contains duplicates) : 
+    // return all possible unique permutations.
     /**  
      * 1 if(used[i] || (i>0 && nums[i] == nums[i-1]) && !used[i - 1]) continue;
      * https://ibb.co/Sw0fgk5
@@ -212,6 +212,7 @@ public class Backtrack {
      * 
      * 3 similar to subsets, extra operation of setting used[i] as true and false in the end
      */
+    // https://leetcode.com/problems/permutations-ii/
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
@@ -325,6 +326,8 @@ public class Backtrack {
     } 
 
 
+    /////////////////// PARTITION
+
     // Palindrome Partitioning : 
     /**
      * in dp palindrome partition we have to find the no of splits
@@ -357,6 +360,7 @@ public class Backtrack {
           }
        }
     }
+
 
     /** 
      * DIFF w.r.t ABOVE IS WE DON'T PASS  THE INDEX, RATHER THE
@@ -486,8 +490,6 @@ public class Backtrack {
         return false;
     }
 
-    
-
 
     // https://leetcode.com/problems/letter-case-permutation/
 
@@ -613,7 +615,7 @@ public class Backtrack {
                             else board[i][j] = '.';
                         }
                     }
-                    //for loop over 
+                    // for loop over 
                     return false;
                 }
             }
@@ -670,6 +672,56 @@ public class Backtrack {
         return true;
     }
     
+    /////////////////////// WORD LADDER, SEARCH
+    /** 
+	 * POINTS : 
+	 * 1 HERE BFS IS USED, BUT FOR ALL STRINGS IN THE QUEUE AT A TIME, 
+	 * THE NEXT STRING IS FOUND AND STORED. SO MIN DIST CAN BE FOUND
+	 * WHENEVER THE END WORD COMES AS WE INCREMENTING BY UNIT DIST FOR ALL 
+	 * TRANSFORMATIONS.
+	 * 
+	 * 2 for(char c ='a'; c<='z'; c++) curr[i] == c
+	 * create a new string and check if it exist in the set
+	 * 
+	 * 3 CHANGE BACK THE STRING char holder = curr[i]; curr[i] = holder;
+	 * 
+	 * 4 ONCE AN ITERATION IS DONE, distance++;
+	 * 
+	 */	
+	// https://leetcode.com/problems/word-ladder
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        HashSet<String> set = new HashSet<>(wordList);
+        if(!set.contains(endWord)) return 0;
+        int distance = 1;
+        
+        Deque<String> q = new LinkedList<>();
+        q.addLast(beginWord);
+        while(q.size()!=0){
+            int size = q.size();            
+            // all words in the same go, helps maintain smallest dist
+            for(int k =0; k<size; k++){//1
+                char[] curr = (q.removeFirst()).toCharArray();
+                
+                for(int i =0; i<curr.length; i++){
+                    char holder = curr[i];//2
+                    
+                    for(char c ='a'; c<='z'; c++){
+                        if(c == holder) continue;//3
+                        curr[i] = c;
+                        String after = String.valueOf(curr);
+                        if(after.equals(endWord)) return distance+1;
+                        if(set.contains(after)) {
+                            // System.out.print(after+", ");
+                            q.addLast(after); set.remove(after);//4
+                        }
+                    }
+                    curr[i] = holder;//5
+                }   
+            }
+            distance++;//6
+        }
+        return 0;
+	}
 
     /**
      * POINTS : 
@@ -774,6 +826,9 @@ public class Backtrack {
         }
     }
 
+
+    ////////////////////// PATTERN ()
+
     // https://www.geeksforgeeks.org/generate-all-binary-strings-from-given-pattern/
     void generateBinPattern(String str) {
         char[] ch = str.toCharArray();
@@ -786,20 +841,16 @@ public class Backtrack {
 
     void generateBinPatternUtil(char[] ch, int k, int index) {
         if (index == k) {
-            // System.out.println(index+ " equals k");
             System.out.println("ch array " + String.valueOf(ch));
         } else {
             if (ch[index] == '?') {
                 ch[index] = '0';
-                // System.out.println("ch array if 0 " + String.valueOf(ch));
                 generateBinPatternUtil(ch, k, index + 1);
 
                 ch[index] = '1';
-                // System.out.println("ch array if 1 " + String.valueOf(ch));
                 generateBinPatternUtil(ch, k, index + 1);
-                ch[index] = '?';
+                ch[index] = '?';// backtrack
             } else {
-                // System.out.println("ch array else " + String.valueOf(ch));
                 generateBinPatternUtil(ch, k, index + 1);
             }
         }
@@ -947,7 +998,6 @@ public class Backtrack {
 
                 color[vertex] = 0;
             }
-
         }
     }
 
@@ -959,54 +1009,47 @@ public class Backtrack {
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////
     // 6 june
     // multiple jumps allowed
+    // https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
     boolean solveNJumpsRatMaze(int[][] maze) {
         int n = maze.length;
-        int[][] sol = new int[n][n];
+        int[][] visited = new int[n][n];
         
         System.out.println("in n rat multiple jumps");
-        if (!solveNRatMazeUtil(maze, sol, 0, 0))
-            return false;
-        utilCustom.Utility.printMatrix(sol);
+        if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
+
+        utilCustom.Utility.printMatrix(visited);
         System.out.println("sol found");
         return true;
     }
 
-    boolean solveNRatMazeUtil(int[][] maze, int[][] sol, int row, int col) {
+    boolean solveNRatMazeUtil(int[][] maze, int[][] visited, int row, int col) {
         if (isNSafeRatMaze(maze, row, col)) {
-            sol[row][col] = 1;
-            System.out.println("row " + row + ", col " + col + 
-            " maze index value " + maze[row][col]);
+            if(row == maze.length-1 && col == maze[0].length-1) return true;
 
-            if (row == maze.length - 1 && col == maze[0].length - 1)
-                return true;
+            // same as graph
+            visited[row][col] = 1;
 
             for (int i = 1; i <= maze[row][col]; i++) {
-                if (solveNRatMazeUtil(maze, sol, row + i, col))
-                    return true;
-                if (solveNRatMazeUtil(maze, sol, row, col + i))
-                    return true;
+                if (solveNRatMazeUtil(maze, visited, row + i, col)) return true;
+                if (solveNRatMazeUtil(maze, visited, row, col + i)) return true;
             }
 
-            sol[row][col] = 0;// backtrack
-
+            visited[row][col] = 0;// backtrack
             return false;
         }
         return false;
     }
 
     boolean isNSafeRatMaze(int[][] grid, int rowIndex, int colIndex) {
-        System.out.println("rowIndex " + rowIndex + ", colIndex " + colIndex);
-        return (rowIndex >= 0 && colIndex >= 0 
-        && rowIndex < grid.length && colIndex < grid[0].length
-        && grid[rowIndex][colIndex] != 0);
+        if(rowIndex >= 0 && rowIndex < grid.length 
+        && colIndex >= 0 && colIndex < grid[0].length
+        && grid[rowIndex][colIndex] != 0) return true;
+        return false;
     }
-    
-
    
-    ///////////////UNIQUE -> USE HASHMAP
+    /////////////// UNIQUE -> USE HASHMAP
     /**
      * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
      * use BACKTRACKING FORMAT 
