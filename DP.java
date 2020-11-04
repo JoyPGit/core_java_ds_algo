@@ -3,7 +3,18 @@ import utilCustom.*;
 
 public class DP {
 
-    /** 
+    /**
+     * 
+     * match : 
+     * substr maxLen, subseq, +1, +2 
+     * else : 
+     * substr 0,      subseq Math.max 
+     * 
+     *           substr       subseq
+     * longest.  i,j+1, 0    i,j+1, max
+     * palin.    1,0         i,j+2, max 
+     *           match,n     match,no
+     * 
      * 
      * stairs, uniqe paths, train ticket, house robber
      * knapsack, subset, coin change,
@@ -286,7 +297,7 @@ public class DP {
         }
         return dp[n];
     }
-    
+
 
     // IMP
     //https://leetcode.com/problems/minimum-cost-for-tickets/
@@ -1572,7 +1583,7 @@ public class DP {
     }
 
     
-    // https://www.youtube.com/watch?v=NnD96abizww
+    // https://www.youtube.com/watch?v=BysNXJHzCEs&t=4s
     int longestCommonSubstring(String str1, String str2){
         int m = str1.length(); int n = str2.length();
         int[][] dp = new int[m][n];
@@ -1581,7 +1592,7 @@ public class DP {
 
         for(int i =0; i<m; i++){
             for(int j = 0; j<n; j++){
-                if(i==0 || j==0) dp[i][j] =0;
+                if(i==0 || j==0) dp[i][j] = 0;
                 else if(str1.charAt(i-1) == str2.charAt(j-1)){
                     dp[i][j] = dp[i][j] + 1;
                     maxLen = Math.max(maxLen, dp[i][j]);
@@ -1593,6 +1604,23 @@ public class DP {
         }
         return maxLen;
     }
+
+     
+    /** 
+     * DIFF : SUBSTRING VS SUBSEQUENCE,
+     * 
+     * match : substr dp[i][j]+1, maxLen; subseq dp[i][j]+1
+     * else : dp[][] = 0, Math.max()
+     * 
+     *           substr       subseq
+     * longest.  i,j+1, 0    i,j+1, max
+     * palin.    1,0         i,j+2, max 
+     *           match,n     match,no
+     * 
+     */
+
+     
+
     /** 
      * 
      * if curr chars match check inner string
@@ -1603,11 +1631,6 @@ public class DP {
      * } 
      *
     */
-    /** 
-     * the difference b/w longest common subsequence and substring is 
-     * in subsequence we take max of [i-1][j] or [i][j-1], but in 
-     * substring we update only when chars match, else value = 0
-     * */
     int longestCommonSubsequence(String str1, String str2) {
         
         int m = str1.length(); int n = str2.length();
@@ -1701,34 +1724,7 @@ public class DP {
     // https://leetcode.com/problems/distinct-subsequences/
 
     /////////////////////////////////// PALINDROME
-     /** 
-     * DIFF : PALINDROMIC SUBSTRING VS SUBSEQUENCE,
-     * 
-     * SUBSTRING IS CONTIGUOUS, SO INNER ELS ARE COMPARED
-     * if(dp[i+1][j-1] == 1)
-     * AND MAXLEN AND START ARE TRACKED.(COUNT LENGTH)
-     * 
-     * IN PALINDROMIC, IF MATCH THEN dp[i][j] = dp[i-1][j+1]+2,
-     * 
-     *  
-     * *********************************************************
-     * LONGEST VS PALINDROME SUBSEQUENCE
-     * IF MATCH :
-     * IN LONGEST SUBSEQ, dp[i][j] = dp[i-1][j+1]+1,
-     * PALINDROME dp[i][j] = dp[i-1][j+1]+2,
-     * 
-     * ELSE :
-     * LONGEST dp[i][j] = 0;
-     * PALINDROME dp[i][j] = Math.max
-     * 
-     * LONGEST DIFF STRINGS (m,n) and RETURN dp[m][n]
-     * PALINDROME SAME STRING and RETURN dp[0][n-1]
-     * 
-     * MATRIX VS UPPER TRIANGULAR
-     * dp[m][n] vs dp[0][n-1]
-     * 
-     * 
-     */
+    // SAME STRING, SO UPPPER TRIANGULAR
 
      /**
      * technique 1 using upper triangular matrix
@@ -1741,7 +1737,7 @@ public class DP {
      * 2 CHECK FOR l=2 AS dp[i + 1][j - 1] CAN'T HANDLE LENGTH 2
      * 
      * 3 FOR ALL OTHER LENGTHS, IF CHARS AT i AND j MATCH
-     * THEN CHECK IFCHARS AT i+1 and j-1 MATCH.
+     * THEN CHECK IF CHARS AT i+1 and j-1 MATCH.
      * 
      * 4 dp[i][j] = 1 MARKING 1 DENOTES A PALINDROMIC SUBSTRING
      * 5 MAXLEN IS USED TO KEEP TRACK OF LENGTH
@@ -1750,15 +1746,15 @@ public class DP {
      * 4 -> dp[i+1][j-1] == 1, len 1,2,..., maxlen, start
      * 
      */
+    // babcd
+    // https://leetcode.com/problems/longest-palindromic-substring/
     String longestPalindromicSubstring(String s) {
         int n = s.length();
         int start = 0;
         int maxlen = 1;
 
-        if (n == 0)
-            return "";
-        if (n == 1)
-            return s;
+        if (n == 0) return "";
+        if (n == 1) return s;
         int[][] dp = new int[n][n];
 
         for (int l=1; l<=n; l++) {
@@ -1823,6 +1819,22 @@ public class DP {
         return count;
     }
 
+     /** 
+     * DIFF : PALINDROMIC SUBSTRING VS SUBSEQUENCE,
+     * 
+     * match : substr maxLen, subseq dp[i][j]+2
+     * else : dp[][] = 0, Math.max()
+     * 
+     * in palin substr, 
+     * 1 inner els must match too dp[i+1][j-1] == 1
+     * 2 dp[i][j] =1, no dp[][]+1
+     * 
+     * 
+     *           substr       subseq
+     * longest.  i,j+1, 0    i,j+1, max
+     * palin.    1,0         i,j+2, max 
+     *           match,n     match,no
+     */
 
     /** diagonally up, comparing around middle
      * aba (0,2)-> 'a' matches 'a' then dp[0][2] = dp[1][1] + 2;
@@ -1830,8 +1842,10 @@ public class DP {
      * 1 here if match dp[i+1][j-1]+2
      * 2 else max(dp[i+1][j], dp[i][j-1])
      * 3 FOR FILLING 1 DON'T RUN LOOP, USE l==1 CHECK AND CONTINUE  
-     * 
+     *
+     * dp[i][j] = dp[i+1][j-1] +2, 
     */
+    // "bbbab", 4
     // https://leetcode.com/problems/longest-palindromic-subsequence/
     public int longestPalindromeSubseq(String s) {
         int n = s.length();
