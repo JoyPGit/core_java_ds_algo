@@ -204,11 +204,12 @@ public class Mathprob {
      * sort from index 3 till end
      * swap 7 with just larger to right
      * 
-     * Why reverse sort? 
+     * Why flip? 
      * Because we are searching for the first smaller el
      * that means all els till now are in descending order.
      * 
-     * find first smaller, sort, swap
+     * find first smaller, flip from smaller+1, 
+     * swap smaller with first larger
     */
     // https://leetcode.com/problems/next-permutation
     public void nextPermutation(int[] nums) {
@@ -224,9 +225,10 @@ public class Mathprob {
             i--;
         }
         
-        if(index == -1) reverseSort(nums, index+1, n-1);
+        // all desc, flip to smallest
+        if(index == -1) flip(nums, index+1, n-1);
         else{
-            reverseSort (nums, index+1, n-1);
+            flip (nums, index+1, n-1);
             for(i = index+1; i<n; i++){
                 if(nums[i]>nums[index]) {
                     swap(nums, index, i);
@@ -242,7 +244,7 @@ public class Mathprob {
         arr[b] = temp;
     }
     
-    void reverseSort(int[] arr, int start, int end){
+    void flip(int[] arr, int start, int end){
         while(start <= end){
             swap(arr, start++, end--);
         }
@@ -296,7 +298,6 @@ public class Mathprob {
     }
     
     // https://leetcode.com/problems/maximum-swap/
-    // https://leetcode.com/problems/next-permutation/
     // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
     // https://leetcode.com/problems/power-of-four
     

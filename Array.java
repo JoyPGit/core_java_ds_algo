@@ -464,13 +464,6 @@ class Array {
         return res;
     }
 
-
-    
-
-
-    
-   
-
     PriorityQueue<Integer> pQueue = new PriorityQueue<Integer>();
     
     void mergekSortedArrays(int[] arr1, int[] arr2, int[] arr3) {
@@ -556,54 +549,7 @@ class Array {
             nums[i] = res[i];
         }
     }
-
-    void findKthMax(int[] arr, int k) {
-        int size = arr.length;
-        buildHeap(arr, size);
-        for (int i = 0; i < k; i++) {
-            System.out.println(deleteTop(arr, size--));
-        }
-    }
-
-    void buildHeap(int[] arr, int size) {
-        for (int i = arr.length / 2 - 1; i >= 0; i--) {
-            heapify(arr, i);
-        }
-        System.out.println(" start" + arr[0]);
-        for (int i = 0; i < arr.length; i++) {
-            System.out.println(arr[i]);
-        }
-    }
-
-    void heapify(int[] arr, int i) {
-        int max = i;
-        if (2 * i + 1 < arr.length) {
-            if (arr[max] > arr[2 * i + 1])
-                max = 2 * i + 1;
-        }
-        if (2 * i + 2 < arr.length) {
-            if (arr[max] > arr[2 * i + 2])
-                max = 2 * i + 2;
-        }
-        if (max != i) {
-            swapHeap(arr, i, max);
-            heapify(arr, max);
-        }
-    }
-
-    int deleteTop(int[] arr, int size) {
-        int value = arr[0];
-        arr[0] = arr[size - 1];
-        heapify(arr, 0);
-        return value;
-    }
-
-    void swapHeap(int[] arr, int a, int b) {
-        int temp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = temp;
-    }
-
+    
 
     void sortOddAscEvenDesc(int[] arr) {
         // arr[] = {1, 2, 3, 5, 4, 7, 10}, Output : {7, 5, 3, 1, 2, 4, 10}
@@ -618,11 +564,6 @@ class Array {
 
     }
 
-    //USE HASHMAP AND PRIORITYQUEUE
-    void sortByFrequency(int[] arr) {}
-
-
-    
 
     // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree
     /** SIMILARITIES WITH QUICKSORT
@@ -666,8 +607,9 @@ class Array {
     }
 
     /**
-     * if 7,2,4 we canignore the second element if k>=2 check boundary cases 7,2,4 k
-     * = 1 1,-1 k =1 INCORECT SOLUTION, USE HEAP CHECK Heap.java
+     * if 7,2,4 we can ignore the second element 
+     * if k>=2 check boundary cases 7,2,4 
+     * k = 1 1,-1 k =1 INCORECT SOLUTION, USE HEAP CHECK Heap.java
      */
     int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
@@ -687,9 +629,10 @@ class Array {
             if (list.size() != 0) {
                 if (list.getFirst() == list.getLast()) {
                     /**
-                     * if the first element is max till now then just add the incoming element
-                     * because, had the last element been greater it would have been the last
-                     * element in the list
+                     * if the first element is max till now then just add 
+                     * the incoming element
+                     * because, had the last element been greater 
+                     * it would have been the last el in the list
                      */
                     list.add(nums[i]);
                     // res[index++] = list.getLast();
@@ -708,8 +651,6 @@ class Array {
         utilCustom.Utility.print1DMatrix(res);
         return res;
     }
-
-    
 
 
     // https://stackoverflow.com/questions/6780632/returning-an-empty-array
@@ -752,58 +693,86 @@ class Array {
         return holder;
     }
 
-    //https://leetcode.com/problems/trapping-rain-water/
-    /** technique is similar to product of elements except self
-     * TWO TRAVERSALS NEEDED;
-     * use 3 arrays
-     * 1 store previous max for each el
-     * 2 store next max for each el
-     * 3 third array stores the min of both the max of both arrays
-     * 4 use thge same array to store diff of 3rd array els and original array
-     * 5 use <= as for same height no need to update max
-     * 6 the ends are always zero
+    /** 
+     * TWO TRAVERSALS NEEDED (LEFT AND RIGHT)
+     * 
+     * use 2 arrays
+     * 1 store max till now in q
+     * 2 IF CURRL EL IS SMALLER, STORE DIFF IN ARRAY
+     * 3 IF CURR EL IS LARGER THAN PEEK, PUSH
+     * 4 DO SAME FOR RIGHT ARRAY
+     * 5 FOR RES TAKE MIN OF LEFT AND RIGHT INDEX
+     * 
      */
-    public int trapRainwater(int[] height) {
+    // https://leetcode.com/problems/trapping-rain-water
+    public int trap(int[] height) {
         int n = height.length;
-        if(n==0 || n==1) return 0;
-        int prev_max = height[0]; int next_max = height[n-1];
-        int[] prev = new int[n];
-        int[] next = new int[n];
-        int[] holder = new int[n];
+        if(n==0) return 0;
+        int[] leftMaxDiff = new int[n];
+        int[] rightMaxDiff = new int[n];
         
-        prev[0] = 0;
-        for(int i =1; i<n; i++){
-            if(height[i]<=prev_max) prev[i] = prev_max;
-            else {
-                prev_max = height[i];
-                prev[i] = 0;
-            }
-        }
-        
-        next[n-1] = 0;
-        for(int i =n-2; i>=0; i--){
-            if(height[i]<=next_max) next[i] = next_max;
-            else {
-                next_max = height[i];
-                next[i] = 0;
-            }
-        }
+        Deque<Integer> q = new LinkedList<>();
+        q.addLast(height[0]); // 1
         
         for(int i =1; i<n-1; i++){
-            holder[i] = Math.min(prev[i], next[i]);
+            // if curr is greater push; diff[index] = 0 by default
+            if(q.getLast()<height[i]) q.addLast(height[i]);
+            else leftMaxDiff[i] = q.getLast()-height[i];
         }
         
-        for(int i =1; i<n-1; i++){
-            holder[i] = (holder[i]-height[i])>0?(holder[i]-height[i]):0;
+        q.clear();
+        q.addLast(height[n-1]); // 1
+        for(int i =n-1; i>0; i--){
+            // if greater push and diff = 0;
+            if(q.getLast()<height[i]) q.addLast(height[i]);
+            else rightMaxDiff[i] = q.getLast()-height[i];
         }
         
-       int sum =0;
+        int res = 0;
         for(int i =1; i<n-1; i++){
-            sum+=holder[i];
+            res+=Math.min(leftMaxDiff[i], rightMaxDiff[i]);
         }
-          
-        return sum;
+        return res;
     }
+
+    // https://leetcode.com/problems/remove-k-digits/
+    public String removeKdigits(String num, int k) {
+        int n = num.length();
+        if(n<k) return num;
+        if(n==k) return "0"; // 10, 2
+        Deque<Character> q = new LinkedList<>();
+        q.addLast(num.charAt(0));
+        
+        for(int i =1; i<n; i++){
+            char curr = num.charAt(i);
+            // if(q.getLast()<curr){
+            //     q.addLast(curr);
+            //     continue;
+            // }
+            while (k>0 && q.size()!=0 && q.getLast()>curr) {
+                q.removeLast(); k--;
+                // System.out.println(q);
+            }
+            q.addLast(curr);
+        }
+        
+        // remaining
+        while(k>0 && q.size()!=0) {
+            q.removeLast(); // 10
+            k--;
+        }
+        // if(q.size() == 1) return ""+q.getFirst(); // 10, 1
+        while(q.size()!=0){
+            if(q.getFirst() == '0') q.removeFirst();
+            else break;
+        }
+        
+        // remove leading zeroes
+        String res = "";
+        while(q.size()!=0) res+=q.removeFirst();
+        return res.length()==0?"0":res;
+    }
+
 
     // Hashing, Prefix Sum
     // https://leetcode.com/problems/subarray-sum-equals-k

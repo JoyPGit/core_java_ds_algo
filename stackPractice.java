@@ -3,7 +3,7 @@ import java.util.*;
 public class StackPractice {
     
     /** 
-     * 
+     * k-digits, sliding window max
      * LARGEST RECT, VALID PARENTHESIS
      * REVERSE USING RECURSION, STOCK SPAN
      * DECODE STRING, SUM OF SUBARRAY MINS
@@ -62,11 +62,45 @@ public class StackPractice {
         while(list.size()!=0){
             res+=list.removeFirst();
         }
+
         System.out.println(res);
-        
-        return res;
-            
+        return res;    
     }
+
+    // Microsoft
+    /**
+     * USE STACK TO COMPARE THE INCOMING EL
+     * IF SAME COMPAE COST
+     * ELSE ADD TO STACK
+     */
+    class Cost{
+        char ch; int cost;
+        Cost(char c, int i){
+            this.ch = c; this.cost = i;
+        }
+    }
+    public int removeDuplicateCharCost(String S, int[] C){
+        int cost = 0;
+
+        Deque<Cost> q = new LinkedList<>();
+        q.addLast(new Cost(S.charAt(0), C[0]));
+
+        for(int i = 1; i<S.length(); i++){
+            // if same cost will increase
+            if(S.charAt(i) == q.getLast().ch) {
+                // if cost at peek is lesser than curr, pop
+                if(q.getLast().cost < C[i]){
+                    cost+= q.removeLast().cost;
+                    q.addLast(new Cost(S.charAt(i), C[i]));
+                }
+                // else don't add
+                else cost+=C[i];
+            }
+            else q.addLast(new Cost(S.charAt(i), C[i]));
+        }
+        return cost;
+    }
+
 
     /**  
      * POINTS :
@@ -134,6 +168,7 @@ public class StackPractice {
             }
             q.addLast(i);
         }
+        // index denotes the min of this window
         res[index++] = nums[q.getFirst()];
         
         for(int i = k; i<n; i++){
@@ -151,7 +186,59 @@ public class StackPractice {
     // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
     // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
 
+    // char to int and vice cersa
+    // n==1 and k==1
+    // q size
+    // preceding zeroes
+    // 423, 14682, 865, 1423
+    // if curr is smaller smaller then peeek but larger than below peek?
+    // 100, 1
+    /** 
+     * 1 IF PEEK IS LARGER, REMOVE
+     * 2 IF LARGER ADD
+     * 3 IF K!=0 STILL REMOVE
+     * 4 RMEOVE PRECEDING ZEROES
+     * 
+    */
     // https://leetcode.com/problems/remove-k-digits/
+    public String removeKdigits(String num, int k) {
+        int n = num.length();
+        if(n<k) return num;
+        if(n==k) return "0"; // 10, 2
+        Deque<Character> q = new LinkedList<>();
+        q.addLast(num.charAt(0));
+        
+        for(int i =1; i<n; i++){
+            char curr = num.charAt(i);
+            // if(q.getLast()<curr){
+            //     q.addLast(curr);
+            //     continue;
+            // }
+            while (k>0 && q.size()!=0 && q.getLast()>curr) {
+                q.removeLast(); k--;
+                // System.out.println(q);
+            }
+            q.addLast(curr);
+        }
+        
+        // remaining
+        while(k>0 && q.size()!=0) {
+            q.removeLast(); // 10
+            k--;
+        }
+        // if(q.size() == 1) return ""+q.getFirst(); // 10, 1
+        while(q.size()!=0){
+            if(q.getFirst() == '0') q.removeFirst();
+            else break;
+        }
+        
+        // remove leading zeroes
+        String res = "";
+        while(q.size()!=0) res+=q.removeFirst();
+        return res.length()==0?"0":res;
+    }
+
+    
     void stockSpan(int[] arr){
         Deque<Integer> stock = new ArrayDeque<Integer>();
         int[] span = new int[arr.length];
@@ -368,39 +455,6 @@ public class StackPractice {
         return res;
     }
 
-    // Microsoft
-    /**
-     * USE STACK TO COMPARE THE INCOMING EL
-     * IF SAME COMPAE COST
-     * ELSE ADD TO STACK
-     */
-    class Cost{
-        char ch; int cost;
-        Cost(char c, int i){
-            this.ch = c; this.cost = i;
-        }
-    }
-    public int removeCharCostStack(String S, int[] C){
-        int cost = 0;
-
-        Deque<Cost> q = new LinkedList<>();
-        q.addLast(new Cost(S.charAt(0), C[0]));
-
-        for(int i = 1; i<S.length(); i++){
-            // if same cost will increase
-            if(S.charAt(i) == q.getLast().ch) {
-                // if cost at peek is lesser than curr, pop
-                if(q.getLast().cost < C[i]){
-                    cost+= q.removeLast().cost;
-                    q.addLast(new Cost(S.charAt(i), C[i]));
-                }
-                // else don't add
-                else cost+=C[i];
-            }
-            else q.addLast(new Cost(S.charAt(i), C[i]));
-        }
-        return cost;
-    }
 
 
     // https://leetcode.com/problems/exclusive-time-of-functions/
@@ -745,7 +799,7 @@ public class StackPractice {
         // System.out.println(stackToReverse);
 
         String S = "aaaabbcc"; int[] C = new int[]{1,2,1,3,1,2,1,2}; // 3
-        stack.removeCharCostStack(S, C);
+        stack.removeDuplicateCharCost(S, C);
     }
 
 }

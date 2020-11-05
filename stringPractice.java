@@ -16,6 +16,7 @@ class StringPractice {
      * QUES : VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
      * WORD SEARCH, WORD LADDER, REORGANIZE, NUMBER OF DECODINGS,
      * LARGEST TIME
+     * detect capital
      * 
      * 
      * 
@@ -1471,43 +1472,6 @@ class StringPractice {
     // https://leetcode.com/problems/multiply-strings/
 
 
-    /**
-     * NEW NO IS SMALLEST POSSIBLE
-     * 
-     * add the digits to stack, when the top is smaller than current,
-     * pop till you find smaller or k==0
-     * 
-     * if k!=0 pop till k==0
-     * 
-     * ensure leading zeroes are removed.
-     */
-    // https://leetcode.com/problems/remove-k-digits/
-    public String removeKdigits(String num, int k) {
-        Deque<Character> s = new LinkedList<>();
-        s.addLast(num.charAt(0));
-
-        for (int i = 1; i < num.length(); i++) {
-            while (s.size() != 0 && num.charAt(i) < s.getLast() && k > 0) {
-                s.removeLast();
-                k--;
-            }
-
-            s.addLast(num.charAt(i));
-        }
-
-        while (k > 0 && s.size() != 0) {
-            s.removeLast();
-            k--;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        while (!s.isEmpty())
-            sb.append(s.removeFirst());
-        while (sb.length() > 1 && sb.charAt(0) == '0')
-            sb.deleteCharAt(0);
-        return sb.length() != 0 ? sb.toString() : "0";
-    }
-
     // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
     // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
     
@@ -2111,37 +2075,47 @@ class StringPractice {
      * IT STRUCK ME THAT THE FIRST CHARACTER IS THE ONE CAUSING ALL PROBLEMS.
      * SO DECIDED TO DO AN ADDITIONAL CHECK FOR word.charAt(1) AS WELL.
      * 
-     * 1 THE IDEA IS TO KEEP 3 FLAGS, first, allUpper AND allLower.
+     * 1 THE IDEA IS TO KEEP 1 FLAG lower.
      * 2 ONCE DONE WITH FIRST 2 CHARS, FOR NEXT CHARS, 
-     * IF UPPERCASE CHAR COMES AND allLower is true, THEN RETURN FALSE;
-     * IF LOWERCASE AND allUpper is true, RETURN FALSE;
-     * 3 FOR FIRST 2 CHARS, IF UPPERCASE CHAR COMES AND FIRST IS FALSE RETURN FALSE 
-     * AS 'aA' will be false.
+     * IF UPPERCASE CHAR COMES AND lower is true, THEN RETURN FALSE;
+     * IF LOWERCASE AND lower is false, RETURN FALSE;
+     * 3 FOR FIRST 2 CHARS, check all 4 combinations 
+     * lower, upper(lu), ll, ul, uu
+     * lu -> false
+     * ll -> lower(true)
+     * uu -> lower(false)
+     * ul -> lower(true)
      * 
      * https://leetcode.com/problems/detect-capital/discuss/
      * 860902/Java-3-Flags-simple-solution
     */
+     // "FlaG", "USa", "fffF", "mL"
+    // https://leetcode.com/problems/detect-capital/
     public boolean detectCapitalUse(String word) {
-        boolean first = false;
-        boolean allUpper = false;
-        boolean allLower = false;
+        boolean lower = true;
         
-        if(word.length() == 1) return true;
+        // check for length 1
+        if(word.length() ==1) return true;
         
-        if(Character.isUpperCase(word.charAt(0))) first = true;
-        else {first = false; allLower = true;}
-        
-        if(Character.isUpperCase(word.charAt(1))){
-            if(!first) return false;
-            allUpper = true;
+        if(Character.isLowerCase(word.charAt(0))){ 
+           if(Character.isLowerCase(word.charAt(1))){
+            // only lower allowed
+            lower = true;
+           }else return false;
         }
-        else allLower = true;
+        else if(Character.isUpperCase(word.charAt(0))) {
+             if(Character.isLowerCase(word.charAt(1))) lower = true;
+             else if (Character.isUpperCase(word.charAt(1)))
+            // only upper allowed
+            lower = false;
+        }
         
         for(int i =2; i<word.length(); i++){
-            if(Character.isUpperCase(word.charAt(i)) ){
-                if(allLower) return false;
-            }else {
-                if(allUpper) return false;
+            if(Character.isUpperCase(word.charAt(i)) && lower){
+                return false;
+            }
+            else if(Character.isLowerCase(word.charAt(i)) && !lower){
+                return false;
             }
         }
         return true;
