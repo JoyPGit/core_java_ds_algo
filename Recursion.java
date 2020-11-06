@@ -17,6 +17,17 @@ public class Recursion {
         }
     }
     /** 
+     * 
+     * all patterns, checks, visited, backtracking
+     * (target sum, jump 3, all subsets)
+     * 
+     * include-exclude
+     * knapsack
+     * parenthesis, pattern -> global var vs arg
+     * partition, unique split
+     * flatten
+     * path sum
+     * 
      * BASIC IDEA IS TO EITHER SELECT AN INDEX OR NOT.
      * IF SELECT f(sum-nums[i], index+1)
      * IF REJECT f(sum, index+1)
@@ -30,24 +41,172 @@ public class Recursion {
     */
 
 
+    ////////////////// DECISION AT INDEX, AND CHECKS FOR THAT 
+
+    // take decision at index and use checks for that
+    // here we need to use all els so both index == nums.length 
+    // and currSum = sum must match
     // https://leetcode.com/problems/target-sum/
+    // global var to local arg?
     int count = 0;
-    public int findTargetSumWays(int[] nums, int target) {
-        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
-        f(nums, 0, target);
+    public int findTargetSumWays(int[] nums, int S) {
+        helper(nums, 0, 0, S);
         return count;
     }
     
-    void f(int[] nums, int index, int sum){
-        if(index==nums.length) {
-            if(sum ==0) count++; 
-            return;
-        }
-        
-        f(nums, index+1, sum+nums[index]);
-        f(nums, index+1, sum-nums[index]);
+    void helper(int[] nums, int currSum, int index, int target){
+        if(index == nums.length && currSum == target) count++;
+        if(index>=nums.length) return;
+        helper(nums, currSum+nums[index], index+1, target);
+        helper(nums, currSum-nums[index], index+1, target);
     }
 
+    //////////////////////// GENERATE PATTERN
+
+    // https://leetcode.com/problems/generate-parentheses/
+    public List<String> generateParenthesis(int n) {
+        List<String> list = new ArrayList<String>();
+        parenthesisHelper(list, "(", 1, 0, n);
+        return list;
+    }
+    
+    public void parenthesisHelper(List<String> list, String curr, int open, int close, int n){
+        
+        if(curr.length() == n*2) list.add(curr);
+        if(open < n) parenthesisHelper(list, curr+"(", open+1, close, n);
+        if(close < open) parenthesisHelper(list, curr+")", open, close+1, n);
+    }
+
+    /** 
+     * For primitive arguments (int, long, etc.), the pass by value is 
+     * the actual value of the primitive (for example, 3).
+     * 
+     * For objects, the pass by value is the value of the reference to the obj.
+     * 
+     * 
+     * 1 AS NEW INSTANCE OF STRINGBUILDER IS PASSED
+     * s.charAt(index) == 63 RETURNS ASCII VALUE, ? -> 63
+     * 
+     * 2 EVERYTIME A NEW INSTANCE IS PASSED, SO NO NEED TO 
+     * REVERT BACK THE CHAR
+     *
+    */
+    void generatePattern(String s){
+        patternHelper(s, 0, s.length());
+    }
+
+    void patternHelper(String s, int index, int n){
+        if(index == n) {
+            System.out.println("final "+s);
+            return;
+        }
+        if(s.charAt(index) == 63){ // ? -> 63
+            // creating a new StringBuilder from s
+            // for easy removal and insertion
+            StringBuilder str1 = new StringBuilder(s);
+            str1.deleteCharAt(index);
+            str1.insert(index, "0");
+            // System.out.println("replace 0 "+str1);
+            patternHelper(str1.toString(), index+1, n);
+
+            StringBuilder str2 = new StringBuilder(s);
+            str2.deleteCharAt(index);
+            str2.insert(index, "1");
+            patternHelper(str2.toString(), index+1, n);
+        }else {
+            // System.out.println(s.charAt(index));
+            patternHelper(s, index+1, n);
+        }
+    }
+
+
+    /** 
+     * 
+     * char array is not primitive so reference is passed, but 
+     * StringBuilder is primitive 
+     * 
+     * FOR CHAR ARRAY, BACKTRACKING IS NEEDED
+     * AS THE REFERENCE IS ALWAYS TO THE SAME ARRAY OBJECT
+    */
+    // "10?1?";
+    void generate01(String str){
+        helper01(str.toCharArray(), 0);
+    }
+
+    void helper01(char[] ch, int index){
+        if(index == ch.length) {
+            System.out.println("binary "+String.valueOf(ch));
+            return;
+        }
+        if(ch[index] == '?'){
+            // System.out.println(String.valueOf(ch));
+            ch[index] = '0';
+            helper01(ch, index+1);
+            ch[index] = '1';
+            helper01(ch, index+1);
+            ch[index] = '?';
+        }
+        // not using else, causes ? to be printed
+        else helper01(ch, index+1);
+    }
+
+    /////////////////////////// JUMPS
+    // https://java2blog.com/check-if-possible-to-reach-end-given-array-by-jumping/
+
+    // maintain a visited arr so as to avoid overflow
+    // https://leetcode.com/problems/jump-game-iii/
+    boolean ans3 = false;
+    boolean[] visited;
+    public boolean canReach(int[] arr, int start) {
+        visited = new boolean[arr.length];
+        helper(arr, start);    
+        return ans3;
+    }
+    
+    void helper(int[] arr, int index){
+        if(index <0 || index>=arr.length) return;
+        if(arr[index] == 0) {
+            ans3 = true; return;
+        }
+        if(visited[index]) return;
+        visited[index] =true;
+        helper(arr, index+arr[index]);
+        helper(arr, index-arr[index]);
+    }
+
+    // https://leetcode.com/problems/jump-game-iv/
+
+
+    // https://www.hackerearth.com/problem/algorithm/free-walk-0f675f40-0d59a400
+    int maxDistance = 0;
+    int solveDist(String S){
+        // Write your code here
+        recur(S, 0, 0);
+        System.out.println("max dist is "+maxDistance);
+        return maxDistance;
+    }
+
+    void recur(String str, int i, int sum){
+        maxDistance = Math.max(maxDistance, Math.abs(sum));
+
+        if(i == str.length()) return;
+
+        // System.out.println("count "+count);
+        if(str.charAt(i) == 'A') {
+            sum+=-1;
+            recur(str, i+1, sum);
+        }
+        else if(str.charAt(i) == 'C') {
+            sum+=1;
+            recur(str, i+1, sum);
+        }
+        else{
+            recur(str, i+1, sum+1);
+            recur(str, i+1, sum-1);
+        }
+    }
+
+    ///////
     boolean ans = false;
 
     public boolean canCross(int[] stones) {
@@ -104,28 +263,8 @@ public class Recursion {
 
     }
 
-    void printWithoutLoop(int num) {
-        printWithoutLoopSubtract(num);
-        printWithoutLoopAdd(num);
-    }
-
-    void printWithoutLoopSubtract(int num) {
-        if (num > 0) {
-            System.out.print(num + ", ");
-            printWithoutLoopSubtract(num - 5);
-        }
-        return;
-    }
-
-    void printWithoutLoopAdd(int num) {
-        if (num != 16) {
-            System.out.print(num + ", ");
-            printWithoutLoopAdd(num + 5);
-        }
-        System.out.print(num + ", ");
-        return;
-    }
-
+    /////////////////////// INCLUDE-EXCLUDE
+    // rod, knapsack, coins
     /** 
      * THE SAME PIECE CAN BE USED MULTIPLE TIMES, HENCE  
      * index IS NOT DECREMENTED WHEN SELECTED
@@ -142,10 +281,90 @@ public class Recursion {
         return Math.max(incl,excl);
     }
 
+     /** similar to rod cutting, we have inifinite supply of coins and 
+     * we have to find no of ways we can make change
+     * in rod cutting too, we could take any piece as many times as we wanted
+     */
+
+    /** the no of ways to make up a sum if infinite supply of coins 
+     * of each denomination is given
+     * 
+     * 2 VARS, SUM AND INDEX
+     * IN INFINITE SUPPLY, SE SAME INDEX
+     */
+    int coinChange(int[] arr, int sum, int index){
+        System.out.println("sum "+sum);
+        if(sum==0) return 1;
+        if(sum<0) return 0;
+        if(index <=0 && sum>=1) return 0;
+        // if(index==0) return 1;
+        return coinChange(arr, sum-arr[index-1], index) + coinChange(arr, sum, index-1);
+    }
+
+
+    /** 
+     * 1 USING HELPER
+     * 2 INCLUSION EXCLUSION
+     * 3 THE THIRD CONDITION IS FOR THE CASE WHEN WE HAVE REACHED 0,
+     * BUT WE KEEP ON EXCLUDING TILL WE REACH THE END OF ARRAY
+     * 
+     * 
+     */
+    int coinchange1(int sum, int[] arr){
+        return helper1(sum-arr[0], arr, 0) + helper1(sum, arr, 1);
+    }
+
+    int helper1(int sum, int[] arr, int index){
+        if(sum == 0) return 1;
+        if(sum < 0) return 0;
+        // if(sum - arr[index]>0) 
+        if(index>=arr.length && sum>=1) return 0;
+        return helper1(sum, arr, index) + helper1(sum, arr, index);
+    }
+
+    // MIN TYPE -> PALIN CUT, CON CHANGE, MATRIX MUL 
+    // MIN NO OF COINS TO MAKE CHANGE
+    int minCoins = Integer.MAX_VALUE;
+    int minChange(int[] arr,int sum){
+        minCoinsHelper(arr, sum, 0, 0);
+        return minCoins;
+    }
+
+    void minCoinsHelper(int[] arr, int sum, int index, int count){
+        if(sum == 0) {
+            minCoins = Math.min(count, minCoins);
+            return;
+        }
+        if(sum<0) return;
+        if(index>= arr.length && sum>=1) return;
+        minCoinsHelper(arr, sum-arr[index], index, count+1);
+        minCoinsHelper(arr, sum, index+1, count);
+    }
+
+
+    int knapsack(int[] val, int[] wt, int weightLimit, int index){
+        if(weightLimit <0) return Integer.MIN_VALUE;
+        if(index<0) return 0; //removing equal to causes problems
+        int incl = val[index]+knapsack(val, wt, weightLimit-wt[index], index-1);
+        int excl = knapsack(val, wt, weightLimit, index-1);
+
+        return Math.max(incl, excl);
+    }
+
+    boolean subsetSum(int[] arr, int sum, int index) {
+        if (index >= arr.length)
+            return false;
+        if (sum == 0)
+            return true;
+        return subsetSum(arr, sum - arr[index], index + 1) || subsetSum(arr, sum, index + 1);
+    }
 
     // https://www.youtube.com/watch?v=wvaYrOp94k0
     // TLE
     // NO BACKTRACKING NEEDED
+
+    ////////////////////////  PARTITION
+
     // https://leetcode.com/problems/palindrome-partitioning-ii
     int min = Integer.MAX_VALUE;
     public int minCut(String s) {
@@ -200,120 +419,126 @@ public class Recursion {
     }
 
 
-     /** similar to rod cutting, we have inifinite supply of coins and 
-     * we have to find no of ways we can make change
-     * in rod cutting too, we could take any piece as many times as we wanted
-     */
-
-    /***the no of ways to make up a sum if infinite supply of coins of each denomination 
-     * is given*/
-    int coinChange(int[] arr, int sum, int index){
-        System.out.println("sum "+sum);
-        if(sum==0) return 1;
-        if(sum<0) return 0;
-        if(index <=0 && sum>=1) return 0;
-        // if(index==0) return 1;
-        return coinChange(arr, sum-arr[index-1], index) + coinChange(arr, sum, index-1);
-    }
-
-
     /** 
-     * 1 USING HELPER
-     * 2 INCLUSION EXCLUSION
-     * 3 THE THIRD CONDITION IS FOR THE CASE WHEN WE HAVE REACHED 0,
-     * BUT WE KEEP ON EXCLUDING TILL WE REACH THE END OF ARRAY
+     * POINTS :
+     * 1 NO NEED FOR GLOBAL VAR, RETURN THE FUNCTION
+     * 2 int f(){
+     *      int res;
+     *      for(){
+     *          res = Math.max(res, 1+f())
+     *      }    
+     *      return res;
+     *  }
      * 
-     * 
-     */
-    int coinchange1(int sum, int[] arr){
-        return helper1(sum-arr[0], arr, 0) + helper1(sum, arr, 1);
+     * start from index+1 and return if index == str.length()
+    */
+    // https://www.youtube.com/watch?v=KAoRNDx-S8M
+    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings/submissions/
+    HashSet<String> splitSet;
+    public int maxUniqueSplit(String s) {
+        int n = s.length();
+        if(n == 0) return 0;
+        splitSet = new HashSet<>();
+        int res = splitHelper(s, 0);
+        return res;
     }
 
-    int helper1(int sum, int[] arr, int index){
-        if(sum == 0) return 1;
-        if(sum < 0) return 0;
-        // if(sum - arr[index]>0) 
-        if(index>=arr.length && sum>=1) return 0;
-        return helper1(sum, arr, index) + helper1(sum, arr, index);
+    int splitHelper(String str, int index){
+        int countSplit = 0;
+        if(index == str.length()) return 0;
+        for(int i = index+1; i<=str.length(); i++){
+            String sub = str.substring(index, i);
+            if(!splitSet.contains(sub)){
+                splitSet.add(sub);
+                countSplit = Math.max(countSplit, 1 + splitHelper(str, i) );
+                splitSet.remove(sub);
+            }
+        }
+        return countSplit;
     }
 
-    // MIN TYPE -> PALIN CUT, CON CHANGE, MATRIX MUL 
-    // MIN NO OF COINS TO MAKE CHANGE
-    int minCoins = Integer.MAX_VALUE;
-    int minChange(int[] arr,int sum){
-        minCoinsHelper(arr, sum, 0, 0);
-        return minCoins;
+    ////////////////////// BACKTRACKING
+
+    // https://leetcode.com/problems/subsets/
+    /** 
+     * VERY SIMPLE APPROACH USING INCLUSION-EXCLUSION
+     * FOR INCLUSION ADD THE EL, FOR EXCLUSION REPLACE WITH 0
+    */
+    void allSubsets(int[] arr) {
+        int[] subset = new int[arr.length];
+        allSubsetHelper(arr, subset, 0);
     }
 
-    void minCoinsHelper(int[] arr, int sum, int index, int count){
-        if(sum == 0) {
-            minCoins = Math.min(count, minCoins);
+    void allSubsetHelper(int[] arr, int[] subset, int index) {
+        if (index == arr.length) {
+            utilCustom.Utility.print1DMatrix(subset);
             return;
         }
-        if(sum<0) return;
-        if(index>= arr.length && sum>=1) return;
-        minCoinsHelper(arr, sum-arr[index], index, count+1);
-        minCoinsHelper(arr, sum, index+1, count);
+        subset[index] = 0;
+        allSubsetHelper(arr, subset, index + 1);
+        subset[index] = arr[index];
+        allSubsetHelper(arr, subset, index + 1);
     }
 
-    // write recursive similar to rod cutting
-    // int minChange2(int[] arr,int sum){
-    //     minCoinsHelper2(arr, sum, 0, 0);
-    //     return minCoins;
-    // }
-
-    // int minCoinsHelper2(int[] arr, int sum, int index){
-    //     for(int i =index; i<arr.length; i++){
-    //         min = Math.min()
-    //     }
-    // }
-
-
-    int knapsack(int[] val, int[] wt, int weightLimit, int index){
-        if(weightLimit <0) return Integer.MIN_VALUE;
-        if(index<0) return 0; //removing equal to causes problems
-        int incl = val[index]+knapsack(val, wt, weightLimit-wt[index], index-1);
-        int excl = knapsack(val, wt, weightLimit, index-1);
-
-        return Math.max(incl, excl);
+    /** 
+     * using backtracking  
+     * HINT : TO PRINT EMPTY SUBSET,
+     * PRINT AT THE START, NO if(index == nums.length)
+    */
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        helper(res, curr, nums, 0);
+        return res;
     }
-
-    boolean subsetSum(int[] arr, int sum, int index) {
-        if (index >= arr.length)
-            return false;
-        if (sum == 0)
-            return true;
-        return subsetSum(arr, sum - arr[index], index + 1) || subsetSum(arr, sum, index + 1);
-    }
-
-    /**
-     * https://stackoverflow.com/questions/37424284/unreported-exception-
-     * java-lang-exception-must-be-caught-or-declared-to-be-throw
-     */
-    boolean found = false;
-
-    void startToDestination(int start, int end) throws Exception {
-        try {
-            if (start > end || start <= 0)
-                return;
-            if (start == end) {
-                System.out.println("done");
-                found = true;
-                return;
-            }
-            if (!found) {
-                System.out.println("current " + start);
-                startToDestination(start * 2, end);
-                startToDestination(start + 2, end);
-            }
-        } catch (Exception e) {
-            // handle exception
-            System.out.println(e);
-            e.printStackTrace();
-            throw new Exception(e);
+    
+    void helper(List<List<Integer>> res, List<Integer> curr, int[] nums, int index){
+        res.add(new ArrayList<>(curr));
+        for(int i = index; i<nums.length; i++){ //0, index?
+            curr.add(nums[i]); // 
+            helper(res, curr, nums, i+1);
+            curr.remove(curr.size()-1);
         }
-
     }
+
+    // dfs using backtracking
+    // need to remove to get paths with same ancestors
+    int n;
+    // https://leetcode.com/problems/all-paths-from-source-to-target/
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        // create graph, no dedge wt, so adj list
+        n = graph.length;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        for(int i=0; i<n; i++){
+            if(graph[i].length==0) continue;
+            List<Integer> curr = map.getOrDefault(i, new ArrayList<>());
+            for(int j =0; j<graph[i].length; j++) curr.add(graph[i][j]);
+            map.put(i, curr);
+        }
+        // System.out.println(map);
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        curr.add(0);
+        
+        // source is zero
+        dfs(res, curr, map, 0);
+        return res;
+    }
+    
+    
+    void dfs(List<List<Integer>> res, List<Integer> curr, HashMap<Integer, List<Integer>> map, int start){
+        if(start == n-1) res.add(new ArrayList<>(curr));
+        if(!map.containsKey(start)) return;
+        List<Integer> list = map.get(start);
+        for(int i : list){
+            curr.add(i);
+            dfs(res, curr, map, i);
+            curr.remove(curr.size()-1);
+        }
+    }
+
+
+    ///////////////////
 
     int maxDiv3 = 0;
 
@@ -346,99 +571,8 @@ public class Recursion {
 
     // void max2or3GroupHelper(int[] arr, int sum, int )
 
-    void allSubsets(int[] arr) {
-        int[] subset = new int[arr.length];
-        allSubsetHelper(arr, subset, 0);
-    }
 
-    /**
-     * always remember to print when index == arr.length & assign subset[index] = 0;
-     */
-    void allSubsetHelper(int[] arr, int[] subset, int index) {
-        if (index == arr.length) {
-            utilCustom.Utility.print1DMatrix(subset);
-            return;
-        }
-        subset[index] = 0;
-        allSubsetHelper(arr, subset, index + 1);
-        subset[index] = arr[index];
-        allSubsetHelper(arr, subset, index + 1);
-    }
-
-    //21 June
-    void allSubsets(int[] arr, int[] subset, int index){
-        if(index == arr.length) {
-            utilCustom.Utility.print1DMatrix(subset);
-            System.out.println();
-            return;
-        }
-        subset[index] = 0;
-        allSubsets(arr, subset, index+1);
-        subset[index] = arr[index];
-        allSubsets(arr, subset, index+1);
-    }
-    
-
-    // https://leetcode.com/problems/generate-parentheses/
-    public List<String> generateParenthesisWithoutBT(int n) {
-        List<String> list = new ArrayList<String>();
-        int open = 0, close = 0;
-        String curr = ""; 
-        parenthesisHelper(list, curr, open, close, n);
-        return list;
-    }
-    
-    public void parenthesisHelper(List<String> list, String curr, int open, int close, int n){
-        
-        if(curr.length() == n*2){
-            list.add(curr);
-            return;
-        }
-        
-        if(open < n) parenthesisHelper(list, curr+"(", open+1, close, n);
-        if(close < open) parenthesisHelper(list, curr+")", open, close+1, n);
-    }
-
-    /** 
-     * For primitive arguments (int, long, etc.), the pass by value is 
-     * the actual value of the primitive (for example, 3).
-     * 
-     * For objects, the pass by value is the value of the reference to the object.
-     * 
-     * 
-     * 1 AS NEW INSTANCE OF STRINGBUILDER IS PASSED
-     * s.charAt(index) == 63 RETURNS ASCII VALUE, ? -> 63
-     * 
-     * 2 EVERYTIME A NEW INSTANCE IS PASSED, SO NO NEED TO 
-     * REVERT BACK THE CHAR
-     * 
-    */
-    void generatePattern(String s){
-        patternHelper(s, s.indexOf('?'), s.length());
-    }
-
-    void patternHelper(String s, int index, int n){
-        if(index == n) {
-            System.out.println("final "+s);
-            return;
-        }
-        if(s.charAt(index) == 63){ // ? -> 63
-            StringBuilder str1 = new StringBuilder(s);
-            str1.deleteCharAt(index);
-            str1.insert(index, "0");
-            // System.out.println("replace 0 "+str1);
-            patternHelper(str1.toString(), index+1, n);
-
-            StringBuilder str2 = new StringBuilder(s);
-            str2.deleteCharAt(index);
-            str2.insert(index, "1");
-            patternHelper(str2.toString(), index+1, n);
-        }else {
-            // System.out.println(s.charAt(index));
-            patternHelper(s, index+1, n);
-        }
-    }
-    
+    //////////////////////////////
     // longest common subsequence
     /* Returns length of LCS for X[0..m-1], Y[0..n-1] */
     int lcs(char[] X, char[] Y, int m, int n) {
@@ -454,65 +588,9 @@ public class Recursion {
         }
     }
 
-    /**
-     * POINTS : 
-     */
-    // https://leetcode.com/problems/target-sum/
-    // https://leetcode.com/problems/path-sum-iii/discuss/780231/java-DFS-.-easy-to-understand-!!!
 
-
-    // https://leetcode.com/problems/jump-game-iii/
-    boolean foundZero = false;
-    public boolean canReach(int[] arr, int start) {
-        HashSet<Integer> set = new HashSet<>();
-        int n = arr.length;
-        if(n==0) return false;
-        
-        recur(arr, start, set);
-        return foundZero;
-    }
-    
-    void recur(int[] arr, int index, HashSet<Integer> set){
-        if(index<0 || index >= arr.length || set.contains(index)) return;
-        int val = arr[index];
-        set.add(index);
-        if(val ==0) {foundZero = true; return;}
-        recur(arr, index+val, set);
-        recur(arr, index-val, set);
-    }
-    // https://leetcode.com/problems/jump-game-iv/
-
-
-    // https://www.hackerearth.com/problem/algorithm/free-walk-0f675f40-0d59a400
-    int maxDistance = 0;
-    int solveDist(String S){
-        // Write your code here
-        recur(S, 0, 0);
-        System.out.println("max dist is "+maxDistance);
-        return maxDistance;
-    }
-
-    void recur(String str, int i, int sum){
-        maxDistance = Math.max(maxDistance, Math.abs(sum));
-
-        if(i == str.length()) return;
-
-        // System.out.println("count "+count);
-        if(str.charAt(i) == 'A') {
-            sum+=-1;
-            recur(str, i+1, sum);
-        }
-        else if(str.charAt(i) == 'C') {
-            sum+=1;
-            recur(str, i+1, sum);
-        }
-        else{
-            recur(str, i+1, sum+1);
-            recur(str, i+1, sum-1);
-        }
-    }
-
-     // https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
+    //////////////////// TREE <-> LINKED LIST
+    // https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
      class Node {
         public int val;
         public Node prev;
@@ -555,42 +633,24 @@ public class Recursion {
         }
     }
 
-    /** 
-     * POINTS :
-     * 1 NO NEED FOR GLOBAL VAR, RETURN THE FUNCTION
-     * 2 int f(){
-     *      int res;
-     *      for(){
-     *          res = Math.max(res, 1+f())
-     *      }    
-     *      return res;
-     *  }
-    */
-    // https://www.youtube.com/watch?v=KAoRNDx-S8M
-    // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
-    HashSet<String> splitSet;
-    public int maxUniqueSplit(String s) {
-        int n = s.length();
-        if(n==0) return 0;
-        splitSet = new HashSet<>();
-        return splitHelper(s);
+    // postorder, fix left, traverse till ned and add right
+    // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+    public void flatten(TreeNode root) {
+        if(root == null) return;
+        flatten(root.left);
+        flatten(root.right);
+        if(root.left !=null) {
+            TreeNode y = root.right;
+            root.right = root.left;
+            TreeNode x = root.left;
+            root.left = null;
+            while(x.right!=null) x= x.right;
+            x.right = y;
+        }
     }
 
-    int splitHelper(String str){
-        int countSplit = 0;
-        
-        for(int i = 1; i<=str.length(); i++){
-            String sub = str.substring(0, i);
-            if(!splitSet.contains(sub)){
-                splitSet.add(sub);
-                // System.out.println(splitSet);
-                countSplit = Math.max(countSplit, 
-                                1 + splitHelper (str.substring(i, str.length() ) ));
-                splitSet.remove(sub); //if commented, fails for "wwwzfvedwfvhsww"
-            }
-        }
-        return countSplit;
-    }
+    ///////////////////////////
+
 
     /** 
      * POINTS :
@@ -629,6 +689,32 @@ public class Recursion {
         dfsInclude(root.left, currSum);
         dfsInclude(root.right, currSum);
     }
+
+
+    ///////////////////////////////
+
+    void printWithoutLoop(int num) {
+        printWithoutLoopSubtract(num);
+        printWithoutLoopAdd(num);
+    }
+
+    void printWithoutLoopSubtract(int num) {
+        if (num > 0) {
+            System.out.print(num + ", ");
+            printWithoutLoopSubtract(num - 5);
+        }
+        return;
+    }
+
+    void printWithoutLoopAdd(int num) {
+        if (num != 16) {
+            System.out.print(num + ", ");
+            printWithoutLoopAdd(num + 5);
+        }
+        System.out.print(num + ", ");
+        return;
+    }
+
 
 
 
@@ -716,6 +802,10 @@ public class Recursion {
     public static void main(String[] args) throws Exception {
         Recursion recur = new Recursion();
 
+        String binary = "???";
+        recur.generatePattern(binary);
+        recur.generate01(binary);
+
         String dist = "AC??C?C?????CCAC??CC";
         // recur.solveDist(dist);
         // int[] stones ={
@@ -729,7 +819,7 @@ public class Recursion {
         // recur.printWithoutLoop(16);
 
         int[] boards = {10, 20, 30, 40}; int painters = 2;
-        System.out.println("min time div "+recur.paintersPartition(boards, painters));
+        // System.out.println("min time div "+recur.paintersPartition(boards, painters));
 
         int set[] = { 3, 34, 4, 12, 5, 2 }, sum = 30;
         // {3, 34, 4, 12, 5, 2}, sum = 9;
@@ -748,7 +838,7 @@ public class Recursion {
         // System.out.println("max sum div by 3 "+recur.maxSumDivThree(nums));
 
         int[] subsets = { 1, 2 };
-        recur.allSubsets(subsets);
+        // recur.allSubsets(subsets);
 
         int[] uniqueComb = { 10, 1, 2, 7, 6, 1, 5 };
         // { 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 5 };

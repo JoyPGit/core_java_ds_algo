@@ -14,6 +14,11 @@ public class ToDo {
      * longest zigzag path
      * search in matrix
      *
+     * multiply large nos
+     * atoi
+     * tree from postorder and inorder
+     * dp subsets(partition)
+     * nuts and bolts, 
      * remove zero sum consecutive nodes
      * merge sort, heap sort, sliding window notes
      * itinerary
@@ -38,6 +43,12 @@ public class ToDo {
      * merge sort list
      * del dup list 2
      * del dup array
+     * 
+
+
+     * 
+     * 
+     * https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/
     
 
      * TREE FROM INORDER AND PREORDER

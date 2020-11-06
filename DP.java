@@ -5,6 +5,7 @@ public class DP {
 
     /**
      * 
+     * 1d coin, book allocation
      * match : 
      * substr maxLen, subseq, +1, +2 
      * else : 
@@ -43,6 +44,23 @@ public class DP {
      * DEL AND EARN
      * 
     */
+     /**
+     * POINTS 
+     * 1 either include the element or not 
+     * LCS exc = f(arr, i+1, prev) inc = f(arr, i+1, arr[i]) return max
+     * 
+     * 2 knapsack similar include or exclude 
+     * 
+     * 3 coin change diff is that the supply of coins is
+     * infinite so return f( S, m - 1, n ) + f( S, m, n-S[m-1] );
+     * 
+     * 3 similar subset sum 
+     * dp[index] = arr[index];
+     * subsetSumHelper(arr, dp, sum - arr[index], index+1); the element is added and sum is reduced
+     * dp[index] = 0;
+     * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
+     */
+
 
     public int factorial(int n){
         if(n==0 || n==1) return 1;
@@ -215,8 +233,9 @@ public class DP {
         return dp[n-1];
     }
 
+    
 
-    /////////////////////////// JUMP, STAIR, UNIQUE PATH
+    /////////////////////////// STAIR, UNIQUE PATH
 
     int countStairs = 0;
     //jumps of 1,2
@@ -277,58 +296,7 @@ public class DP {
     }
 
 
-    ////////////////// JUMP GAME
-
-    // https://leetcode.com/problems/jump-game-ii/
-    public int jump(int[] nums) {
-        int n = nums.length;
-        int[] dp = new int[n];
-        return jumpHelper(nums, 0, dp);
-    }
-    
-    int jumpHelper(int[] nums, int index, int[] dp){
-        if(index>=nums.length-1) return 0; // base condn
-        if(dp[index]!=0)return dp[index];
-        
-        int min = Integer.MAX_VALUE-10000;
-        for(int i = 1; i<=nums[index]; i++){ // i value
-            min = Math.min(min, 1 + jumpHelper(nums, index+i, dp)); // cost
-        }
-        return dp[index] = min;
-    }
-
-    /**
-     * https://www.youtube.com/watch?v=cETfFsSTGJI
-     * points
-     * 1 assign infinity to dp index 1 till end 
-     * 2 for i =1 loop j from j=0 till i
-     * 3 if arr[j]+j >=i checking if we can reach index i from index j
-     * if yes and dp[i] > dp[j]+1, we update
-     */
-    int jumpDP(int[] arr) {
-        // int[] result = new int[arr.length];
-        int []dp = new int[arr.length];
-        dp[0] = 0;
-        for(int i=1; i < arr.length ; i++){
-            dp[i] = Integer.MAX_VALUE-1;
-        }
-        
-        for(int i=1; i < arr.length; i++){
-            for(int j=0; j < i; j++){
-                
-                if(arr[j] + j >= i && dp[i] > dp[j] + 1){
-                    // result[i] = j;
-                    dp[i] = dp[j] + 1;
-                }
-            }
-        }
-        
-        return dp[dp.length-1];
-    }
-
-
-
-    /**
+     /**
      * the trick is to convert a recursive relation to a dp relation 
      * dfs(r,c) = dfs(r+1,c)+dfs(r,c+1);
      * 
@@ -391,6 +359,56 @@ public class DP {
         }
         
         return dp[m-1][n-1];
+    }
+
+
+    ////////////////// JUMP GAME
+
+    // https://leetcode.com/problems/jump-game-ii/
+    public int jump(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        return jumpHelper(nums, 0, dp);
+    }
+    
+    int jumpHelper(int[] nums, int index, int[] dp){
+        if(index>=nums.length-1) return 0; // base condn
+        if(dp[index]!=0)return dp[index];
+        
+        int min = Integer.MAX_VALUE-10000;
+        for(int i = 1; i<=nums[index]; i++){ // i value
+            min = Math.min(min, 1 + jumpHelper(nums, index+i, dp)); // cost
+        }
+        return dp[index] = min;
+    }
+
+    /**
+     * https://www.youtube.com/watch?v=cETfFsSTGJI
+     * points
+     * 1 assign infinity to dp index 1 till end 
+     * 2 for i =1 loop j from j=0 till i
+     * 3 if arr[j]+j >=i checking if we can reach index i from index j
+     * if yes and dp[i] > dp[j]+1, we update
+     */
+    int jumpDP(int[] arr) {
+        // int[] result = new int[arr.length];
+        int n = arr.length;
+        int []dp = new int[n];
+        dp[0] = 0;
+        for(int i=1; i < arr.length ; i++){
+            dp[i] = Integer.MAX_VALUE-1;
+        }
+        
+        for(int i=1; i < arr.length; i++){
+            for(int j=0; j < i; j++){
+                // if can cross i, check jumps(dp[j] + 1)
+                if(arr[j] + j >= i && dp[i] > dp[j] + 1){
+                    // result[i] = j;
+                    dp[i] = dp[j] + 1;
+                }
+            }
+        }
+        return dp[n-1];
     }
 
 
@@ -615,7 +633,6 @@ public class DP {
      * j= i-1 till 0
      * 
      * WEIGHTED JOB SCHEDULING
-     * https://leetcode.com/problems/maximum-profit-in-job-scheduling/ 
      * 1 SORT ON THE BASIS OF END TIMES
      * 2 ASSIGN MAX OF (jobs[i].profit, dp[i-1]);
      * 3 CHECK FOR j = i-1 till 0;
@@ -624,6 +641,7 @@ public class DP {
      * finding profit, not longest, so take Max of profits
      * 
     */
+    // https://leetcode.com/problems/maximum-profit-in-job-scheduling/ 
     class Job {
         int start, end, profit;
         
@@ -647,11 +665,11 @@ public class DP {
         dp[0] = jobs[0].profit;
 
         for (int i = 1; i < n; i++){
-            dp[i] = Math.max(jobs[i].profit, dp[i-1]);
+            dp[i] = Math.max(jobs[i].profit, dp[i-1]); // 1
             for(int j = i-1; j >= 0; j--){
-                if(jobs[j].end <= jobs[i].start){ 
+                if(jobs[j].end <= jobs[i].start){  // 2
                     // if no overlap
-                    dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]);
+                    dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]); // 3
                     break;
                 }
             }
@@ -992,6 +1010,27 @@ public class DP {
         return dp[limit-1][n];
     }
 
+    // TRYING TO USE MEMOIZATION
+    // SEE CHEAPEST FLIGHTS WITH DP (ULTIMATE)
+    // INCLUDE EXCLUDE
+    // https://leetcode.com/problems/target-sum/
+    int sumCount = 0;
+    public int findTargetSumWays(int[] nums, int target) {
+        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
+        f(nums, 0, target);
+        return sumCount;
+    }
+    
+    void f(int[] nums, int index, int sum){
+        // need to use all els
+        if(index==nums.length && sum ==0){
+            sumCount++; 
+            return;
+        }
+        
+        f(nums, index+1, sum+nums[index]);
+        f(nums, index+1, sum-nums[index]);
+    }
 
     void matrixBlockSum(int[][] arr, int k){
         int R = arr.length; int C = arr[0].length;
@@ -1024,104 +1063,33 @@ public class DP {
         dp[row][col] = sum;
     }
 
-    /////////////////////////////// SUBSETS
-
-    /**this problem and the one below it are complementary
-     * one is to find if a subset exists with given sum
-     * second is to print all subsets with the sum
-     * 
-     * recursive approach, add or ignore
+     /**
+     * USING INCLUDE EXCLUDE TECHNIQUE AS IN KNAPSACK
      * 
      * dp approach
      * create 2d array
      */
     // https://www.geeksforgeeks.org/subset-sum-problem-dp-25/
     void subsetSum(int[] arr, int sum, int index){
-        int[] dp = new int[arr.length];
-        subsetSumHelper(arr, dp, sum, index);
+        subsetSumHelper(arr, sum, index);
     }
 
-    void subsetSumHelper(int[] arr, int[] dp, int sum, int index){
+    void subsetSumHelper(int[] arr, int sum, int index){
         if(sum == 0) {
-            utilCustom.Utility.print1DMatrix(dp);
             System.out.println("found");
             return;
         }
         if(index>=arr.length) return;
-        dp[index] = arr[index];
-        subsetSumHelper(arr, dp, sum - arr[index], index+1);
-        dp[index] = 0;
-        subsetSumHelper(arr, dp, sum , index+1);
+        subsetSumHelper(arr, sum - arr[index], index+1);
+        subsetSumHelper(arr, sum , index+1);
     }
-    //IMP
-    //2 subset problems for practice
+
+    /////////////////////////////// SUBSETS
+    // FIRST COL TRUE
+    // 0 ELS-> 0 SUM TRUE
+    // 0 SUM -> ALL ELS TRUE
+    // [n+1][target+1]
     
-    // https://www.geeksforgeeks.org/partition-a-set-into-two-subsets
-    //-such-that-the-difference-of-subset-sums-is-minimum/
-    
-    // https://www.youtube.com/watch?v=7BynUy5ml0I
-    // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
-
-
-
-    // https://www.geeksforgeeks.org/perfect-sum-problem-print-subsets-given-sum/
-
-
-    /**
-     * POINTS 
-     * 1 either include the element or not 
-     * LCS exc = f(arr, i+1, prev) inc = f(arr, i+1, arr[i]) return max
-     * 
-     * 2 knapsack similar include or exclude 
-     * 3 coin change diff is that the supply of coins is
-     * infinite so return f( S, m - 1, n ) + f( S, m, n-S[m-1] );
-     * 
-     * 3 similar subset sum 
-     * dp[index] = arr[index];
-     * subsetSumHelper(arr, dp, sum - arr[index], index+1); the element is added and sum is reduced
-     * dp[index] = 0;
-     * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
-     */
-
-    boolean subsetSumDP(int[] set, int sum){
-        // dp[0][0] =true;
-        int n = set.length;
-        boolean[][] dp = new boolean[n+1][sum+1];
-
-        for(int i=1; i<n; i++){
-            if(i == set[0]) dp[0][i] = true;
-        }
-        for(int i = 1; i<set.length; i++){
-            for(int j =0; j<=sum; j++){
-                // if(j==0) dp[i][j] = true;
-                // else 
-                if(set[i]>j) dp[i][j] = dp[i-1][j];//tricky : false or from above
-                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i]];
-            }
-        }
-        utilCustom.Utility.printMatrixBool(dp);
-        System.out.println("the subset exists : "+dp[n-1][sum]);
-        return dp[n-1][sum];
-    }
-
-
-    int maxSizeSubset(int[] set, int sum){
-        int maxLength = 0;
-        maxSizeSubsethelper(set, sum, 0, 0, maxLength);
-        return maxLength;
-    }
-
-    int maxSizeSubsethelper(int[] set, int sum, int index, int length, int maxLength){
-        if(index >= set.length) return 0;
-        if(sum == 0){
-            maxLength = Math.max(maxLength, length);
-            System.out.println("max in here " +maxLength);
-            return 0;
-        }
-        return Math.max(maxSizeSubsethelper(set, sum-set[index], index+1, length+1, maxLength),
-        maxSizeSubsethelper(set, sum, index+1, length, maxLength));
-    }
-
     /** 
      * for every recursion involving selecting or not, remember
      * 1 the base condition will provide the output
@@ -1146,28 +1114,10 @@ public class DP {
         canPartitionHelper(set, target, index+1);
     }
 
-    boolean canPartitionDP(int[] set){
-        int sum = 0;
-        for(int i=0; i<set.length; i++){
-            sum+=set[i];
-        }
-        if(sum%2!=0) return false;
-        int target = sum/2;
-        boolean[][] dp = new boolean[set.length+1][target+1];
 
-        dp[0][0] = true;
-        for(int i=1; i<=set.length; i++){
-            for(int j =0; j<=target;j++){
-                if(set[i-1]>j) dp[i][j] = dp[i-1][j];
-                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i-1]];
-            }
-        }
-        utilCustom.Utility.printMatrixBool(dp);
-        return dp[set.length][target];
-    }
-
-
-    // FIRST COL IS ALL TRUE LIKE LCS
+    // FIRST COL IS ALL TRUE, 
+    // 0 ELS-> 0 SUM TRUE
+    // 0 SUM -> ALL ELS TRUE
     // https://leetcode.com/problems/partition-equal-subset-sum/
     public boolean canPartition2(int[] set) {
         int sum = 0;
@@ -1193,7 +1143,8 @@ public class DP {
     }
 
 
-    /**We can use Dynamic Programming 
+    /**
+     * We can use Dynamic Programming 
      * (similar to the way we find if a set can be partitioned into two equal sum subsets). 
      * Then we find the max possible sum, which will be our first partition.
      * Second partition will be the difference of the total sum and firstSum.
@@ -1233,29 +1184,102 @@ public class DP {
         return Math.abs(firstPart - secondPart);
     } 
         
-    // TRYING TO USE MEMOIZATION
-    // SEE CHEAPEST FLIGHTS WITH DP (ULTIMATE)
-    // INCLUDE EXCLUDE
-    // https://leetcode.com/problems/target-sum/
-    int sumCount = 0;
-    public int findTargetSumWays(int[] nums, int target) {
-        // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
-        f(nums, 0, target);
-        return sumCount;
-    }
-    
-    void f(int[] nums, int index, int sum){
-        // need to use all els
-        if(index==nums.length && sum ==0){
-            sumCount++; 
-            return;
-        }
-        
-        f(nums, index+1, sum+nums[index]);
-        f(nums, index+1, sum-nums[index]);
-    }
-    // TRY TO ADD MEMOIZATION
 
+   
+    //IMP
+    //2 subset problems for practice
+
+    // https://www.youtube.com/watch?v=7BynUy5ml0I
+    // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+
+
+    // https://www.geeksforgeeks.org/perfect-sum-problem-print-subsets-given-sum/
+
+
+   /** 
+    * SIMILAR TO PARTTION, HERE WE CHECK FOR A SUM INTEAD OF SUM/2
+   */
+    boolean subsetSumDP(int[] set, int sum){
+        // dp[0][0] =true;
+        int n = set.length;
+        boolean[][] dp = new boolean[n+1][sum+1];
+
+        for(int i=1; i<n; i++){
+            if(i == set[0]) dp[0][i] = true;
+        }
+        for(int i = 1; i<set.length; i++){
+            for(int j =0; j<=sum; j++){
+                // if(j==0) dp[i][j] = true;
+                // else 
+                if(set[i]>j) dp[i][j] = dp[i-1][j];//tricky : false or from above
+                else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i]];
+            }
+        }
+        utilCustom.Utility.printMatrixBool(dp);
+        System.out.println("the subset exists : "+dp[n-1][sum]);
+        return dp[n-1][sum];
+    }
+
+    
+    // https://www.geeksforgeeks.org/maximum-size-subset-given-sum/
+    int maxSizeSubset(int[] set, int sum){
+        int maxLength = 0;
+        maxSizeSubsethelper(set, sum, 0, 0, maxLength);
+        return maxLength;
+    }
+
+    int maxSizeSubsethelper(int[] set, int sum, int index, int length, int maxLength){
+        if(index >= set.length) return 0;
+        if(sum == 0){
+            maxLength = Math.max(maxLength, length);
+            System.out.println("max in here " +maxLength);
+            return 0;
+        }
+        return Math.max(maxSizeSubsethelper(set, sum-set[index], index+1, length+1, maxLength),
+        maxSizeSubsethelper(set, sum, index+1, length, maxLength));
+    }
+
+    /** 
+     * use 2 arrays dp and count
+     * if (i >= set[j-1]) {
+     *  subset[i,j] = subset[i,j] || subset[i-set[j-1]][j-1];
+     * 
+     *  if (subset[i,j])
+     *   count[i,j] = Math.Max(count[i, j-1], count[i- set[j-1], j-1] + 1);
+     *  }
+     * 
+     * 1 2 ARRAYS DP AND COUNT
+     * 2 UPDATE CONDITIONIS TRICKY, UPDATE COUNT ONLY IF dp[i][j] IS TRUE
+     * 3 ELSE SIMILAR, TAKE FROM ABOVE IF SMALLER
+     * 
+     */
+    // https://www.geeksforgeeks.org/maximum-size-subset-given-sum/
+    public int maxSizeSubsetDP(int[] nums, int target) {
+        int n = nums.length;
+        if(n==0 || n==1) return 0;
+        
+        boolean[][] dp = new boolean[n+1][target+1];
+        int[][] count = new int[n+1][target+1];
+        
+        for(int i =0; i<=n; i++) dp[i][0] = true;
+        
+        for(int i =1; i<=n; i++){
+            for(int j = 1; j<=target; j++){
+                if(nums[i-1]>j) {
+                    dp[i][j] = dp[i-1][j];
+                    count[i][j] = count[i-1][j];
+                }
+                else {
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]];
+                    // update count only if dp[i][j]is true
+                    if(dp[i][j]){
+                        count[i][j] = Math.max(count[i-1][j], count[i-1][j-nums[i-1]])+1;
+                    }
+                }
+            }
+        }
+        return count[n][target];
+    }
 
     ////////////////////////////// MINI-MAX
 
@@ -1463,11 +1487,39 @@ public class DP {
 
 
     ////////////////////////// STRING DP
-
+    // if similar, refer diagonally upper el
     /** 
+     * size m+1, no filling row col
+     * POINTS :
+     * 1 dp size [m+1][n+1]
+     * 2 assign first row and col -> i to match with null string
+     * 3 start from i=1, j=1 and word.charAt(i-1) && word.charAt(j-1)
+     * 
+    */
+    // https://leetcode.com/problems/edit-distance/submissions/
+    public int minEditDistance(String word1, String word2) {
+        int m = word2.length();
+        int n = word1.length();
+        
+        int[][] dp = new int[m+1][n+1];
+        
+        for(int i =0; i<=m; i++) dp[i][0] = i;
+        for(int i =0; i<=n; i++) dp[0][i] = i;
+        
+        for(int i =1; i<=m; i++){
+            for(int j =1; j<=n; j++){
+                if(word1.charAt(j-1) == word2.charAt(i-1)) dp[i][j] = dp[i-1][j-1];
+                else dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i][j-1], dp[i-1][j]))+1;
+            }
+        }
+        return dp[m][n];
+    }
+    
+    /** 
+     * 
      * POINTS :
      * 1 RUN LOOPS FOR BOTH STRINGS
-     * 2
+     * 2 FIRST ROW COL -> 0
     */
     // https://leetcode.com/problems/decode-ways/discuss/
     // 30358/Java-clean-DP-solution-with-explanation
@@ -1550,7 +1602,6 @@ public class DP {
      *
     */
     int longestCommonSubsequence(String str1, String str2) {
-        
         int m = str1.length(); int n = str2.length();
         
         int[][] dp = new int [m+1][n+1];
@@ -1560,9 +1611,7 @@ public class DP {
                 if(str1.charAt(i-1) == str2.charAt(j-1)){
                     dp[i][j] = dp[i-1][j-1]+1;
                 } 
-                else {
-                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);    
-                }
+                else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
             }
         }
         return dp[m][n];
@@ -1821,112 +1870,8 @@ public class DP {
         }
     }
 
-    /** 
-     * POINTS:
-     * 1 NO INDEX IS PASSED AS SUBSTRING IS PASSED FOR NEXT CALL
-     * 2 WE FIND PALINDROMIC SUBSTRING AND THEN PASS THE OTHER SUSBTRING TO NEXT CALL
-     * 3 NO GLOBAL VAR, INITIALISE INSIDE AND RETURN
-    */
-    // int min = Integer.MAX_VALUE;
-    // https://leetcode.com/problems/palindrome-partitioning-ii
-    public int minCut(String s) {
-        if(s.length() == 1) return 0;
-        return helper(s);
-    }
-    
-    // like dfs in matrix
-    int helper(String str){
-        int min = Integer.MAX_VALUE;
-        if(utilCustom.Utility.isPalindrome(str)) return 0;
-                
-        for(int i = 0; i<str.length(); i++){
-            String palin = str.substring(0, i+1);
-            if(utilCustom.Utility.isPalindrome(palin)){
-                // System.out.println(palin);
-                min = Math.min(min, 1 + helper(str.substring(i+1)) );
-            }
-        }
-        return min;// base case
-    }
-
-    /** 
-     * https://www.youtube.com/watch?v=lDYIvtBVmgo
-     * POINTS :
-     * 1 SAME AS MATRIX MULTIPLICATION
-     * 2 FOR PALINDROME ALWAYS USE SAME SIZED ARRAY, NOT n+1
-     * 3 FOR (l=1) USE 0 AS INDIVIDUAL LETTER IS A PALINDROME 
-     * 
-     * 4 l = 1 to n; i = 0 to i+l-1<n; j = i+l-1
-     * 
-     * 5 for(k = i; k < j)
-     *    min = (dp[i][k] + dp[k+1][j])
-     * 
-     * 6 dp[i][j] = min+1;
-     * 
-    */
-    // https://leetcode.com/problems/palindrome-partitioning-ii/
-    public int minCutDP(String s) {
-        if(utilCustom.Utility.isPalindrome(s)) return 0;
-        int n = s.length();
-        int[][] dp = new int[n][n];
-        
-        for(int l =1; l<=n; l++){
-            for(int i=0; i+l-1<n; i++){
-                int j = i+l-1;
-                if(l==1) {
-                    dp[i][j] = 0; continue;
-                }
-                if(utilCustom.Utility.isPalindrome(s.substring(i,j+1))) dp[i][j] = 0;
-                else{
-                    int min = Integer.MAX_VALUE;
-                    for(int k = i; k<j; k++){
-                        min = Math.min(min, dp[i][k] + dp[k+1][j]);
-                    }
-                    dp[i][j] = min+1;    
-                    System.out.println("dp["+i+"]["+j+"] "+dp[i][j]);
-                }
-            }
-        }
-        utilCustom.Utility.printMatrix(dp);
-        return dp[0][n-1];
-    }
-
-    /** 
-     * MATRIX CHAIN MULTIPLICATION
-     * BURSTING BALLOONS
-     * PAINTER'S PARTITION
-     * PALINDROMIC PARTITIONING
-     * */
-
-    /**
-     * https://www.youtube.com/watch?v=kMK148J9qEE 
-     * MATRIX MULTIPLICATION , UPPER TRIANGULAR
-     * POINTS : 
-     * 1 i+l<n not i+l-1
-     * as here we consider l=2 to include 3 elements; one more
-     * 2 k =i+1 till j 
-     * 3 dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k][j] + arr[i]*arr[k]*arr[j]);
-     * 
-     * 
-     * imp 
-     * dp[i][k] + dp[k][j] + arr[i]*arr[k]*arr[j]
-    */
-    public int matrixMultiplication(int arr[]){
-        int n = arr.length;
-        int dp[][] = new int[n][n];
-
-        for(int l=2; l<n; l++){
-            for(int i=0; l+i<n; i++){
-                int j = i + l;
-                dp[i][j] = Integer.MAX_VALUE;
-                for(int k=i+1; k<j; k++){
-                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k][j] + arr[i]*arr[k]*arr[j]);
-                }
-            }
-        }
-        utilCustom.Utility.printMatrix(dp);
-        return dp[0][arr.length-1];
-    }
+    /////////////////////////// PARTITION
+    // LIKE JUMP GAME
 
     /** 
      * 1 THE APPROX RELATON IS 
@@ -1998,6 +1943,77 @@ public class DP {
         return total; 
     } 
 
+    /** 
+     * POINTS:
+     * 1 NO INDEX IS PASSED AS SUBSTRING IS PASSED FOR NEXT CALL
+     * 2 WE FIND PALINDROMIC SUBSTRING AND THEN PASS THE OTHER SUSBTRING TO NEXT CALL
+     * 3 NO GLOBAL VAR, INITIALISE INSIDE AND RETURN
+    */
+    // int min = Integer.MAX_VALUE;
+    // https://leetcode.com/problems/palindrome-partitioning-ii
+    public int minCut(String s) {
+        if(s.length() == 1) return 0;
+        return helper(s);
+    }
+    
+    // like dfs in matrix
+    int helper(String str){
+        int min = Integer.MAX_VALUE;
+        if(utilCustom.Utility.isPalindrome(str)) return 0;
+                
+        for(int i = 0; i<str.length(); i++){
+            String palin = str.substring(0, i+1);
+            if(utilCustom.Utility.isPalindrome(palin)){
+                // System.out.println(palin);
+                min = Math.min(min, 1 + helper(str.substring(i+1)) );
+            }
+        }
+        return min;// base case
+    }
+
+    /** 
+     * https://www.youtube.com/watch?v=lDYIvtBVmgo
+     * POINTS :
+     * 1 SAME AS MATRIX MULTIPLICATION
+     * 2 FOR PALINDROME ALWAYS USE SAME SIZED ARRAY, NOT n+1
+     * 3 FOR (l=1) USE 0 AS INDIVIDUAL LETTER IS A PALINDROME 
+     * 
+     * 4 l = 1 to n; i = 0 to i+l-1<n; j = i+l-1
+     * 
+     * 5 for(k = i; k < j)
+     *    min = (dp[i][k] + dp[k+1][j])
+     * 
+     * 6 dp[i][j] = min+1;
+     * 
+    */
+    // https://leetcode.com/problems/palindrome-partitioning-ii/
+    public int minCutDP(String s) {
+        if(utilCustom.Utility.isPalindrome(s)) return 0;
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        
+        for(int l =1; l<=n; l++){
+            for(int i=0; i+l-1<n; i++){
+                int j = i+l-1;
+                if(l==1) {
+                    dp[i][j] = 0; continue;
+                }
+                if(utilCustom.Utility.isPalindrome(s.substring(i,j+1))) dp[i][j] = 0;
+                else{
+                    int min = Integer.MAX_VALUE;
+                    for(int k = i; k<j; k++){
+                        min = Math.min(min, dp[i][k] + dp[k+1][j]);
+                    }
+                    dp[i][j] = min+1;    
+                    System.out.println("dp["+i+"]["+j+"] "+dp[i][j]);
+                }
+            }
+        }
+        utilCustom.Utility.printMatrix(dp);
+        return dp[0][n-1];
+    }
+
+
     // similar 
     // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
 
@@ -2040,7 +2056,46 @@ public class DP {
         return dp[0][n-1];
     }
 
+    // https://leetcode.com/problems/
+    // number-of-ways-to-form-a-target-string-given-a-dictionary/
 
+    /** 
+     * MATRIX CHAIN MULTIPLICATION
+     * BURSTING BALLOONS
+     * PAINTER'S PARTITION
+     * PALINDROMIC PARTITIONING
+     * */
+
+    /**
+     * https://www.youtube.com/watch?v=kMK148J9qEE 
+     * MATRIX MULTIPLICATION , UPPER TRIANGULAR
+     * POINTS : 
+     * 1 i+l<n not i+l-1
+     * as here we consider l=2 to include 3 elements; one more
+     * 2 k =i+1 till j 
+     * 3 dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k][j] + arr[i]*arr[k]*arr[j]);
+     * 
+     * 
+     * imp 
+     * dp[i][k] + dp[k][j] + arr[i]*arr[k]*arr[j]
+    */
+    public int matrixMultiplication(int arr[]){
+        int n = arr.length;
+        int dp[][] = new int[n][n];
+
+        for(int l=2; l<n; l++){
+            for(int i=0; l+i<n; i++){
+                int j = i + l;
+                dp[i][j] = Integer.MAX_VALUE;
+                for(int k=i+1; k<j; k++){
+                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k][j] + arr[i]*arr[k]*arr[j]);
+                }
+            }
+        }
+        utilCustom.Utility.printMatrix(dp);
+        return dp[0][arr.length-1];
+    }
+    
     /** 
      * POINTS :
      * 1 USE A DP OF SIZE m+1, n+1

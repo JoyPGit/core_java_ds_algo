@@ -1114,8 +1114,48 @@ public class Tree {
         res+=')';
     }
 
+    // fails for -ve values, need to add a check for that
     // https://leetcode.com/problems/serialize-and-deserialize-bst/
+    int index = 0;
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if(root == null) return "";
+        String res = "";
+        String result = dfsPre(root, res);
+        // System.out.println("res "+result);
+        return result;
+    }
+    
+    public String dfsPre(TreeNode root, String res){
+        if(root == null) return "*";
+        String result = "";
+        result+=""+root.val;
+        result+=dfsPre(root.left, res);
+        result+=dfsPre(root.right, res);
+        return result;
+    }
 
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data.length()==0) return null;
+        if(data.length()== 1) return new TreeNode(Integer.parseInt(""+data.charAt(0)));
+        
+        return helper(data);
+    }
+        
+    public TreeNode helper(String data){  
+        // System.out.println("index "+index);
+        
+        if( index >= data.length() ||
+            (""+data.charAt(index)).equals("*")) {
+            this.index++;
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.parseInt(""+data.charAt(this.index++)));
+        root.left = helper(data);
+        root.right = helper(data);
+        return root;
+    }
 
     //////////////////////////////////PATH SUM
     /// SIMILAR TO HEIGHT AND ANCESTOR TEMPLATE
@@ -1499,7 +1539,8 @@ public class Tree {
         curr.right = build(list, mid+1, end);
         return curr;
     }
-    ///////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////// BST
 
     // https://leetcode.com/problems/kth-smallest-element-in-a-bst
     int counter = 0;
@@ -1619,14 +1660,15 @@ public class Tree {
         if (root == null) return new BSTCustomLong(Long.MIN_VALUE, Long.MAX_VALUE, 0);
         BSTCustomLong left = postBST(root.left);
         BSTCustomLong right = postBST(root.right);
-    
-        if (root.val > left.max && root.val < right.min) { // valid BST
+
+        // valid BST
+        if (root.val > left.max && root.val < right.min) {
             BSTCustomLong res = new BSTCustomLong(
                 Math.max(right.max, root.val),//update max
                 Math.min(left.min, root.val), 0);//update min
             return res;
         } else isBST = false;
-        //invalid BST so MAX is sent in place of min
+        // invalid BST so MAX is sent in place of min
         return new BSTCustomLong(Long.MAX_VALUE, Long.MIN_VALUE, 0);
     }
 
