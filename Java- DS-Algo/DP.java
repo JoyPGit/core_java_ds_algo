@@ -4,8 +4,11 @@ import utilCustom.*;
 public class DP {
 
     /**
-     * subset -> knapsack, coin change no of ways,
      * 
+     * RELN -> PAINTER, STAIRS, COIN 1D
+     * 
+     * subset -> knapsack, coin change no of ways,
+     * subset, coin -> 1st col TRUE, 1
      * 1d coin(always for min no), rod cutting, train ticket
      * book allocation
      * match : 
@@ -89,6 +92,63 @@ public class DP {
     }
 
 
+    /////////////////////////// HOUSE ROBBER
+    /**
+     * 1 add boundary condition check for n= 0 and 1 
+     * 2 also dp[1] = max of arr[0] and arr[1] 2 
+     * 3 dp[i] = max(arr[i]+ dp[i-2], dp[i-1])
+     */
+    int houseRobber(int[] arr) {
+        int n = arr.length;
+
+        if (n == 0) return 0;
+        if (n == 1) return arr[0];
+        if (n == 2) return arr[0] > arr[1] ? arr[0] : arr[1];
+
+        int[] dp = new int[n];
+
+        dp[0] = arr[0];
+        dp[1] = Math.max(arr[0], arr[1]);
+
+        for (int i = 2; i < arr.length; i++) {
+            dp[i] = Math.max(arr[i] + dp[i-2], dp[i-1]);
+        }
+        return dp[dp.length - 1];
+    }
+
+    /** 
+     * POINTS :
+     * 1 TRY TO CONVERT TO HOUSE ROBBER
+     * 2 CREATE A NEW ARRAY OF SIZE = max el of arr
+     * 3 TAKE CUMULATIVE SUM
+    */
+    // [3,1]
+    // https://leetcode.com/problems/delete-and-earn/
+    public int deleteAndEarn(int[] nums) {
+        Arrays.sort(nums);
+        
+        if(nums.length == 0) return 0;
+        if(nums.length == 1) return nums[0];
+        // if(nums.length == 2) return Math.max(nums[0], nums[1]);
+        int n = nums[nums.length-1]+1;
+        System.out.println(n);
+        int[] base = new int[n];
+        int[] dp = new int[n];
+        
+        for(int i =0; i<nums.length; i++) base[nums[i]] += nums[i];
+        
+        dp[0] = base[0];
+        dp[1] = Math.max(dp[0], base[1]);
+        
+        for(int i = 2; i<n; i++){
+            dp[i] = Math.max(dp[i-2] + base[i], dp[i-1]);
+        }
+        
+        return dp[n-1];
+    }
+
+    //////////// MAX PROD SUBARRAY
+
     // https://leetcode.com/explore/interview/card/
     // top-interview-questions-hard/121/dynamic-programming/860/
     /** 
@@ -126,8 +186,6 @@ public class DP {
 
         dp[0] = 0;
 
-        // the code is similar to LIS i=1, j=0, 
-        // after for loop dp[i] value 
         for(int i=1; i<=arr.length; i++ ){
             int max = Integer.MIN_VALUE;
             for(int j = 0; j<i; j++){
@@ -140,6 +198,15 @@ public class DP {
         return dp[dp.length-1];
     }
 
+    /** 
+     * FILL DP WITH AMT+1, dp[0][0] = 0
+     * 
+     * POINTS :
+     * 1 dp[0] = 0, NOT SELECTING ANY CON CAN GGIVE A VALUE OF 0,
+     * IT'S NOT IMPOSSIBLE, SO DON'T RETURN -1
+     * 2 2 FOR LOOPS, SIMILAR TO PARTITION,
+     * COMPARING ALL COIN VALUES(j) FOR AN amount(i)
+    */
     // https://leetcode.com/problems/coin-change/solution/
     public int coinChange1D(int[] coins, int amount) {
         int max = amount + 1;
@@ -197,62 +264,6 @@ public class DP {
         }
         return dp[n];
     }
-
-    /////////////////////////// HOUSE ROBBER
-    /**
-     * 1 add boundary condition check for n= 0 and 1 
-     * 2 also dp[1] = max of arr[0] and arr[1] 2 
-     * 3 dp[i] = max(arr[i]+ dp[i-2], dp[i-1])
-     */
-    int houseRobber(int[] arr) {
-        int n = arr.length;
-
-        if (n == 0) return 0;
-        if (n == 1) return arr[0];
-        if (n == 2) return arr[0] > arr[1] ? arr[0] : arr[1];
-
-        int[] dp = new int[n];
-
-        dp[0] = arr[0];
-        dp[1] = Math.max(arr[0], arr[1]);
-
-        for (int i = 2; i < arr.length; i++) {
-            dp[i] = Math.max(arr[i] + dp[i-2], dp[i-1]);
-        }
-        return dp[dp.length - 1];
-    }
-
-    /** 
-     * POINTS :
-     * 1 TRY TO CONVERT TO HOUSE ROBBER
-     * 2 CREATE A NEW ARRAY OF SIZE = max el of arr
-     * 3 TAKE CUMULATIVE SUM
-    */
-    // [3,1]
-    // https://leetcode.com/problems/delete-and-earn/
-    public int deleteAndEarn(int[] nums) {
-        Arrays.sort(nums);
-        
-        if(nums.length == 0) return 0;
-        if(nums.length == 1) return nums[0];
-        // if(nums.length == 2) return Math.max(nums[0], nums[1]);
-        int n = nums[nums.length-1]+1;
-        System.out.println(n);
-        int[] base = new int[n];
-        int[] dp = new int[n];
-        
-        for(int i =0; i<nums.length; i++) base[nums[i]] += nums[i];
-        
-        dp[0] = base[0];
-        dp[1] = Math.max(dp[0], base[1]);
-        
-        for(int i = 2; i<n; i++){
-            dp[i] = Math.max(dp[i-2] + base[i], dp[i-1]);
-        }
-        
-        return dp[n-1];
-    }
-
     
 
     /////////////////////////// STAIR, UNIQUE PATH
@@ -307,7 +318,7 @@ public class DP {
         if(index >= cost.length) return 0; // 2
         if(dp[index]!=0) return dp[index]; // 3
         int min = Integer.MAX_VALUE-100;
-        // 4 i=0 causes overflow, i determines jump length
+        // 4 i=0 same index, causes overflow, i determines jump length
         for(int i = 1; i<3; i++){         
             // 5 cost of current
             min = Math.min(min, cost[index] + stairsHelper(cost, index+i, dp)); 
@@ -315,7 +326,9 @@ public class DP {
         return dp[index] = min; // 6
     }
 
-    ///////// JUMP GAME
+
+    ////////////// JUMP GAME
+
     // check partition
     // https://leetcode.com/problems/jump-game-ii/
     public int jump(int[] nums) {
@@ -365,44 +378,7 @@ public class DP {
     }
 
     /////////////////////////// PARTITION
-    // LIKE JUMP GAME
-
-    // PAINTER'S PARTITION
-    // { 10, 20, 60, 50, 30, 40 }; int painters = 4; 
-    int paintersPartitionDP(int arr[], int k) { 
-        int n = arr.length;
-        int dp[][] = new int[k+1][n+1]; 
-    
-        // 1 painter 
-        for (int i = 1; i <= n; i++) dp[1][i] = sum(arr, 0, i - 1); 
-    
-        // 1 board 
-        for (int i = 1; i <= k; i++) dp[i][1] = arr[0]; 
-    
-        // 2 to k partitions 
-        for (int i = 2; i <= k; i++) { 
-            // 2 to n boards 
-            for (int j = 2; j <= n; j++) { 
-                int min = Integer.MAX_VALUE;    
-    
-                // i-1 th separator before position arr[p=1..j] 
-                for (int p = 1; p <= j; p++) {
-                    min = Math.min(min, Math.max(sum(arr, p, j - 1), dp[i - 1][p]));  
-                } 
-                dp[i][j] = min; 
-            } 
-        } 
-        utilCustom.Utility.printMatrix(dp);
-        return dp[k][n]; 
-    } 
-
-    int sum(int arr[], int from, int to) { 
-        int total = 0; 
-        for (int i = from; i <= to; i++) 
-            total += arr[i]; 
-        return total; 
-    } 
-
+    // LIKE CLIMBING STAIRS
 
     /** 
      * 1 THE APPROX RELATON IS 
@@ -435,6 +411,42 @@ public class DP {
             (utilCustom.Utility.sumSubarray(boards, 0, k), painterHelper(boards, painters-1, k+1)));
         }
         return min;
+    }
+
+    // PAINTER'S PARTITION
+    // { 10, 20, 60, 50, 30, 40 }; int painters = 4; 
+    int paintersPartitionDP(int arr[], int k) { 
+        int n = arr.length;
+        int dp[][] = new int[k+1][n+1]; 
+    
+        // 1 painter 
+        for (int i = 1; i <= n; i++) dp[1][i] = sum(arr, 0, i - 1); 
+    
+        // 1 board 
+        for (int i = 1; i <= k; i++) dp[i][1] = arr[0]; 
+    
+        // 2 to k partitions 
+        for (int i = 2; i <= k; i++) { 
+            // 2 to n boards 
+            for (int j = 2; j <= n; j++) { 
+                int min = Integer.MAX_VALUE;    
+    
+                // i-1 th separator before position arr[p=1..j] 
+                for (int p = 1; p <= j; p++) {
+                    min = Math.min(min, Math.max(dp[i - 1][p], sum(arr, p, j - 1)));  
+                } 
+                dp[i][j] = min; 
+            } 
+        } 
+        utilCustom.Utility.printMatrix(dp);
+        return dp[k][n]; 
+    } 
+
+    int sum(int arr[], int from, int to) { 
+        int total = 0; 
+        for (int i = from; i <= to; i++) 
+            total += arr[i]; 
+        return total; 
     }
 
 
@@ -554,6 +566,7 @@ public class DP {
     // https://leetcode.com/problems/
     // number-of-ways-to-form-a-target-string-given-a-dictionary/
 
+    ///////////////////////// MCM 
     /** 
      * MATRIX CHAIN MULTIPLICATION
      * BURSTING BALLOONS
@@ -945,19 +958,18 @@ public class DP {
     
     // WITH MEMOIZATION
     int knapsackMemo(int[] val, int[] wt, int remainingWeight, int currVal, int index, int[][] dp){
-        if(remainingWeight<0 || index>=val.length) return 0;
-        // System.out.println("index "+index+" currVal "+ currVal);
+        if(remainingWeight<0 || index>=val.length) return 0; // 1
         if(remainingWeight == 0) return dp[index][remainingWeight] = currVal;
         
         // if(dp[index][remainingWeight]!=0) return dp[index][remainingWeight];
         utilCustom.Utility.printMatrix(dp);
 
-        dp[index][remainingWeight] = 
+        dp[index][remainingWeight] =  // 2
         Math.max(
         knapsackMemo(val, wt, remainingWeight - wt[index], currVal + val[index], index, dp),
         knapsackMemo(val, wt, remainingWeight, currVal, index+1, dp));
         // boundary conditions are remainingWeight - wt[index] and index+1
-        return dp[index][remainingWeight];
+        return dp[index][remainingWeight]; // 3
     }
 
     /** 

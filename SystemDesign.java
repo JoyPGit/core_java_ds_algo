@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class SystemDesign {
-    // CTCI SYSTEEM DESIGN
+    // CTCI SYSTEM DESIGN
     // tic-tac-toe game
     // chess board
     // trie

@@ -3,7 +3,25 @@ import java.util.*;
 public class Backtrack {
 
     /**  
+     * sorting is necessary to remove [7,1]
+     * [1,7],[2,6],[2,1,5],[7,1]]
      * 
+     * if individual duplicates are to be removed, use hashset
+     * for dup sets, use res.contains(curr)
+     * 
+     * subsets-ii, all subsets w/o dups
+     * (sort and check if same, continue)
+     * 
+     * comb-ii, 
+     * no dup sets (res.contains)
+     * no dup in the same set(sort and run check)
+     * 
+     * perm-i
+     * 
+     * 
+     * subset -> add at first, remember empty []
+     * 
+     * ***********************************************
      * DFS WITH RETURN TEMPLATE
      * 
      * boolean dfs(char[][] board, int row, int col, String word, int index){
@@ -137,7 +155,7 @@ public class Backtrack {
     }
 
 
-    // Subsets II (contains duplicates) : 
+    // Subsets II (contains duplicate elements) : 
     /** can use a HashMap to keep track
      * or
      * if(i > start && nums[i] == nums[i-1]) continue;
@@ -162,13 +180,13 @@ public class Backtrack {
     } 
 
     
-    // Permutations : https://leetcode.com/problems/permutations/
     // Given a collection of distinct integers, return all possible permutations
     /** 
      * what's the diff w.r.t combinations?
      * 1 Arrays.sort(nums) is not used
      * 
      * 2 only add when size == nums.length, 
+     * 
      * 3 start from 0th index always, AND THE CHECK IS NOT ON INDEX
      *   RATHER ON THE PRESENCE OF THE EL, AS WE ITERATE FROM START
      *   EVERY TIME
@@ -177,6 +195,7 @@ public class Backtrack {
      *   use hashmap
      *   (or) nums[i] == nums[i-1] && i>start
      */
+    // Permutations : https://leetcode.com/problems/permutations/
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
@@ -205,8 +224,10 @@ public class Backtrack {
      * 
      * The difficulty is to handle the duplicates.
      * With input as [1a, 1b, 2a] (duplicate 1),
-     * If we don't handle the duplicates, the result will be: [1a, 1b, 2a], [1b, 1a, 2a]..,
+     * If we don't handle the duplicates, 
+     * the result will be: [1a, 1b, 2a], [1b, 1a, 2a]..,
      * so we must make sure 1a goes before 1b to avoid duplicates
+     * 
      * 2 By using nums[i-1]==nums[i] && !used[i-1], 
      * we can make sure that 1b is not chosen before 1a
      * 
@@ -248,9 +269,13 @@ public class Backtrack {
     // https://www.youtube.com/watch?v=nYFd7VHKyWQ
     
 
+    /** 
+     * combinations of size k are reqd; add a check for list.size
+     * compare this ques and permute-i
+     * 
+     */ 
+
     // https://leetcode.com/problems/combinations/
-    // this ques is quite silly start with combination sum 2
-    // if all combinations of size k are reqd; add a check for list.size
     public List<List<Integer>> combine(int n, int k) {
         int[] nums = new int[n];
         for(int i=0; i<n; i++) nums[i] = i+1;
@@ -335,63 +360,43 @@ public class Backtrack {
      * BUT HERE WE HAVE TO RETURN A LIST OF ALL PALINDROMIC SUBSTRINGS 
      * AFTER SPLITTING
      * 
-     * start changes every time
+     * 
+     * pass index and start from i = index+1
+     * imp : i<= str.length()
      */
     // https://leetcode.com/problems/palindrome-partitioning
-    public List<List<String>> palindromePartition(String s) {
-        List<List<String>> res = new ArrayList<>();
-        List<String> list = new ArrayList<>();
-        backtrack7(res, list, s, 0);
-        System.out.println(res);
-        return res;
-    }
-    
-    public void backtrack7(List<List<String>> res, List<String> list, String s, int start){
-       if(start == s.length())
-          res.add(new ArrayList<>(list));
-       else{
-          for(int i = start; i < s.length(); i++){
-            String palin = s.substring(start, i+1);
-            if(utilCustom.Utility.isPalindrome(palin)){
-                list.add(palin);
-                backtrack7(res, list, s, i + 1);// 's' is passed
-                list.remove(list.size() - 1);
-            }
-          }
-       }
-    }
-
-
-    /** 
-     * DIFF w.r.t ABOVE IS WE DON'T PASS  THE INDEX, RATHER THE
-     * SUBSTRING IS PASSED AND WE ALWAYS START FROM 0.
-    */
-    // https://leetcode.com/problems/palindrome-partitioning
-    public List<List<String>> partition(String s) {
+    public List<List<String>> palinPartition(String s) {
         List<List<String>> res = new ArrayList<>();
         List<String> curr = new ArrayList<>();
-        helper(res, curr, s);
+        helper(res, curr, s, 0);
         return res;
     }
     
     
-    void helper(List<List<String>> res, List<String> curr, String str){
-        if(str.length() == 0){
-            // System.out.println(curr);
+    void helper(List<List<String>> res, List<String> curr, String str, int index){
+        if(index == str.length()){
             res.add(new ArrayList<>(curr));
-            return;
-        } 
+        }
         
-        for(int i = 0; i<str.length(); i++){
-            String palin = str.substring(0, i+1);
-            if(utilCustom.Utility.isPalindrome(palin)) {
-                // System.out.println(palin);
-                curr.add(palin);
-                helper(res, curr, str.substring(i+1));// pass the string
+        // <=str.length()
+        for(int i = index+1; i<=str.length(); i++){
+            if(isPalindrome(str.substring(index, i))){
+                curr.add(str.substring(index, i)); 
+                helper(res, curr, str, i);
                 curr.remove(curr.size()-1);
             }
         }
     }
+    
+    boolean isPalindrome(String str){
+        int i = 0; int j = str.length()-1;
+        while(i<=j){
+            if(str.charAt(i) != str.charAt(j)) return false;
+            i++; j--;
+        }
+        return true;
+    }
+
 
     // https://www.youtube.com/watch?v=KAoRNDx-S8M
     // https://leetcode.com/problems/split-a-string-into-the-max-number-of-unique-substrings
@@ -418,6 +423,49 @@ public class Backtrack {
         }
         return countSplit;
     }
+
+    /////////////// UNIQUE -> USE HASHMAP
+    /**
+     * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
+     * use BACKTRACKING FORMAT 
+     * 
+     * 1 dfs(){ res.add; for(){ add(i) //ADD dfs(i+1)
+     * remove(list.size()-1) //REMOVE } }
+     * 
+     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE COUNTED
+     * SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7 
+     * 
+     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
+     * 4 START WITH i = start AND USE i NOT start 
+     * 5 FOR NO DUPLICATES -> !res.contains(list)
+     */
+
+    int uniqueCombinationsSumK(int[] arr, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        // Arrays.sort(arr);
+        int start = 0;
+        int sum = 0;
+        btk(res, list, arr, k, start, sum);
+        System.out.println(res);
+        return res.size();
+    }
+
+    void btk(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
+        if (sum > k) return;
+
+        if(k == sum && !res.contains(list)){
+            res.add(new ArrayList<>(list)); 
+            return;
+        }
+        
+        for (int i = start; i < arr.length; i++) {
+            list.add(arr[i]);
+            btk(res, list, arr, k, i + 1, sum + arr[i]);
+            list.remove(list.size() - 1);
+        }
+    }
+
 
       
     /*
@@ -490,8 +538,6 @@ public class Backtrack {
         return false;
     }
 
-
-    // https://leetcode.com/problems/letter-case-permutation/
 
     // https://leetcode.com/problems/number-of-matching-subsequences
     public int numMatchingSubseq(String S, String[] words) {
@@ -1049,49 +1095,7 @@ public class Backtrack {
         return false;
     }
    
-    /////////////// UNIQUE -> USE HASHMAP
-    /**
-     * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
-     * use BACKTRACKING FORMAT 
-     * 
-     * 1 dfs(){ res.add; for(){ add(i) //ADD dfs(i+1)
-     * remove(list.size()-1) //REMOVE } }
-     * 
-     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE COUNTED
-     * SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7 
-     * 
-     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
-     * 4 START WITH i = start AND USE i NOT start 
-     * 5 FOR NO DUPLICATES -> !res.contains(list)
-     */
-
-    int uniqueCombinationsSumK(int[] arr, int k) {
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        // Arrays.sort(arr);
-        int start = 0;
-        int sum = 0;
-        btk(res, list, arr, k, start, sum);
-        System.out.println(res);
-        return res.size();
-    }
-
-    void btk(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
-        if (sum > k) return;
-
-        if(k == sum && !res.contains(list)){
-            res.add(new ArrayList<>(list)); 
-            return;
-        }
-        
-        for (int i = start; i < arr.length; i++) {
-            list.add(arr[i]);
-            btk(res, list, arr, k, i + 1, sum + arr[i]);
-            list.remove(list.size() - 1);
-        }
-    }
-
-
+    
     /** 
      * POINTS :
      * 1 2 DFS ARE USED, ONE EXCLUSIVE ONE INLUSIVE

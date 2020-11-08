@@ -9,7 +9,8 @@ public class ToDo {
      * 2 map string and freq, add all values to pQueue
      * and sort on the basis of req and s.charAt() smaller
      * 
-     * painter partition, word dict, min cut palindrome partitioning
+     * painter partition (dp)
+     * word dict, min cut palindrome partitioning
      * linked list, 3 sum
      * longest zigzag path
      * search in matrix
