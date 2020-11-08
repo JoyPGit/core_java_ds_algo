@@ -48,13 +48,24 @@ class Array {
      */
    
 
+
+    /**
+     * the first two if condns are boundary conditions
+     * 
+     */
     // { 9, 7, 1, 8, 5, 6 };
     void findMountain(int[] arr) {
         int n = arr.length;
         if(n==0) return;
         for (int i = 0; i < n; i++) {
-            if(i==0 && arr[i] > arr[i+1]) {System.out.println("mountain found "+arr[i]);continue;}
-            if(i==n-1 && arr[i] > arr[i-1]) {System.out.println("mountain found "+arr[i]);continue;}
+            if(i==0 && arr[i] > arr[i+1]) {
+                System.out.println("mountain found "+arr[i]);
+                continue;
+            }
+            if(i==n-1 && arr[i] > arr[i-1]) {
+                System.out.println("mountain found "+arr[i]);
+                continue;
+            }
             
             if (arr[i] > arr[i - 1] && arr[i] > arr[i + 1]) {
                 System.out.println("mountain found "+arr[i]);
@@ -222,6 +233,8 @@ class Array {
     /////////////////////////////// DUPLICATES
     
     /** 
+     * mark index nums[abs(nums[i])]
+     * 
      * 1 nums[i] can be negative but 
      * nums[nums[i]], if negative determines duplicate
      * 2 return nums[i]
@@ -400,23 +413,6 @@ class Array {
     }
 
 
-    // https://leetcode.com/problems/two-sum/
-    public int[] twoSum(int[] nums, int target) {
-        int n = nums.length;
-        int[] res = new int[2];
-        // Arrays.sort(nums);
-        
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int i =0; i<nums.length; i++){
-            if(map.containsKey(target - nums[i])) {
-                res[0] = i; res[1] = map.get(target - nums[i]);
-                break;
-            }     
-            else map.put(nums[i], i);
-        }
-        return res;
-    }
-
     /** IMP 
      * POINTS : 
      * 1 USE BIDIRECTIONAL SEARCH (WORKS ON SORTED)
@@ -440,6 +436,7 @@ class Array {
         List<List<Integer>> res = new ArrayList<>();
         
         for(int i =0; i<n; i++){
+            // 1
             if (i > 0 && nums[i] == nums[i - 1]) continue;
             int low = i+1; int high = n-1;
             while(low<high){
@@ -451,7 +448,7 @@ class Array {
                     // res.add(curr);
                     
                     res.add(Arrays.asList(nums[i], nums[low], nums[high]));
-                    
+                    // 2
                     while (low < high && nums[low] == nums[low+1]) low++;
                     while (low < high && nums[high] == nums[high-1]) high--;
                     low++; high--;
@@ -496,6 +493,7 @@ class Array {
      * if 1 is seen we increment i
      * so if we see 2, then swap and check the same i, so same i
      */
+    // lo holds index of first 1
     // [2,0,1]
     // https://leetcode.com/problems/sort-colors/
     public void sortColors(int[] nums) {
@@ -535,8 +533,8 @@ class Array {
         int[] res = new int[n];
         int mid = (n-1)/2; int right = n-1; int count = 0;
         
-        while(mid>=0 || right>(n-1)/2) {
-            if(count%2 == 0){
+        while(mid>=0 || right>(n-1)/2) { // 1
+            if(count%2 == 0){  //2
                 res[count]=nums[mid--];
             }
             if(count%2 != 0){
@@ -578,6 +576,7 @@ class Array {
     
     // TreeNode helper(int[] arr,int low, int high){
     //     if(low>high) return null;
+    //     if(low == high) return new TreeNode(arr[lo]);
     //     int mid = low + (high-low)/2;
     //     TreeNode root = new TreeNode(arr[mid]);
     //     root.left = helper(arr, low, mid-1);
@@ -588,10 +587,11 @@ class Array {
 
     // KADANE' ALGO
     // int [] a = {-2, -3, 4, -1, -2, 1, 5, -3};
-    /** point : max is found first and then
+    /** 
+     * point : max is found first and then
      * sum check is done. Doing the opposite 
      * doesn't work for negative numbers, as max
-     * can never be negative as sumis set zero
+     * can never be negative as sum is set zero
      * beforehand and 0>-ve.
      */
     int maxSubArrayContiguous(int[] arr) {
@@ -735,6 +735,9 @@ class Array {
         return res;
     }
 
+    /** 
+     * 
+    */
     // https://leetcode.com/problems/remove-k-digits/
     public String removeKdigits(String num, int k) {
         int n = num.length();
@@ -749,6 +752,7 @@ class Array {
             //     q.addLast(curr);
             //     continue;
             // }
+            // 3 condns
             while (k>0 && q.size()!=0 && q.getLast()>curr) {
                 q.removeLast(); k--;
                 // System.out.println(q);

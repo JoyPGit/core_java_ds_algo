@@ -11,7 +11,12 @@ ALTER TABLE - modifies a table
 DROP TABLE - deletes a table
 CREATE INDEX - creates an index (search key)
 DROP INDEX - deletes an index
+COUNT
+MIN-MAX
+AND, LIKE, IN, NOT IN, 
+ORDER BY
 JOINS
+GROUP BY, HAVING
 */
 
 --intersection, union
