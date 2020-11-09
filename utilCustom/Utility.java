@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Utility {
 
-    Utility(){}
+    public Utility(){}
     // https://stackoverflow.com/questions/886955/
     // how-do-i-break-out-of-nested-loops-in-java
 

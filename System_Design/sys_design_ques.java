@@ -1,8 +1,8 @@
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
+package System_Design;
 
-public class SystemDesign {
+import java.util.*;
+
+public class sys_design_ques {
     // CTCI SYSTEM DESIGN
     // tic-tac-toe game
     // chess board
