@@ -48,12 +48,12 @@ import java.util.*;
  * 
  * 
  * 
- * ///////////////////////////////
+ * ////////////////////////////////////////
  * DFS WITH MARKING NO OF ISLANDS
  * LOOP : COURSE SCHEDULE, TERMINAL STATES
  * 
  * 
- * ////////////////////////////////////////////
+ * ////////////////////////////////////////
  * TOPO SORT WITH LOOP TEMPLATE :
  * 
  * 1 ADD TO CURRPARENTS AND REMOVE
@@ -431,7 +431,8 @@ class Graph {
         
         return dfs(headID, g, dp, manager, informTime);
     }
-    
+	
+	// like palindrome partitioning
     int dfs(int src, HashMap<Integer, List<Integer>> g, int[] dp, int[] manager, int[] informTime){
         
         if(dp[src]!=0) return dp[src];

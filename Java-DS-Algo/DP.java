@@ -1,4 +1,5 @@
 import java.util.*;
+
 import utilCustom.*;
 
 public class DP {
@@ -65,6 +66,7 @@ public class DP {
      * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
      */
 
+    Utility utility = new Utility();
 
     public int factorial(int n){
         if(n==0 || n==1) return 1;
@@ -245,6 +247,22 @@ public class DP {
         return dp[lastDay];
     }
 
+    // https://leetcode.com/problems/perfect-squares/
+    public int numSquares1(int n) {
+        int[] nums = new int[(int)Math.sqrt(n)+1];
+        
+        int[][] dp = new int[nums.length][n+1];
+        
+        for(int i =1; i<nums.length; i++){
+            for(int j =1; j<n; j++){
+                if(j<nums[i-1]) dp[i][j] = dp[i-1][j];
+                else dp[i][j] = Math.min(dp[i-1][j], dp[i-1][j-nums[i-1]])+1;
+            }
+        }
+        Utility.printMatrix(dp);
+        return dp[nums.length-1][n];
+    }
+
     // https://leetcode.com/problems/decode-ways/
     public int numDecodings(String s) {
         int n = s.length();
@@ -401,14 +419,14 @@ public class DP {
     int painterHelper(int[] boards, int painters, int index){
         if(index==boards.length-1) return boards[boards.length-1];
 
-        if(painters == 1) return utilCustom.Utility.sumSubarray(boards, index, boards.length-1);
+        if(painters == 1) return Utility.sumSubarray(boards, index, boards.length-1);
 
         int min = Integer.MAX_VALUE;
         for(int k = 0; k<boards.length; k++){
 
             min = Math.min(min, 
             Math.max
-            (utilCustom.Utility.sumSubarray(boards, 0, k), painterHelper(boards, painters-1, k+1)));
+            (Utility.sumSubarray(boards, 0, k), painterHelper(boards, painters-1, k+1)));
         }
         return min;
     }
@@ -438,7 +456,7 @@ public class DP {
                 dp[i][j] = min; 
             } 
         } 
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         return dp[k][n]; 
     } 
 
@@ -466,11 +484,11 @@ public class DP {
     // like dfs in matrix
     int helper(String str){
         int min = Integer.MAX_VALUE;
-        if(utilCustom.Utility.isPalindrome(str)) return 0;
+        if(Utility.isPalindrome(str)) return 0;
                 
         for(int i = 0; i<str.length(); i++){
             String palin = str.substring(0, i+1);
-            if(utilCustom.Utility.isPalindrome(palin)){
+            if(Utility.isPalindrome(palin)){
                 // System.out.println(palin);
                 min = Math.min(min, 1 + helper(str.substring(i+1)) );
             }
@@ -495,7 +513,7 @@ public class DP {
     */
     // https://leetcode.com/problems/palindrome-partitioning-ii/
     public int minCutDP(String s) {
-        if(utilCustom.Utility.isPalindrome(s)) return 0;
+        if(Utility.isPalindrome(s)) return 0;
         int n = s.length();
         int[][] dp = new int[n][n];
         
@@ -505,7 +523,7 @@ public class DP {
                 if(l==1) {
                     dp[i][j] = 0; continue;
                 }
-                if(utilCustom.Utility.isPalindrome(s.substring(i,j+1))) dp[i][j] = 0;
+                if(Utility.isPalindrome(s.substring(i,j+1))) dp[i][j] = 0;
                 else{
                     int min = Integer.MAX_VALUE;
                     for(int k = i; k<j; k++){
@@ -516,7 +534,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         return dp[0][n-1];
     }
 
@@ -600,7 +618,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         return dp[0][arr.length-1];
     }
 
@@ -776,7 +794,7 @@ public class DP {
         for(int i=0; i<n; i++){
             max = Math.max(max, dp[i]);
         }
-        utilCustom.Utility.print1DMatrix(dp);
+        Utility.print1DMatrix(dp);
         return max;
     }
     
@@ -962,7 +980,7 @@ public class DP {
         if(remainingWeight == 0) return dp[index][remainingWeight] = currVal;
         
         // if(dp[index][remainingWeight]!=0) return dp[index][remainingWeight];
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
 
         dp[index][remainingWeight] =  // 2
         Math.max(
@@ -999,7 +1017,7 @@ public class DP {
 				}
 			}
         }
-		utilCustom.Utility.printMatrix(dp);
+		Utility.printMatrix(dp);
 		return dp[v.length][W];
     }
 
@@ -1088,7 +1106,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         return dp[value.length][limit];
     }
 
@@ -1219,7 +1237,7 @@ public class DP {
                 else dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]; 
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         return dp[n][total];
     }
 
@@ -1255,7 +1273,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         return dp[limit-1][n];
     }
 
@@ -1293,7 +1311,7 @@ public class DP {
                 // }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
     }
     
     void matrixBlockSumHelper(int[][] arr, int[][] dp, int row, int col, int k){
@@ -1387,7 +1405,7 @@ public class DP {
                 else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i-1]];
             }
         }
-        utilCustom.Utility.printMatrixBool(dp);
+        Utility.printMatrixBool(dp);
         return dp[n][target];
     }
 
@@ -1464,7 +1482,7 @@ public class DP {
                 else dp[i][j] = dp[i-1][j] || dp[i-1][j-set[i]];
             }
         }
-        utilCustom.Utility.printMatrixBool(dp);
+        Utility.printMatrixBool(dp);
         System.out.println("the subset exists : "+dp[n-1][sum]);
         return dp[n-1][sum];
     }
@@ -1603,7 +1621,7 @@ public class DP {
             }
         }
         
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         if(dp[0][n-1]>=half) return true; //
         return false;
     }
@@ -1795,7 +1813,7 @@ public class DP {
                 else dp[i][j] = false;
             }
         }
-        utilCustom.Utility.printMatrixBool(dp);
+        Utility.printMatrixBool(dp);
         return dp[n1][n2];
     }
 
@@ -1869,7 +1887,7 @@ public class DP {
     /** 
      * longest repeating subsequence
      * SAME AS LCSUBSEQUENCE, USE TWO(SAME) STRINGS AND FIND LCS,
-     * BUT TEH CHARS AT THE SAMEINDEX SHOUDLNT BE SAME
+     * BUT THE CHARS AT THE SAMEINDEX SHOUDLNT BE SAME
      * 
      * 
     */
@@ -1903,7 +1921,7 @@ public class DP {
             }
         }
         
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         int i = str1.length(); int j = str2.length();
         StringBuilder res = new StringBuilder();
         
@@ -1993,7 +2011,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         System.out.println("longest palindromic substring : " + s.substring(start, start + maxlen));
         return s.substring(start, start + maxlen);
     }
@@ -2029,7 +2047,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         System.out.println("all palindromic substrings' count : " + count);
         return count;
     }
@@ -2085,7 +2103,7 @@ public class DP {
                 else dp[i][j] = Math.max(dp[i][j-1], dp[i+1][j]);
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         System.out.println("longest palin subseq is "+dp[0][n-1]);
         return dp[0][n-1];
     }
@@ -2109,7 +2127,7 @@ public class DP {
         
         for(int i = 0; i<str.length(); i++){
             String palin = str.substring(0, i+1);
-            if(utilCustom.Utility.isPalindrome(palin)) {
+            if(Utility.isPalindrome(palin)) {
                 // System.out.println(palin);
                 curr.add(palin);
                 helper(res, curr, str.substring(i+1));// pass the string
@@ -2146,7 +2164,7 @@ public class DP {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         System.out.println(result);
         return result*result;
     }
@@ -2307,6 +2325,9 @@ public class DP {
 
         int[] subsetArr = {1,2,3};
         // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
+
+        int number = 12;
+        dp.numSquares1(number);
 
         int[][] blockSum = {{1,2,3},{4,5,6},{7,8,9}};
         // dp.matrixBlockSum(blockSum, 1);

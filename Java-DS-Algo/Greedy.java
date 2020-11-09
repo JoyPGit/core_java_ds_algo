@@ -6,6 +6,7 @@ class Greedy{
 
     /**
      * IMP : 
+     * REORG STRING
      * MEETING -> LIKE TRAIN PLATFORM ADD ALL TO PQ ARRIVAL ++ DEPARTURE --
      * INTERVAL -> SORT START AND LONGER END
      * ARROWS, EVENTS -> END

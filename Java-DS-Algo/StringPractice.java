@@ -1883,13 +1883,18 @@ class StringPractice {
 
     // https://leetcode.com/problems/compare-strings-by-frequency-of-the-smallest-character/
 
+    /** 
+     * 1 FIRST FIGURE OUT HOW TO STORE THE SCORES FOR EACH PLAYER
+     * 2 HOW TO SORT 
+     * 3 
+    */
     // TAKE CARE TO ADD THE CURR ELEMENT TO THE NEW ARRAY IN ELSE 
     // https://leetcode.com/problems/rank-teams-by-votes/
     public String rankTeams(String[] votes) {
-        HashMap<Character, int[]> map = new HashMap<>();
-        
         int n = votes[0].length();
-        
+        HashMap<Character, int[]> map = new HashMap<>();
+
+        // no 0 index issue, comparison starts from 0th index
         for(String s : votes){
             for(int i =0; i<s.length(); i++){
                 int[] curr = map.getOrDefault(s.charAt(i), new int[n]);
@@ -1898,6 +1903,7 @@ class StringPractice {
             }
         }
         
+        // comparator
         PriorityQueue<Character> q = new PriorityQueue<>((x,y)->{
             int[] a = map.get(x); int[] b = map.get(y);
             for(int i =0; i<a.length; i++){
@@ -1906,7 +1912,7 @@ class StringPractice {
             return x-y;
         });
         
-        
+        // add to pq
         for(Map.Entry<Character, int[]> entry : map.entrySet()){
             q.add(entry.getKey());
         }

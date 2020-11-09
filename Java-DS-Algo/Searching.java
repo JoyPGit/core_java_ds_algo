@@ -2,6 +2,11 @@ import java.util.*;
 
 public class Searching {
     
+    /**
+     * floor, ceil, peak,
+     * leaderboard
+     * 
+     */
     Searching(){}
 
     int binarySearch(int[] arr, int key){

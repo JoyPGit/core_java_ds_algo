@@ -1,5 +1,19 @@
 import java.util.*;
 
+class Node{
+    int val;
+    Node left; Node right;
+    Node(int v){
+        this.val = v;
+        this.left = null;
+        this.right = null;
+    }
+    Node(int v, Node l, Node r){
+        this.val = v;
+        this.left = l;
+        this.right = r;
+    }
+} 
 class Array {
 
     /** 
@@ -68,9 +82,8 @@ class Array {
         
         while(low<high){ // 1
             int mid = low + (high - low)/2;
-            // 2
+            // 2 
             if(nums[mid] < nums[high]) high = mid;
-            // if no duplicates, can remove this
             else if(nums[mid] == nums[high]) high--;
             else low = mid+1;
             
@@ -611,15 +624,15 @@ class Array {
      * 3 f(low, mid-1); f(mid+1, high); NOT 0 AND n, USE LOW AND HIGH
      * 
     */
-    public TreeNode sortedArrayToBST(int[] nums) {
+    public Node sortedArrayToBST(int[] nums) {
         return helper(nums, 0, nums.length-1);
     }
     
-    TreeNode helper(int[] arr,int low, int high){
+    Node helper(int[] arr,int low, int high){
         if(low>high) return null;
-        if(low == high) return new TreeNode(arr[low]);
+        if(low == high) return new Node(arr[low]);
         int mid = low + (high-low)/2;
-        TreeNode root = new TreeNode(arr[mid]);
+        Node root = new Node(arr[mid]);
         root.left = helper(arr, low, mid-1);
         root.right = helper(arr, mid+1, high);
         return root;
