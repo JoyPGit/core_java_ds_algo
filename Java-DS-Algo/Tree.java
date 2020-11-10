@@ -1281,7 +1281,23 @@ public class Tree {
 
     ////////////////////////////////////////////////
     //////////////////////// DFS PATH SUM 3 TEMPLATE
-
+    class ListNode {
+        int key;
+        int val;
+        ListNode next;
+        ListNode random;
+    
+        ListNode() {
+        }
+        // constructor overloading
+    
+        ListNode(int data) {
+            this.key = data;
+            this.next = null;
+            this.random = null;
+            this.val = this.key;
+        }
+    }
     // https://leetcode.com/problems/subtree-of-another-tree
     /** if the root matches, then recur for that using isSame
      * else recur for left and right nodes.
