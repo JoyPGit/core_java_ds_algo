@@ -31,7 +31,7 @@ public class sys_design_ques {
      * IF PRESENT, BRING TO FRONT
      * 
      * also update head and currLast in put
-     * 1 a page class, like node of lnked list
+     * 1 a page class, like node of linked list
      * 2 a linked list with head and last;
      * 3 a counter to check 
      * if size < capacity, add a new page at end

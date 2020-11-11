@@ -1,0 +1,92 @@
+1 TCP/IP MODEL VS OSI MODEL
+OSI MODEL IS KIND OF LIKE A GUIDELINE,
+BUT IN REAL WORLD TCP/IP IS USED
+TCP -> Transmission Control Protocol/Internet Protocol
+
+2 OSI has 7 layers
+Application, Presentation, Session
+Transport
+Network
+Link
+Physical
+
+3 TCP/IP has 5 layers, the Application layer of TCP/IP incorporates
+the application, presentation and session into a single application layer
+
+4 BASIC WORKING :
+
+Why port no?
+Many applications can be running on a server. To map to a particular app,
+source and destination ports are needed. Source port is my app's port 
+and destination is the application on server which will handle the request.
+
+Suppose I open a chrome browser window in my system
+The application is assigned some port no (b/w 1024 and 65535). Then when 
+I hit google, port no 80 (HTTP) on the Google server will handle my HTTP
+request. 
+src port () -> destination port (80)
+
+Google's server can have multiple apps running, but port 80 will 
+be the one handling HTTP requests.
+Supose File Server is there, it will be running on port 21.
+
+Similarly when I create a local server and assign a port no, it is the 
+application layer port no. It is the destination port for 
+any request made to my local server.
+
+5 LAYERS:
+
+Link Layer MAC address,
+Network layer IP address
+Trans Layer port to port 
+
+
+Each layer adds certain amount of data to the previous layer's data and 
+passes it down.
+
+
+4.1 Application layer : HTTP, HTTPs, SMTP, FTP
+4.2 Network layer : 
+
+Transport Layer :
+https://www.youtube.com/watch?v=kAty4mKczEg
+Port to port delivery 
+Protocols: TCP, UDP
+TCP is reliable, see TCP HEADER below
+
+
+Network Layer :
+System to sytem transmission
+source machine to nearest router; nearest router to destination m/c
+uses IP Address
+
+Data Link Layer :
+https://www.youtube.com/watch?v=JRgmPco0KWI
+Hop to hop transmission or router to router transmission
+Data Link Layer only ensures packets reach correct network, 
+
+MAC address(Physical address)
+Cyclic Redundancy Check
+Error Control : CRC
+Flow Control techniques : Stop and Wait, Go Back N, Selective Repeat
+Access Control (ALOHA, )
+
+//////////////////////////////////// LAYER HEADERS
+
+
+///////////////////////////////////// TCP HEADER
+see TCP Header pic
+
+https://www.youtube.com/watch?v=hsNuqtfxgRI
+
+TCP Protocol
+Byte Streaming, Network layer
+Sender sends the segment and receiver sends an acknowledgment, the ack number
+is one more than the last byte no in the segment.
+
+Various flags like URG(urgent), PSH(push) are used.
+SYN flag is sent when the connection is established for the first time
+Window Size -> Sender window size
+
+
+

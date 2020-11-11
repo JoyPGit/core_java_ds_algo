@@ -12,6 +12,12 @@ class StringPractice {
 
     // https://www.geeksforgeeks.org/string-data-structure/
     /**
+     * string patterns
+     * no fo substrings all 3 chars,
+     * longest repeating
+     * longest palindrome
+     * 
+     * 
      * 
      * QUES : VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
      * WORD SEARCH, WORD LADDER, REORGANIZE, NUMBER OF DECODINGS,
@@ -2133,38 +2139,59 @@ class StringPractice {
         
     // }
 
-    // https://leetcode.com/problems/word-ladder
+    /**
+     * String is immutable
+     * 
+     * after word is created 
+     * check if in used, continue; 
+     * check if in unused(valid), add to q
+     * unused is required, as wordList is too slow for checking
+     */
+    // https://leetcode.com/problems/word-ladder/submissions/
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        HashSet<String> set = new HashSet<>(wordList);
-        if(!set.contains(endWord)) return 0;
-        int distance = 1;
+        if(!wordList.contains(endWord)) return 0;
+        HashSet<String> used = new HashSet<>(); // 1
+        HashSet<String> unused = new HashSet<>(); // 2
+        Deque<String> q = new LinkedList<>(); // 3
+        int distance = 1; // 4
         
-        Deque<String> q = new LinkedList<>();
+        for(String str : wordList) unused.add(str); // 5
+        used.add(beginWord);
         q.addLast(beginWord);
+        
         while(q.size()!=0){
-            int size = q.size();            
-            // all words in the same go, helps maintain smallest dist
-            for(int k =0; k<size; k++){//1
-                char[] curr = (q.removeFirst()).toCharArray();
+            int size = q.size(); // 6
+            for(int i =0; i<size; i++){
+                String curr = q.removeFirst();
+                // string is immutable, convert to char array
+                char[] ch = curr.toCharArray(); // 7
                 
-                for(int i =0; i<curr.length; i++){
-                    char holder = curr[i];//2
+                for(int j = 0; j<curr.length(); j++){
                     
-                    for(char c ='a'; c<='z'; c++){
-                        if(c==holder) continue;//3
-                        curr[i] = c;
-                        String after = String.valueOf(curr);
-                        if(after.equals(endWord)) return distance+1;
-                        if(set.contains(after)) {
-                            // System.out.print(after+", ");
-                            q.addLast(after); set.remove(after);//4
+                    char temp = ch[j];
+                    for(char c = 'a'; c<='z'; c++){ // 8
+                        ch[j] = c; // 7
+                        String created = String.valueOf(ch);
+                        if(created.equals(endWord)) { // 9
+                            // System.out.println(created);
+                            // System.out.println(created.equals(endWord));
+                            return distance+1;
+                        }
+                        if(used.contains(created)) continue; // 10
+                        //if unused
+                        if(unused.contains(created)){ // 11
+                            // System.out.println("in here "+ch);
+                            used.add(created); // 9
+                            unused.remove(created);
+                            q.addLast(created);
                         }
                     }
-                    curr[i] = holder;//5
-                }   
+                    ch[j] = temp; // 12
+                }
             }
-            distance++;//6
+            distance++;
         }
+        
         return 0;
     }
     

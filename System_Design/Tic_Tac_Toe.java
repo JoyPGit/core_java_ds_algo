@@ -2,6 +2,11 @@ package System_Design;
 
 import java.util.*;
 
+// use .java 
+// java Tic_Tac_Toe.java
+// 1, 2, 2, 
+// 1, 1, 1, 
+// 2, 1, 2, 
 public class Tic_Tac_Toe {
     HashMap<String, Integer> scoreCard = new HashMap<>();
     boolean gameOver = false;
@@ -36,12 +41,13 @@ public class Tic_Tac_Toe {
             currentPlayer = currentPlayer == 1?2:1;
             currBoard.nextMove(currentPlayer, input);
             System.out.println("in here");
+            this.moves++;
             currBoard.printBoard();
             if(currBoard.checkWinner(currentPlayer)){
                 System.out.println("winner is "+ currentPlayer);
                 break;
             }
-            this.moves++;
+            
             if(this.moves == 9) {
                 System.out.println("no winner found, match draw");
                 break;
@@ -84,6 +90,7 @@ class Board{
             System.out.println();
         }
     }
+
     int[] nextMove(int playerNumber, Scanner input){
         int[] indexes = new int[2];
         indexes = askForPosition(playerNumber, input);
@@ -129,6 +136,12 @@ class Board{
         count = 0;
 
         for(int i =0; i<boardSize; i++){
+            if(this.board[1][i] == playerNumber) count++;
+        }
+        if(count == this.boardSize) return true;
+        count = 0;
+
+        for(int i =0; i<boardSize; i++){
             if(this.board[boardSize-1][i] == playerNumber) count++;
         }
         if(count == this.boardSize) return true;
@@ -137,6 +150,12 @@ class Board{
         // check col
         for(int i =0; i<boardSize; i++){
             if(this.board[i][0] == playerNumber) count++;
+        }
+        if(count == this.boardSize) return true;
+        count = 0;
+
+        for(int i =0; i<boardSize; i++){
+            if(this.board[i][1] == playerNumber) count++;
         }
         if(count == this.boardSize) return true;
         count = 0;

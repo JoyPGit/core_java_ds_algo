@@ -1,16 +1,31 @@
 import java.util.*;
 
+class Node{
+    int val;
+    Node left; Node right;
+    Node(int v){
+        this.val = v;
+        this.left = null;
+        this.right = null;
+    }
+    Node(int v, Node l, Node r){
+        this.val = v;
+        this.left = l;
+        this.right = r;
+    }
+} 
 //how hashmaps work https://www.youtube.com/watch?v=c3RVW3KGIIE
 
 /** 
+ * 0s and 1s, substrings with k distinct els
+ * 
  * PREFIX SUM
- * LONGEST SUBARRAY OF 0S AMND 1S
+ * LONGEST SUBARRAY OF 0S AND 1S
  * LONGEST AP
  * RANK TEAMS
  * WORD SUBSETS
  * PATH SUM 3
  * NO OF SUBARRAYS HAVING SUM K (PREFIX SUM)
- * LONGEST SUBARRAY OF 0S AND 1S (STORE +/- DIFF)
  * FIND ITINERARY
  * WORD SUBSETS
  * 
@@ -54,6 +69,18 @@ import java.util.*;
     *
     */
 public class HashPractice{
+
+    int smallestElementRepeatedKTimes(int[] arr, int k){
+        int n = arr.length; int min = Integer.MAX_VALUE;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        for(int i =0; i<n; i++) map.put(arr[i], map.getOrDefault(arr[i], 0)+1);
+
+        for(HashMap.Entry<Integer, Integer> entry : map.entrySet()){
+            if(entry.getValue() == k) min = Math.min(min, entry.getKey());
+        }
+        return min;
+    }
 
     // https://leetcode.com/problems/two-sum/
     public int[] twoSum(int[] nums, int target) {
@@ -144,18 +171,6 @@ public class HashPractice{
     }
 
 
-    int smallestElementRepeatedKTimes(int[] arr, int k){
-        int n = arr.length; int min = Integer.MAX_VALUE;
-        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-
-        for(int i =0; i<n; i++) map.put(arr[i], map.getOrDefault(arr[i], 0)+1);
-
-        for(HashMap.Entry<Integer, Integer> entry : map.entrySet()){
-            if(entry.getValue() == k) min = Math.min(min, entry.getKey());
-        }
-        return min;
-    }
-
     //IMP QUESTIONS
     
     // https://www.geeksforgeeks.org/maximum-difference-first-last-indexes-element-array/
@@ -198,6 +213,8 @@ public class HashPractice{
      * 2 ALWAYS USE INDEXES, NOT (int i : nums) FOR SUM
      * 3 ALWAYS UPDATE LENGTH INSIDE WHILE LOOP
      * 4 ADD A CHECK IN THE RETURN STATEMENT
+     * 
+     * find the minimal length of subarray which has sum ≥ s. 
     */
     // https://leetcode.com/problems/minimum-size-subarray-sum
     public int minSubArrayLen(int s, int[] nums) {
@@ -217,6 +234,8 @@ public class HashPractice{
         }
         return length==Integer.MAX_VALUE?0:length;
     }
+
+    ///////////////// SHRINK; MAP SIZE = SLIDING WINDOW SIZE
     
     /** 
      * HOLD THE FREQ OF INTEGER IN MAP, NOT INDEX, 
@@ -240,6 +259,7 @@ public class HashPractice{
         for(int i = 0; i<n; i++){
             map.put(arr[i], map.getOrDefault(arr[i], 0)+1); 
             while(map.size()>=k){
+                // update length
                 length = Math.min(length, i- left+1);
                 if(map.get(arr[left]) == 1) map.remove(arr[left]);
                 else map.put(arr[left], map.get(arr[left]) - 1);
@@ -250,61 +270,12 @@ public class HashPractice{
         return length;
     }
 
-     /** 
-     * 
-     * POINTS : 
-     * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN RESULT STRING, CONTINUE
-     * Why? beacuse the char is alrady at its lowest lexicographic position.
-     * 
-     * 2 IF LAST CHAR IS LEXICOGRAPHICALLY GREATER AND IT'S FREQ IS >0, 
-     * IT MEANS THAT CHAR CAN BE USED LATER, SO IT'S SAFE TO REMOVE IT.
-     * REMEMBER TO REMOVE IT FROM VISITED SET AS WELL
-     * 
-     * STEPS :
-     * 1 CHECK IF INCOMING CHAR IS IN RESULT STRING
-     * 2 CHECK IS THE INCOMING CHAR IS GREATER THAN THE LAST CHAR IN RESULT
-     * AND IF IT THE LAST CHAR HAS ANY OCCURENCES LEFT (FREQ >= 1)
-     * 3 AFTER TRIMMING USING WHILE LOOP ADD THE CHAR AT END
-     * 
-     * */
-    /**
-     * imp how to handle bb? -> if(res.contains) continue;
-     * decrement freq of incoming char as it cn't be used further
-     * if exists continue
-     * check for freq >= 1
-     * add after removal of larger with freq>=1
-     * 
-     * FREQ-- FOR ALL, IF EXISTS CONTINUE; REST SAME 
-     */ 
-    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
-    public String smallestSubsequence(String text) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        String res = "";
-        
-        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
-        
-        for(char c : text.toCharArray()){
-            map.put(c, map.get(c)-1);
-
-            if(res.contains(""+c)) continue; // 1
-            while(res.length()>0 // 2
-                  // last char must be graeter and has future occurences
-                  && res.charAt(res.length()-1) > c // 3
-                  // no need to keep an index as substrng removes the last char
-                  && map.get(res.charAt(res.length()-1)) > 0 ){ // 4 
-                    res = res.substring(0, res.length()-1);
-            }
-            res+=c; // 5
-        }
-        return res;
-    }
-
 
     // SLIDING WINDOW
     // 1,1,2,3,1,4
     // always store freq, not index, use left for index
     // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
-    int longesSubArraytWithkEls(int[] arr, int k){
+    int longestSubArraytWithkEls(int[] arr, int k){
         int n = arr.length;
         int left = 0; int length = Integer.MIN_VALUE;
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -340,6 +311,7 @@ public class HashPractice{
         
     // }
 
+    
     // https://www.geeksforgeeks.org/longest-subarray-sum-divisible-k/
     int longestSubArrayDivByK(int[] arr, int k){
         int max =0; int sum =0;
@@ -409,37 +381,91 @@ public class HashPractice{
         return count;
     }
 
+
     /**  
      * LONGEST SUBARRAY OF 0S AND 1S
      * 
-     * If difference between current counts already exists, 
-     * then substring between previous and current index has same
-     * no. of 0s and 1s. 
-     * Update result.
-     * 
+     * SIMILAR TO PREFIX SUM
+     * 1 MARK ALL 0S AS -1
+     * 2 STORE CUMULATIVE SUM AND INDEXES
+     * 3 IF SUM EXISTS, UPDATE LEN
      * ELSE MAKE AN ENTRY
+     * 
+     * len =  i - map.get(sum) // map stores index
+     * 
     */ 
     // https://leetcode.com/problems/contiguous-array
-     public int findMaxLength(int[] nums) {
-        int n = nums.length;
-        int countZeroes = 0; int countOnes = 0;
-        int maxLen = 0;
-        //store diff and index
+    public int findMaxLength(int[] nums) {
+        int n = nums.length; 
+        int sum = 0; int len = 0;
         HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(0,-1); // imp
-        
-        for(int i =0; i<n; i++){
-            if(nums[i] == 0) countZeroes++;
-            else countOnes++;
-            int diff = countOnes - countZeroes;
-            if(map.containsKey(diff)) {
-                maxLen = Math.max(maxLen, i - map.get(diff));
-            }   
-            else map.put(diff, i);
+
+        for(int i =0; i <n; i++){
+            if(nums[i] == 0) nums[i] =-1;
         }
-        return maxLen;
+        
+        // cumulative sum ,index
+        map.put(0,-1);
+        
+        for(int i = 0; i<n; i++){
+            sum+=nums[i];
+            if(map.containsKey(sum)) len = Math.max(len, i- map.get(sum));
+            else map.put(sum, i);
+        }
+        
+        return len;
     }
     
+    //// IMP
+     /** 
+     * 
+     * POINTS : 
+     * 1 FOR ANY INCOMING CHAR, IF IT EXISTS IN RESULT STRING, CONTINUE
+     * Why? because the char is alrady at its lowest lexicographic position.
+     * 
+     * 2 IF LAST CHAR IS LEXICOGRAPHICALLY GREATER AND IT'S FREQ IS >0, 
+     * IT MEANS THAT CHAR CAN BE USED LATER, SO IT'S SAFE TO REMOVE IT.
+     * REMEMBER TO REMOVE IT FROM VISITED SET AS WELL
+     * 
+     * STEPS :
+     * 1 CHECK IF INCOMING CHAR IS IN RESULT STRING
+     * 2 CHECK IS THE INCOMING CHAR IS GREATER THAN THE LAST CHAR IN RESULT
+     * AND IF IT THE LAST CHAR HAS ANY OCCURENCES LEFT (FREQ >= 1)
+     * 3 AFTER TRIMMING USING WHILE LOOP ADD THE CHAR AT END
+     * 
+     * */
+    /**
+     * imp how to handle bb? -> if(res.contains) continue;
+     * decrement freq of incoming char as it cn't be used further
+     * if exists continue
+     * check for freq >= 1
+     * add after removal of larger with freq>=1
+     * 
+     * FREQ-- FOR ALL, IF EXISTS CONTINUE; REST SAME 
+     */ 
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters
+    public String smallestSubsequence(String text) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        String res = "";
+        
+        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        for(char c : text.toCharArray()){
+            map.put(c, map.get(c)-1);
+
+            if(res.contains(""+c)) continue; // 1
+            while(res.length()>0 // 2
+                  // last char must be graeter and has future occurences
+                  && res.charAt(res.length()-1) > c // 3
+                  // no need to keep an index as substrng removes the last char
+                  && map.get(res.charAt(res.length()-1)) > 0 ){ // 4 
+                    res = res.substring(0, res.length()-1);
+            }
+            res+=c; // 5
+        }
+        return res;
+    }
+
 
     public int longestAPHash(int[] A) {
         HashMap<Integer, Integer> hash[] = new HashMap[A.length];
@@ -693,14 +719,14 @@ public class HashPractice{
     int target = 0;
     HashMap<Integer, Integer> map = new HashMap<>();
     
-    public int pathSum(TreeNode root, int sum) {
+    public int pathSum(Node root, int sum) {
         target = sum;
         map.put(0,1);
         helper(root, 0);
         return count;
     }
     
-    void helper(TreeNode root, int sum){
+    void helper(Node root, int sum){
         if(root == null) return;
         sum+=root.val;
         count+=map.getOrDefault(sum-target, 0);
@@ -845,7 +871,7 @@ public class HashPractice{
         int[] longestK = new int[]
         // {6, 5, 1, 2, 3, 2, 1, 4, 5};
         {1,1,2,3,1,4};
-        h.longesSubArraytWithkEls(longestK, 3);
+        h.longestSubArraytWithkEls(longestK, 3);
         int[] apSeq = {24,13,1,100,0,94,3,0,3};
         //{3,6,9,10};
             // {44,46,22,68,45,66,43,9,37,30,50,67,32,47,

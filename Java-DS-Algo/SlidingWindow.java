@@ -4,6 +4,12 @@ public class SlidingWindow {
 
 
     /** 
+     * 
+     * all substrings containing k els
+     * 
+     * min window, 
+     * 
+     * 
      * basic idea is to reduce the freq of outgoing and 
      * increase freq of incoming
      * 
@@ -142,21 +148,54 @@ public class SlidingWindow {
     }
 
 
-    
-    // https://leetcode.com/problems/subarray-product-less-than-k/
-    /**  
-        https://leetcode.com/problems/subarray-product-less-than-k/discuss/
-        741191/JAVA-Simple-Solution%3A-Sliding-Window
-        nums = [10, 5, 2, 6], k = 100; Output: 8
+    // SHRINKING, USE LEFT AND UPDATE AFTER WHILE
 
+    /** 
+     * 1 SHRINK ONLY WHEN ZEROES>K
+     * 2 UPDATE ONLY AFTER SHRINKING, THIS HANDLES THE ELSE CONDITION
+     * OF UPDATING ONLY WHEN ZEROES<K
+     * 3  i-left+1
+     * 
+    */
+    // https://leetcode.com/problems/max-consecutive-ones-iii
+    public int longestOnes(int[] A, int K) {
+        int n = A.length;
+        if(n == 0) return n;
+        int zeroes = 0;
+        int max = 0;
+        int left = 0;
+        
+        for(int i =0; i<n; i++){
+            if(A[i]==0) zeroes++;
+            
+            // int j = 0;
+            while(zeroes>K){
+                if(A[left]==0) zeroes--;
+                left++;
+            }
+            max = Math.max(max, i-left+1);
+        }
+        return max;
+    }
+    
+
+    ///////////////// COUNT += 
+
+    /**  
+     * https://leetcode.com/problems/subarray-product-less-than-k/discuss/
+     * 741191/JAVA-Simple-Solution%3A-Sliding-Window
+     * 
+     * nums = [10, 5, 2, 6], k = 100; Output: 8
+     * 
      * SIMILAR SHRINKING TECHNIQUE
      * 1 BOUNDARY CONDITION IS IMP if(k<=1) return 0;
      * 2 COUNT IS UPDATED THROUGHOUT
      * 3 WHEN PROD>K, IT'S BROUGHT UNDER K
      * 4 (i - start+1) ADDS ALL THE ELS AND 1 EXTRA FOR THE SUBARRAY 
      *   FROM start+1 TILL i AS A WHOLE
-
+     * 
     */
+    // https://leetcode.com/problems/subarray-product-less-than-k/
     public int numSubarrayProductLessThanK(int[] nums, int k) {
         if(k<=1) return 0;
         int n = nums.length;
@@ -203,6 +242,7 @@ public class SlidingWindow {
             
         return count;
     }
+
 
     // https://leetcode.com/problems/minimum-size-subarray-sum/
     /** 
@@ -502,14 +542,12 @@ public class SlidingWindow {
     public List<Integer> findAnagrams(String s, String t) {
         char[] base = new char[26];
         List<Integer> res = new ArrayList<>();
-        if (s.length() == 0)
-            return res;
-        int n = t.length();
-        if (n > s.length())
-            return res;
+        if (s.length() == 0) return res;
 
-        for (char c : t.toCharArray())
-            base[c - 'a']++;
+        int n = t.length();
+        if (n > s.length()) return res;
+
+        for (char c : t.toCharArray()) base[c - 'a']++;
 
         char[] ch = s.toCharArray();
         char[] curr = new char[26];
@@ -604,28 +642,6 @@ public class SlidingWindow {
         return min;
     }
 
-    // https://leetcode.com/problems/max-consecutive-ones-iii
-    // window size = no of 1s won't work
-    // j holds start of the window where zeroes <=k
-    public int longestOnes(int[] A, int K) {
-        int n = A.length;
-        if(n == 0) return n;
-        int zeroes = 0;
-        int max = 0;
-        int j = 0;
-        
-        for(int i =0; i<n; i++){
-            if(A[i]==0) zeroes++;
-            
-            // int j = 0;
-            while(zeroes>K){
-                if(A[j]==0) zeroes--;
-                j++;
-            }
-            max = Math.max(max, i-j+1);
-        }
-        return max;
-    }
 
 
     // Count Number of Nice Subarrays

@@ -399,6 +399,7 @@ public class Tree {
         HashSet<Integer> set = new HashSet<>();
         PriorityQueue<Integer> pq = new PriorityQueue<>();
         preOrder(root, set, pq);
+        // remove twice
         pq.remove();
         if(pq.size()==0) return -1;
         return pq.remove();
@@ -437,8 +438,8 @@ public class Tree {
      * 5 ADD LIST TO RES
      *
      * */
+    // RECURSIVE, using hashmap 
     // https://leetcode.com/problems/binary-tree-level-order-traversal
-    // RECURSIVE
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         if(root == null) return res;
@@ -453,10 +454,7 @@ public class Tree {
     
     void preOrder(HashMap<Integer, List<Integer>> map, TreeNode root, int level){
         if(root == null) return;
-        List<Integer> curr = new ArrayList<>();
-        if(map.containsKey(level)){
-            curr = map.get(level);
-        } 
+        List<Integer> curr = map.getOrDefault(level, new ArrayList<>());
         curr.add(root.val);
         map.put(level, curr);
         
@@ -663,6 +661,8 @@ public class Tree {
     }
 
 
+    // use hashmap, right -> dist+1, left -> same
+    // https://www.geeksforgeeks.org/diagonal-traversal-of-binary-tree/
     HashMap<Integer, List<Integer>> diaMap = new HashMap<>();
     void diagonalTraversal(TreeNode root){
         diaHelper(root, 0);
@@ -939,6 +939,7 @@ public class Tree {
             return (left != null) ? left : right;
         }
     }
+
 
     /////////////////////// HEIGHT AND RECURSION LEFT, RIGHT
     // find height of tree
@@ -1680,6 +1681,8 @@ public class Tree {
         // valid BST
         if (root.val > left.max && root.val < right.min) {
             BSTCustomLong res = new BSTCustomLong(
+                // think in terms of left and right subtrees
+                // just find max and min 
                 Math.max(right.max, root.val),//update max
                 Math.min(left.min, root.val), 0);//update min
             return res;
