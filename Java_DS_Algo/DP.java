@@ -484,7 +484,7 @@ public class DP {
     }
 
     /** 
-     * k transactions
+     * k transactions (stock buy sell)
      * POINTS : 
      * 1 LIKE PAINTER
      * 2 TWO OPTIONS, EITHER I DO OR DON'T DO ANY TRANSACTION

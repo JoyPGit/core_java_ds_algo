@@ -572,6 +572,60 @@ public class Searching {
         return result;
     }
 
+    /** 
+     * POINTS :
+     * 1 IF CAPACITY = SUM OF ALL WTS, IT CAN BE TRANSFERRED IN A DAY
+     * 2 CAPACITY CAN'T BE LESSER THAN MAX WT
+     * 3 START FROM MIN AND GO TILL MAX
+     * 4 CHECK IF ANY WT MATCHES THE ISSAFE CONDN
+     * 
+     * ISSAFE CONDN : 
+     * ADD UP THE WEIGHTS TILL IT IS LESSER THAN CURRENT CAPACITY
+     * ELSE WE WILL LOAD THIS WT FROM THE NEXT DAY. 
+     * ALSO WE WILL TRY TO ADD AS MUCH WT AS POSSIBLE
+     * (LESS THAN CURRENT CAPACITY, OF COURSE) THAT'S WHY SUM+=WEIGHT
+     * 
+     * normal version w/o binary search
+     * for(int i = minW, i<=maxW; i++){
+     *    if(isSafe(i, weights, D)) return i;
+     * }
+     * 
+     * BINARY SEARCH:
+     * START FROM MID, IF MID IS VALID, WE LOOK FOR A LESSER CAPACITY
+     * ELSE WE MOVE TOWARDS HIGHER CAPACITY
+     * 
+    */
+    // https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+    public int shipWithinDays(int[] weights, int D) {
+        int sum = 0; int max = 0;
+        for(int i : weights){
+            sum+=i;
+            max = Math.max(max, i);
+        }
+        
+        int minW = max; int maxW = sum;
+        
+        while(minW<maxW){
+            int mid = minW + (maxW - minW)/2;
+            if(isSafe(mid, weights, D)){
+                maxW = mid;
+            } else minW = mid+1;
+        }
+        return minW;
+    }
+    
+    boolean isSafe(int capacity, int[] weights, int D){
+        int sum = 0; int days = 1;
+        
+        for(int w : weights){
+            if(sum+w<=capacity) sum+=w;
+            else{
+                days++;
+                sum = w;
+            }
+        }
+        return days<=D;
+    }
 
     // https://leetcode.com/tag/binary-search/
     // https://leetcode.com/problems/h-index-ii/
