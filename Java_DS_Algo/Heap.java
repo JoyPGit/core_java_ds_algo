@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 public class Heap {
     /** 
      * HEAPSORT, SMALLEST RANGE, MEDIAN

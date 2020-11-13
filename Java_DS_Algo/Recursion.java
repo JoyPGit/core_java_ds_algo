@@ -1,21 +1,10 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 public class Recursion {
     Recursion() {
     }
-    public class TreeNode {
-        int key; int val;
-        TreeNode left;
-        TreeNode right;
-        TreeNode rightpointer;
     
-        TreeNode(int key) {
-            this.key = key;
-            this.val = key;
-            this.left = null;
-            this.right = null;
-        }
-    }
     /** 
      * 
      * all patterns, checks, visited, backtracking
@@ -375,11 +364,11 @@ public class Recursion {
     
      // like dfs in matrix
     int helper(String str){
-        if(utilCustom.Utility.isPalindrome(str)) return 0;
+        if(Java_DS_Algo.utilCustom.Utility.isPalindrome(str)) return 0;
                 
         for(int i = 0; i<str.length(); i++){
             String palin = str.substring(0, i+1);
-            if(utilCustom.Utility.isPalindrome(palin)){
+            if(Java_DS_Algo.utilCustom.Utility.isPalindrome(palin)){
                 min = Math.min(min, 1 + helper(str.substring(i+1)) );
             }
         }
@@ -407,12 +396,12 @@ public class Recursion {
     int painterHelper(int[] boards, int painters, int index){
         if(index==boards.length-1) return boards[boards.length-1];
 
-        if(painters == 1) return utilCustom.Utility.sumSubarray(boards, index, boards.length-1);
+        if(painters == 1) return Java_DS_Algo.utilCustom.Utility.sumSubarray(boards, index, boards.length-1);
 
         int min = Integer.MAX_VALUE;
         for(int k = 0; k<boards.length; k++){
 
-            min = Math.min(min, Math.max(utilCustom.Utility.sumSubarray(boards, 0, k),
+            min = Math.min(min, Math.max(Java_DS_Algo.utilCustom.Utility.sumSubarray(boards, 0, k),
             painterHelper(boards, painters-1, k+1)));
         }
         return min;
@@ -471,7 +460,7 @@ public class Recursion {
 
     void allSubsetHelper(int[] arr, int[] subset, int index) {
         if (index == arr.length) {
-            utilCustom.Utility.print1DMatrix(subset);
+            Java_DS_Algo.utilCustom.Utility.print1DMatrix(subset);
             return;
         }
         subset[index] = 0;

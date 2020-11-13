@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 public class Searching {
     
     /**
@@ -501,7 +502,7 @@ public class Searching {
             if(index == -1) res[i] = 1;
             else res[i] = index + 2;
         }
-        utilCustom.Utility.print1DMatrix(res);
+        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 

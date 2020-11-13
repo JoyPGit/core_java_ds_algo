@@ -1,3 +1,5 @@
+package Java_DS_Algo;
+
 class TrieNode{
     boolean isWord;
     TrieNode[] holder = new TrieNode[26];//IMP

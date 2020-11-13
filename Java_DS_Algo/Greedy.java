@@ -1,6 +1,7 @@
+package Java_DS_Algo;
 import java.util.*;
 
-import utilCustom.*;
+import Java_DS_Algo.utilCustom.*;
 
 class Greedy{
 
@@ -679,7 +680,7 @@ class Greedy{
         }
 
         for(People p:list) System.out.println(p.h+" "+p.k);
-        utilCustom.Utility.printMatrix(people);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(people);
         return people;
         // return list.toArray();
     }

@@ -1,4 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
+import Java_DS_Algo.utilCustom.*;
 
 /**
  * DFS INFORM TIME,
@@ -721,7 +723,7 @@ class Graph {
         int i = 0;
 		int[] res = new int[q.size()];
         while(q.size()!=0) res[i++] = q.removeLast();
-		// utilCustom.Utility.print1DMatrix(resCourse1);
+		// Java_DS_Algo.utilCustom.Utility.print1DMatrix(resCourse1);
 		return res;
 	}
 
@@ -950,7 +952,7 @@ class Graph {
             distance++;
         }
         System.out.println("bfs wall : ");
-        utilCustom.Utility.printMatrix(matrix);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
     }
 
     boolean isSafeWallBFS(int[][] matrix, int r, int c){
@@ -1573,8 +1575,8 @@ class Graph {
 			}
 		}
 
-		utilCustom.Utility.print1DMatrix(distance);
-		utilCustom.Utility.print1DMatrix(parent);
+		Java_DS_Algo.utilCustom.Utility.print1DMatrix(distance);
+		Java_DS_Algo.utilCustom.Utility.print1DMatrix(parent);
 
 	}
 
@@ -1604,7 +1606,7 @@ class Graph {
 			g[graph[i][0]][graph[i][1]] = graph[i][2];
 			g[graph[i][1]][graph[i][0]] = graph[i][2];
 		}
-		// utilCustom.Utility.printMatrix(g);
+		// Java_DS_Algo.utilCustom.Utility.printMatrix(g);
 
 		
 		int[] distance = new int[n];
@@ -1631,8 +1633,8 @@ class Graph {
 				}
 			}	
 		}
-		utilCustom.Utility.print1DMatrix(distance);
-		utilCustom.Utility.print1DMatrix(parent);
+		Java_DS_Algo.utilCustom.Utility.print1DMatrix(distance);
+		Java_DS_Algo.utilCustom.Utility.print1DMatrix(parent);
 	}
 
 
@@ -1684,7 +1686,7 @@ class Graph {
 
 	void mcolorUtil(int[][] arr, int vertex, int[] color) {
 		if (vertex == arr.length) {
-			utilCustom.Utility.print1DMatrix(color);
+			Java_DS_Algo.utilCustom.Utility.print1DMatrix(color);
 			this.foundMinColor = true;
 			int max = 0;
 			for (int i = 0; i < color.length; i++) {
@@ -1789,7 +1791,7 @@ class Graph {
 			g[edges[i][0]][edges[i][1]] = 1;
 			g[edges[i][1]][edges[i][0]] = 1;
 		}
-		utilCustom.Utility.printMatrix(g);
+		Java_DS_Algo.utilCustom.Utility.printMatrix(g);
 		// System.out.println(g[2][3]);
 		set.clear();
 		set.add(edges[0][0]);
@@ -1813,7 +1815,7 @@ class Graph {
 					System.out.println(q);
 				} else if (curr != i && g[curr][i] != 0 && set.contains(i)) {
 					res = new int[] { curr, i };
-					utilCustom.Utility.print1DMatrix(res);
+					Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
 					return;
 				}
 			}

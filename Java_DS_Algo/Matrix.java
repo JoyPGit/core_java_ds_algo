@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 class Matrix {
 
     /** 
@@ -660,7 +661,7 @@ class Matrix {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(matrix);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
     }
 
     void helperK(int[][] grid, int row, int col, int count) {
@@ -729,7 +730,7 @@ class Matrix {
             }
         }
         System.out.println("walls 1 from 0 :");
-        utilCustom.Utility.printMatrix(matrix);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
     } 
 
 
@@ -944,7 +945,7 @@ class Matrix {
             distance++;
         }
         System.out.println("bfs wall : ");
-        utilCustom.Utility.printMatrix(matrix);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
     }
 
     boolean isSafeWallBFS(int[][] matrix, int r, int c){
@@ -1478,7 +1479,7 @@ class Matrix {
         System.out.println("in n rat multiple jumps");
         if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
 
-        utilCustom.Utility.printMatrix(visited);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(visited);
         System.out.println("sol found");
         return true;
     }

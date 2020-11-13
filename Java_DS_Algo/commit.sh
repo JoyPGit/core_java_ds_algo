@@ -1,6 +1,6 @@
 rm *.class
 # cd utilCustom
-rm *.class
+# rm *.class
 # cd ..
 git add .
 git commit -m "$1" 

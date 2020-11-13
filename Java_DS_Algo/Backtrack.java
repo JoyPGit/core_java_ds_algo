@@ -1,3 +1,5 @@
+package Java_DS_Algo;
+
 import java.util.*;
 
 public class Backtrack {
@@ -141,7 +143,7 @@ public class Backtrack {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         backtrack(res, list, nums, 0);
-        utilCustom.Utility.printListOfLists(res);
+        Java_DS_Algo.utilCustom.Utility.printListOfLists(res);
         return res;
     }
     
@@ -587,7 +589,7 @@ public class Backtrack {
     void helper4jul(int[][] board, int row) {
         if (row == board.length) {
             System.out.println("found");
-            utilCustom.Utility.printMatrix(board);
+            Java_DS_Algo.utilCustom.Utility.printMatrix(board);
             return;
         } else {
             for (int i = 0; i < board.length; i++) {
@@ -1065,7 +1067,7 @@ public class Backtrack {
         System.out.println("in n rat multiple jumps");
         if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
 
-        utilCustom.Utility.printMatrix(visited);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(visited);
         System.out.println("sol found");
         return true;
     }

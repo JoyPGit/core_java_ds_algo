@@ -1,4 +1,4 @@
-package utilCustom;
+package Java_DS_Algo.utilCustom;
 
 import java.util.*;
 

@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 class StringPractice {
 
     // https://www.baeldung.com/java-string-immutable
@@ -949,13 +950,13 @@ class StringPractice {
         
         int[] base = new int[26];
         for(int i =0; i<n; i++) base[t.charAt(i)-'A']++;
-        utilCustom.Utility.print1DMatrix(base);
+        Java_DS_Algo.utilCustom.Utility.print1DMatrix(base);
         
         int[] curr = new int[26];
         for(int i =0; i<n; i++) {
             if(t.contains(""+s.charAt(i))) curr[s.charAt(i)-'A']++;
         }
-        utilCustom.Utility.print1DMatrix(curr);
+        Java_DS_Algo.utilCustom.Utility.print1DMatrix(curr);
 
         if(Arrays.equals(base, curr)) res = findBest(res, s.substring(0, n));
         
@@ -1099,7 +1100,7 @@ class StringPractice {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(dp);
+        Java_DS_Algo.utilCustom.Utility.printMatrix(dp);
         System.out.println("all palindromic substrings' count : " + count);
         return count;
     }

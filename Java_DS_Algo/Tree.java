@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 class TreeNode {
     int key; int val;
     TreeNode left;
@@ -1090,6 +1091,28 @@ public class Tree {
         return left && right;
     } 
 
+
+    /** 
+     * 1 PASS THE ROOT, MAX AND MIN
+     * 2 CALC MAX AND MIN AT EVERY NODE
+    */
+    // https://leetcode.com/problems/maximum-difference-between-node-and-ancestor
+    int diff = 0;
+    public int maxAncestorDiff(TreeNode root) {
+        if(root == null) return 0;
+        dfs(root, root.val, root.val);
+        return diff;
+    }
+    
+    void dfs(TreeNode root, int max, int min){
+        diff = Math.max(diff, Math.abs(max - min));
+        if(root == null) return;
+        
+        // System.out.println("root "+root.val+"; "+diff);
+        dfs(root.left, Math.max(max, root.val), Math.min(min, root.val));
+        dfs(root.right, Math.max(max, root.val), Math.min(min, root.val));
+    }
+
     // https://leetcode.com/discuss/general-discussion/454844/binary-tree-isomorphism-problem    
 
     // https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
@@ -1312,9 +1335,11 @@ public class Tree {
      */
     public boolean isSubtree(TreeNode s, TreeNode t) {
         if(s == null) return false;
-        else if(isSameTree(s, t)) return true;
+        boolean equal = (isSameTree(s, t));
         // t is passed, not t.left or t.right
-        else return isSubtree(s.left, t) || isSubtree(s.right, t);
+        boolean left =  isSubtree(s.left, t);
+        boolean right = isSubtree(s.right, t);
+        return equal || left || right;
     }
 
     // SAME AS DFS PATH SUM 3, ONLY USE OR INSTEAD OF AND
@@ -1660,6 +1685,7 @@ public class Tree {
 
     // LIKE HEIGHT
     // EXTRA PARAM INSTEAD OF GLOBAL VAR
+    // https://leetcode.com/problems/validate-binary-search-tree/
     class BSTCustomLong{
         long max; long min; long sum;
         BSTCustomLong(long m1, long m2, long s){

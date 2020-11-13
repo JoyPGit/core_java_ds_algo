@@ -1,5 +1,3 @@
-package utilCustom;
-
 public class ToDo {
 
     /**
@@ -54,6 +52,7 @@ public class ToDo {
      * merge sort list
      * del dup list 2
      * del dup array
+     * https://leetcode.com/problems/frog-jump/
      * 
 
 

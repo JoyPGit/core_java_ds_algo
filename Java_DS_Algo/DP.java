@@ -1,6 +1,8 @@
+package Java_DS_Algo;
+
 import java.util.*;
 
-import utilCustom.*;
+import Java_DS_Algo.utilCustom.*;
 
 public class DP {
 
@@ -247,20 +249,34 @@ public class DP {
         return dp[lastDay];
     }
 
+    /**
+     * POINTS :
+     * 1 SIMILAR TO COIN CHANGE
+     * 2 CREATE A nums ARRAY TO STIORE SQUARES, fill with (i+1)*(i+1)
+     * 3 USE  SAME RELATION
+     * dp[i][j] = Math.min(dp[i-1][j], dp[i][j-nums[i-1]] +1);
+     * +1 for current el,
+    */
     // https://leetcode.com/problems/perfect-squares/
-    public int numSquares1(int n) {
-        int[] nums = new int[(int)Math.sqrt(n)+1];
+    public int numSquares(int n) {
+        int sq = (int)Math.sqrt(n);
+        int[][] dp = new int[sq+1][n+1];
         
-        int[][] dp = new int[nums.length][n+1];
+        int[] nums = new int[n+1];
+        for(int i =0; i<=n; i++){
+            nums[i] = (i+1)*(i+1);
+        }
         
-        for(int i =1; i<nums.length; i++){
-            for(int j =1; j<n; j++){
-                if(j<nums[i-1]) dp[i][j] = dp[i-1][j];
-                else dp[i][j] = Math.min(dp[i-1][j], dp[i-1][j-nums[i-1]])+1;
+        Arrays.fill(dp[0], Integer.MAX_VALUE);
+        dp[0][0] = 0;
+        
+        for(int i =1; i<=sq; i++){
+            for(int j =1; j<=n; j++){
+                if(nums[i-1]>j) dp[i][j] = dp[i-1][j];
+                else dp[i][j] = Math.min(dp[i-1][j], dp[i][j-nums[i-1]] +1);
             }
         }
-        Utility.printMatrix(dp);
-        return dp[nums.length-1][n];
+        return dp[sq][n];
     }
 
     // https://leetcode.com/problems/decode-ways/
@@ -467,6 +483,49 @@ public class DP {
         return total; 
     }
 
+    /** 
+     * k transactions
+     * POINTS : 
+     * 1 LIKE PAINTER
+     * 2 TWO OPTIONS, EITHER I DO OR DON'T DO ANY TRANSACTION
+     * 3 IF I DO, SELECT MAX FROM p TILL j-1 i.e.
+     * THE STOCK COULD HAVE BEEN BOUGHT ON DAY 0 AND SOLD ON p, 
+     * AND WE BUY AGAIN ON p, 
+     * SO PROFIT = prices[j] - prices[p] + profit from previous transactions
+     * 
+     * previous transactions = dp[i-1][p]
+     * i-1 because transaction is reduced by one as this transaction 
+     * is included in k
+     * 
+     * 2, [3,0,5,10]
+     * bought at 0, sold at 5, bought at 5 sold at 10 
+     * profit = 10
+     * 
+     * size [k+1][n], 0 transactions
+     * reduce transaction
+     * 
+     */ 
+    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv
+    public int maxProfit(int k, int[] prices) {
+        int n = prices.length;
+        if(n<2) return 0;
+        
+        int[][] dp = new int[k+1][n];
+        
+        // k+1 as 0 transactions is an option
+        for(int i =1; i<=k; i++){
+            for(int j=1; j<n; j++){
+                int max = 0;
+                // p from 0 till j-1
+                for(int p = 0; p<j; p++){
+                    max = Math.max(max, prices[j] - prices[p] + dp[i-1][p]);
+                }
+                // no transaction case
+                dp[i][j] = Math.max(max, dp[i][j-1]);
+            }
+        }
+        return dp[k][n-1];
+    }
 
     /** 
      * POINTS:
@@ -1865,6 +1924,8 @@ public class DP {
      *   return Math.max(lcs(X, Y, m, n - 1), lcs(X, Y, m - 1, n));
      * } 
      *
+     * first row anc ol are extra, startr from i=0; j=0 and 
+     * compare i-1 and j-1
     */
     int longestCommonSubsequence(String str1, String str2) {
         int m = str1.length(); int n = str2.length();
@@ -1873,6 +1934,7 @@ public class DP {
         
         for(int i =0; i<=m; i++){
             for(int j =0; j<=n; j++){
+                if(i ==0 || j==0 ) continue;
                 if(str1.charAt(i-1) == str2.charAt(j-1)){
                     dp[i][j] = dp[i-1][j-1]+1;
                 } 
@@ -2327,7 +2389,7 @@ public class DP {
         // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
 
         int number = 12;
-        dp.numSquares1(number);
+        dp.numSquares(number);
 
         int[][] blockSum = {{1,2,3},{4,5,6},{7,8,9}};
         // dp.matrixBlockSum(blockSum, 1);

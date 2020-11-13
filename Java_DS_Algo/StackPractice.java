@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 public class StackPractice {
     
     /** 
@@ -349,7 +350,7 @@ public class StackPractice {
             System.out.println("sum "+sum);
 
         }
-        utilCustom.Utility.printListOfLists(res);
+        Java_DS_Algo.utilCustom.Utility.printListOfLists(res);
         for(int i =0; i<res.size(); i++){
             Collections.sort(res.get(i));
             if((res.get(i)).size()==0) continue;
@@ -413,7 +414,7 @@ public class StackPractice {
             res[i] = list.removeFirst();
             i++;
         }
-        utilCustom.Utility.print1DMatrix(res);
+        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 

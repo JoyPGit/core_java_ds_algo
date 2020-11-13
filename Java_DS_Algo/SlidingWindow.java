@@ -1,10 +1,11 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 public class SlidingWindow {
 
 
     /** 
-     * 
+     * numSubarrayProductLessThanK, longestOnes
      * all substrings containing k els
      * 
      * min window, 
@@ -127,7 +128,7 @@ public class SlidingWindow {
         res[index++] = list.getFirst();
     
         System.out.println("first k");
-        utilCustom.Utility.print1DMatrix(res);
+        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
 
         for(int i =k; i<n; i++){
             if(list.getFirst()==nums[i-k]){
@@ -143,7 +144,7 @@ public class SlidingWindow {
             System.out.println(list);
             res[index++] = list.getFirst();
         }
-        utilCustom.Utility.print1DMatrix(res);
+        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 
@@ -385,33 +386,7 @@ public class SlidingWindow {
         return length;
     }
 
-    /////////////////////////// NEXT 3 QUES ARE VERY IMP ////////////////
-
-    /** POINTS : 
-     * 1 left HOLDS THE INDEX OF A NON REPEATING CHAR
-     * left = Math.max(left, map.get(s.charAt(i))+1);
-     * handle aab, pwwke, dvdf
-     * 
-     * left IS INCREMENTED TO THE NEXT INDEX OF THE CHAR FOUND IN MAP
-     * 
-     */
-    // https://leetcode.com/problems/longest-substring-without-repeating-characters
-    public int lengthOfLongestSubstring(String s) {
-        int n = s.length();
-        if(n == 0) return n;
-        HashMap<Character, Integer> map = new HashMap<>();
-        int len = 0; 
-        int left = 0;
-        
-        for(int i =0; i<n; i++){
-            if(map.containsKey(s.charAt(i))) {
-                left = Math.max(left, map.get(s.charAt(i))+1);
-            }
-            len = Math.max(len, i-left+1);   
-            map.put(s.charAt(i), i);
-        }
-        return len;
-    }
+    /////////////////////////// NEXT 2 QUES ARE VERY IMP ////////////////
 
 
     // "cdadabcc", "bbcaac"

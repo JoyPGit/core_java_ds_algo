@@ -1,19 +1,7 @@
+package Java_DS_Algo;
 import java.util.*;
 
-class Node{
-    int val;
-    Node left; Node right;
-    Node(int v){
-        this.val = v;
-        this.left = null;
-        this.right = null;
-    }
-    Node(int v, Node l, Node r){
-        this.val = v;
-        this.left = l;
-        this.right = r;
-    }
-} 
+
 //how hashmaps work https://www.youtube.com/watch?v=c3RVW3KGIIE
 
 /** 
@@ -24,6 +12,7 @@ class Node{
  * LONGEST AP
  * RANK TEAMS
  * WORD SUBSETS
+ * SUBSTRING WITH DISTINCT CHARS
  * PATH SUM 3
  * NO OF SUBARRAYS HAVING SUM K (PREFIX SUM)
  * FIND ITINERARY
@@ -467,6 +456,32 @@ public class HashPractice{
     }
 
 
+    /** POINTS : 
+     * 1 left HOLDS THE INDEX OF A NON REPEATING CHAR
+     * left = Math.max(left, map.get(s.charAt(i))+1);
+     * handle aab, pwwke, dvdf
+     * 
+     * left IS INCREMENTED TO THE NEXT INDEX OF THE CHAR FOUND IN MAP
+     * 
+     */
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        if(n == 0) return n;
+        HashMap<Character, Integer> map = new HashMap<>();
+        int len = 0; 
+        int left = 0;
+        
+        for(int i =0; i<n; i++){
+            if(map.containsKey(s.charAt(i))) {
+                left = Math.max(left, map.get(s.charAt(i))+1);
+            }
+            len = Math.max(len, i-left+1);   
+            map.put(s.charAt(i), i);
+        }
+        return len;
+    }
+
     public int longestAPHash(int[] A) {
         HashMap<Integer, Integer> hash[] = new HashMap[A.length];
         for(int i = 0; i < A.length; i++)
@@ -719,14 +734,14 @@ public class HashPractice{
     int target = 0;
     HashMap<Integer, Integer> map = new HashMap<>();
     
-    public int pathSum(Node root, int sum) {
+    public int pathSum(TreeNode root, int sum) {
         target = sum;
         map.put(0,1);
         helper(root, 0);
         return count;
     }
     
-    void helper(Node root, int sum){
+    void helper(TreeNode root, int sum){
         if(root == null) return;
         sum+=root.val;
         count+=map.getOrDefault(sum-target, 0);

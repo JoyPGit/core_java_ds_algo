@@ -1,3 +1,4 @@
+package Java_DS_Algo;
 import java.util.*;
 
 // https://leetcode.com/problems/distribute-candies-to-people
@@ -12,6 +13,65 @@ public class Mathprob {
         if(a%b == 0) return b;
         return gcd(b, a%b);
     }
+
+    // https://leetcode.com/problems/count-primes/
+    public int countPrimes(int n) {
+        int count =0;
+        for(int i =0; i<n; i++){
+            // to handle 0 and 1
+            if(i == 0 || i == 1) continue;
+            if(isPrime(i)) {
+                // System.out.println(" num "+i);
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    boolean isPrime(int num){
+        // not j<=num/2
+        for(int j =2; j*j<=num; j++){
+            if(num%j == 0) return false;
+        }
+        return true;
+    }
+
+    // SIEVE OF ERATOSTHENES
+    /** 
+     * 1 FIND A PRIME,
+     * 2 MARK ALL ITS MULTIPLES FALSE IN ARRAY
+     * 3 RUN FOR i*i<=n
+    */
+    // https://leetcode.com/problems/count-primes/
+    // no need to check for isPrime, use array
+    public int countPrimes1(int n) {
+        int count = 0;
+        if(n==0 || n==1 || n==2) return 0;
+        boolean isPrimeArr[] = new boolean[n+1];
+        Arrays.fill(isPrimeArr, true);
+
+        for(int i = 2; i*i<=n; i++){ // 
+            // if(i == 0 || i == 1) continue;
+            // if already marked non-prime, continue
+            if(!isPrimeArr[i]) continue;
+            // mark multiples
+            if(isPrimeArr[i]) markPrime(i, n, isPrimeArr);
+        }
+        for(int i =2; i < isPrimeArr.length-1; i++){ //
+            if(isPrimeArr[i]) count++;
+        }
+        return count;
+    }
+    
+
+    // find multiples
+    void markPrime(int div, int n, boolean[] arr){
+        for(int i = 2; i*div<=n; i++) {
+            if(arr[i*div]==false) continue; // 
+            arr[i*div] = false;
+        }
+    }
+
 
     /** 
      * POINTS :
@@ -92,8 +152,20 @@ public class Mathprob {
         return res;
     }
 
-      // https://leetcode.com/problems/water-bottles/
-      public int numWaterBottles(int numBottles, int numExchange) {
+    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        if(n<2) return 0;
+        int min = prices[0]; int profit = 0;
+        for(int i =1; i<n; i++){
+            if(prices[i]<min) min = prices[i];
+            else profit = Math.max(profit, prices[i] - min);
+        }
+        return profit;
+    }
+
+    // https://leetcode.com/problems/water-bottles/
+    public int numWaterBottles(int numBottles, int numExchange) {
         int i = 0; 
         while(i <= numBottles){
             if(i%numExchange==0) {

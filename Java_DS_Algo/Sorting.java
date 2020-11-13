@@ -1,5 +1,6 @@
+package Java_DS_Algo;
 import java.util.*;
-
+import Java_DS_Algo.utilCustom.*;
 public class Sorting {
     Sorting(){}
 
@@ -12,7 +13,8 @@ public class Sorting {
             }
             nums[j] = temp;
         }
-        utilCustom.Utility.print1DMatrix(nums);
+        for(int i :nums) System.out.println(i);
+        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(nums);
     }
 
 
@@ -29,7 +31,7 @@ public class Sorting {
         if(index*2+2<arr.length && arr[min]>arr[index*2+2]) min = index*2+2;
 
         if(min!=index) {
-            utilCustom.Utility.swap(arr, index, min);
+            // Java_DS_Algo.utilCustom.Utility.swap(arr, index, min);
             heapify(arr, min);
         }
     }
@@ -42,11 +44,11 @@ public class Sorting {
             heapify25Apr(arr, arr.length, i);
         }
 
-        utilCustom.Utility.print1DMatrix(arr);
+        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(arr);
         System.out.println();
 
         for (int i = n - 1; i > n - 2 - 1; i--) {
-            utilCustom.Utility.swap(arr, i, 0);
+            // Java_DS_Algo.utilCustom.Utility.swap(arr, i, 0);
             // int temp =arr[0];
             // arr[0] = arr[i];
             // arr[i] = temp;
@@ -72,7 +74,7 @@ public class Sorting {
         }
 
         if (max != index) {
-            utilCustom.Utility.swap(arr, index, max);
+            // Java_DS_Algo.utilCustom.Utility.swap(arr, index, max);
             heapify25Apr(arr, n, max);
         }
     }
@@ -301,8 +303,8 @@ public class Sorting {
         int n = nums.length;
         int lo = 0; int i =0;
         while(i<n){
-            if(nums[i] == 0) utilCustom.Utility.swap(nums, lo++, i++);
-            else i++;
+            // if(nums[i] == 0) //Java_DS_Algo.utilCustom.Utility.swap(nums, lo++, i++);
+            // else i++;
         }
     }
 
@@ -327,9 +329,9 @@ public class Sorting {
         int lo = 0; int hi = n-1;
         int i = 0 ;
         while(i<=hi){ // 1
-            if(nums[i] == 0) utilCustom.Utility.swap(nums, lo++, i++); // 2
-            else if(nums[i] == 2) utilCustom.Utility.swap(nums, hi--, i); // 3
-            else i++;
+            // if(nums[i] == 0) //Java_DS_Algo.utilCustom.Utility.swap(nums, lo++, i++); // 2
+            // else if(nums[i] == 2) //Java_DS_Algo.utilCustom.Utility.swap(nums, hi--, i); // 3
+            // else i++;
         }
     }
 
@@ -340,7 +342,6 @@ public class Sorting {
     public static void main(String[] args) {
         Sorting sorter = new Sorting();
         int[] arr = {4,5,6,7,1,2,8};
-        sorter.insertionSort(arr);
-        
+        sorter.insertionSort(arr);        
     }
 }
