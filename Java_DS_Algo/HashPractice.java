@@ -5,21 +5,25 @@ import java.util.*;
 //how hashmaps work https://www.youtube.com/watch?v=c3RVW3KGIIE
 
 /** 
- * 0s and 1s, substrings with k distinct els
+ * ** min window
  * 
- * PREFIX SUM
+ * AP HASH, ITINERARY, WORD SUBSETS
+ * 
+ * SMALLEST SUBSEQUECE, MNIN WINDOW SUBSTRING
+ * 
+ * 0s and 1s, prefix sum
+ * rank teams, word subsets
+ * 
  * LONGEST SUBARRAY OF 0S AND 1S
  * LONGEST AP
  * RANK TEAMS
  * WORD SUBSETS
- * SUBSTRING WITH DISTINCT CHARS
  * PATH SUM 3
  * NO OF SUBARRAYS HAVING SUM K (PREFIX SUM)
  * FIND ITINERARY
  * WORD SUBSETS
  * 
  * SLIDING WINDOW -> WHENEVER K DISTINCT
- * LONGEST SUBARRAY OF K DISTINCT ELS
  * SMALLEST
 */
 
@@ -57,7 +61,7 @@ import java.util.*;
     * 3 WHENEVER CONTIGUOUS SUBARRAY WITH SUM = K IS REQD, USE HASHMAP
     *
     */
-public class HashPractice{
+class HashPractice{
 
     int smallestElementRepeatedKTimes(int[] arr, int k){
         int n = arr.length; int min = Integer.MAX_VALUE;
@@ -70,6 +74,7 @@ public class HashPractice{
         }
         return min;
     }
+
 
     // https://leetcode.com/problems/two-sum/
     public int[] twoSum(int[] nums, int target) {
@@ -125,6 +130,31 @@ public class HashPractice{
         for(int i =0; i<a.length; i++) a[i] = Math.min(a[i], b[i]);
     }
 
+
+    // https://leetcode.com/problems/relative-sort-array/
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int x : arr1) map.put(x, map.getOrDefault(x,0)+1);
+
+        int index = 0;
+        for(int i=0; i<arr2.length; i++){
+            int freq = map.get(arr2[i]); 
+            for(int j=0; j<freq; j++) arr1[index++] = arr2[i];
+            map.remove(arr2[i]);
+        }
+        
+        // now add remaining to list to be sorted
+        List<Integer> remaining = new ArrayList<>();
+        for(Map.Entry <Integer, Integer> entry : map.entrySet()){
+            for(int i=0; i<entry.getValue(); i++) remaining.add(entry.getKey());
+        }
+        
+        Collections.sort(remaining);
+        for(int i =0; i<remaining.size(); i++) arr1[index++] = remaining.get(i);
+        
+        return arr1;
+    }
+
     /** POINTS :
      * 1 MAINTAIN A HASHMAP
      * 2 WHEN ITERATING OVER SECOND MAP, IF PRESENT, ADD TO RESULT
@@ -149,7 +179,8 @@ public class HashPractice{
         
         for(int i :arr2){
             if(map.containsKey(i)){
-                res.add(i); map.put(i, map.get(i)-1);
+                res.add(i); 
+                map.put(i, map.get(i)-1);
                 if(map.get(i)==0) map.remove(i);
             }
         }
@@ -159,9 +190,8 @@ public class HashPractice{
         return result;
     }
 
-
-    //IMP QUESTIONS
     
+    // update last in each iteration
     // https://www.geeksforgeeks.org/maximum-difference-first-last-indexes-element-array/
     class FirstLast{
         int first; int second;
@@ -196,100 +226,7 @@ public class HashPractice{
     // https://www.geeksforgeeks.org/common-elements-in-all-rows-of-a-given-matrix/
     // https://www.geeksforgeeks.org/find-pairs-given-sum-elements-pair-different-rows/
     
-    /** 
-     * POINTS :
-     * 1 USE A SLIDING WINDOW, A LEFT POINTER
-     * 2 ALWAYS USE INDEXES, NOT (int i : nums) FOR SUM
-     * 3 ALWAYS UPDATE LENGTH INSIDE WHILE LOOP
-     * 4 ADD A CHECK IN THE RETURN STATEMENT
-     * 
-     * find the minimal length of subarray which has sum ≥ s. 
-    */
-    // https://leetcode.com/problems/minimum-size-subarray-sum
-    public int minSubArrayLen(int s, int[] nums) {
-        int n = nums.length;
-        int left = 0; int sum = 0;
-        int length = Integer.MAX_VALUE;
-        
-        for(int i=0; i<n; i++){
-            sum += nums[i];
-            while(sum>=s){
-                length = Math.min(length, i-left+1);
-                // System.out.println(sum);
-                // System.out.println("len "+length);
-                sum-=nums[left];
-                left++;
-            }
-        }
-        return length==Integer.MAX_VALUE?0:length;
-    }
-
-    ///////////////// SHRINK; MAP SIZE = SLIDING WINDOW SIZE
     
-    /** 
-     * HOLD THE FREQ OF INTEGER IN MAP, NOT INDEX, 
-     * INDEX CAN BE KEPT TRACK OF USING LEFT FLAG
-     * 
-     * how to shrink?
-     * once the map size is >= k, 
-     * while loop
-     * compare length
-     * remove left, 
-     * 
-     * repeated eles can cause the length to grow
-     * arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
-     */
-    // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
-    int smallestSubArrayKDistinct(int[] arr, int k){
-        int n = arr.length; 
-        int left = 0; int length = Integer.MAX_VALUE;
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        for(int i = 0; i<n; i++){
-            map.put(arr[i], map.getOrDefault(arr[i], 0)+1); 
-            while(map.size()>=k){
-                // update length
-                length = Math.min(length, i- left+1);
-                if(map.get(arr[left]) == 1) map.remove(arr[left]);
-                else map.put(arr[left], map.get(arr[left]) - 1);
-                left++;
-            }
-        }
-        System.out.println("smallest subarray with "+k+" distinct els has length "+length);
-        return length;
-    }
-
-
-    // SLIDING WINDOW
-    // 1,1,2,3,1,4
-    // always store freq, not index, use left for index
-    // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
-    int longestSubArraytWithkEls(int[] arr, int k){
-        int n = arr.length;
-        int left = 0; int length = Integer.MIN_VALUE;
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int i =0; i<n; i++){
-            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
-
-            while(map.size()>k){
-                if(map.get(arr[left]) == 1) map.remove(arr[left]);
-                else map.put(arr[left], map.get(arr[left])-1);
-                System.out.println(arr[left]);
-                left++;
-                System.out.println(map);
-            }
-            length = Math.max(length, i-left+1);
-            // length is placed here, so it checks for cases
-            // when the map size is <= k
-
-        }
-        System.out.println("longest subarray with "+k+" els has length "+length);
-        return length;
-    }
-    // similar
-    // https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
-
-
     // https://leetcode.com/problems/subarrays-with-k-different-integers/solution/
     // https://www.geeksforgeeks.org/find-four-elements-a-b-c-and-d-in-an-array-such-that-ab-cd/
 
@@ -299,26 +236,10 @@ public class HashPractice{
     // int pairGreatestProduct(int[] arr){
         
     // }
-
-    
-    // https://www.geeksforgeeks.org/longest-subarray-sum-divisible-k/
-    int longestSubArrayDivByK(int[] arr, int k){
-        int max =0; int sum =0;
-        HashMap<Integer, Integer> list = new HashMap<>();
-
-        for(int i =0; i<arr.length; i++){
-            sum+= arr[i];
-            list.put(sum%k, 0);
-        }
-
-        return max;
-    }
     
 
-    //////////////////////////////////// IMP
-
+    ///////////////////////// PREFIX-SUM
     /** 
-     * PREFIX-SUM
      * 
      * ALWAYS THINK CUMULATIVE SUM, IF THERE EXISTS SUM-K
      * TARGET = 8, SUM = 18 AND 10 EXISTS, SO THERE IS A SUBARRAY WHOSE
@@ -384,7 +305,7 @@ public class HashPractice{
      * 
     */ 
     // https://leetcode.com/problems/contiguous-array
-    public int findMaxLength(int[] nums) {
+    public int findMaxLength0s1s(int[] nums) {
         int n = nums.length; 
         int sum = 0; int len = 0;
         HashMap<Integer, Integer> map = new HashMap<>();
@@ -404,8 +325,49 @@ public class HashPractice{
         
         return len;
     }
+
+    /** POINTS :
+     * 1 STORE REMAINDER INSTEAD OF SUM
+     * 2 NO NEED TO CHECK IF INDIVIDUAL EL IS DIV BY K
+     * COUNT+=MAP.GET(REM) DOES THE TRICK
+     * 3 IF REM<0 REM+=K TO MAKE IT GREATER THAN 0
+     * 
+     * imp : rem<0 rem+=k
+     */
+    // https://leetcode.com/problems/subarray-sums-divisible-by-k/
+    public int subarraysDivByK(int[] nums, int k) {
+        int n = nums.length;
+        if(n==0) return 0;
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        int sum = 0; int rem = 0; int count = 0; 
+        map.put(rem,1);
+        
+        for(int i : nums){
+            sum+=i; rem = sum%k; // 1
+            if(rem<0) rem+=k; // 2
+            if(map.containsKey(rem)) count+=map.get(rem);
+            // System.out.println("i "+i+" "+count);
+            map.put(rem, map.getOrDefault(rem, 0)+1);
+        }
+        return count;
+    }
     
-    //// IMP
+    // https://www.geeksforgeeks.org/longest-subarray-sum-divisible-k/
+    int longestSubArrayDivByK(int[] arr, int k){
+        int max =0; int sum =0;
+        HashMap<Integer, Integer> list = new HashMap<>();
+
+        for(int i =0; i<arr.length; i++){
+            sum+= arr[i];
+            list.put(sum%k, 0);
+        }
+
+        return max;
+    }
+
+    // SMALLEST LEXICOGRAPHICALLY
      /** 
      * 
      * POINTS : 
@@ -455,31 +417,57 @@ public class HashPractice{
         return res;
     }
 
-
-    /** POINTS : 
-     * 1 left HOLDS THE INDEX OF A NON REPEATING CHAR
-     * left = Math.max(left, map.get(s.charAt(i))+1);
-     * handle aab, pwwke, dvdf
+    ///// TRICKY USE HASHMAP AND COMPARE USING t.length()
+    /** 
+     *  IT'S A BIT TRICKY, if t contains aa, we need to find aa, 
+     * only a won't do.
      * 
-     * left IS INCREMENTED TO THE NEXT INDEX OF THE CHAR FOUND IN MAP
+     * POINTS :
+     * 
+     * 1 SO USE HASHMAP (why? because hashset can't store freq
+     * and we need freq to remove els from the map)
+     * 2 COUNT IS USED TO KEEP TRACK OF MAP SIZE 
+     * (i.e. when all chars of t have been included)
+     * 3 IF LEFT IS PRESENT IN MAP, REDUCE COUNT; AS LEFT HAS MOVED OVER A VALID CHAR
      * 
      */
-    // https://leetcode.com/problems/longest-substring-without-repeating-characters
-    public int lengthOfLongestSubstring(String s) {
-        int n = s.length();
-        if(n == 0) return n;
-        HashMap<Character, Integer> map = new HashMap<>();
-        int len = 0; 
-        int left = 0;
+    // https://leetcode.com/problems/minimum-window-substring
+    public String minWindow(String s, String t) {
+        if(s == null || s.length() < t.length() || s.length() == 0) return "";
+        HashMap<Character, Integer>map = new HashMap<>();
         
-        for(int i =0; i<n; i++){
-            if(map.containsKey(s.charAt(i))) {
-                left = Math.max(left, map.get(s.charAt(i))+1);
+        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+        
+        // add only valid chars(chars in t) 
+        for(int i =0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
+                if(map.get(s.charAt(i)) >= 0) count++;
             }
-            len = Math.max(len, i-left+1);   
-            map.put(s.charAt(i), i);
+            
+            // System.out.println(map);
+            while(count == t.length()) {
+                // if smaller len found, update len and starting char
+                if(i-left+1 < len){
+                    start = left;
+                    len = i-left+1;
+                }
+                // now increment the freq which was reduced
+                if(map.containsKey(s.charAt(left))){
+                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
+                    if(map.get(s.charAt(left))>0) count--;
+                }
+                left++;
+                // System.out.print("in here ");
+                // System.out.println(map);
+            }
+            // System.out.println("left "+left);
         }
-        return len;
+        if(len>s.length()) return ""; 
+
+        return s.substring(start, start+len);
     }
 
     public int longestAPHash(int[] A) {
@@ -503,31 +491,6 @@ public class HashPractice{
         
         System.out.print("max AP using Hash "); System.out.println(max+1);
         return max + 1;
-    }
-
-
-    // https://leetcode.com/problems/relative-sort-array/
-    public int[] relativeSortArray(int[] arr1, int[] arr2) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int x : arr1) map.put(x, map.getOrDefault(x,0)+1);
-
-        int index = 0;
-        for(int i=0; i<arr2.length; i++){
-            int freq = map.get(arr2[i]); 
-            for(int j=0; j<freq; j++) arr1[index++] = arr2[i];
-            map.remove(arr2[i]);
-        }
-        
-        // now add remaining to list to be sorted
-        List<Integer> remaining = new ArrayList<>();
-        for(Map.Entry <Integer, Integer> entry : map.entrySet()){
-            for(int i=0; i<entry.getValue(); i++) remaining.add(entry.getKey());
-        }
-        
-        Collections.sort(remaining);
-        for(int i =0; i<remaining.size(); i++) arr1[index++] = remaining.get(i);
-        
-        return arr1;
     }
 
     
@@ -756,34 +719,6 @@ public class HashPractice{
 
 
 
-    /** POINTS :
-     * 1 STORE REMAINDER INSTEAD OF SUM
-     * 2 NO NEED TO CHECK IF INDIVIDUAL EL IS DIV BY K
-     * COUNT+=MAP.GET(REM) DOES THE TRICK
-     * 3 IF REM<0 REM+=K TO MAKE IT GREATER THAN 0
-     * 
-     * imp : rem<0 rem+=k
-     */
-    // https://leetcode.com/problems/subarray-sums-divisible-by-k/
-    public int subarraysDivByK(int[] nums, int k) {
-        int n = nums.length;
-        if(n==0) return 0;
-        
-        HashMap<Integer, Integer> map = new HashMap<>();
-        
-        int sum = 0; int rem = 0; int count = 0; 
-        map.put(rem,1);
-        
-        for(int i : nums){
-            sum+=i; rem = sum%k; // 1
-            if(rem<0) rem+=k; // 2
-            if(map.containsKey(rem)) count+=map.get(rem);
-            // System.out.println("i "+i+" "+count);
-            map.put(rem, map.getOrDefault(rem, 0)+1);
-        }
-        return count;
-    }
-
     // need to do dfs for every node, stuck when node doesn't have entry. 
     // Use for loop as in dfs of graph
     // https://leetcode.com/problems/reconstruct-itinerary/
@@ -883,10 +818,6 @@ public class HashPractice{
         // 2;
         // h.smallestSubArrayKDistinct(subarrKdis, k);
 
-        int[] longestK = new int[]
-        // {6, 5, 1, 2, 3, 2, 1, 4, 5};
-        {1,1,2,3,1,4};
-        h.longestSubArraytWithkEls(longestK, 3);
         int[] apSeq = {24,13,1,100,0,94,3,0,3};
         //{3,6,9,10};
             // {44,46,22,68,45,66,43,9,37,30,50,67,32,47,

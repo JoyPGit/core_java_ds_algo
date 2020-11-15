@@ -1952,36 +1952,71 @@ public class Tree {
      * 2 STEPS : create node, find index, preStart++, set children
      * 3 AND THE BOUNDARY FOR LEFT = (start, index-1)
      * AND RIGHT = (index+1, end)
+     * 
+     * 
+     * imp : 
+     * return when start>end
+     * include start and end in arguments
+     * 
     */
     // https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal
-    int preStart = 0; // 1
+    int preIndex = 0;
     public TreeNode buildTree(int[] preorder, int[] inorder) {
         int n = preorder.length;
         if(n==0) return null;
+        if(n==1) return new TreeNode(preorder[0]);
+        
         return helper(preorder, inorder, 0, n-1);
     }
     
     TreeNode helper(int[] preorder, int[] inorder, int start, int end){
-        if(start>end) return null;
-        if(preStart >= preorder.length) return null;
-
-        TreeNode root = new TreeNode(preorder[preStart]);//imp
+        if(start > end) return null;
         
-        int index = findIndex(preorder[preStart], inorder);
-        preStart++;
-        root.left = helper (preorder, inorder, start, index-1);
-        root.right = helper (preorder, inorder, index+1, end);
+        TreeNode root = new TreeNode(preorder[preIndex++]);
+        int curr = findIndex(inorder, root.val);
+        
+        root.left = helper(preorder, inorder, start, curr-1);
+        root.right = helper(preorder, inorder, curr+1, end);
         return root;
     }
     
-    int findIndex(int val, int[] inorder){
-         for(int i =0; i<inorder.length; i++){
-            if(inorder[i] == val) return i;
+    int findIndex(int[] inorder, int key){
+        for(int i =0; i<inorder.length; i++){
+            if(inorder[i] == key) return i;
         }
         return -1;
     }
 
+    /**
+     * 1 SAME AS ABOVE, ONLY DIFF IS WE MOVE FROM RIGHT TO LEFT
+     * 2 POSTINDEX = n-1;
+     * 3 new TreeNode(postorder[postIndex--]);
+     * 4 FIRST RIGHT AND THEN LEFT CHILD
+     * 
+     * 
+     * right and then left
+     * start>end and findIndex in inorder remains same
+    */
+    // https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal
+    int postIndex;
+    public TreeNode buildTree2(int[] inorder, int[] postorder) {
+        int n = postorder.length;
+        if(n==0) return null;
+        if(n==1) return new TreeNode(postorder[0]);
+        postIndex = n-1;
+        return helper(inorder, postorder, 0, n-1);
+    }
     
+    TreeNode helper2(int[] inorder, int[] postorder, int start, int end){
+        if(start > end) return null;
+        
+        TreeNode root = new TreeNode(postorder[postIndex--]);
+        int curr = findIndex(inorder, root.val);
+        
+        root.right = helper(inorder, postorder, curr+1, end);
+        root.left = helper(inorder, postorder, start, curr-1);
+        return root;
+    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////

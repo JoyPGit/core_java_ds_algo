@@ -1,12 +1,20 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+// import Java_DS_Algo.utilCustom.*;
 public class SlidingWindow {
 
 
     /** 
-     * numSubarrayProductLessThanK, longestOnes
-     * all substrings containing k els
+     * counting distinct can be done using counter or map size
+     * 
+     * count distinct
+     * longest ones
+     * smallest with sum>=k, smallest substr with k els
+     * length of longest substr, 
+     * no of substrings, numSubarrayProductLessThanK
+     * all substrings containing k els (count+=)
+     * 
+     * celebrity, anagrams, swaps
      * 
      * min window, 
      * 
@@ -48,69 +56,56 @@ public class SlidingWindow {
      * 
     */
 
-    /**mostly we use deque, sometimes hashmap 
-     * deque properties;
-     * getLast, getFirst, removeLast, removeFirst, add
+    /** 
+     * POINTS :
+     * 1 USE MAP SIZE TO FIND DISTINCT ELS
+     * 2 DO IN TWO STEPS, ONCE FOR FIRST WINDOW, THEN FOR SUBSEQUENT WINDOWS
+     * 3 DECREMENT FOR OUTGOING EL, IF FREQ == 0, REMOVE
+     * 4 ADD THE INCOMING EL
+     * 5 ADD MAP SIZE TO RES
+     * 
     */
-
     // MICROSOFT
     // https://www.geeksforgeeks.org/count-distinct-elements-in-every-window-of-size-k/
-    ArrayList<Integer> distinctElsinWindow(int[] arr, int k){
+    ArrayList<Integer> countDistinct(int A[], int n, int k){
         ArrayList<Integer> res = new ArrayList<>();
+        if(n==0) return res;
+
         HashMap<Integer, Integer> map = new HashMap<>();
-        int count = 0;
-        for(int i =0; i<k; i++){
-            if(!map.containsKey(arr[i])){
-                map.put(arr[i], 1);
-                count++;
-            }else {
-                map.put(arr[i], map.get(arr[i])+1);
-            }
+        for(int i = 0; i<k; i++){
+            map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            // if(map.get(A[i]) == 1) count++;
         }
-        res.add(count);
-
-        /**
-         * remove outgoing el, decrement count; add incoming el; if
-         * count>1, don't increment counter; else c+1
-         * 
-         * map contains mapping of element, by default it's null; check for that too
-         * 
-         * if outgoing = incoming, do nothing
-         * else 
-         * check if outgoing has count 1, then decrement count
-         * check incoming, if it has count == null increment count; update map
-         *  if count!=null; update map
-         */
-        for(int i =k; i<arr.length; i++){
-            
-            if(arr[i-k] == arr[i]){
-                res.add(count);
-            }else{
-                int old = map.get(arr[i-k]);
-                if(old==1) count--;
-                map.put(arr[i-k], old-1);
-                System.out.println(map);
-
-                if(map.get(arr[i])==null){
-                    map.put(arr[i], 1);
-                    count++;
-                }else if(map.get(arr[i])!=null){
-                    map.put(arr[i], map.get(arr[i])+1);
-                }
-                res.add(count);
-            } 
+        res.add(map.size());
+        
+        for(int i = k; i<n; i++){
+            int out = A[i-k];
+            // decrement outgoing's freq
+            map.put(out, map.get(out)-1);
+            // remove if 0 freq
+            if(map.get(out) == 0) map.remove(out);
+            // new el
+            map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            res.add(map.size());
         }
-        System.out.println(res);
+        System.out.println("disinct els in every window of size "+k+
+        " is "+res+" found using map size");
         return res;
     }
 
+    /**  
+     * count distinct can be solved wither by counting all els
+     * or keeping track of map size
+     * */
+
     /**
      * max els in every window, use deque, 
-     * run 2 loops, pop till el is larger
-     * 
-     * same technique is used often
+     * 1 run 2 loops, 
+     * 2 pop till el is larger
+     * 3 add first el to res
+     * maintain a global index
     */
-
+    // https://leetcode.com/problems/sliding-window-maximum/
     public int[] maxSlidingWindowStack(int[] nums, int k) {
         int n = nums.length;
         int[] res = new int [n-k+1]; int index= 0;
@@ -121,16 +116,11 @@ public class SlidingWindow {
             while(list.size()!=0 && list.getLast()<nums[i]){
                 list.removeLast();
             }
-
             list.add(nums[i]);
-            // System.out.println(list);
         }
         res[index++] = list.getFirst();
-    
-        System.out.println("first k");
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
 
-        for(int i =k; i<n; i++){
+        for(int i = k; i<n; i++){
             if(list.getFirst()==nums[i-k]){
                 list.removeFirst();                
             }
@@ -144,135 +134,11 @@ public class SlidingWindow {
             System.out.println(list);
             res[index++] = list.getFirst();
         }
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
+        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 
-
-    // SHRINKING, USE LEFT AND UPDATE AFTER WHILE
-
-    /** 
-     * 1 SHRINK ONLY WHEN ZEROES>K
-     * 2 UPDATE ONLY AFTER SHRINKING, THIS HANDLES THE ELSE CONDITION
-     * OF UPDATING ONLY WHEN ZEROES<K
-     * 3  i-left+1
-     * 
-    */
-    // https://leetcode.com/problems/max-consecutive-ones-iii
-    public int longestOnes(int[] A, int K) {
-        int n = A.length;
-        if(n == 0) return n;
-        int zeroes = 0;
-        int max = 0;
-        int left = 0;
-        
-        for(int i =0; i<n; i++){
-            if(A[i]==0) zeroes++;
-            
-            // int j = 0;
-            while(zeroes>K){
-                if(A[left]==0) zeroes--;
-                left++;
-            }
-            max = Math.max(max, i-left+1);
-        }
-        return max;
-    }
     
-
-    ///////////////// COUNT += 
-
-    /**  
-     * https://leetcode.com/problems/subarray-product-less-than-k/discuss/
-     * 741191/JAVA-Simple-Solution%3A-Sliding-Window
-     * 
-     * nums = [10, 5, 2, 6], k = 100; Output: 8
-     * 
-     * SIMILAR SHRINKING TECHNIQUE
-     * 1 BOUNDARY CONDITION IS IMP if(k<=1) return 0;
-     * 2 COUNT IS UPDATED THROUGHOUT
-     * 3 WHEN PROD>K, IT'S BROUGHT UNDER K
-     * 4 (i - start+1) ADDS ALL THE ELS AND 1 EXTRA FOR THE SUBARRAY 
-     *   FROM start+1 TILL i AS A WHOLE
-     * 
-    */
-    // https://leetcode.com/problems/subarray-product-less-than-k/
-    public int numSubarrayProductLessThanK(int[] nums, int k) {
-        if(k<=1) return 0;
-        int n = nums.length;
-        
-        int prod = 1; int count = 0; int start =0;
-        for(int i =0; i<n; i++){
-            prod*=nums[i];
-            while(prod>=k){
-                prod/=nums[start];
-                start++;
-            }
-            count+=i-start+1;
-        }
-        return count;
-    }
-
-
-    /** 
-     * POINTS :
-     * 1 USE MAP.SIZE, NOT INDIVIDUAL COUNTS
-     * no need oF while(leftMap.get('a') + leftMap.get('b') + leftMap.get('c') >= 3)
-     * 
-     * 2 IF FREQ == 0, REMOVE FROM MAP
-     * 3 left++
-     * 4 count+=left similar to above
-     * 
-    */
-    // https://leetcode.com/problems/number-of-substrings-containing-all-three-characters
-    public int numberOfSubstrings(String s) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        int left = 0; int count = 0;
-        // HashSet<String> set = new HashSet<>();
-        
-        for(int i =0; i<s.length(); i++){
-            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
-            while(map.size() == 3){
-                // count++; 
-                map.put(s.charAt(left), map.get(s.charAt(left)) - 1);
-                if(map.get(s.charAt(left)) == 0) map.remove(s.charAt(left));
-                left++;
-            }
-            count+=left;
-        }
-            
-        return count;
-    }
-
-
-    // https://leetcode.com/problems/minimum-size-subarray-sum/
-    /** 
-     * POINTS : 
-     * 1 run 2 loops
-     * 2 WHILE sum>=s; track min, LEFT++ 
-     * 3 RETURN CONDITION IS IMP, IF length == 0 OR SUM NEVER REACHES s, 
-     * MAX_VALUE IS RETURNED
-     */
-    public int minSubArrayLenWithSumGreaterThanOrEqualK(int s, int[] nums) {
-        int n = nums.length; int sum =0; 
-        int min =Integer.MAX_VALUE; int left =0;
-        
-        
-        for(int i =0; i<n; i++){
-            sum+=nums[i];
-            while(sum >= s){
-                min = Math.min(i-left+1, min);
-                sum = sum - nums[left];
-                left++;
-            }
-        }
-        return min == Integer.MAX_VALUE?0:min;
-    }
-
-
-    /** the above works for non negative integers, this one for both */
-    // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
-
 
     /** tricky thing here is to check for the list size and add the incoming el
      * and then return 0 if list size is empty.
@@ -313,46 +179,68 @@ public class SlidingWindow {
         return res;
     }
 
+
+    /////////////// SHRINKING, USE LEFT AND UPDATE AFTER WHILE
+
     /** 
-     * IMP : DISTINCT ONLY WHEN FREQ = 1.
-     * POINTS : 
-     * 1 TRAVERSE THE FIRST WINDOW
-     * 2 USE A SINGLE VAR COUNT 
-     * 3 FOR OTHER WINDOWS, REMOVE THE EL JUST BEFORE THE WINDOW, A[i-k]
-     * IF ITS FREQ IS <=0,  A DISTINCT CHAR HAS BEEN REMOVED, SO count--
-     * 4 ADD THE NEW EL, SAME LOGIC AS FIRST WINDOW
-     * IF FREQ > 1, IT'S NOT DISTINCT, SO ONLY FREQ = 1
+     * 1 SHRINK ONLY WHEN ZEROES>K
+     * 2 UPDATE ONLY AFTER SHRINKING, THIS HANDLES THE ELSE CONDITION
+     * OF UPDATING ONLY WHEN ZEROES<K
+     * 3  i-left+1
+     * 
+     * we may change up to K values from 0 to 1.
     */
-    // https://practice.geeksforgeeks.org/problems/count-distinct-elements-in-every-window/1
-    ArrayList<Integer> countDistinct(int A[], int n, int k)
-    {
-        ArrayList<Integer> res = new ArrayList<>();
-        if(n==0) return res;
-        int count = 0;
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int i = 0; i<k; i++){
-            map.put(A[i], map.getOrDefault(A[i], 0)+1);
-            if(map.get(A[i]) == 1) count++;
-        }
-        res.add(count);
+    // https://leetcode.com/problems/max-consecutive-ones-iii
+    public int longestOnes(int[] A, int K) {
+        int n = A.length;
+        if(n == 0) return n;
+        int zeroes = 0;
+        int max = 0;
+        int left = 0;
         
-        for(int i = k; i<n; i++){
-            // decrement outgoing's freq
-            map.put(A[i-k], map.get(A[i-k])-1);
-            if(map.get(A[i-k]) < 1) count--;
-            map.put(A[i], map.getOrDefault(A[i], 0)+1);
-            // new el
-            if(map.get(A[i]) == 1) count++;
-            res.add(count);
+        for(int i =0; i<n; i++){
+            if(A[i]==0) zeroes++;
+            
+            // int j = 0;
+            while(zeroes>K){
+                if(A[left]==0) zeroes--;
+                left++;
+            }
+            max = Math.max(max, i-left+1);
         }
-        return res;
+        return max;
+    }
+    
+    /////////////////// SHRINK; MAP SIZE = SLIDING WINDOW SIZE
+
+    /** 
+     * POINTS :
+     * 1 USE A SLIDING WINDOW, A LEFT POINTER
+     * 2 ALWAYS USE INDEXES, NOT (int i : nums) FOR SUM
+     * 3 ALWAYS UPDATE LENGTH INSIDE WHILE LOOP
+     * 4 ADD A CHECK IN THE RETURN STATEMENT
+     * 
+     * find the minimal length of subarray which has sum ≥ s. 
+    */
+    // https://leetcode.com/problems/minimum-size-subarray-sum
+    public int minSubArrayLen(int s, int[] nums) {
+        int n = nums.length;
+        int left = 0; int sum = 0;
+        int length = Integer.MAX_VALUE;
+        
+        for(int i=0; i<n; i++){
+            sum += nums[i];
+            while(sum>=s){
+                length = Math.min(length, i-left+1);
+                // System.out.println(sum);
+                // System.out.println("len "+length);
+                sum-=nums[left];
+                left++;
+            }
+        }
+        return length==Integer.MAX_VALUE?0:length;
     }
 
-    // https://www.geeksforgeeks.org/
-    // count-of-subarrays-of-size-k-with-elements-having-even-frequencies/?ref=rp
-
-    // use XOR
-    
 
     /** 
      * HOLD THE FREQ OF INTEGER IN MAP, NOT INDEX, 
@@ -366,6 +254,9 @@ public class SlidingWindow {
      * 
      * repeated eles can cause the length to grow
      * arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} ,    k = 3  o/p = [5 7]
+     * 
+     * for exactly k els :  while(map.size() == k)
+     * for atleast k :  while(map.size()>=k)
      */
     // https://www.geeksforgeeks.org/smallest-subarray-k-distinct-numbers/
     int smallestSubArrayKDistinct(int[] arr, int k){
@@ -375,7 +266,9 @@ public class SlidingWindow {
 
         for(int i = 0; i<n; i++){
             map.put(arr[i], map.getOrDefault(arr[i], 0)+1); 
+            // keep shrinking
             while(map.size()>=k){
+                // update length
                 length = Math.min(length, i- left+1);
                 if(map.get(arr[left]) == 1) map.remove(arr[left]);
                 else map.put(arr[left], map.get(arr[left]) - 1);
@@ -386,81 +279,161 @@ public class SlidingWindow {
         return length;
     }
 
-    /////////////////////////// NEXT 2 QUES ARE VERY IMP ////////////////
 
+    /** 
+     * 
+     * SLIDING WINDOW
+     * 1,1,2,3,1,4
+     * always store freq, not index, use left for index
+     * 
+     * 1 USING (map.size()>=k) EQUAL TO DOESN'T WORK AS IT 
+     * CONSIDERS LENGTHS > k.
+     * 2 UPDATE LENGTH AFTER THE EXTRA ELS ARE TRIMMED, i.e. LEFT
+     * REACHES CORRECT POSITION
+     * 3 
+     * 
+     * 
+     * https://leetcode.com/discuss/interview-question/332807/
+     * uber-phone-screen-longest-substring-with-at-most-k-distinct-characters
+     * 
+     * remove till size==k and then update length
+    */
+    // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
+    int longestSubArraytWithkEls(int[] arr, int k){
+        int n = arr.length;
+        int left = 0; int length = Integer.MIN_VALUE;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i =0; i<n; i++){
+            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
 
-    // "cdadabcc", "bbcaac"
-    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
-    public String smallestSubsequence(String text) {
-        HashMap<Character, Integer> map = new HashMap<>();
-        String res = "";
-        
-        for(char c : text.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
-        
-        for(char c : text.toCharArray()){
-            map.put(c, map.get(c)-1);// 1
-
-            if(res.contains(""+c)) continue; 
-            while(res.length()>0 
-                  // last char must be graeter and has future occurences
-                  && res.charAt(res.length()-1) > c 
-                  // no need to keep an index as substrng removes the last char
-                  && map.get(res.charAt(res.length()-1)) > 0 ){
-                    res = res.substring(0, res.length()-1);
+            while(map.size()>k){
+                if(map.get(arr[left]) == 1) map.remove(arr[left]);
+                else map.put(arr[left], map.get(arr[left])-1);
+                System.out.println("left "+arr[left]);
+                left++;
+                System.out.println(map);
             }
-            res+=c;
+            length = Math.min(length, i-left+1);
+
+            // length is placed here, so it checks for cases
+            // when the map size is <= k
+            System.out.println("length "+length);
         }
-        return res;
+        System.out.println("longest subarray with "+k+" els has length "+length);
+        return length;
     }
 
     /** 
-     * IMP QUES */
-    // https://leetcode.com/problems/minimum-window-substring
-    public String minWindow(String s, String t) {
-        if(s == null || s.length() < t.length() || s.length() == 0) return "";
-        HashMap<Character, Integer>map = new HashMap<>();
-        
-        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
-        
-        int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+     * POINTS : 
+     * 1 SIMILAR TO ABOVE, LONGEST SUBARRAY
+     * 2 KEEP REMOVING FROM LEFT TILL ALL OCCURENCES OF CURR CHAR ARE REMOVED
+     * 3 ADD CHAR TO SET
+     * 4 UPDATE LENGTH ONCE DUPLICATES ARE REMOVED
+     * 
+     * "dvdf"
+     * 
+     * hashset, remove then update length
+    */
+    // https://leetcode.com/problems/longest-substring-without-repeating-characters
+    public int lengthOfLongestSubstring(String s) {
+        if(s.length() == 0) return 0;
+        int left = 0; int len = -1;
+        HashSet<Character> set = new HashSet<>();
         
         for(int i =0; i<s.length(); i++){
-            if(map.containsKey(s.charAt(i))){
-                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
-                if(map.get(s.charAt(i)) >= 0) count++;
-            }
-            
-            // System.out.println(map);
-            while(count == t.length()) {
-                if(i-left+1 < len){
-                    start = left;
-                    len = i-left+1;
-                }
-                // now increment the freq which was reduced
-                if(map.containsKey(s.charAt(left))){
-                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
-                    if(map.get(s.charAt(left))>0) count--;
-                }
+            while(set.contains(s.charAt(i))){
+                set.remove(s.charAt(left));
                 left++;
-                // System.out.print("in here ");
-                // System.out.println(map);
             }
-            // System.out.println("left "+left);
+            set.add(s.charAt(i));
+            len = Math.max(len, i-left+1);
         }
-        if(len>s.length()) return ""; 
-
-        return s.substring(start, start+len);
+        return len;
     }
+
+    // similar
+    // https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
 
 
     
     // https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/
 
+
+    ///////////////// COUNT += 
+
+    /** 
+     * POINTS :
+     * 1 USE MAP.SIZE, NOT INDIVIDUAL COUNTS
+     * no need oF while(leftMap.get('a') + leftMap.get('b') + leftMap.get('c') >= 3)
+     * 
+     * 2 IF FREQ == 0, REMOVE FROM MAP
+     * 3 left++
+     * 4 count+=left similar to above
+     * 
+    */
+    // https://leetcode.com/problems/number-of-substrings-containing-all-three-characters
+    public int numberOfSubstrings(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int left = 0; int count = 0;
+        // HashSet<String> set = new HashSet<>();
+        
+        for(int i =0; i<s.length(); i++){
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
+            while(map.size() == 3){
+                // count++; 
+                map.put(s.charAt(left), map.get(s.charAt(left)) - 1);
+                if(map.get(s.charAt(left)) == 0) map.remove(s.charAt(left));
+                left++;
+            }
+            count+=left;
+        }
+            
+        return count;
+    }
+
+    /**  
+     * https://leetcode.com/problems/subarray-product-less-than-k/discuss/
+     * 741191/JAVA-Simple-Solution%3A-Sliding-Window
+     * 
+     * nums = [10, 5, 2, 6], k = 100; Output: 8
+     * 
+     * SIMILAR SHRINKING TECHNIQUE
+     * 1 BOUNDARY CONDITION IS IMP if(k<=1) return 0;
+     * 2 COUNT IS UPDATED THROUGHOUT
+     * 3 WHEN PROD>K, IT'S BROUGHT UNDER K
+     * 4 (i - start+1) ADDS ALL THE ELS AND 1 EXTRA FOR THE SUBARRAY 
+     *   FROM start+1 TILL i AS A WHOLE
+     * 
+     * remove product>k in while and then update
+     * 
+    */
+    // https://leetcode.com/problems/subarray-product-less-than-k/
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if(k<=1) return 0;
+        int n = nums.length;
+        
+        int prod = 1; int count = 0; int start =0;
+        for(int i =0; i<n; i++){
+            prod*=nums[i];
+            while(prod>=k){
+                prod/=nums[start];
+                start++;
+            }
+            count+=i-start+1;
+        }
+        return count;
+    }
+
+
+    // https://www.geeksforgeeks.org/
+    // count-of-subarrays-of-size-k-with-elements-having-even-frequencies/?ref=rp
+
     
     // CELEBRITY PROBLEM
 
     // Returns id of celebrity. Else -1
-    /** if a knows b, then a isn't a celeb, and if a doesn't know b, then
+    /** 
+     * if a knows b, then a isn't a celeb, and if a doesn't know b, then
      * b isn't a celeb. eliminate the non celeb; a++; b--;
      * move 2 pointers, and finally check for a
      */
@@ -490,8 +463,6 @@ public class SlidingWindow {
 		return (matrix[a][b] == 1) ? true : false; 
 	} 
 
-
-    // https://leetcode.com/problems/max-consecutive-ones-iii/
 
     /** 
     POINTS : 
@@ -618,6 +589,8 @@ public class SlidingWindow {
     }
 
 
+    // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
+
 
     // Count Number of Nice Subarrays
     // Replace the Substring for Balanced String
@@ -640,6 +613,14 @@ public class SlidingWindow {
         int k = 2;//4;
         // slide.distinctElsinWindow(arr, k);
 
+        int N = 7, K = 4, A[] = {1,2,1,3,4,2,3};
+        slide.countDistinct(A, A.length, K);
+
+        int[] longestK = new int[]
+        {6, 5, 1, 2, 3, 2, 1, 4, 5};
+        // {1,1,2,3,1,4};
+        // slide.longestSubArraytWithkEls(longestK, 3);
+
         // int negArr[] = {12, -1, -7, 8, -15, 30, 16, 28} , negk = 3;
         int negArr[] = {-8, 2, 3, -6, 10}, negk = 2;
         // slide.findFirstNegative(negArr, negk);
@@ -653,7 +634,7 @@ public class SlidingWindow {
 
         int[] minSwap1s = {1,0,1,0,1,0,0,1,1,1};
         // int[] minSwap1s = {0,0,0,1,0};
-        slide.minSwaps(minSwap1s);
+        // slide.minSwaps(minSwap1s);
     }
     
 }
