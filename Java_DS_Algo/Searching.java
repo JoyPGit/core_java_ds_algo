@@ -1,12 +1,13 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+// import Java_DS_Algo.utilCustom.*;
 public class Searching {
     
     /**
      * floor, ceil, peak,
      * leaderboard
-     * 
+     * high = mid -1;
+     * only in 2nd template high = mid
      */
     Searching(){}
 
@@ -423,31 +424,42 @@ public class Searching {
     }
 
 
-    // https://leetcode.com/problems/first-missing-positive/
-    // inaccurate soln but works for tougher ques
+    /** 
+     * POINTS : 
+     * 1 MARK ALL -VE AND >n AS n+1
+     * 2 MARK nums[Math.abs(nums[k]) - 1] AS -ve
+     * 3 ITERATE AGAIN AND FIND FIRST +ve
+     * 4 IF NONE, RETURN n+1
+     * 
+     * mark -ve nos and nos>n as n+1 and nums[i] - 1 as -ve
+     * 
+    */
+    // [1,1], [-1,-2], [2,1], 
+    // [-5] this is why we mark -ve as n+1
+    // https://leetcode.com/problems/first-missing-positive
     public int firstMissingPositive(int[] nums) {
-        Arrays.sort(nums);
-        int n = nums.length; 
-        int i = 0; int j =0;
-        int min = 1; boolean found = false;
+        // Math.abs(arr[index]) -1 -> -ve
+        // traverse and find first +ve index-> +1
+        int n = nums.length;
+        if(n==0) return 1;
         
-        while(nums[i]<=0 && i<n) i++;
-        // min = nums[i]<0?1:nums[i];
-        
-        if(i==n-1) return min;
-        if(i==n) return min;
-        // else min = nums[i];
-        System.out.println(i);
-        for(j =i+1; j<n; j++){
-            if((nums[j] - nums[j-1])!=1) {
-                min = nums[j-1]+1;
-                found =true;
-                System.out.println("min "+min);
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0 || nums[i] > n) {
+                nums[i] = n + 1;
             }
         }
-        System.out.println(j);
-        if(j== n && !found) return nums[n-1]+1;
-        return min;
+        
+        for(int k = 0; k<n; k++){ // start from 0 not j
+            if(Math.abs(nums[k])-1 >= 0 && Math.abs(nums[k])-1<n 
+               && nums[Math.abs(nums[k]) - 1] >0 ) // -ve should remain -ve
+                nums[Math.abs(nums[k]) - 1]*=(-1);
+        }
+        
+        // for(int p : nums) System.out.println(p);
+        for(int i =0; i<n; i++){
+            if(nums[i] > 0) return i+1;
+        }
+        return n+1;
     }
 
     // PIVOT
@@ -502,7 +514,7 @@ public class Searching {
             if(index == -1) res[i] = 1;
             else res[i] = index + 2;
         }
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
+        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
         return res;
     }
 
@@ -563,7 +575,7 @@ public class Searching {
             int mid = lo + (hi - lo) / 2;
             if (arr[mid] == 1) {
                 result = mid;
-                hi = mid - 1;
+                hi = mid-1;
             }
             if (arr[mid] == 0) {
                 lo = mid + 1;
@@ -648,10 +660,20 @@ public class Searching {
         Searching coronaSearch = new Searching();
         int[] arr = {1,3,3,5,8,11,14};//,4,6,7,9,21,43};
 
-        coronaSearch.findFloor(arr, 5);
+        // coronaSearch.findFloor(arr, 5);
+
+        int[][] matrix = new int[][]{
+            {0,0,1,1,1},
+            {0,1,1,1,1},
+            {0,0,0,0,0},
+            {1,1,1,1,1}
+        };
+
+        System.out.println("row with max 1s " +
+        coronaSearch.rowWithMax1s(matrix, matrix.length, matrix[0].length));
         int[] scores = {100, 90, 90, 80, 75, 60};
         int[] alice = {50, 65, 77, 90, 102};
-        climbingLeaderboard(scores, alice);
+        // climbingLeaderboard(scores, alice);
         // coronaSort.heapSort(arr);
         // for(int i =0; i<arr.length; i++){
         //     System.out.println(arr[i]);

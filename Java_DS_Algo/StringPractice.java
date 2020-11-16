@@ -17,6 +17,7 @@ class StringPractice {
      * no fo substrings all 3 chars,
      * longest repeating
      * longest palindrome
+     * longest happy prefix
      * 
      * 
      * 
@@ -700,125 +701,7 @@ class StringPractice {
     }
 
 
-    void stringtoWords(String number) {
-        int n = number.length();
-        String a, b, c, d;
-        // remove all preceding zeroes
-        if (n == 4) {
-            a = number.substring(0, 1);
-            b = number.substring(1, 2);
-            c = number.substring(2, 3);
-            d = number.substring(3, 4);
-            System.out.println("a " + a);
-            printDigit(a);
-            if (!a.equals("0"))
-                System.out.print(printDigit(a) + " thousand ");
-            if (!b.equals("0"))
-                System.out.print(printDigit(b) + " hundred ");
-            if (!c.equals("0"))
-                System.out.print(printTensDigit(c));
-            if (!d.equals("0"))
-                System.out.print(printDigit(d));
-        } else if (n == 3) {
-            a = number.substring(0, 1);
-            b = number.substring(1, 2);
-            c = number.substring(2, 3);
-            if (!a.equals("0"))
-                System.out.print(printDigit(a) + " hundred ");
-            if (!b.equals("0"))
-                System.out.print(printTensDigit(b));
-            if (!c.equals("0"))
-                System.out.print(printDigit(c));
-        } else if (n == 2) {
-            a = number.substring(0, 1);
-            b = number.substring(1, 2);
-            if (!a.equals("0")) {
-                if (a.equals("1")) {
-                    System.out.println(printTeen(number));
-                    return;
-                } else
-                    System.out.print(printTensDigit(a));
-            }
-            if (!b.equals("0"))
-                System.out.print(printDigit(b));
-        } else if (n == 1) {
-            a = number.substring(0, 1);
-            if (!a.equals("0"))
-                System.out.print(printDigit(a));
-            else if (a.equals("0"))
-                System.out.print("zero");
-        }
-        System.out.println();
-    }
-
-    String printDigit(String s) {
-        if (s.equals("1"))
-            return "one ";
-        else if (s.equals("2"))
-            return "two ";
-        else if (s.equals("3"))
-            return "three ";
-        else if (s.equals("4"))
-            return "four";
-        else if (s.equals("5"))
-            return "five";
-        else if (s.equals("6"))
-            return "six";
-        else if (s.equals("7"))
-            return "seven";
-        else if (s.equals("8"))
-            return "eight";
-        else if (s.equals("9"))
-            return "nine";
-        else
-            return "";
-    }
-
-    String printTensDigit(String s) {
-        if (s.equals("1"))
-            return " ten ";
-        else if (s.equals("2"))
-            return " twenty ";
-        else if (s.equals("3"))
-            return " thirty ";
-        else if (s.equals("4"))
-            return " forty ";
-        else if (s.equals("5"))
-            return " fifty ";
-        else if (s.equals("6"))
-            return " sixty ";
-        else if (s.equals("7"))
-            return " seventy ";
-        else if (s.equals("8"))
-            return " eighty ";
-        else if (s.equals("9"))
-            return " ninety ";
-        else
-            return "";
-    }
-
-    String printTeen(String num) {
-        if (num.equals("10"))
-            return "ten";
-        else if (num.equals("11"))
-            return "eleven";
-        else if (num.equals("12"))
-            return "twelve";
-        else if (num.equals("13"))
-            return "thirteen";
-        else if (num.equals("14"))
-            return "fourteen";
-        else if (num.equals("15"))
-            return "fifteen";
-        else if (num.equals("16"))
-            return "sixteen";
-        else if (num.equals("17"))
-            return "seventeen";
-        else if (num.equals("18"))
-            return "eighteen";
-        else
-            return "nineteen";
-    }
+    void stringtoWords(String number) {}
 
     /**
      * https://leetcode.com/problems/split-a-string-in-balanced-strings/
@@ -942,40 +825,39 @@ class StringPractice {
      * 
      * SIMILAR TO INTERSECTION OF 2 ARRAYS
      */
-    // https://leetcode.com/problems/minimum-window-substring/
-    public String minWindow(String s, String t) {
-        int n = t.length();
-        String res = "";
-        if(n>s.length()) return res;
-        
-        int[] base = new int[26];
-        for(int i =0; i<n; i++) base[t.charAt(i)-'A']++;
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(base);
-        
-        int[] curr = new int[26];
-        for(int i =0; i<n; i++) {
-            if(t.contains(""+s.charAt(i))) curr[s.charAt(i)-'A']++;
-        }
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(curr);
-
-        if(Arrays.equals(base, curr)) res = findBest(res, s.substring(0, n));
-        
-        for(int i = n; i<s.length(); i++){
-            int prev = i-n;
-            if(curr[s.charAt(prev)-'A']!=0) curr[s.charAt(prev) - 'A']--;
-            if(t.contains(""+s.charAt(i))) curr[s.charAt(i) - 'A']++;
-            
-            if(Arrays.equals(base, curr)) 
-                res = findBest(res, s.substring(prev+1, i+1));
-        }
-        return res;
-    }
+   // https://leetcode.com/problems/minimum-window-substring
+   public String minWindow(String s, String t) {
+    if(s == null || s.length() < t.length() || s.length() == 0) return "";
+    HashMap<Character, Integer>map = new HashMap<>();
     
-    String findBest(String a, String b){
-        System.out.println("b "+b);
-        if(a != "" && a.length()<=b.length()) return a;
-        return b;
+    for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+    
+    int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+    
+    for(int i =0; i<s.length(); i++){
+        if(map.containsKey(s.charAt(i))){
+            map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
+            if(map.get(s.charAt(i)) >= 0) count++;
+        }
+        
+        while(count == t.length()) {
+            // if smaller len found, update len and starting char
+            if(i-left+1 < len){
+                start = left;
+                len = i-left+1;
+            }
+            // now increment the freq which was reduced
+            if(map.containsKey(s.charAt(left))){
+                map.put(s.charAt(left), map.get(s.charAt(left))+1);
+                if(map.get(s.charAt(left))>0) count--;
+            }
+            left++;
+        }
     }
+    if(len>s.length()) return ""; 
+
+    return s.substring(start, start+len);
+}
 
     // https://leetcode.com/problems/word-subsets/
 
@@ -1267,7 +1149,7 @@ class StringPractice {
      * if j==0; check for match
      * if j>0; check for no match j= lps[j-1]
      * if match j++; lps[i] = j
-     * https://www.geeksforgeeks.org/longest-prefix-also-suffix/
+     * 
     */
     // https://leetcode.com/problems/longest-happy-prefix
     public String longestPrefix(String s) {
@@ -1890,45 +1772,7 @@ class StringPractice {
 
     // https://leetcode.com/problems/compare-strings-by-frequency-of-the-smallest-character/
 
-    /** 
-     * 1 FIRST FIGURE OUT HOW TO STORE THE SCORES FOR EACH PLAYER
-     * 2 HOW TO SORT 
-     * 3 
-    */
-    // TAKE CARE TO ADD THE CURR ELEMENT TO THE NEW ARRAY IN ELSE 
-    // https://leetcode.com/problems/rank-teams-by-votes/
-    public String rankTeams(String[] votes) {
-        int n = votes[0].length();
-        HashMap<Character, int[]> map = new HashMap<>();
-
-        // no 0 index issue, comparison starts from 0th index
-        for(String s : votes){
-            for(int i =0; i<s.length(); i++){
-                int[] curr = map.getOrDefault(s.charAt(i), new int[n]);
-                curr[i]++; // 1
-                map.put(s.charAt(i), curr);
-            }
-        }
-        
-        // comparator
-        PriorityQueue<Character> q = new PriorityQueue<>((x,y)->{
-            int[] a = map.get(x); int[] b = map.get(y);
-            for(int i =0; i<a.length; i++){
-                if(a[i]!=b[i]) return b[i]-a[i]; //max heap
-            }
-            return x-y;
-        });
-        
-        // add to pq
-        for(Map.Entry<Character, int[]> entry : map.entrySet()){
-            q.add(entry.getKey());
-        }
-        
-        String result = "";
-        while(q.size()!=0) result+=(q.remove());
-            
-        return result;
-    }
+    
 
     /** basically we keep a char array(base) to keep count of pattern
     and use a new array(curr) while sliding over the string. 

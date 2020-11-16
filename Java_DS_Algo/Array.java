@@ -133,14 +133,7 @@ class Array {
     }
     
 
-    // https://leetcode.com/problems/first-missing-positive/
-    // inaccurate soln but works for tougher ques
-    public int firstMissingPositive(int[] nums) {
-        int holder = 1;
-        Arrays.sort(nums);
-        for(int i : nums) if(i==holder) holder++;
-        return holder;
-    }
+    
 
 
     /**

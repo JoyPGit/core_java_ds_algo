@@ -34,6 +34,10 @@ public class Tree {
     }
     
     /** 
+     * 
+     * prune, ancestor, nodes at dist k
+     * 
+     * 
      *  * TEMPLATES : 
      * 1 HEIGHT -> ANCESTOR (REMOVE GLOBAL), VALID BST(POST)
      * 2 TREE PRUNING
@@ -984,6 +988,8 @@ public class Tree {
      *  boolean right = allAncestorsHelper(root.right, res, target);
      *  if(left || right) res.add(root.val);
      *
+     * 
+     * remember to return root if both left and right are not null
     */
     // https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -1027,6 +1033,20 @@ public class Tree {
         return (left || right);
         // return false;
     }
+
+
+    // https://www.geeksforgeeks.org/find-mirror-given-node-binary-tree/
+    void findMirrorNode(TreeNode node1, TreeNode node2, int data) {
+        if(node1==null) return;
+        if(node2==null) return;
+
+        if (node1.key == data) System.out.println("the mirror is " + node2.key);
+        if (node2.key == data) System.out.println("the mirror is " + node1.key);
+
+        findMirrorNode(node1.left, node2.right, data);
+        findMirrorNode(node1.right, node2.left, data);
+    }
+
 
     // https://leetcode.com/problems/symmetric-tree/
     public boolean isSymmetric(TreeNode root) {
@@ -1397,7 +1417,7 @@ public class Tree {
 
 
 
-    ////////////////////////////////////LEAF NODES
+    ////////////////////////////// LEAF NODES
     // SAME AS INSERT TEMPLATE .left = f()
 
     // https://leetcode.com/problems/sum-of-left-leaves/
@@ -1582,7 +1602,6 @@ public class Tree {
         return curr;
     }
 
-    ////////////////////////////////////// BST
 
     // https://leetcode.com/problems/kth-smallest-element-in-a-bst
     int counter = 0;
@@ -2041,30 +2060,6 @@ public class Tree {
             this.child = child;
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // https://www.geeksforgeeks.org/find-mirror-given-node-binary-tree/
-    void findMirrorNode(TreeNode node1, TreeNode node2, int data) {
-        if(node1==null) return;
-        if(node2==null) return;
-
-        if (node1.key == data) System.out.println("the mirror is " + node2.key);
-        if (node2.key == data) System.out.println("the mirror is " + node1.key);
-
-        findMirrorNode(node1.left, node2.right, data);
-        findMirrorNode(node1.right, node2.left, data);
-    }
-
-
-    ///////////////////////////// 5th feb LCA
-    /**
-     * 2 problems one index++ second check the index before assigning
-     */
-    
-
-
-    // Java program to find binary tree with given inorder 
-    // traversal 
 
 
 	// Function for constructing all possible trees with 

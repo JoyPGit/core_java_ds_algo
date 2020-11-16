@@ -106,7 +106,7 @@ public class SlidingWindow {
      * maintain a global index
     */
     // https://leetcode.com/problems/sliding-window-maximum/
-    public int[] maxSlidingWindowStack(int[] nums, int k) {
+    public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
         int[] res = new int [n-k+1]; int index= 0;
 
@@ -211,6 +211,59 @@ public class SlidingWindow {
         return max;
     }
     
+    ///// TRICKY USE HASHMAP AND COMPARE USING t.length()
+    /** 
+     *  IT'S A BIT TRICKY, if t contains aa, we need to find aa, 
+     * only a won't do.
+     * 
+     * POINTS :
+     * 
+     * 1 SO USE HASHMAP (why? because hashset can't store freq
+     * and we need freq to remove els from the map)
+     * 2 COUNT IS USED TO KEEP TRACK OF MAP SIZE 
+     * (i.e. when all chars of t have been included)
+     * 3 IF LEFT IS PRESENT IN MAP, REDUCE COUNT; AS LEFT HAS MOVED OVER A VALID CHAR
+     * 
+     */
+    // https://leetcode.com/problems/minimum-window-substring
+    public String minWindow(String s, String t) {
+        if(s == null || s.length() < t.length() || s.length() == 0) return "";
+        HashMap<Character, Integer>map = new HashMap<>();
+        
+        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+        
+        // add only valid chars(chars in t) 
+        for(int i =0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
+                if(map.get(s.charAt(i)) >= 0) count++;
+            }
+            // to accoiunt for duplicates in t
+            // System.out.println(map);
+            while(count == t.length()) {
+                // if smaller len found, update len and starting char
+                if(i-left+1 < len){
+                    start = left;
+                    len = i-left+1;
+                }
+                // now increment the freq which was reduced
+                if(map.containsKey(s.charAt(left))){
+                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
+                    if(map.get(s.charAt(left))>0) count--;
+                }
+                left++;
+                // System.out.print("in here ");
+                // System.out.println(map);
+            }
+            // System.out.println("left "+left);
+        }
+        if(len>s.length()) return ""; 
+
+        return s.substring(start, start+len);
+    }
+
     /////////////////// SHRINK; MAP SIZE = SLIDING WINDOW SIZE
 
     /** 
