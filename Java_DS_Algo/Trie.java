@@ -6,7 +6,6 @@ class TrieNode{
     TrieNode(){}
 }
 public class Trie {
-    // https://leetcode.com/problems/implement-trie-prefix-tree/
 
     /** 
      * SIMILAR TO LINKED LIST, CREATE A NODE CLASS INSIDE THE LIST CLASS
@@ -23,6 +22,7 @@ public class Trie {
      * 5 IN SEARCH RETURN p.isEnd, AND IF NULL IN B/W RETURN FALSE;
      * 
      * */
+    // https://leetcode.com/problems/implement-trie-prefix-tree/
     TrieNode root = new TrieNode();
 
     void insert(String word){

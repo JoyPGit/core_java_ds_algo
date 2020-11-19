@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-// import Java_DS_Algo.utilCustom.*;
+// import utilCustom.Utility;
 public class Searching {
     
     /**
@@ -514,7 +514,7 @@ public class Searching {
             if(index == -1) res[i] = 1;
             else res[i] = index + 2;
         }
-        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
+        // Utility.print1DMatrix(res);
         return res;
     }
 

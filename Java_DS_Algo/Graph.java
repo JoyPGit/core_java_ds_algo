@@ -1,10 +1,10 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 
 /**
  * DFS INFORM TIME,
- * 
+ * walls and gates
  * ROTTING, BIPARTITE, TIME TO INFORM BFS, LADDER LENGTH
  * FLIGHTS
  *  
@@ -175,6 +175,9 @@ import Java_DS_Algo.utilCustom.*;
 // list representation
 class Graph {
 	private int V; // No. of vertices
+	
+	int[] rows = new int[]{-1,0,0,1};
+	int[] cols = new int[]{0,-1,1,0};
 
 	// Adjacency List as ArrayList of ArrayList's
 	private ArrayList<ArrayList<Integer>> adj;
@@ -318,37 +321,40 @@ class Graph {
     }
 	
 
-	// https://leetcode.com/problems/number-of-islands
-	public int numIslands(char[][] grid) {
+	// using adj list
+	public int findCircleNum1(int[][] M) {
+        int n = M.length;
         int count = 0;
         
-        for(int i =0; i<grid.length; i++){
-            for(int j =0; j<grid[0].length; j++){
-                if(grid[i][j] == '1') {
-                    dfs(grid, i, j); 
-                    count++;
-                }
+        HashSet<Integer> set = new HashSet<>();
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        
+        for(int i =0; i<n; i++){
+            List<Integer> list = new ArrayList<>();
+            for(int j =0; j<n; j++){
+                if(M[i][j] == 1) list.add(j);
             }
+            map.put(i, list);
+        }
+        
+        for(int i =0; i<n; i++){
+            if(set.contains(i)) continue;
+            dfs1(i, map, set);
+            count++;
         }
         return count;
     }
-	
-	int[] rows = new int[]{-1,0,0,1};
-	int[] cols = new int[]{0,-1,1,0};
-	
-    void dfs(char[][] grid, int row, int col){
-        if(row>=0 && row<grid.length
-          && col>=0 && col<grid[0].length
-          && grid[row][col] == '1'){
-            grid[row][col] = '0';
-
-            for(int k = 0; k<rows.length; k++){
-                int newX = row + rows[k];
-                int newY = col + cols[k];
-                dfs(grid, newX, newY);
-            }
+    
+    
+    void dfs1(int node, HashMap<Integer, List<Integer>> map, HashSet<Integer> set){
+        set.add(node);
+        if(!map.containsKey(node)) return;
+        List<Integer> list = map.get(node);
+        for(int i : list){
+            if(set.contains(i)) continue;
+            dfs1(i, map, set);
         }
-	}
+    }
 	
 	/** 
 	 * FIND TOTAL NO OF COMPONENTS AND THEN CHECK MST PROPERTY
@@ -445,7 +451,9 @@ class Graph {
 		
 		// tree structure ,so max gives the time to inform the farthest emp
 		// also no conflict so, we don't compare
-        for(int i : curr) max = Math.max(max, dfs(i, g, dp, manager, informTime));
+        for(int i : curr) {
+			max = Math.max(max, dfs(i, g, dp, manager, informTime));
+		}
         dp[src] = max + informTime[src];
         // System.out.println(src +" "+dp[src]);
         return dp[src];
@@ -503,6 +511,39 @@ class Graph {
 		q.addLast(curr);
 	}
 
+	// https://leetcode.com/problems/reconstruct-itinerary/
+    Deque<String> q = new LinkedList<>();
+    public List<String> findItinerary(List<List<String>> tickets) {
+        HashMap<String, PriorityQueue<String>> map = new HashMap<>();
+        
+        for(int i =0; i<tickets.size(); i++){
+            PriorityQueue<String> curr = 
+                map.getOrDefault(tickets.get(i).get(0), new PriorityQueue<>());
+            curr.add(tickets.get(i).get(1));
+            map.put(tickets.get(i).get(0), curr);
+        }
+        
+        dfs("JFK", map);
+        List<String> res = new ArrayList<>();
+        while(q.size()!=0){
+            res.add(q.removeLast());
+        }
+        return res;
+    }
+    
+    
+    void dfs(String start, HashMap<String, PriorityQueue<String>> map){
+        if(!map.containsKey(start)) {
+            q.addLast(start);
+            return;
+        }
+        PriorityQueue<String> curr = map.get(start);
+        while(curr.size()!=0){
+            dfs(curr.remove(), map);
+        }
+        q.addLast(start);
+	}
+	
 	/**
 	 * LOOP
 	 * 1 backtracking
@@ -723,7 +764,7 @@ class Graph {
         int i = 0;
 		int[] res = new int[q.size()];
         while(q.size()!=0) res[i++] = q.removeLast();
-		// Java_DS_Algo.utilCustom.Utility.print1DMatrix(resCourse1);
+		// Utility.print1DMatrix(resCourse1);
 		return res;
 	}
 
@@ -952,7 +993,7 @@ class Graph {
             distance++;
         }
         System.out.println("bfs wall : ");
-        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
+        Utility.printMatrix(matrix);
     }
 
     boolean isSafeWallBFS(int[][] matrix, int r, int c){
@@ -1620,8 +1661,8 @@ class Graph {
 			}
 		}
 
-		Java_DS_Algo.utilCustom.Utility.print1DMatrix(distance);
-		Java_DS_Algo.utilCustom.Utility.print1DMatrix(parent);
+		Utility.print1DMatrix(distance);
+		Utility.print1DMatrix(parent);
 
 	}
 
@@ -1651,7 +1692,7 @@ class Graph {
 			g[graph[i][0]][graph[i][1]] = graph[i][2];
 			g[graph[i][1]][graph[i][0]] = graph[i][2];
 		}
-		// Java_DS_Algo.utilCustom.Utility.printMatrix(g);
+		// Utility.printMatrix(g);
 
 		
 		int[] distance = new int[n];
@@ -1678,8 +1719,8 @@ class Graph {
 				}
 			}	
 		}
-		Java_DS_Algo.utilCustom.Utility.print1DMatrix(distance);
-		Java_DS_Algo.utilCustom.Utility.print1DMatrix(parent);
+		Utility.print1DMatrix(distance);
+		Utility.print1DMatrix(parent);
 	}
 
 
@@ -1731,7 +1772,7 @@ class Graph {
 
 	void mcolorUtil(int[][] arr, int vertex, int[] color) {
 		if (vertex == arr.length) {
-			Java_DS_Algo.utilCustom.Utility.print1DMatrix(color);
+			Utility.print1DMatrix(color);
 			this.foundMinColor = true;
 			int max = 0;
 			for (int i = 0; i < color.length; i++) {
@@ -1836,7 +1877,7 @@ class Graph {
 			g[edges[i][0]][edges[i][1]] = 1;
 			g[edges[i][1]][edges[i][0]] = 1;
 		}
-		Java_DS_Algo.utilCustom.Utility.printMatrix(g);
+		Utility.printMatrix(g);
 		// System.out.println(g[2][3]);
 		set.clear();
 		set.add(edges[0][0]);
@@ -1860,7 +1901,7 @@ class Graph {
 					System.out.println(q);
 				} else if (curr != i && g[curr][i] != 0 && set.contains(i)) {
 					res = new int[] { curr, i };
-					Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
+					Utility.print1DMatrix(res);
 					return;
 				}
 			}

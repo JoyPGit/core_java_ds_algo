@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 class StringPractice {
 
     // https://www.baeldung.com/java-string-immutable
@@ -982,7 +982,7 @@ class StringPractice {
                 }
             }
         }
-        Java_DS_Algo.utilCustom.Utility.printMatrix(dp);
+        Utility.printMatrix(dp);
         System.out.println("all palindromic substrings' count : " + count);
         return count;
     }

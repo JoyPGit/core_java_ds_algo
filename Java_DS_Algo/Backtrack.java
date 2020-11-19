@@ -2,6 +2,8 @@ package Java_DS_Algo;
 
 import java.util.*;
 
+import utilCustom.Utility;
+
 public class Backtrack {
 
     /**  
@@ -143,7 +145,7 @@ public class Backtrack {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         backtrack(res, list, nums, 0);
-        Java_DS_Algo.utilCustom.Utility.printListOfLists(res);
+        Utility.printListOfLists(res);
         return res;
     }
     
@@ -296,7 +298,8 @@ public class Backtrack {
         } 
     }
 
-   
+
+    // take care of starting index
     // Combination Sum : https://leetcode.com/problems/combination-sum/
     // can reuse the same element, start with i again in btk()
     public List<List<Integer>> combinationSum(int[] nums, int target) {
@@ -589,7 +592,7 @@ public class Backtrack {
     void helper4jul(int[][] board, int row) {
         if (row == board.length) {
             System.out.println("found");
-            Java_DS_Algo.utilCustom.Utility.printMatrix(board);
+            Utility.printMatrix(board);
             return;
         } else {
             for (int i = 0; i < board.length; i++) {
@@ -954,44 +957,33 @@ public class Backtrack {
      * curr = curr.substring(0, curr.length()-1);
      * 
      * IF PASSED AS PARAMETER, REMOVAL ISN'T REQUIRED.
+     * 
+     * keep on adding till no of open or closed reaches half
+     * add to res pnly open = closed =half
     */
-
     // generate 0s and 1s, free walk
     // https://leetcode.com/problems/generate-parentheses/
-    List<String> res = new ArrayList<>();
-    String curr = "(";
-    int open = 1, close = 0;
     public List<String> generateParenthesis(int n) {
-        
-        helper(n);
-        System.out.println("res "+res);
+        List<String> res = new ArrayList<>();
+        gPhelper(res, "", 0, 0, n);
         return res;
-        
     }
-    void helper(int n){
-        if(open==n && close == n) {
+    
+    void gPhelper(List<String> res, String curr, int open, int closed, int target){
+        if(open == target && closed == target){
             res.add(curr);
-            System.out.println(curr);
-            return;
         }
-
-        if(open<0 || close>open) return;
-        
-        System.out.println("curr "+curr);
-        if(open<n){
-            curr+="(";
-            open++;
-            helper(n);
-            curr = curr.substring(0, curr.length()-1);
-            open--;
-        }
-        curr+=")";
-        close++;
-        helper(n);
+        if(open>target || closed>target) return;
+        if(closed>open) return;
+        curr+="(";
+        gPhelper(res, curr, open+1, closed, target);
         curr = curr.substring(0, curr.length()-1);
-        close--;
+        curr+=")";
+        gPhelper(res, curr, open, closed+1, target);
     }
 
+
+    ////
     public List<String> generateParenthesisWithoutBT(int n) {
         List<String> list = new ArrayList<String>();
         int open = 0, close = 0;
@@ -1071,7 +1063,7 @@ public class Backtrack {
         System.out.println("in n rat multiple jumps");
         if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
 
-        Java_DS_Algo.utilCustom.Utility.printMatrix(visited);
+        Utility.printMatrix(visited);
         System.out.println("sol found");
         return true;
     }

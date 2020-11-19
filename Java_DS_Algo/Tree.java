@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 class TreeNode {
     int key; int val;
     TreeNode left;

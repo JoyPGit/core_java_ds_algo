@@ -1,7 +1,7 @@
 package Java_DS_Algo;
 import java.util.*;
 
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 
 class Greedy{
 
@@ -119,111 +119,58 @@ class Greedy{
      * Similar compare prev end and next start
      * https://leetcode.com/problems/merge-intervals/discuss/21222/A-simple-Java-solution
     */
-    /** 
-     * Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
-     * Output: [[1,6],[8,10],[15,18]]
-     * 
-     * Merge intervals if they overlap
-     * 
-     * POINTS:
-     * 1 Arrays.sort()
-     * 2 ARRAYLIST OF int[]
-     * 3 prevInterval = intervals[0] prevInterval holds a reference to the intervals[0]
-     * so any time it is changed the entry in the list changes, until prevInterval is
-     * updated to point ot something else 
-     * 
-     * 4 prevInterval is added to list and its ref maintained
-     * we iterate over the list and if current[0]<pev[1], then we update 
-     * prev[1] to max of prev[1], current[1], 
-     * for cases like [1,8] and [2,4], prev must be [1,8]
-     * else update reference and add to list
-     * 
-     * 5 list.toArrays(new int[list.size()][]);
-     */
-    // https://leetcode.com/problems/merge-intervals/
-    public int[][] mergeIntervals(int[][] intervals) {
-		if (intervals.length <= 1) return intervals;
-        ArrayList<int[]> result = new ArrayList<>();
-
-		// Sort by smaller starting point
-        // Arrays.sort(intervals, (x, y) -> Integer.compare(x[0], y[0]));
-        Arrays.sort(intervals, (x, y) -> x[0] - y[0]);
-        
-        int[] prevInterval = intervals[0];
-        result.add(prevInterval);
-
-        for (int[] interval : intervals) {
-			if (interval[0] <= prevInterval[1]){
-                // Overlapping intervals, update the end if needed
-                prevInterval[1] = Math.max(prevInterval[1], interval[1]);
-            } 
-            else {                           
-                // Disjoint intervals, add the new interval to the list
-				prevInterval = interval;
-				result.add(prevInterval);
-            }
-        }
-		return result.toArray(new int[result.size()][]);
-    }
 
     /**
      * 1 MERGING IS ONLY POSSIBLE WHEN THE END >= CURRENT BEGINNING
      * 2 KEEP A START AND AN END
      * 3 WHEN prevEnd >= intervals[i][0] this fails, 
-     * UPDATE BOTH START AND END AS WE HAVE TO START TO MERGE FROM
-     * A NEW INTERVAL
+     * ADD PEV TO RES AND PREV = CURR
      * 
-     * 4 i == n-1 ADD THE LAST STATE OF START AND END
-     * BECAUSE THERE CAN BE 2 POSSIBILTIES
-     * THE START AND END GOT UPDATED AT  n-1
-     * OR BEFORE
+     * 4 ADD PREV AT THE END TO ACCOUNT FOR THE LAST INTERVAL
      * 
-     * IN ANY CASE, THESE NEED TO BE ADDED AS THERE ARE NO FURTHER
-     * INTERVALS.
+     * imp prev.end = Math.max(prev.end, curr.end); 
      */
     // done in a diff manner
+    class Interval{
+        int start; int end;
+        Interval(int s, int e){
+            this.start = s;
+            this.end = e;
+        }
+    }
     public int[][] merge(int[][] intervals) {
-        List<List<Integer>> res = new ArrayList<>();
-        int n = intervals.length;
-        if(n == 0) return new int[][]{};
-        if(n == 1) return new int[][]{{intervals[0][0], intervals[0][1]}};
+        List<Interval> list = new ArrayList<>();
+        List<Interval> res = new ArrayList<>();
         
-        Arrays.sort(intervals, (x,y)->{
-            if(x[0] == y[0]) return y[1] - x[1];
-            return x[0] - y[0];
+        for(int i =0; i<intervals.length; i++){
+            list.add(new Interval(intervals[i][0], intervals[i][1]));
+        }
+        
+        Collections.sort(list, (x,y)->{
+            if(x.start == y.start) return y.end - x.end;
+            return x.start - y.start;
         });
-        
-        int prevStart = intervals[0][0]; 
-        int prevEnd = intervals[0][1];
-        int index = 0;
-        
-        for(int i = 1; i<n; i++){
-            if(prevEnd >= intervals[i][0]) {
-                prevEnd = Math.max(prevEnd, intervals[i][1]);
-            }else{
-                List<Integer> curr = new ArrayList<>();
-                curr.add(prevStart); curr.add(prevEnd);
-                res.add(index, (curr));
-                index++;
-                prevStart = intervals[i][0];
-                prevEnd = intervals[i][1];
-            }
             
-            if(i == n-1) {
-                List<Integer> curr = new ArrayList<>();
-                curr.add(prevStart); curr.add(prevEnd);
-                res.add(index, curr);
+        Interval prev = list.get(0);
+        for(int i =1; i<list.size(); i++){
+            
+            Interval curr = list.get(i);
+            // imp update with max
+            if(curr.start <= prev.end) prev.end = Math.max(prev.end, curr.end); 
+            else{
+                res.add(prev);
+                prev = curr;
             }
-        }
-        System.out.println(res);
+        }            
+            
+        res.add(prev);
         
-        // copy to array
-        int[][] resultArr = new int[res.size()][2];
+        int[][] result = new int[res.size()][2];
         for(int i =0; i<res.size(); i++){
-            resultArr[i][0] = res.get(i).get(0);
-            resultArr[i][1] = res.get(i).get(1);
+            result[i][0] = res.get(i).start;
+            result[i][1] = res.get(i).end;
         }
-        return resultArr;
+        return result;
     }
     
     
@@ -510,14 +457,14 @@ class Greedy{
                 char curr = pq.remove();
                 res += curr; // 4
                 map.put(curr, map.get(curr)-1); // 5
-                n--; // 6
                 // chk for freq here, why add to list if freq<0
                 if(map.get(curr)>0) list.add(curr); // 7
             }
             for(int i =0; i<list.size(); i++){
                 pq.add(list.get(i));
             }
-            // list.clear(); //
+            // k els have been used, so length reduced by k
+            n-=k; 
         }
         // System.out.println(res);
         return res;
@@ -680,7 +627,7 @@ class Greedy{
         }
 
         for(People p:list) System.out.println(p.h+" "+p.k);
-        Java_DS_Algo.utilCustom.Utility.printMatrix(people);
+        Utility.printMatrix(people);
         return people;
         // return list.toArray();
     }

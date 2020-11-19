@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-// import Java_DS_Algo.utilCustom.*;
+// import utilCustom.Utility;
 public class SlidingWindow {
 
 
@@ -134,7 +134,7 @@ public class SlidingWindow {
             System.out.println(list);
             res[index++] = list.getFirst();
         }
-        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
+        // Utility.print1DMatrix(res);
         return res;
     }
 
@@ -408,7 +408,6 @@ public class SlidingWindow {
     // https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
 
 
-    
     // https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/
 
 

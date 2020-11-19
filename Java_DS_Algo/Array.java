@@ -1,5 +1,6 @@
 package Java_DS_Algo;
-import Java_DS_Algo.utilCustom.*;
+
+import utilCustom.*;
 
 import java.util.*;
 
@@ -373,7 +374,7 @@ class Array {
             }
         }
         System.out.println("j is at "+j);
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(nums);
+        Utility.print1DMatrix(nums);
         return ++j;
     }
 
@@ -521,7 +522,7 @@ class Array {
         int n = nums.length;
         int lo = 0; int i =0;
         while(i<n){
-            if(nums[i] == 0) Java_DS_Algo.utilCustom.Utility.swap(nums, lo++, i++);
+            if(nums[i] == 0) Utility.swap(nums, lo++, i++);
             else i++;
         }
     }
@@ -548,8 +549,8 @@ class Array {
         int lo = 0; int hi = n-1;
         int i = 0 ;
         while(i<=hi){ // 1
-            if(nums[i] == 0) Java_DS_Algo.utilCustom.Utility.swap(nums, lo++, i++); // 2
-            else if(nums[i] == 2) Java_DS_Algo.utilCustom.Utility.swap(nums, hi--, i);
+            if(nums[i] == 0) Utility.swap(nums, lo++, i++); // 2
+            else if(nums[i] == 2) Utility.swap(nums, hi--, i);
             else i++;
         }
     }
@@ -560,7 +561,7 @@ class Array {
         for (int i = 0; i < arr.length; i++) {
             int j = i;
             while (j >= 1 && arr[j] < arr[j - 1]) {
-                Java_DS_Algo.utilCustom.Utility.swap(arr, j, j - 1);
+                Utility.swap(arr, j, j - 1);
                 j--;
             }
         }
@@ -695,7 +696,7 @@ class Array {
             res[index++] = list.getFirst();
         }
         
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(res);
+        Utility.print1DMatrix(res);
         return res;
     }
 
@@ -769,20 +770,20 @@ class Array {
             left[i] = prod*nums[i-1]; 
             prod*=nums[i-1];
         }
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(left);
+        Utility.print1DMatrix(left);
 
         prod = nums[n-1]; right[n-1] = nums[n-1]; right[n-2] = nums[n-1];
         for(int i = n-3; i>=0; i--){
             right[i] = prod*nums[i+1]; 
             prod*=nums[i+1];
         }
-        Java_DS_Algo.utilCustom.Utility. print1DMatrix(right);
+        Utility. print1DMatrix(right);
         
         holder[0] = right[0]; holder[n-1] = left[n-1];
         for(int i = 1; i<n-1; i++){
             holder[i] = left[i]*right[i]; 
         }
-        Java_DS_Algo.utilCustom.Utility.print1DMatrix(holder);
+        Utility.print1DMatrix(holder);
         return holder;
     }
 
@@ -882,7 +883,7 @@ class Array {
 
         int[] zeroOneArr = { 0, 1, 1, 1, 1, 1 };
         // test.sort01(zeroOneArr);
-        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(zeroOneArr);
+        // Utility.print1DMatrix(zeroOneArr);
         // test.moveAllZeroesToEnd(zeroArr);
         // test.quickSortArray24Apr(zeroArr, 0, zeroArr.length-1);
         // test.print1DMatrix(zeroArr);

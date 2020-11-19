@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 public class Sorting {
     Sorting(){}
 
@@ -14,7 +14,7 @@ public class Sorting {
             nums[j] = temp;
         }
         for(int i :nums) System.out.println(i);
-        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(nums);
+        // Utility.print1DMatrix(nums);
     }
 
 
@@ -31,7 +31,7 @@ public class Sorting {
         if(index*2+2<arr.length && arr[min]>arr[index*2+2]) min = index*2+2;
 
         if(min!=index) {
-            // Java_DS_Algo.utilCustom.Utility.swap(arr, index, min);
+            // Utility.swap(arr, index, min);
             heapify(arr, min);
         }
     }
@@ -44,11 +44,11 @@ public class Sorting {
             heapify25Apr(arr, arr.length, i);
         }
 
-        // Java_DS_Algo.utilCustom.Utility.print1DMatrix(arr);
+        // Utility.print1DMatrix(arr);
         System.out.println();
 
         for (int i = n - 1; i > n - 2 - 1; i--) {
-            // Java_DS_Algo.utilCustom.Utility.swap(arr, i, 0);
+            // Utility.swap(arr, i, 0);
             // int temp =arr[0];
             // arr[0] = arr[i];
             // arr[i] = temp;
@@ -74,7 +74,7 @@ public class Sorting {
         }
 
         if (max != index) {
-            // Java_DS_Algo.utilCustom.Utility.swap(arr, index, max);
+            // Utility.swap(arr, index, max);
             heapify25Apr(arr, n, max);
         }
     }
@@ -303,7 +303,7 @@ public class Sorting {
         int n = nums.length;
         int lo = 0; int i =0;
         while(i<n){
-            // if(nums[i] == 0) //Java_DS_Algo.utilCustom.Utility.swap(nums, lo++, i++);
+            // if(nums[i] == 0) //Utility.swap(nums, lo++, i++);
             // else i++;
         }
     }
@@ -329,8 +329,8 @@ public class Sorting {
         int lo = 0; int hi = n-1;
         int i = 0 ;
         while(i<=hi){ // 1
-            // if(nums[i] == 0) //Java_DS_Algo.utilCustom.Utility.swap(nums, lo++, i++); // 2
-            // else if(nums[i] == 2) //Java_DS_Algo.utilCustom.Utility.swap(nums, hi--, i); // 3
+            // if(nums[i] == 0) //Utility.swap(nums, lo++, i++); // 2
+            // else if(nums[i] == 2) //Utility.swap(nums, hi--, i); // 3
             // else i++;
         }
     }

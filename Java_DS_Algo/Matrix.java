@@ -1,8 +1,7 @@
 package Java_DS_Algo;
 import java.util.*;
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 class Matrix {
-
     /** 
      * 
      * PACIFIC ATLANTIC, OBSTACLES, WALLS AND GATES, WORD SEARCH
@@ -661,7 +660,8 @@ class Matrix {
                 }
             }
         }
-        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
+        utilCustom.Utility.printMatrix(matrix);
+        // Utility.printMatrix(matrix);
     }
 
     void helperK(int[][] grid, int row, int col, int count) {
@@ -709,7 +709,7 @@ class Matrix {
      * DP CAN'T BE APPLIED HERE AS WE RUN INTO A COMPARISON OF 
      * INF WITH INF WHICH RUNS INTO AN INF LOOP
      * DP WORKS WITH GOLD MINE AS INDEX VALUES ARE INCREASING, 
-     * IF WE USE SAME ADJACENT VALUES IT WILL RUN INTO INF LOOP
+     * IF WE USE SAME ADJACENT VALUES IT WILL RUN INTO inf LOOP
      * 
      *   
      * STARTING FROM 0
@@ -730,7 +730,7 @@ class Matrix {
             }
         }
         System.out.println("walls 1 from 0 :");
-        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
+        Utility.printMatrix(matrix);
     } 
 
 
@@ -945,7 +945,7 @@ class Matrix {
             distance++;
         }
         System.out.println("bfs wall : ");
-        Java_DS_Algo.utilCustom.Utility.printMatrix(matrix);
+        Utility.printMatrix(matrix);
     }
 
     boolean isSafeWallBFS(int[][] matrix, int r, int c){
@@ -1453,117 +1453,6 @@ class Matrix {
     }
 
 
-    //////////////////////////////// BACKTRACKING
-    /** 
-     * same as dfs, minor changes
-     * 
-     * f(){
-     *  if(isSafe()){
-     *      mark visited;
-     *      if(f()) return true;
-     *      unmark;
-     *  }
-     *  return false;
-     * }
-     * 
-     * WE RETURN FALSE WHENEVER NOT SAFE
-     * 
-    */
-    // 6 june
-    // multiple jumps allowed
-    // https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
-    boolean solveNJumpsRatMaze(int[][] maze) {
-        int n = maze.length;
-        int[][] visited = new int[n][n];
-        
-        System.out.println("in n rat multiple jumps");
-        if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
-
-        Java_DS_Algo.utilCustom.Utility.printMatrix(visited);
-        System.out.println("sol found");
-        return true;
-    }
-
-    boolean solveNRatMazeUtil(int[][] maze, int[][] visited, int row, int col) {
-        if (isNSafeRatMaze(maze, row, col)) {
-            if(row == maze.length-1 && col == maze[0].length-1) return true;
-
-            // same as graph
-            visited[row][col] = 1;
-
-            for (int i = 1; i <= maze[row][col]; i++) {
-                if (solveNRatMazeUtil(maze, visited, row + i, col)) return true;
-                if (solveNRatMazeUtil(maze, visited, row, col + i)) return true;
-            }
-
-            visited[row][col] = 0;// backtrack
-            return false;
-        }
-        return false;
-    }
-
-    boolean isNSafeRatMaze(int[][] grid, int rowIndex, int colIndex) {
-        if(rowIndex >= 0 && rowIndex < grid.length 
-        && colIndex >= 0 && colIndex < grid[0].length
-        && grid[rowIndex][colIndex] != 0) return true;
-        return false;
-    }
-
-    /**
-     * POINTS : 
-     * 1 start a dfs whenever the ch[i][j] matches the starting char of string
-     * 2 USE THE WORD, DON'T USE CHAR ARRAY
-     * 3 NO NEED TO MAINTAIN VISITED ARRAY, USE BACKTRACKING
-     * 4 RETURN BOOLEAN DFS, MAINTAINING A GLOBAL VARIABLE CHECKS
-     * FOR ALL POSSIBLE STARTS AND DOESN'T RETURN TRUE TILL ALL POSSIBILITIES
-     * ARE EXHAUSTED, WHICH RESULTS IN TLE
-     * 5 
-     * 
-     */
-    // backtracking
-    // mark as ' '
-    // pass the char, not word and index both
-    // return boolean not void 
-    // https://leetcode.com/problems/word-search/
-    public boolean exist(char[][] board, String word) {
-        int m = board.length;
-        int n = board[0].length;
-        
-        for(int i =0; i<m; i++){
-            for(int j =0; j<n; j++){
-                if(board[i][j] == word.charAt(0)) {
-                    if(dfs(board, i, j, word, 0)) return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    boolean dfs(char[][] board, int row, int col, String word, int index){
-        // proceed till index == word.length() 
-        if(index == word.length()) return true;
-        
-        if(isSafeBoard(board, row, col, word.charAt(index))){
-            char temp = word.charAt(index);
-            board[row][col] = ' '; // 2
-            boolean found = dfs(board, row+1, col, word, index+1) // 3
-            || dfs(board, row-1, col, word, index+1)
-            || dfs(board, row, col+1, word, index+1)
-            || dfs(board, row, col-1, word, index+1);
-
-            if(found) return true; // 4
-            board[row][col] = temp; // 5
-        }
-        return false;
-    }
-    
-    boolean isSafeBoard(char[][] board, int row, int col, char ch){
-        if(row>=0 && row<board.length
-          && col>=0 && col<board[0].length
-          && board[row][col] == ch) return true;
-        return false;
-    }
-
     // https://leetcode.com/problems/check-if-there-is-a-valid-path-in-a-grid/
     // discuss/547633/Python-SUPER-EASY-Idea%3A-just-walk-the-maze-based-on-the-rule
     public static void main(String[] args) {
@@ -1638,7 +1527,7 @@ class Matrix {
                                 { pInf, -1, pInf, -1 }, 
                                 { 0, -1, pInf, pInf } };
         // matrix.wallsAndGatesKevin(wallsAndGates);
-        // matrix.wallsAndGates1(wallsAndGates);
+        matrix.wallsAndGates1(wallsAndGates);
         matrix.wallsAndGatesBFS(wallsAndGates);
 
         // matrix.antiDiaPrint(twoDimArr);

@@ -1,5 +1,5 @@
 package Java_DS_Algo;
-import Java_DS_Algo.utilCustom.*;
+import utilCustom.Utility;
 import java.util.*;
 
 class ListNode {

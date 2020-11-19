@@ -7,7 +7,7 @@ import java.util.*;
 /** 
  * ** min window
  * 
- * AP HASH, ITINERARY, WORD SUBSETS
+ * AP HASH, WORD SUBSETS
  * 
  * SMALLEST SUBSEQUECE, MNIN WINDOW SUBSTRING
  * 
@@ -20,7 +20,6 @@ import java.util.*;
  * WORD SUBSETS
  * PATH SUM 3
  * NO OF SUBARRAYS HAVING SUM K (PREFIX SUM)
- * FIND ITINERARY
  * WORD SUBSETS
  * 
  * SLIDING WINDOW -> WHENEVER K DISTINCT
@@ -673,7 +672,6 @@ class HashPractice{
     // https://leetcode.com/discuss/interview-question/844979/amazon-online-assessment-question-2
     /** USE DFS SIMILAR TO FRIEND CIRCLE LEETCODE */
 
-    // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/
     // https://leetcode.com/problems/longest-consecutive-sequence/
     
     public static void main(String[] args) {
