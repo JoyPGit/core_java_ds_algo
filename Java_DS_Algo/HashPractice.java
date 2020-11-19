@@ -666,48 +666,6 @@ class HashPractice{
     // 895204/Java-DFS-2-ms-faster-than-100.00-39-MB-less-than-12.94
 
 
-
-    // need to do dfs for every node, stuck when node doesn't have entry. 
-    // Use for loop as in dfs of graph
-    // https://leetcode.com/problems/reconstruct-itinerary/
-    public List<String> findItinerary(List<List<String>> tickets) {
-        HashMap<String, List<String>> map = new HashMap<>();
-        int count = tickets.size()+1;
-        List<String> res = new ArrayList<>();
-        // map creation
-        for(int i =0; i<tickets.size(); i++){
-            
-            List<String> curr = 
-                map.getOrDefault((tickets.get(i)).get(0), new ArrayList<String>());
-            curr.add((tickets.get(i)).get(1));
-            map.put((tickets.get(i)).get(0), curr);
-        }
-        
-        // map sortiing lexicographically
-        for(HashMap.Entry<String, List<String>> entry : map.entrySet()){
-            List<String> curr = entry.getValue();
-            Collections.sort(curr);
-            map.put(entry.getKey(), curr);
-        }
-        // HashSet<String> visited
-        // can remove the vivited airports from the list
-        String start = "JFK"; res.add(start);
-        dfs(start, map, res);
-        
-        return res;
-    }
-    
-    void dfs(String start, HashMap<String, List<String>> map, List<String> res){
-        if(!map.containsKey(start)) return;
-        List<String> currList = map.get(start);
-        while(currList.size()!=0){
-            start = currList.remove(0);
-            res.add(start);
-            dfs(start, map, res);
-        }
-        map.remove(start);
-    }
-
     // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
 
     // https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60/

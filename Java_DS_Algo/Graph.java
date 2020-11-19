@@ -1236,6 +1236,51 @@ class Graph {
         return 0;
     }
 	
+	// https://www.hackerearth.com/submission/48715922/
+	// i think it doesn't work
+	// https://www.hackerearth.com/problem/algorithm/strategic-warehouse-placements/description/
+	void wareHousePlacement(){	
+		Scanner s = new Scanner(System.in);
+        // System.out.println("enter N and M");
+        int n = s.nextInt();
+        int m = s.nextInt();
+
+        HashMap<Integer, ArrayList<Integer>> mapW = new HashMap<>();
+
+        for(int i =0; i<m; i++){
+            // System.out.println("enter node pairs");
+            int a = s.nextInt(); int b = s.nextInt();
+            ArrayList<Integer> curr = map.getOrDefault(a, new ArrayList<Integer>());
+            curr.add(b);
+            map.put(a, curr);
+            curr = map.getOrDefault(b, new ArrayList<>());
+            curr.add(a);
+            map.put(b, curr);
+        }
+        
+
+        PriorityQueue<Integer> pq = 
+        new PriorityQueue<>((x, y)->map.get(y).size() - map.get(x).size());
+
+        for(HashMap.Entry<Integer, ArrayList<Integer>> e :map.entrySet()){
+            pq.add(e.getKey());
+        }
+
+        HashSet<Integer> visited = new HashSet<>(); int counter = 0;
+        while(pq.size()!=0){
+            int node = pq.remove();
+            if(visited.contains(node)) continue;
+            visited.add(node);
+            List<Integer> list = map.get(node);
+            for(int i =0; i<list.size(); i++){
+                visited.add(list.get(i));
+            }
+            counter++;
+        }
+
+        System.out.println(counter);
+	}
+
 
 	// https://leetcode.com/problems/possible-bipartition/
 	

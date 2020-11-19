@@ -925,6 +925,45 @@ class LinkedPractice {
         return last;
     }
     
+    /** 
+     * POINTS :
+     * 1 USE DUMMY, START FROM DUMMY
+     * 2 MAKE ENTRY OF SUM AND CORRESPONDING NODE
+     * 3 IF SUM IS FOUND, NODE.NEXT = p.next, CLEAR MAP
+     * 
+     * we clear map,set sum to 0 and start again from dummy, this way 
+     * the issues with list.size() and 0 value nodes can be avoided.
+     * 
+    */
+    // [1,-1], [0,0], [1,3,2,-3,-2,5,5,-5,1]
+    // https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list
+    public ListNode removeZeroSumSublists(ListNode head) {
+        if(head == null) return null;
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        
+        HashMap<Integer, ListNode> map = new HashMap<>();
+        ListNode p = dummy;
+        
+        int sum = 0;
+        while(p!=null){
+            sum+=p.val;
+            if(map.containsKey(sum)){
+                // delinking 0 sum nodes
+                map.get(sum).next  = p.next;
+                // clear, we start afresh, imp
+                map.clear();
+                sum = 0;
+                // reset p to dummy
+                p = dummy;
+            }
+            else {
+                map.put(sum, p);
+                p = p.next;
+            }
+        }
+        return dummy.next;
+    }
 
     // https://stackoverflow.com/questions/21528422/storing-a-doubly-linked-list-using-just-a-single-pointer-field
     // https://github.com/mission-peace/interview/blob/master/src/com/interview/linklist/SortedLLToBalancedBST.java
