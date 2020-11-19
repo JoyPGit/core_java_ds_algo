@@ -1,0 +1,49 @@
+https://www.youtube.com/watch?v=ewcoEYS85Co
+
+
+When a client hits a url for the first time, a html doc is sent from 
+server, this html doc has header, body and footer. the whole angular code
+is attached in the body. 
+<router-outlet>
+
+and then to optmize lazy loading is used, which calls a page only when 
+a request is made, so initial rendering is faster.
+
+
+https://www.youtube.com/watch?v=Nehk4tBxD4o
+create a module with -- routing
+
+
+https://www.youtube.com/watch?v=75XFBIKLPQY
+lazy loading
+
+https://www.youtube.com/watch?v=qAeh4jZTjCk
+angular services
+
+https://www.youtube.com/watch?v=CacMOuzTiJU
+two way binding
+
+
+install using angular-cli
+use Angular routing adds app.routing
+use angular readme.md
+
+ng serve build and run
+viewport
+
+`ng generate directive|pipe|service|class|guard|interface|enum|module`.
+selector for ap component
+<app-root>
+
+angular.json contains commands which will run when specific keywords
+are entered
+
+polyfills.ts takes care fo browser incompatibilities
+
+ng build -> creates distributable in dist fodler
+assets -> images
+ng new my-dream-app
+
+ng class
+ngIf, ngFor
+boolean 

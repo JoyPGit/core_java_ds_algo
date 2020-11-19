@@ -1,0 +1,18 @@
+https://blog.logrocket.com/how-browser-rendering-works-behind-the-scenes-6782b0e8fb10/#:~:text=The%20DOM%20contains%20all%20the,something%20called%20a%20render%20tree.
+
+
+bytes ->  tokens -> HTML parser ->DOM
+
+DOM is rendered
+When writing HTML source code, you can define attributes on your 
+HTML elements. Then, once the browser parses your code, a 
+corresponding DOM node will be created. This node is an object, 
+and therefore it has properties.
+
+
+DOM 
+https://bitsofco.de/what-exactly-is-the-dom/
+
+HTML attibutes are key value pairs
+
+DOM properties change value, 

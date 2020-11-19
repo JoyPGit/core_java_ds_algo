@@ -1,0 +1,81 @@
+https://www.softwaretestinghelp.com/core-java-interview-questions/
+
+JIT
+
+access specifiers, static method
+final
+public vs private vs protectedvs default
+private -> only itself
+protected -> only subclasses
+default -> visible in same package
+
+abstraction vs encapsulation
+
+abstraction hides unwanted data, 
+encapsulation hides implementation of useful data
+We can implement abstraction using abstract class and interfaces.	
+
+Whereas encapsulation can be implemented using by access modifiers 
+i.e. private, protected and public.
+
+polymorphism -> Animal animal = new Dog();
+
+method overriding vs overloading
+same class vs subclass
+
+
+interface vs abstract class
+
+abstract method
+The method which has only the declaration and not the implementation is called the abstract method and it has the keyword called “abstract”. Declarations ends with a semicolon.
+
+multiple inheritance 
+
+
+Difference between String, String Builder, and String Buffer.
+Buffer is thread safe, Builder is not
+
+
+Exception handling
+final vs static
+
+threads, 
+Runnable, join, yield
+start vs run
+start() creates a new thread and 
+the code inside the run () method is executed in the new thread. 
+
+sleep()
+
+
+public class MultipleThreads implements Runnable{
+    // Main thread starts here
+    public static void main (String[] args){
+        Runnable r = new runnable ();
+        Thread t=new thread ();
+        //User thread starts here
+        t.start ();
+        Addition add = new addition ();
+    }
+
+    public void run(){
+        go();  // User thread ends here
+    }
+}
+
+If we need our class to extend some other classes other than the thread
+then we can go with the runnable interface because in java 
+we can extend only one class.
+
+yield() vs run()
+A yield () method moves the currently running thread to a runnable state 
+and allows the other threads for execution. So that eq
+ual priority threads have a chance to run. It is a static method. 
+It doesn’t release any lock.
+
+
+
+Locks are per objects. Every Java object has a lock. 
+A lock has only one key. A thread can access a synchronized method only if
+the thread can get the key to the objects to lock.
+Synchronization makes only one thread to access a block of code at a time.

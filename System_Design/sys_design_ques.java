@@ -8,12 +8,17 @@ public class sys_design_ques {
     // chess board
     // trie
     // minesweeper
+
+    // https://leetcode.com/discuss/
+    // interview-question/system-design/344524/design-a-jobtask-scheduler
+
     // https://leetcode.com/problems/online-stock-span/
     // https://leetcode.com/problems/implement-trie-prefix-tree/
     // https://leetcode.com/problems/lru-cache/
     // https://leetcode.com/discuss/interview-question/874074/
     // Food-Delivery-App-or-Low-Level-Design-or-Interview-Question
 
+    // https://stackoverflow.com/questions/26094969/design-a-generic-job-scheduler
 
     // https://netflixtechblog.com/
     // https://netflixtechblog.com/byte-down-making-netflixs-data-infrastructure-cost-effective-fee7b3235032

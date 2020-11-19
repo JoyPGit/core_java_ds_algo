@@ -4,15 +4,24 @@ public class ToDo {
      * https://leetcode.com/problems/top-k-frequent-words/
      * 1 hashmap -> map freq to an arraylist
      * 
+     * itinerary, median of 2 sorted, maximal rect
+     * graph, matrix(walls), tree
+     * 
      * coin 1d, train ticket
      * ood, cn, os, js
      * sys design, 
      * sort songs lexico
      * 
+     * word break, reorg, remove zero sum
+     * sum of subarray mins, 
+     * 3 sum
+     * 
     // https://leetcode.com/problems/compare-strings-by-frequency-of-the-smallest-character/
      * 
      * 2 map string and freq, add all values to pQueue
      * and sort on the basis of req and s.charAt() smaller
+     * 
+     * https://leetcode.com/problems/reconstruct-itinerary/
      * 
      * painter partition (dp)
      * word dict, min cut palindrome partitioning
@@ -30,7 +39,7 @@ public class ToDo {
      * itinerary
      * SUM SUBARRAY MINS
      * 
-     * 
+     * https://leetcode.com/problems/minimum-operations-to-reduce-x-to-zero/submissions/
      * 
      * REORG STRING
      * TASK SCHEDULER
@@ -46,7 +55,6 @@ public class ToDo {
      * 
      * TRIE
      * LRU CACHE
-     * ITINERARY
      * SUDOKU
      * MEDIAN
      * merge sort list
@@ -61,7 +69,6 @@ public class ToDo {
      * https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/
     
 
-     * TREE FROM INORDER AND PREORDER
      * WORD SEARCH
      * SUBSETS, SUBSETS WITH DUPLICATES
      * SORTING
