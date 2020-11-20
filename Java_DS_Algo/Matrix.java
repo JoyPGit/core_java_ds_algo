@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-import utilCustom.Utility;
+// import utilCustom.Utility;
 class Matrix {
     /** 
      * 
@@ -660,7 +660,7 @@ class Matrix {
                 }
             }
         }
-        utilCustom.Utility.printMatrix(matrix);
+        // utilCustom.Utility.printMatrix(matrix);
         // Utility.printMatrix(matrix);
     }
 
@@ -730,7 +730,7 @@ class Matrix {
             }
         }
         System.out.println("walls 1 from 0 :");
-        Utility.printMatrix(matrix);
+        // Utility.printMatrix(matrix);
     } 
 
 
@@ -945,7 +945,7 @@ class Matrix {
             distance++;
         }
         System.out.println("bfs wall : ");
-        Utility.printMatrix(matrix);
+        // Utility.printMatrix(matrix);
     }
 
     boolean isSafeWallBFS(int[][] matrix, int r, int c){
@@ -1497,7 +1497,7 @@ class Matrix {
                             //  {0,0,0,0,0}};
 
         // System.out.println("row index of max1s " + matrix.rowWithMax1s(onesArray));
-        matrix.rowWithMaximumOnes(onesArray);
+        // matrix.rowWithMaximumOnes(onesArray);
 
         // int[][] floodFillArray = {{1,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
         // matrix.floodFill(floodFillArray);
@@ -1527,8 +1527,8 @@ class Matrix {
                                 { pInf, -1, pInf, -1 }, 
                                 { 0, -1, pInf, pInf } };
         // matrix.wallsAndGatesKevin(wallsAndGates);
-        matrix.wallsAndGates1(wallsAndGates);
-        matrix.wallsAndGatesBFS(wallsAndGates);
+        // matrix.wallsAndGates1(wallsAndGates);
+        // matrix.wallsAndGatesBFS(wallsAndGates);
 
         // matrix.antiDiaPrint(twoDimArr);
 
@@ -1549,7 +1549,9 @@ class Matrix {
 
         // matrix.maximalRectangle(maximalRectangle);
 
-
+            char[] ch = new char[2];
+            System.out.println("val is "+ch[0]);
+            
 
     }
 

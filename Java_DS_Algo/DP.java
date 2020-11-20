@@ -8,11 +8,16 @@ public class DP {
 
     /**
      * 
-     * RELN -> PAINTER, STAIRS, COIN 1D
+     * RELN -> PAINTER, STAIRS
+     * coin min
+     * dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i-1]]+1);
+     * coin no of ways
+     * dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]; 
+     * 
      * 
      * subset -> knapsack, coin change no of ways,
      * subset, coin -> 1st col TRUE, 1
-     * 1d coin(always for min no), rod cutting, train ticket
+     * train ticket
      * book allocation
      * match : 
      * substr maxLen, subseq, +1, +2 
@@ -484,7 +489,6 @@ public class DP {
     }
 
     /** 
-     * k transactions (stock buy sell)
      * POINTS : 
      * 1 LIKE PAINTER
      * 2 TWO OPTIONS, EITHER I DO OR DON'T DO ANY TRANSACTION
@@ -497,13 +501,24 @@ public class DP {
      * i-1 because transaction is reduced by one as this transaction 
      * is included in k
      * 
+     * 2 HERE WE DONT LOOK AT PREVIOUS DAY AT THE LAST, SO AS TO CHECK
+     * IF NOT DOING NAY TRANSACTION ON THIS DAY, CARRYING FORWARD 
+     * PREVIOUS DAY'S PROFIT WOULD BE BETTER OR NOT
+     * 
      * 2, [3,0,5,10]
      * bought at 0, sold at 5, bought at 5 sold at 10 
      * profit = 10
      * 
+     * 
      * size [k+1][n], 0 transactions
      * reduce transaction
      * 
+     * 
+     * imp : transactions -> row, days -> col
+     * start from j=1 as we can't sell on day 0 so no profit
+     * https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/
+     * 
+     * * k transactions (stock buy sell)
      */ 
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv
     public int maxProfit(int k, int[] prices) {
@@ -1252,23 +1267,6 @@ public class DP {
             }
         }
         return dp[n][amount] == Integer.MAX_VALUE-100?-1:dp[n][amount];
-    }
-
-    // min no of coins
-    // https://leetcode.com/problems/coin-change/solution/
-    public int coinChange1DArr(int[] coins, int amount) {
-        int max = amount + 1;
-        int[] dp = new int[amount + 1];
-        Arrays.fill(dp, max);
-        dp[0] = 0;
-        for (int i = 1; i <= amount; i++) {
-            for (int j = 0; j < coins.length; j++) {
-                if (coins[j] <= i) {
-                dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
-                }
-            }
-        }
-        return dp[amount] > amount ? -1 : dp[amount];
     }
 
 

@@ -6,10 +6,10 @@ import java.util.*;
 
 /** 
  * ** min window
- * 
+ * subarray sums div by k, longest subarray of 0s and 1s
  * AP HASH, WORD SUBSETS
  * 
- * SMALLEST SUBSEQUECE, MNIN WINDOW SUBSTRING
+ * SMALLEST SUBSEQUENCE, MIN WINDOW SUBSTRING
  * 
  * 0s and 1s, prefix sum
  * rank teams, word subsets
@@ -263,7 +263,7 @@ class HashPractice{
      * count = 3 [1],[-1,2],[1]
      * 
      * sum + x - k = sum => x=k
-     * Existence of (sum-k) means from a previos index till this index
+     * Existence of (sum-k) means from a previous index till this index
      * there is k sum subarray. 
      * 
      * STEPS :
@@ -346,8 +346,7 @@ class HashPractice{
         for(int i : nums){
             sum+=i; rem = sum%k; // 1
             if(rem<0) rem+=k; // 2
-            if(map.containsKey(rem)) count+=map.get(rem);
-            // System.out.println("i "+i+" "+count);
+            count+=map.getOrDefault(rem, 0);
             map.put(rem, map.getOrDefault(rem, 0)+1);
         }
         return count;

@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-import utilCustom.Utility;
+// import utilCustom.Utility;
 class StringPractice {
 
     // https://www.baeldung.com/java-string-immutable
@@ -118,6 +118,15 @@ class StringPractice {
         res.insert(res.length(), 2);
         System.out.println(res);
         return res.reverse().toString();
+    }
+
+    boolean palindrome(String str){
+        int lo = 0; int hi = str.length()-1;
+        while(lo<=hi){
+            if(str.charAt(lo) != str.charAt(hi)) return false;
+            lo++; hi--;
+        }
+        return true;
     }
 
     // https://leetcode.com/problems/consecutive-characters/
@@ -982,7 +991,7 @@ class StringPractice {
                 }
             }
         }
-        Utility.printMatrix(dp);
+        // Utility.printMatrix(dp);
         System.out.println("all palindromic substrings' count : " + count);
         return count;
     }
@@ -2194,6 +2203,8 @@ class StringPractice {
         // System.out.println(string.isAnagramStringCompare("str1", "str2"));
 
         String s = "othello";
+        String s1  = "aba";
+        System.out.println(s+" is palindrome "+string.palindrome(s));
         // System.out.println(s.substring(2,3));
         // System.out.println(string.lexicographicSubConcat(s));
 
@@ -2237,7 +2248,7 @@ class StringPractice {
         // string.compress(toCompress);
 
         char a = 'a'; char b = 'b';
-        System.out.println(a-b);
+        // System.out.println(a-b);
 
     }
 }
