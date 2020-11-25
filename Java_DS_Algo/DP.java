@@ -25,9 +25,9 @@ public class DP {
      * substr 0,      subseq Math.max 
      * 
      *           substr       subseq
-     * longest.  i,j+1, 0    i,j+1, max
-     * palin.    1,0         i,j+2, max 
-     *           match,no     match,no
+     * longest.  udia+1, 0   udia+1, max
+     * palin.    1,0         ldia+2, max 
+     *           match, no    match, no
      * 
      * 
      * job scheduling
@@ -207,30 +207,6 @@ public class DP {
         return dp[dp.length-1];
     }
 
-    /** 
-     * FILL DP WITH AMT+1, dp[0][0] = 0
-     * 
-     * POINTS :
-     * 1 dp[0] = 0, NOT SELECTING ANY CON CAN GGIVE A VALUE OF 0,
-     * IT'S NOT IMPOSSIBLE, SO DON'T RETURN -1
-     * 2 2 FOR LOOPS, SIMILAR TO PARTITION,
-     * COMPARING ALL COIN VALUES(j) FOR AN amount(i)
-    */
-    // https://leetcode.com/problems/coin-change/solution/
-    public int coinChange1D(int[] coins, int amount) {
-        int max = amount + 1;
-        int[] dp = new int[amount + 1];
-        Arrays.fill(dp, max);
-        dp[0] = 0;
-        for (int i = 1; i <= amount; i++) {
-            for (int j = 0; j < coins.length; j++) {
-                if (coins[j] <= i) {
-                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
-                }
-            }
-        }
-        return dp[amount] > amount ? -1 : dp[amount];
-    }
 
     // IMP
     // https://leetcode.com/problems/minimum-cost-for-tickets/
@@ -254,35 +230,7 @@ public class DP {
         return dp[lastDay];
     }
 
-    /**
-     * POINTS :
-     * 1 SIMILAR TO COIN CHANGE
-     * 2 CREATE A nums ARRAY TO STIORE SQUARES, fill with (i+1)*(i+1)
-     * 3 USE  SAME RELATION
-     * dp[i][j] = Math.min(dp[i-1][j], dp[i][j-nums[i-1]] +1);
-     * +1 for current el,
-    */
-    // https://leetcode.com/problems/perfect-squares/
-    public int numSquares(int n) {
-        int sq = (int)Math.sqrt(n);
-        int[][] dp = new int[sq+1][n+1];
-        
-        int[] nums = new int[n+1];
-        for(int i =0; i<=n; i++){
-            nums[i] = (i+1)*(i+1);
-        }
-        
-        Arrays.fill(dp[0], Integer.MAX_VALUE);
-        dp[0][0] = 0;
-        
-        for(int i =1; i<=sq; i++){
-            for(int j =1; j<=n; j++){
-                if(nums[i-1]>j) dp[i][j] = dp[i-1][j];
-                else dp[i][j] = Math.min(dp[i-1][j], dp[i][j-nums[i-1]] +1);
-            }
-        }
-        return dp[sq][n];
-    }
+    
 
     // https://leetcode.com/problems/decode-ways/
     public int numDecodings(String s) {
@@ -510,8 +458,9 @@ public class DP {
      * profit = 10
      * 
      * 
-     * size [k+1][n], 0 transactions
-     * reduce transaction
+     * size [k+1][n],
+     * either max of p=0 till j-1 and [i-1][p] // plus max of (p-1)th transcn
+     * or [i][j-1] // previous day
      * 
      * 
      * imp : transactions -> row, days -> col
@@ -1337,7 +1286,7 @@ public class DP {
     // TRYING TO USE MEMOIZATION
     // SEE CHEAPEST FLIGHTS WITH DP (ULTIMATE)
     // INCLUDE EXCLUDE
-    // https://leetcode.com/problems/target-sum/
+    // https://leetcode.com/pro blems/target-sum/
     int sumCount = 0;
     public int findTargetSumWays(int[] nums, int target) {
         // return f(nums, 1, target+nums[0]) + f(nums, 1, target-nums[0]);
@@ -1905,9 +1854,9 @@ public class DP {
      * else : dp[][] = 0, Math.max()
      * 
      *           substr       subseq
-     * longest.  i,j+1, 0    i,j+1, max
-     * palin.    1,0         i,j+2, max 
-     *           match,n     match,no
+     * longest.  udia+1, 0   udia+1, max
+     * palin.    1,0         ldia+2, max 
+     *           match, no    match, no
      * 
      */
 
@@ -1947,7 +1896,7 @@ public class DP {
     /** 
      * longest repeating subsequence
      * SAME AS LCSUBSEQUENCE, USE TWO(SAME) STRINGS AND FIND LCS,
-     * BUT THE CHARS AT THE SAMEINDEX SHOUDLNT BE SAME
+     * BUT THE CHARS AT THE SAME INDEX SHOUDLNT BE SAME
      * 
      * 
     */
@@ -2124,9 +2073,9 @@ public class DP {
      * 
      * 
      *           substr       subseq
-     * longest.  i,j+1, 0    i,j+1, max
-     * palin.    1,0         i,j+2, max 
-     *           match,n     match,no
+     * longest.  udia+1, 0   udia+1, max
+     * palin.    1,0         ldia+2, max 
+     *           match, no    match, no
      */
 
     /** diagonally up, comparing around middle
@@ -2387,7 +2336,6 @@ public class DP {
         // dp.allSubsets(subsetArr, new int[subsetArr.length], 0);
 
         int number = 12;
-        dp.numSquares(number);
 
         int[][] blockSum = {{1,2,3},{4,5,6},{7,8,9}};
         // dp.matrixBlockSum(blockSum, 1);

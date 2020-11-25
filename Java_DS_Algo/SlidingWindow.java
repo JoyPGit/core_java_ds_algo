@@ -5,13 +5,19 @@ public class SlidingWindow {
 
 
     /** 
-     * counting distinct can be done using counter or map size
      * 
-     * count distinct
-     * longest ones
-     * smallest with sum>=k, smallest substr with k els
-     * length of longest substr, 
-     * no of substrings, numSubarrayProductLessThanK
+     * 2 ways either a predetermined window size is present
+     * or 
+     * use while(zero>K) and increment left
+     * 
+     * 1 counting distinct can be done using counter or map size
+     * 2 longest ones
+     * 3 smallest with sum>=k, smallest substr with k els
+     * 4 length of longest substr, 
+     * remove till single occurrence is left
+     * 
+     * 
+     * 5 no of substrings, numSubarrayProductLessThanK
      * all substrings containing k els (count+=)
      * 
      * celebrity, anagrams, swaps
@@ -56,47 +62,6 @@ public class SlidingWindow {
      * 
     */
 
-    /** 
-     * POINTS :
-     * 1 USE MAP SIZE TO FIND DISTINCT ELS
-     * 2 DO IN TWO STEPS, ONCE FOR FIRST WINDOW, THEN FOR SUBSEQUENT WINDOWS
-     * 3 DECREMENT FOR OUTGOING EL, IF FREQ == 0, REMOVE
-     * 4 ADD THE INCOMING EL
-     * 5 ADD MAP SIZE TO RES
-     * 
-    */
-    // MICROSOFT
-    // https://www.geeksforgeeks.org/count-distinct-elements-in-every-window-of-size-k/
-    ArrayList<Integer> countDistinct(int A[], int n, int k){
-        ArrayList<Integer> res = new ArrayList<>();
-        if(n==0) return res;
-
-        HashMap<Integer, Integer> map = new HashMap<>();
-        for(int i = 0; i<k; i++){
-            map.put(A[i], map.getOrDefault(A[i], 0)+1);
-            // if(map.get(A[i]) == 1) count++;
-        }
-        res.add(map.size());
-        
-        for(int i = k; i<n; i++){
-            int out = A[i-k];
-            // decrement outgoing's freq
-            map.put(out, map.get(out)-1);
-            // remove if 0 freq
-            if(map.get(out) == 0) map.remove(out);
-            // new el
-            map.put(A[i], map.getOrDefault(A[i], 0)+1);
-            res.add(map.size());
-        }
-        System.out.println("disinct els in every window of size "+k+
-        " is "+res+" found using map size");
-        return res;
-    }
-
-    /**  
-     * count distinct can be solved wither by counting all els
-     * or keeping track of map size
-     * */
 
     /**
      * max els in every window, use deque, 
@@ -182,6 +147,51 @@ public class SlidingWindow {
 
     /////////////// SHRINKING, USE LEFT AND UPDATE AFTER WHILE
 
+     /// MAP SIZE
+    /** 
+     * POINTS :
+     * 1 USE MAP SIZE TO FIND DISTINCT ELS
+     * 2 DO IN TWO STEPS, ONCE FOR FIRST WINDOW, THEN FOR SUBSEQUENT WINDOWS
+     * 3 DECREMENT FOR OUTGOING EL, IF FREQ == 0, REMOVE
+     * 4 ADD THE INCOMING EL
+     * 5 ADD MAP SIZE TO RES
+     * 
+     * 
+     * imp map.size(), no counter needed
+    */
+    // MICROSOFT
+    // https://www.geeksforgeeks.org/count-distinct-elements-in-every-window-of-size-k/
+    ArrayList<Integer> countDistinct(int A[], int n, int k){
+        ArrayList<Integer> res = new ArrayList<>();
+        if(n==0) return res;
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i<k; i++){
+            map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            // if(map.get(A[i]) == 1) count++;
+        }
+        res.add(map.size());
+        
+        for(int i = k; i<n; i++){
+            int out = A[i-k];
+            // decrement outgoing's freq
+            map.put(out, map.get(out)-1);
+            // remove if 0 freq
+            if(map.get(out) == 0) map.remove(out);
+            // new el
+            map.put(A[i], map.getOrDefault(A[i], 0)+1);
+            res.add(map.size());
+        }
+        System.out.println("disinct els in every window of size "+k+
+        " is "+res+" found using map size");
+        return res;
+    }
+
+    /**  
+     * count distinct can be solved wither by counting all els
+     * or keeping track of map size
+     * */
+    
     /** 
      * 1 SHRINK ONLY WHEN ZEROES>K
      * 2 UPDATE ONLY AFTER SHRINKING, THIS HANDLES THE ELSE CONDITION
@@ -240,7 +250,7 @@ public class SlidingWindow {
                 map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
                 if(map.get(s.charAt(i)) >= 0) count++;
             }
-            // to accoiunt for duplicates in t
+            // to account for duplicates in t
             // System.out.println(map);
             while(count == t.length()) {
                 // if smaller len found, update len and starting char
@@ -285,8 +295,6 @@ public class SlidingWindow {
             sum += nums[i];
             while(sum>=s){
                 length = Math.min(length, i-left+1);
-                // System.out.println(sum);
-                // System.out.println("len "+length);
                 sum-=nums[left];
                 left++;
             }
@@ -385,7 +393,7 @@ public class SlidingWindow {
      * 
      * "dvdf"
      * 
-     * hashset, remove then update length
+     * hashset, remove till single occurence is left then update length
     */
     // https://leetcode.com/problems/longest-substring-without-repeating-characters
     public int lengthOfLongestSubstring(String s) {

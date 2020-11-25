@@ -228,12 +228,12 @@ public class StackPractice {
             k--;
         }
         // if(q.size() == 1) return ""+q.getFirst(); // 10, 1
+        // remove leading zeroes
         while(q.size()!=0){
             if(q.getFirst() == '0') q.removeFirst();
             else break;
         }
         
-        // remove leading zeroes
         String res = "";
         while(q.size()!=0) res+=q.removeFirst();
         return res.length()==0?"0":res;
@@ -320,8 +320,30 @@ public class StackPractice {
         return maxArea;
     }
 
-
     // https://leetcode.com/problems/evaluate-reverse-polish-notation/
+    public int evalRPN(String[] tokens) {;
+        int n = tokens.length;                                         
+        if(n == 0) return 0;
+            
+        Deque<Integer> q = new LinkedList<>(); 
+        for(int i =0; i<n; i++){
+            if((!(tokens[i]).equals("*") && !(tokens[i]).equals("+")
+            && !(tokens[i]).equals("-") && !(tokens[i]).equals("/"))){
+                q.addLast(Integer.parseInt(tokens[i]));
+            }else{
+                int num2 = q.removeLast();
+                int num1 = q.removeLast();
+                int num3 = 0;
+                if((tokens[i]).equals("+")) num3 = num1+num2;
+                if((tokens[i]).equals("-")) num3 = num1-num2;
+                if((tokens[i]).equals("*")) num3 = num1*num2;
+                if((tokens[i]).equals("/")) num3 = num1/num2;
+                q.addLast(num3);
+            }
+        }
+        
+        return q.removeFirst();
+    }
 
 
     /** 

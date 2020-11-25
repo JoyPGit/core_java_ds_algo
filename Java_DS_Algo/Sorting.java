@@ -145,7 +145,7 @@ public class Sorting {
      * 1 ADD a(TO BE SORTED) TO A MAP
      * 2 ITERATE OVER B AND ADD THE ELS TO A 'FREQ' NO OF TIMES
      * 3 KEEP AN INDEX VAR TO KEEP TRACK OF WHERE TO ADD IN A
-     * 4 FOR REMAININIG ELS IN MAP, ADD ALL ELS 'FREQ' NO OF TIMES
+     * 4 FOR REMAINING ELS IN MAP, ADD ALL ELS 'FREQ' NO OF TIMES
      * TO A LIST
      * 5 SORT LIST AND ADD TO A USING 'INDEX' VAR
      */
@@ -184,6 +184,8 @@ public class Sorting {
      * 1 USE LAST EL AS PIVOT
      * 2 ALWAYS USE lo and hi;
      * 
+     * pivot is returned after partition
+     * 
      */
     // https://leetcode.com/problems/sort-an-array
     public int[] sortArray(int[] nums) {
@@ -195,6 +197,8 @@ public class Sorting {
         return nums;
     }
     
+    // like tree from inorder
+    // root, then both halves
     void quickSort(int[] nums, int lo, int hi){
         // lo == hi; single el so must be at correct posn
         // no need to find pivot
@@ -271,7 +275,7 @@ public class Sorting {
     /**
      * POINTS :
      * 1 START FROM MID AND RIGHT AND ADD FROM BOTH ALTERNATELY
-     * 2 DO ODD EVEN CHECK AS ADDING SIMULTANEOULSY FAISL FOR
+     * 2 DO ODD EVEN CHECK AS ADDING SIMULTANEOULSY FAILS FOR
      * ODD LENGTH ARRAY
      * MID = (n-1)/2  ; lo + (hi-lo)/2;
      * 

@@ -106,11 +106,13 @@ class Array {
         int n = nums.length;
         int max = 0;
 
-        int i = 0;
-        while (i < n) {
-            int j = i;
-            while (j < n && nums[j] == 1 && nums[i] == 1) j++;
-            max = Math.max(j - i, max);
+        int j = 0;
+        for(int i =0; i<n; i++){
+            if(nums[i] == 0) continue;
+            j = i;
+            while(j<n && nums[j] == 1) j++;
+            max = Math.max(max, j-i);
+            // update i, as j is at 0
             i = j;
         }
         return max;
@@ -193,6 +195,7 @@ class Array {
                 int j = i+l-1;
                 // checking for length 2, if both els match
                 if(l==2 && arr[i] == arr[j]) count++;
+                // even length
                 else if(l%2==0){
                     int sum = sum(arr,i,j);
                     for(int k = i;k<j; k++){
@@ -611,13 +614,13 @@ class Array {
     }
 
 
-    // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree
     /** SIMILARITIES WITH QUICKSORT
      * 1 BOUNDARY CONDN (low<=high) 
      * 2 USE MID
      * 3 f(low, mid-1); f(mid+1, high); NOT 0 AND n, USE LOW AND HIGH
      * 
     */
+    // https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree
     public Node sortedArrayToBST(int[] nums) {
         return helper(nums, 0, nums.length-1);
     }

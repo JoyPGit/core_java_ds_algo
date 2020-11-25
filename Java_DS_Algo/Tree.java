@@ -1748,7 +1748,7 @@ public class Tree {
      * USE POSTORDER O(n)
      * 
      * * [4,8,null,6,1,9,null,-5,4,null,null,null,-3,null,10]
-     * using global var doesn't work as 
+     * 
      * left sum = -8 (-5-3)
      * right sum = 14 (10+4)
      * root = 1
@@ -1762,7 +1762,7 @@ public class Tree {
      * SEE VALIDBST ABOVE, LIKE HEIGHT
      * f(){
      *  null -> valid
-     *  invalid -> return invalid
+     *  invalid -> return false, sum = 0
      *  valid -> update max -> pass sum
      * }
      * 
@@ -1770,47 +1770,49 @@ public class Tree {
      * INVALID CONDN : validBST(Long.MAX_VALUE, Long.MIN_VALUE, 0);
      * 
      * 
-     
+     * imp : keep global max and update only in case of valid BST
+     * 
+     * use Math.max(root.val, right.max) and Math.min(left.min, root.val)
+     * as if subtree doesn't exist, worng value might be passed
      */
     // https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/
-    class BSTCustom{
-        int max; int min; int sum; boolean isBST;
-        BSTCustom(int m1, int m2, int s, boolean is){
-            this.max = m1; this.min = m2; this.sum =s; this.isBST = is;
+    class BSTNode{
+        int max, min, sum;
+        BSTNode(int a, int b, int c){
+            this.max = a;
+            this.min = b;
+            this.sum = c;
         }
     }
-
+    
     int max = 0;
     public int maxSumBST(TreeNode root) {
-        postDFS(root);
+        if(root == null) return 0;
+        helperBST(root);
         return max;
     }
     
-    public BSTCustom postDFS(TreeNode root) {
-        if (root == null) 
-            return new BSTCustom(Integer.MIN_VALUE, Integer.MAX_VALUE, 0, true);
-        // postorder left, right and then root decision
-        BSTCustom left = postDFS(root.left);
-        BSTCustom right = postDFS(root.right);
+    
+    BSTNode helperBST(TreeNode root){
+        if(root == null) 
+            return new BSTNode(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
+        BSTNode left = helperBST(root.left);
+        BSTNode right = helperBST(root.right);
         
-        // root decision
-        // not a valid BST, so apply min/max
-        // send 0
-        if(left.isBST == false || right.isBST == false
-           || root.val <= left.max || root.val >= right.min){
-             return new BSTCustom(Integer.MAX_VALUE, Integer.MIN_VALUE, 0, false);
+        // valid BST
+        if(left.max < root.val && root.val < right.min){
+            // System.out.println(left.sum +" "+right.sum +" "+ root.val);
+            max = Math.max(max, left.sum+right.sum+root.val);
+            return new BSTNode(Math.max(right.max, root.val), // max 
+                           Math.min(left.min, root.val), // min 
+                           left.sum+right.sum+root.val);
+            // send sum, not max
         }
-        
-        else {//valid BST, 
-            BSTCustom res = new BSTCustom(
-                Math.max(right.max, root.val),//update max
-                Math.min(left.min, root.val),//update min
-                root.val + left.sum + right.sum, true);
-            max = Math.max(max, root.val + left.sum + right.sum);
-            return res;
+        else {
+            return new BSTNode(Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
+
         }
     }
-
     ////////////////////////////////////////////////////////////
     ///////////////IMP
 
@@ -1824,6 +1826,7 @@ public class Tree {
     public void flatten(TreeNode root) {
         // helper(root);
         if(root == null) return;
+        // calling first moves us to leaf nodes
         flatten(root.left);
         flatten(root.right);
         TreeNode y = null;

@@ -271,6 +271,9 @@ class HashPractice{
      * 2 sum+=i;
      * 3 count += map.getOrDefault(sum-target)
      * 4 add current sum
+     * 
+     * 
+     * imp : sum-k
      */
     // https://leetcode.com/problems/subarray-sum-equals-k
     public int subarraySum(int[] nums, int k) {
@@ -290,8 +293,10 @@ class HashPractice{
         return count;
     }
 
+    
 
     /**  
+     * HERE WE STORE INDEX INSTEAD OF FREQ
      * LONGEST SUBARRAY OF 0S AND 1S
      * 
      * SIMILAR TO PREFIX SUM

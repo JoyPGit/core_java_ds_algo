@@ -35,7 +35,7 @@ public class Tic_Tac_Toe {
         // mapping players to board
         currBoard = new Board(size, p1, p2);
 
-        // no need to maintian gameOver, break
+        // no need to maintain gameOver, break
         while(true){
             currentPlayer = currentPlayer == 1?2:1;
             currBoard.nextMove(currentPlayer, input);

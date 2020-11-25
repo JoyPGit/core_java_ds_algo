@@ -196,7 +196,8 @@ class LinkedPractice {
         
         ListNode p = headA, q = headB;
         while(p!=q){ //both null stops the iterations
-            if(p == null) p = headB;//
+            // move to other list
+            if(p == null) p = headB;
             else p = p.next;
             
             if(q == null) q = headA;
@@ -743,7 +744,7 @@ class LinkedPractice {
      * 1 TAKE CARE TO SET NEXT AND PREV BOTH
      * 2 SET CHILD TO NULL
      * 
-     * similar recusrion startegt as in reverse k nodes
+     * similar recursion strategy as in reverse k nodes
      * the function makes a call to itself to get the last node
      * of it's child's list. To do this return last for this call.
      * 
@@ -776,7 +777,7 @@ class LinkedPractice {
                     p.child = null;//imp
                     r.next = q; // -> next
                     if(q!=null) q.prev = r; // <- prev
-                    p = r; // so that p.next later moves it to q
+                    p = r; // so that p.next outside later moves it to q
                 }
                 last = p;
                 p = p.next;
@@ -785,7 +786,52 @@ class LinkedPractice {
         }
     }
     
+    /** 
+     * sum+=l1+l2+carry
+     * value sum%10
+     * carry = sum/10
+     * 
+     * same code for each remaining list
+    */
+    // https://leetcode.com/problems/add-two-numbers/submissions/
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        int carry = 0;
+        ListNode res = new ListNode(-1); ListNode p = res;
+        while(l1!=null && l2!=null){
+            int sum = 0; 
+            sum+=l1.val;
+            sum+=l2.val;
+            sum+=carry;
+            p.next = new ListNode(sum%10);
+            carry = sum/10;
+            p = p.next; l1 = l1.next; l2 = l2.next;
+        }
+        
+        // same code for each remaining list
+        while(l1!=null){
+            int sum = 0; 
+            sum+=l1.val;
+            sum+=carry;
+            p.next = new ListNode(sum%10);
+            carry = sum/10;
+            p = p.next; l1 = l1.next;
+        }
+        
+        while(l2!=null){
+            int sum = 0; 
+            sum+=l2.val;
+            sum+=carry;
+            p.next = new ListNode(sum%10);
+            carry = sum/10;
+            p = p.next;
+            l2 = l2.next;
+        }
+        if(carry!=0) p.next = new ListNode(carry);
+        
+        return res.next;
+    }
 
+    
     /**
      * reverse both lists add and then reverse the final 
      * WHILE ADDING (SUM+CARRY)%10 IS NODE VALUE 
@@ -800,7 +846,7 @@ class LinkedPractice {
      * reverse->b!=null
      */
     // https://leetcode.com/problems/add-two-numbers-ii/submissions/
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
         ListNode a = reverseList(l1);
         ListNode b = reverseList(l2);
         ListNode c = new ListNode(0);

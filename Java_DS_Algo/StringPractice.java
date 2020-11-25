@@ -120,6 +120,7 @@ class StringPractice {
         return res.reverse().toString();
     }
 
+
     boolean palindrome(String str){
         int lo = 0; int hi = str.length()-1;
         while(lo<=hi){
@@ -283,6 +284,74 @@ class StringPractice {
         }
         return res.toString();
     }
+
+    // https://leetcode.com/discuss/interview-question/851939/ancestor-problem
+    class Name{
+        String first;
+        String roman;
+        int num;
+        Name(String f, String r, int n){
+            this.first = f;
+            this.roman = r;
+            this.num = n;
+        }
+    }
+    List<String> sortRoyal(List<String> names){
+        PriorityQueue<Name> pq = new PriorityQueue<>((x,y)->{
+            if((x.first).compareTo(y.first)==0) return x.num - y.num;
+            return (x.first).compareTo(y.first); 
+        });
+
+        for(String str : names){
+            int index = str.indexOf(" ");
+            String first = str.substring(0, index);
+            String second = str.substring(index+1);
+            int num = romanToInt(second);
+
+            pq.add(new Name(first, second, num));
+        }
+
+        List<String> res = new ArrayList<>();
+        while(pq.size()!=0){
+            Name curr = pq.remove(); 
+            res.add(curr.first+" "+curr.roman);
+        }
+        return res;
+    }
+
+    public int romanToInt(String s) {
+        int num = 0;
+        for(int i =0; i<s.length(); i++){
+            if(s.charAt(i) == 'I') num+=1;
+            if(s.charAt(i) == 'V') {
+                if(i>=1 && s.charAt(i-1) == 'I') num+=3;
+                else num+=5;
+            }
+            if(s.charAt(i) == 'X') {
+                if(i>=1 && s.charAt(i-1) == 'I') num+=8;
+                else num+=10;
+            }
+            if(s.charAt(i) == 'L') {
+                if(i>=1 && s.charAt(i-1) == 'X') num+=30;
+                else num+=50;
+            }
+            if(s.charAt(i) == 'C') {
+                if(i>=1 && s.charAt(i-1) == 'X') num+=80;
+                else num+=100;
+            }
+            if(s.charAt(i) == 'D') {
+                if(i>=1 && s.charAt(i-1) == 'C') num+=300;
+                else num+=500;
+            }
+            if(s.charAt(i) == 'M') {
+                if(i>=1 && s.charAt(i-1) == 'C') num+=800;
+                else num+=1000;
+            }
+        }
+        return num;
+    }
+
+
 
     // incomplete
     String sumOf2LargeNos(String str1, String str2) {
@@ -1295,41 +1364,39 @@ class StringPractice {
     }
 
 
-    // use start and end to make substring comparison
-    // 2 loops for each substring
-    // increment end after dot
-    // compare and if equal, increment start and end
-    // special case when 1, no . start == end, so add a check
-    // no and is needed in while as start == end will terminate the loop
-    // because comparison will definitely give an o/p
-    // "1.0.1", "1.00"
+    /** 
+     * POINTS :
+     * 1 NESTED LOOPS
+     * 2 USE OR BECAUSE IF ONE STRING RUNS OUT, COMPARISON SHOULD
+     *  BE MADE WITH 0
+     * 3 SUBTRING GOES ONE AHEAD, e1 GOES TILL DOT, 
+     * SO version1.substring(s1, e1)
+     * 4 INCREMENT e1 AND s1
+     *  
+     * imp : if s1 == e1 substring will fail, add a check
+    */
+    // to handle "1.01.01", "1.001"
     // https://leetcode.com/problems/compare-version-numbers/
     public int compareVersion(String version1, String version2) {
-        String num1 = ""; String num2 = "";
-        int start1 = 0; int end1 = 0; 
-        int start2 = 0; int end2 = 0;   
-        
-        while(end1<version1.length() || end2<version2.length()){
-            while(end1<version1.length() && version1.charAt(end1) != '.') end1++;
-            // 1 so start == end
-            if(start1 == end1) num1 = "0"; // 1
-            else num1 = version1.substring(start1, end1); // 2
+        int s1 = 0; int s2 = 0;
+        int e1 = 0; int e2 = 0;
+        int num1 = 0; int num2 = 0;
+        // diff lengths, so or
+        while(s1<version1.length() || s2<version2.length()){
+            while(e1<version1.length() && version1.charAt(e1)!='.') e1++;
+            if(s1 == e1) num1 = 0;
+            else num1 = Integer.parseInt(version1.substring(s1, e1));
+            e1++; s1 = e1;
             
-            while(end2<version2.length() && version2.charAt(end2) != '.') end2++;
-            if(start2 == end2) num2 = "0";
-            else num2 = version2.substring(start2, end2);
-
-            int val = compare(num1, num2); // 3
-            if(val == 0){
-                end1++; start1 = end1; // 4
-                end2++; start2 = end2;
-            }else return val>0?1:-1; // to keep o/p either 1 or -1 
+            while(e2<version2.length() && version2.charAt(e2)!='.') e2++;
+            if(s2 == e2) num2 = 0;
+            else num2 = Integer.parseInt(version2.substring(s2, e2));
+            e2++; s2 = e2;
+            
+            // System.out.println("num1 "+num1+" num2 "+num2);
+            if(num1 != num2) return num1-num2>0?1:-1;
         }
         return 0;
-    }
-    
-    int compare(String a, String b){
-        return Integer.parseInt(a) - Integer.parseInt(b);
     }
   
     // https://leetcode.com/problems/reformat-date/
