@@ -344,6 +344,7 @@ class Array {
         return nums[lo]; // 
     }
     
+    
     /**
      * It is somewhat similar to QUICKSORT partition, 
      * the way we do partition(i++, swap(a[i], a[j]). 
@@ -635,6 +636,63 @@ class Array {
         return root;
     }
 
+    /** 
+     * POINTS : 
+     * 1 MARK ALL -VE AND >n AS n+1
+     * 2 MARK nums[Math.abs(nums[k]) - 1] AS -ve
+     * 3 ITERATE AGAIN AND FIND FIRST +ve
+     * 4 IF NONE, RETURN n+1
+     * 
+     * mark -ve nos and nos>n as n+1 and nums[i] - 1 as -ve
+     * 
+    */
+    // [1,1], [-1,-2], [2,1], 
+    // [-5] this is why we mark -ve as n+1
+    // https://leetcode.com/problems/first-missing-positive
+    public int firstMissingPositive(int[] nums) {
+        // Math.abs(arr[index]) -1 -> -ve
+        // traverse and find first +ve index-> +1
+        int n = nums.length;
+        if(n==0) return 1;
+        
+        for (int i = 0; i < n; i++) {
+            if (nums[i] <= 0 || nums[i] > n) {
+                nums[i] = n + 1;
+            }
+        }
+        
+        for(int k = 0; k<n; k++){ // start from 0 not j
+            if(Math.abs(nums[k])-1 >= 0 && Math.abs(nums[k])-1<n 
+               && nums[Math.abs(nums[k]) - 1] >0 ) // -ve should remain -ve
+                nums[Math.abs(nums[k]) - 1]*=(-1);
+        }
+        
+        // for(int p : nums) System.out.println(p);
+        for(int i =0; i<n; i++){
+            if(nums[i] > 0) return i+1;
+        }
+        return n+1;
+    }
+
+    // BOYER-MOORE ALGO, MAJORITY EL
+    // https://leetcode.com/problems/majority-element-ii/
+    // discuss/63520/Boyer-Moore-Majority-Vote-algorithm-and-my-elaboration
+
+    // https://leetcode.com/problems/majority-element/
+    public int majorityElement(int[] nums) {
+        int n = nums.length;
+        int res = nums[0]; int count = 1;
+        
+        for(int i=1; i<n; i++){
+            if(count == 0){
+                count++;
+                res =nums[i];
+            }
+            else if(nums[i] == res) count++;
+            else if(nums[i] != res) count--;
+        }
+        return res;
+    }
 
     // KADANE' ALGO
     // int [] a = {-2, -3, 4, -1, -2, 1, 5, -3};
@@ -646,7 +704,7 @@ class Array {
      * beforehand and 0>-ve.
      */
     int maxSubArrayContiguous(int[] arr) {
-        if(arr.length ==1) return arr[0];
+        if(arr.length == 1) return arr[0];
         int max = Integer.MIN_VALUE; int sum = 0;
         
         for(int i =0; i<arr.length; i++){
@@ -919,7 +977,7 @@ class Array {
         int smallestMissing[] =
                 // {0, -10, 1, 3, -20};
                 { 1, 2, 3, 4, 5 };
-        // test.smallestPositiveMissing(smallestMissing);
+        test.firstMissingPositive(smallestMissing);
         int[] a = { -2, -3, 4, -1, -2, 1, 5, -3 };
         // test.largestSumContigousSubarray(a);
 

@@ -380,11 +380,17 @@ class StringPractice {
         return String.valueOf(in);
     }
 
+    // https://www.youtube.com/watch?v=UcTKk2y_3s4
     // https://leetcode.com/problems/excel-sheet-column-title/
     public String convertToTitle(int n) {
-        System.out.println('A');
-        System.out.println('a');
-        return "a";
+        String result = "";
+        while(n>0){
+            int a = (n-1)%26;
+            char c= (char)('A'+a);
+            result = c+result;
+            n = (n-1)/26;
+        }
+        return result;
     }
 
     
@@ -493,7 +499,7 @@ class StringPractice {
     
     /** 
      * POINTS:
-     * 1 SIMILAR TO GCD, MATHEMATICAL CALCULATOIN OF LENGTH
+     * 1 SIMILAR TO GCD, MATHEMATICAL CALCULATION OF LENGTH
      * 2 START FROM N/2, IF N%L == 0
      * 3 REPEATEDLY ADD THE SUBSTRING(0,l) m TIMES
      * AND CHECK WITH STRING
@@ -903,14 +909,15 @@ class StringPractice {
      * 
      * SIMILAR TO INTERSECTION OF 2 ARRAYS
      */
-   // https://leetcode.com/problems/minimum-window-substring
-   public String minWindow(String s, String t) {
+    // s = "ADOBECODEBANC", t = "ABC"
+    // https://leetcode.com/problems/minimum-window-substring
+    public String minWindow(String s, String t) {
     if(s == null || s.length() < t.length() || s.length() == 0) return "";
     HashMap<Character, Integer>map = new HashMap<>();
     
     for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
     
-    int start =0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+    int start = 0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
     
     for(int i =0; i<s.length(); i++){
         if(map.containsKey(s.charAt(i))){
@@ -1281,8 +1288,6 @@ class StringPractice {
 
     // aug leetcode valid palindrome
     // https://leetcode.com/problems/distinct-subsequences-ii/
-
-    // https://www.geeksforgeeks.org/find-excel-column-name-given-number/
 
 
     class partition {
@@ -2226,6 +2231,12 @@ class StringPractice {
     // https://leetcode.com/problems/next-closest-time/
     // https://www.codertrain.co/next-closest-time
 
+
+    // https://stackoverflow.com/questions/59549234/
+    // how-to-determine-the-smallest-common-divisor-of-a-string
+    // #:~:text=If%20t%20divides%20s%2C%20then,of%20that%20length%
+    // 20divides%20t.&text=This%20will%20tell%20you%20all,are%20also%20
+    // prefixes%20of%20t.
 
     // https://leetcode.com/problems/multiply-strings/
     // https://leetcode.com/problems/boats-to-save-people/

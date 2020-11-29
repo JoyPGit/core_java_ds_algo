@@ -152,6 +152,30 @@ class LinkedPractice {
     }
 
     /** 
+     * use a newHead global var which will hold the last node
+     * hold b.next as arg
+    */
+    // https://leetcode.com/problems/reverse-linked-list/
+    ListNode newHead = null;
+    public ListNode reverseListRecursive(ListNode head) {
+        if(head == null || head.next == null) return head;
+        helper(head, head.next);
+        return newHead;
+    }
+    
+    ListNode helper(ListNode a, ListNode b){
+        if(b == null) {
+            newHead = a;
+            return a;
+        }
+        ListNode c = helper(b, b.next);
+        // System.out.println("c "+c.val);
+        c.next = a;
+        a.next = null;
+        return a;
+    }
+
+    /** 
      * TO USE THIS, MAKE SURE TO HOLD THE START INDEX OF THE 
      * NEXT LIST.(see reverse k nodes)
      * k is passed by value so use directly

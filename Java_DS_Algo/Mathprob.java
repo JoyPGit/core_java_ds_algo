@@ -36,9 +36,10 @@ public class Mathprob {
         return true;
     }
 
+
     // SIEVE OF ERATOSTHENES
     /** 
-     * 1 FIND A PRIME,
+     * 1 FIND A PRIME, if(!isPrimeArr[i]) continue;
      * 2 MARK ALL ITS MULTIPLES FALSE IN ARRAY
      * 3 RUN FOR i*i<=n
     */
@@ -51,13 +52,12 @@ public class Mathprob {
         Arrays.fill(isPrimeArr, true);
 
         for(int i = 2; i*i<=n; i++){ // 
-            // if(i == 0 || i == 1) continue;
             // if already marked non-prime, continue
             if(!isPrimeArr[i]) continue;
             // mark multiples
-            if(isPrimeArr[i]) markPrime(i, n, isPrimeArr);
+            markPrime(i, n, isPrimeArr);
         }
-        for(int i =2; i < isPrimeArr.length-1; i++){ //
+        for(int i = 2; i<n; i++){ //
             if(isPrimeArr[i]) count++;
         }
         return count;
@@ -66,11 +66,12 @@ public class Mathprob {
 
     // find multiples
     void markPrime(int div, int n, boolean[] arr){
-        for(int i = 2; i*div<=n; i++) {
-            if(arr[i*div]==false) continue; // 
+        for(int i = 2; i*div<=n; i++) { // mnultiples
+            if(arr[i*div]==false) continue; 
             arr[i*div] = false;
         }
     }
+
 
 
     /** 
@@ -181,6 +182,19 @@ public class Mathprob {
         return numBottles;
     }
     
+    // https://www.youtube.com/watch?v=UcTKk2y_3s4
+    // https://leetcode.com/problems/excel-sheet-column-title/
+    public String convertToTitle(int n) {
+        String result = "";
+        while(n>0){
+            int a = (n-1)%26;
+            char c= (char)('A'+a);
+            result = c+result;
+            n = (n-1)/26;
+        }
+        return result;
+    }
+
     // https://leetcode.com/problems/lemonade-change/
     public boolean lemonadeChange(int[] bills) {
         int n = bills.length;

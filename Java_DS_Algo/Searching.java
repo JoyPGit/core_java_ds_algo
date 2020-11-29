@@ -4,6 +4,7 @@ import java.util.*;
 public class Searching {
     
     /**
+     * find min : compare with hi, return lo
      * search in matrix
      * capacity to ship
      * floor, ceil, peak,
@@ -235,6 +236,8 @@ public class Searching {
      * 3 IF MID<HIGH, ARRAY IS SORTED, SO MOVE LEFT
      * 4 IF MID == HIGH, HIGH--
      * 5 RETURN nums[low]
+     * 
+     * only ques where high = mid; else high = mid-1
      * */
     
     // 2nd SECOND TEMPLATE OF BS, 
@@ -247,6 +250,7 @@ public class Searching {
             int mid = low + (high - low)/2;
             //2 
             if(nums[mid] < nums[high]) high = mid;//3
+            // duplicates
             else if(nums[mid] == nums[high]) high--;
             else low = mid+1;
             
@@ -382,20 +386,44 @@ public class Searching {
         return res;
     }
 
-    // https://leetcode.com/problems/single-element-in-a-sorted-array/
-    // [1,1,2,3,3,4,4,8,8]
-    public int singleNonDuplicate(int[] nums) {
+    /**
+     *  We want the first element of the middle pair,
+     * which should be at an even index if the left part is sorted.
+     * https://leetcode.com/problems/single-element-in-a-sorted-array
+     * /discuss/100754/Java-Binary-Search-short-(7l)-O(log(n))-w-explanations
+     * 
+     * IMP : IF NO SINGLE EL, LAST INDEX OF PAIR WILL BE ODD.
+     * 
+     * 1,1,2 -> mid 1,  mid is odd, arr[mid] == arr[mid+1]
+     * 0,1,1,2,2  ->  2,  mid is even, arr[mid] != arr[mid+1]
+     * 0,0,1,1,2  ->  2,  mid is odd, arr[mid] == arr[mid+1]
+     * 
+     * if mid is even and arr[mid] != arr[mid+1], the pair
+     * end at even index, so the disturbance must be on the left side
+     * 
+     * not equal here signifies we have the last index of the pair
+     * and it is at even posn, but for no disturbance, last must
+     * be at an odd posn. So hi = mid;
+     * 
+     * If equal, no disturbance, move right by 2 as this is a pair.
+     * 
+     * return nums[lo]
+     */ 
+    // https://leetcode.com/problems/single-element-in-a-sorted-array
+    public int singleNonDuplicateBinary(int[] nums) {
         int n = nums.length;
-        int j = 0; int i = 0;
-        while(i<n-1){//out of bounds error
-            while(nums[j] == nums[i]) j++;
-            j--;// get back to curr el as j goes to next el
-            if(j == i) return nums[i];
-            // System.out.println("j "+j+" i "+i);
-            i = ++j;//move i and j both to next el
+        int lo = 0; int hi = n-1;
+        
+        while(lo<hi){
+            int mid = lo + (hi-lo)/2;
+            if(mid%2!=0) mid--; // 
+            
+            // el on left
+            if(nums[mid] != nums[mid+1]){ // 
+                hi = mid;
+            }else lo = mid+2; // 
         }
-        //if here, the last el must be the single el which is returned
-        return nums[n-1];
+        return nums[lo]; // 
     }
 
 
@@ -526,6 +554,7 @@ public class Searching {
         arr[b] = temp;
     }
 
+    // larger key accept
     static int findCeiling(int[] arr, int start, int end, int key){
         int lo = start; int hi = end;
         int result = -1;
@@ -539,6 +568,25 @@ public class Searching {
             else hi = mid-1;
         }
         return result;
+    }
+
+    /**  
+     * 2 cases:
+     * 1 if i>first , update both
+     * 2 if i> second and i!= first, update second
+    */
+    // https://www.geeksforgeeks.org/find-second-largest-element-array/
+    int secondLargest(int[] arr){
+        int first = 0; int second = 0;
+        for(int i : arr){
+            if(i > first) {
+                first = i;
+                second = first;
+            }
+            else if(i > second && i!= first) second = i;
+        }
+        if(second == Integer.MIN_VALUE) System.out.println("no 2nd min");
+        return second;
     }
 
     

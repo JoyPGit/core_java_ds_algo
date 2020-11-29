@@ -1,6 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
-import utilCustom.Utility;
+// import utilCustom.Utility;
 public class Recursion {
     Recursion() {
     }
@@ -29,6 +29,16 @@ public class Recursion {
      * N QUEEN -> PAINTER 
     */
 
+    void printReverseRecursive(String str){
+        int n = str.length()-1;
+        printHelper(str, n);
+    } 
+
+    void printHelper(String str, int index){
+        System.out.print(str.charAt(index)+", ");
+        if(index == 0) return;
+        printHelper( str, index-1);
+    }
 
     ////////////////// DECISION AT INDEX, AND CHECKS FOR THAT 
 
@@ -364,15 +374,26 @@ public class Recursion {
     
      // like dfs in matrix
     int helper(String str){
-        if(Utility.isPalindrome(str)) return 0;
+        if(isPalindrome(str)) return 0;
                 
         for(int i = 0; i<str.length(); i++){
             String palin = str.substring(0, i+1);
-            if(Utility.isPalindrome(palin)){
+            if(isPalindrome(palin)){
                 min = Math.min(min, 1 + helper(str.substring(i+1)) );
             }
         }
         return 0;
+    }
+
+    boolean isPalindrome(String str){
+        int lo = 0; int hi = str.length()-1;
+        while(lo<=hi){
+            if(str.charAt(lo) != str.charAt(hi)) return false;
+            else {    
+                lo++; hi--;
+            }
+        }
+        return true;
     }
 
     /** 
@@ -396,17 +417,18 @@ public class Recursion {
     int painterHelper(int[] boards, int painters, int index){
         if(index==boards.length-1) return boards[boards.length-1];
 
-        if(painters == 1) return Utility.sumSubarray(boards, index, boards.length-1);
+        // if(painters == 1) return Utility.sumSubarray(boards, index, boards.length-1);
 
         int min = Integer.MAX_VALUE;
         for(int k = 0; k<boards.length; k++){
 
-            min = Math.min(min, Math.max(Utility.sumSubarray(boards, 0, k),
-            painterHelper(boards, painters-1, k+1)));
+            // min = Math.min(min, Math.max(Utility.sumSubarray(boards, 0, k),
+            // painterHelper(boards, painters-1, k+1)));
         }
         return min;
     }
 
+    // int sumSubarray(int[] arr, int)
 
     /** 
      * POINTS :
@@ -460,7 +482,7 @@ public class Recursion {
 
     void allSubsetHelper(int[] arr, int[] subset, int index) {
         if (index == arr.length) {
-            Utility.print1DMatrix(subset);
+            // Utility.print1DMatrix(subset);
             return;
         }
         subset[index] = 0;
@@ -622,6 +644,14 @@ public class Recursion {
         }
     }
 
+    class TreeNode{
+        int val; TreeNode left ; TreeNode right;
+        TreeNode(int v, TreeNode l, TreeNode r){
+            this.val = v;
+            this.left = l;
+            this.right = r;
+        }
+    }
     // postorder, fix left, traverse till ned and add right
     // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
     public void flatten(TreeNode root) {
@@ -791,6 +821,7 @@ public class Recursion {
     public static void main(String[] args) throws Exception {
         Recursion recur = new Recursion();
 
+        recur.printReverseRecursive("string");
         String binary = "???";
         recur.generatePattern(binary);
         recur.generate01(binary);
@@ -810,9 +841,13 @@ public class Recursion {
         int[] boards = {10, 20, 30, 40}; int painters = 2;
         // System.out.println("min time div "+recur.paintersPartition(boards, painters));
 
-        int set[] = { 3, 34, 4, 12, 5, 2 }, sum = 30;
+        int[] set = new int[]{478, 757, 314, 471, 729, 100, 459, 618};
+        // { 3, 34, 4, 12, 5, 2 }, 
+        int sum = 30;
+
+        
         // {3, 34, 4, 12, 5, 2}, sum = 9;
-        // System.out.println(recur.subsetSum(set, sum, 0));
+        System.out.println(recur.subsetSum(set, sum, 0));
 
         int[] kSubsetArr = { 3, 3, 4, 1, 5, 2, 6 };
         int k = 3;

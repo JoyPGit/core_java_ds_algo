@@ -127,7 +127,33 @@ public class Heap {
         // heapifySinglePath(0);
     }
 
-    
+    // Clearwater
+    // min distinct els after removing m els
+    // https://www.geeksforgeeks.org/minimum-number-of-distinct-elements-after-removing-m-items/
+    class Key{
+        int id; int freq;
+        Key(int i, int f){
+            this.id  = i;
+            this.freq = f;
+        }
+    }
+    int distinctIds(int arr[], int m) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i : arr){
+            map.put(i, map.getOrDefault(i, 0)+1);
+        }
+
+        PriorityQueue<Key> pq= new PriorityQueue<>((x,y)->x.freq -y.freq);
+        for(HashMap.Entry<Integer, Integer> entry : map.entrySet()){
+            pq.add(new Key(entry.getKey(), entry.getValue()));
+        }
+
+        for(int i =0; i<m; i++){
+            Key curr = pq.remove();
+            if(curr.freq>1) pq.add(new Key(curr.id, curr.freq-1));
+        }
+        return pq.size();
+    }
 
     /*
      * * provides O(log(n)) time for the enqueuing and dequeuing methods ({@code

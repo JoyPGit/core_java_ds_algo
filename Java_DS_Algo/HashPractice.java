@@ -172,11 +172,11 @@ class HashPractice{
     // https://leetcode.com/problems/intersection-of-two-arrays-ii
     public int[] intersect(int[] arr1, int[] arr2) {
         HashMap<Integer, Integer> map = new HashMap<>();
-        List<Integer> res= new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
         
         for(int i : arr1) map.put(i, map.getOrDefault(i, 0)+1);
         
-        for(int i :arr2){
+        for(int i : arr2){
             if(map.containsKey(i)){
                 res.add(i); 
                 map.put(i, map.get(i)-1);

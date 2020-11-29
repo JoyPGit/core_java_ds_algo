@@ -65,41 +65,35 @@ public class SlidingWindow {
 
     /**
      * max els in every window, use deque, 
-     * 1 run 2 loops, 
-     * 2 pop till el is larger
-     * 3 add first el to res
+     * 1 run twice, once for k and then for res els
+     * 2 use q.size()!=0 check
+     * 3 pop till el is larger
+     * 4 maintain left and compare first el with left
      * maintain a global index
     */
     // https://leetcode.com/problems/sliding-window-maximum/
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
-        int[] res = new int [n-k+1]; int index= 0;
-
-        Deque<Integer> list = new LinkedList<>();
-
+      
+        if(k ==1) return nums;
+        Deque<Integer> q = new LinkedList<>();
+        int[] res = new int[n-k+1];
+        int index = 0; int left = 0;
+        
         for(int i =0; i<k; i++){
-            while(list.size()!=0 && list.getLast()<nums[i]){
-                list.removeLast();
-            }
-            list.add(nums[i]);
+            while(q.size()!=0 && q.getLast()<nums[i]) q.removeLast();
+            q.addLast(nums[i]);
         }
-        res[index++] = list.getFirst();
-
-        for(int i = k; i<n; i++){
-            if(list.getFirst()==nums[i-k]){
-                list.removeFirst();                
-            }
-            
-            while(list.size()!=0 && list.getLast()<nums[i]){
-                System.out.println("in here");
-                list.removeLast();
-            }
-            
-            list.add(nums[i]);
-            System.out.println(list);
-            res[index++] = list.getFirst();
+        res[index++] = q.getFirst();
+        // left++;
+        
+        for(int i =k; i<n; i++){
+            while(q.size()!=0 && q.getLast()<nums[i]) q.removeLast();
+            if(q.size()!=0 && nums[left] == q.getFirst()) q.removeFirst();
+            q.addLast(nums[i]);
+            res[index++] = q.getFirst();
+            left++;
         }
-        // Utility.print1DMatrix(res);
         return res;
     }
 
@@ -164,6 +158,7 @@ public class SlidingWindow {
     ArrayList<Integer> countDistinct(int A[], int n, int k){
         ArrayList<Integer> res = new ArrayList<>();
         if(n==0) return res;
+        int left = 0;
 
         HashMap<Integer, Integer> map = new HashMap<>();
         for(int i = 0; i<k; i++){
@@ -173,11 +168,13 @@ public class SlidingWindow {
         res.add(map.size());
         
         for(int i = k; i<n; i++){
-            int out = A[i-k];
+            // int out = A[i-k];
+
             // decrement outgoing's freq
-            map.put(out, map.get(out)-1);
+            map.put(A[left], map.get(A[left])-1);
             // remove if 0 freq
-            if(map.get(out) == 0) map.remove(out);
+            if(map.get(A[left]) == 0) map.remove(A[left]);
+            left++;
             // new el
             map.put(A[i], map.getOrDefault(A[i], 0)+1);
             res.add(map.size());
@@ -211,7 +208,7 @@ public class SlidingWindow {
         for(int i =0; i<n; i++){
             if(A[i]==0) zeroes++;
             
-            // int j = 0;
+            // shrink for every new el
             while(zeroes>K){
                 if(A[left]==0) zeroes--;
                 left++;
@@ -358,6 +355,7 @@ public class SlidingWindow {
      * uber-phone-screen-longest-substring-with-at-most-k-distinct-characters
      * 
      * remove till size==k and then update length
+     * length is checked only when map size = k, so trim if larger
     */
     // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
     int longestSubArraytWithkEls(int[] arr, int k){
@@ -428,7 +426,6 @@ public class SlidingWindow {
      * 
      * 2 IF FREQ == 0, REMOVE FROM MAP
      * 3 left++
-     * 4 count+=left similar to above
      * 
     */
     // https://leetcode.com/problems/number-of-substrings-containing-all-three-characters
@@ -440,7 +437,8 @@ public class SlidingWindow {
         for(int i =0; i<s.length(); i++){
             map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
             while(map.size() == 3){
-                // count++; 
+                // while size == 3, we move left, so
+                // that count+=left will have all valid substrings
                 map.put(s.charAt(left), map.get(s.charAt(left)) - 1);
                 if(map.get(s.charAt(left)) == 0) map.remove(s.charAt(left));
                 left++;
@@ -465,21 +463,22 @@ public class SlidingWindow {
      *   FROM start+1 TILL i AS A WHOLE
      * 
      * remove product>k in while and then update
-     * 
+     * move left as when prod<k, left will hold count of all
+     * subarrays, which can be used as count+=i-left+1
     */
     // https://leetcode.com/problems/subarray-product-less-than-k/
     public int numSubarrayProductLessThanK(int[] nums, int k) {
         if(k<=1) return 0;
         int n = nums.length;
         
-        int prod = 1; int count = 0; int start =0;
+        int prod = 1; int count = 0; int left =0;
         for(int i =0; i<n; i++){
             prod*=nums[i];
             while(prod>=k){
-                prod/=nums[start];
-                start++;
+                prod/=nums[left];
+                left++;
             }
-            count+=i-start+1;
+            count+=i-left+1;
         }
         return count;
     }
@@ -533,42 +532,42 @@ public class SlidingWindow {
      * 2 STORE PATTERN'S COUNT IN A CHAR ARRAY(NAMED 'BASE') OF SIZE 26
      * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 2 STEPS : 
      * FIRST WINDOW AND THEN ALL OTHER WINDOWS,
-
-     * TRAVERSE FROM i TILL n (PATTERN LENGTH) AND STORE IN A NEW ARRAY--> FIRST WINDOW
-     * AND THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
-
+     * 
+     * TRAVERSE FROM i TILL n (PATTERN LENGTH) 
+     * AND STORE IN A NEW ARRAY--> FIRST WINDOW
+     * THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
+     * 
      * 4 COMPARE IF ARRAYS ARE EQUAL 
      * WE KEEP THE BASE ARRAY AS A REFERENCE AND THE CURR ARRAY HOLDS 
      * THE STATE OF THE CURRENT SLIDING WINDOW
 
      * 5 IF ARRAYS ARE EQUAL STORE START INDEX OF THIS WINDOW
-     * (i-window length) window length = pattern length;
+     * 
+     * use left to decrement count
     */	
     // https://leetcode.com/problems/find-all-anagrams-in-a-string
-    public List<Integer> findAnagrams(String s, String t) {
-        char[] base = new char[26];
+    public List<Integer> findAnagrams(String s, String p) {
         List<Integer> res = new ArrayList<>();
-        if (s.length() == 0) return res;
-
-        int n = t.length();
-        if (n > s.length()) return res;
-
-        for (char c : t.toCharArray()) base[c - 'a']++;
-
-        char[] ch = s.toCharArray();
+        
+        if(s.length()==0 || s.length() < p.length()) return res;
+        char[] base = new char[26];
+        for(char c: p.toCharArray()) base[c-'a']++;
+        
+        int left = 0;
+        
         char[] curr = new char[26];
-        for (int i = 0; i < n; i++)
-            curr[ch[i] - 'a']++;
-        if (Arrays.equals(base, curr))
-            res.add(0);
-
-        for (int i = n; i < s.length(); i++) {
-            int prev = i - n;
-            curr[s.charAt(prev) - 'a']--;
+        for(int i = 0; i<p.length(); i++){
             curr[s.charAt(i) - 'a']++;
-
-            if (Arrays.equals(base, curr))
-                res.add(prev + 1);
+        }
+        
+        // for starting index, consider length of p
+        if(Arrays.equals(base, curr)) res.add(0);
+        
+        for(int i =p.length(); i<s.length(); i++){
+            curr[s.charAt(left)-'a']--;
+            left++;
+            curr[s.charAt(i)-'a']++;
+            if(Arrays.equals(base, curr)) res.add(left);
         }
         return res;
     }
@@ -624,6 +623,8 @@ public class SlidingWindow {
     // https://leetcode.com/discuss/interview-question/344778/
     // find-the-minimum-number-of-swaps-required-such-that-all-
     // the-0s-and-all-the-1s-are-together
+
+    // no of 1s -> window size, min 0s -> min swaps
     int minSwaps(int[] arr){
         int n = arr.length;
         int windowSize = 0;

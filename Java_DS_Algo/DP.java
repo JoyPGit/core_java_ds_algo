@@ -75,6 +75,19 @@ public class DP {
 
     Utility utility = new Utility();
 
+    // https://leetcode.com/problems/fibonacci-number
+    public int fib(int N) {
+        if(N==0) return 0;
+        if(N==1) return 1;
+        int[] dp = new int[N+1];
+        dp[0] = 0; dp[1] = 1;
+        
+        for(int i =2; i<=N; i++){
+            dp[i] = dp[i-1] + dp[i-2];
+        }
+        return dp[N];
+    }
+
     public int factorial(int n){
         if(n==0 || n==1) return 1;
         return n*factorial(n-1);
@@ -1195,7 +1208,7 @@ public class DP {
      * WHEN NO POSSIBLE CONFIG IS FOUND
      * 
     */
-    // coin change to achieve the sum with min no of coins
+    // MIN coins to achieve the amount
     // https://leetcode.com/problems/coin-change/submissions/
     public int coinChangeDP(int[] coins, int amount) {
         int n = coins.length;
@@ -1388,6 +1401,7 @@ public class DP {
     }
 
 
+    // like coin change no of ways
     // FIRST COL IS ALL TRUE, 
     // 0 ELS-> 0 SUM TRUE
     // 0 SUM -> ALL ELS TRUE
@@ -1871,17 +1885,20 @@ public class DP {
      *   return Math.max(lcs(X, Y, m, n - 1), lcs(X, Y, m - 1, n));
      * } 
      *
-     * first row anc ol are extra, startr from i=0; j=0 and 
+     * first row and col are extra, startr from i=0; j=0 and 
      * compare i-1 and j-1
+     * 
+     * imp : [m+1][n+1], start from i = 1, compare i-1 but update dp[i][j]
+     * match dp[i-][j-1]+1
+     * else max
     */
     int longestCommonSubsequence(String str1, String str2) {
         int m = str1.length(); int n = str2.length();
         
-        int[][] dp = new int [m+1][n+1];
+        int[][] dp = new int [m+1][n+1]; // 1
         
-        for(int i =0; i<=m; i++){
-            for(int j =0; j<=n; j++){
-                if(i ==0 || j==0 ) continue;
+        for(int i = 1; i<=m; i++){ // 2
+            for(int j = 1; j<=n; j++){
                 if(str1.charAt(i-1) == str2.charAt(j-1)){
                     dp[i][j] = dp[i-1][j-1]+1;
                 } 
