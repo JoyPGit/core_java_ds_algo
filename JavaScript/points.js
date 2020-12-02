@@ -31,3 +31,5 @@ let diff = function (x, y){
   return x-y;
 }
 // ref error : Cannot access 'diff' before initialization
+
+// http://callbackhell.com/

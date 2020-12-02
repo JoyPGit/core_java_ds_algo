@@ -72,6 +72,21 @@ public class Mathprob {
         }
     }
 
+    boolean isPerfectSquare(int x){
+        if(x == 1) return true;
+        int lo = 2; int hi =  x/2;
+        while(lo<=hi){
+            int mid = lo+(hi - lo)/2;
+            if(mid*mid == x) {
+                System.out.println(x+" is a perfect sq");
+                return true;
+            }
+            else if(mid*mid>x) hi = mid-1;
+            else lo = mid+1;
+        }
+        System.out.println(x+" is not a perfect sq");
+        return false;
+    }
 
 
     /** 
@@ -112,33 +127,33 @@ public class Mathprob {
      * APPEND SUM%10
      * CARRY = SUM/10
     */
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        ListNode p = l1;
-        ListNode q = l2;
+    // public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    //     ListNode p = l1;
+    //     ListNode q = l2;
         
-        int carry = 0; String res = "";
-        while(p!=null || q!=null){
-            int sum = carry;
-            if(p!=null) sum+=p.val;
-            if(q!=null) sum+=q.val;
-            // System.out.println(res);
-            res += (sum%10);
-            carry = sum/10;
-            if(p!=null) p = p.next; 
-            if(q!=null) q = q.next;
-        }
-        if(carry!=0) res += carry;
-        ListNode r = new ListNode(res.charAt(0)-'0');
+    //     int carry = 0; String res = "";
+    //     while(p!=null || q!=null){
+    //         int sum = carry;
+    //         if(p!=null) sum+=p.val;
+    //         if(q!=null) sum+=q.val;
+    //         // System.out.println(res);
+    //         res += (sum%10);
+    //         carry = sum/10;
+    //         if(p!=null) p = p.next; 
+    //         if(q!=null) q = q.next;
+    //     }
+    //     if(carry!=0) res += carry;
+    //     ListNode r = new ListNode(res.charAt(0)-'0');
         
-        ListNode ans = r;
-        for(int i =1; i<res.length(); i++){
-            // System.out.println(res.charAt(i));
+    //     ListNode ans = r;
+    //     for(int i =1; i<res.length(); i++){
+    //         // System.out.println(res.charAt(i));
             
-            r.next = new ListNode(res.charAt(i)-'0');
-            r = r.next;
-        }
-        return ans;
-    }
+    //         r.next = new ListNode(res.charAt(i)-'0');
+    //         r = r.next;
+    //     }
+    //     return ans;
+    // }
 
     public int[] distributeCandies(int candies, int num_people) {
         int[] res = new int[num_people];
@@ -389,7 +404,9 @@ public class Mathprob {
     
     public static void main(String[] args) {
         Mathprob math = new Mathprob();
-        math.power(99, 9);
+        // math.power(99, 9);
+        // math.isPerfectSquare(2);
+        math.isPerfectSquare(81);
     }
 
 }

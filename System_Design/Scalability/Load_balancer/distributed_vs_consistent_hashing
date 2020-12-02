@@ -1,0 +1,103 @@
+Distributed system metadata
+Consistent hashing
+
+Distributed Hashing
+A typical use case for this is the implementation of in-memory caches, 
+such as Memcached.
+
+Such setups consist of a pool of caching servers that host many 
+key/value pairs and are used to provide fast access to data 
+originally stored (or computed) elsewhere. For example, to reduce 
+the load on a database server and at the same time improve performance, 
+an application can be designed to first fetch data from the cache servers,
+and only if it’s not present there, a situation known as 
+cache miss, resort to the database, running the relevant query 
+and caching the results with an appropriate key, so that it can be 
+found next time it’s needed.
+
+Now, how does distribution take place? What criteria are used to 
+determine which keys to host in which servers?
+
+The simplest way is to take the hash modulo of the number of servers. 
+That is, server = hash(key) mod N, where N is the size of the pool. 
+To store or retrieve a key, the client first computes the hash, 
+applies a modulo N operation, and uses the resulting index to 
+contact the appropriate server (probably by using a lookup table of 
+IP addresses).
+
+The Rehashing Problem
+
+This distribution scheme is simple, intuitive, and works fine. 
+That is, until the number of servers changes. What happens if one of 
+the servers crashes or becomes unavailable? Keys need to be 
+redistributed to account for the missing server, of course. 
+The same applies if one or more new servers are added to the pool;
+keys need to be redistributed to include the new servers. 
+This is true for any distribution scheme, but the problem with 
+our simple modulo distribution is that when the number of servers 
+changes, most hashes modulo N will change, so most keys will need 
+to be moved to a different server. So, even if a single server is 
+removed or added, all keys will likely need to be rehashed into a 
+different server.
+
+
+
+https://www.toptal.com/big-data/consistent-hashing
+
+THIS IS NOT SOME CIRCULAR LINKED-LIST KIND OF IMPLEMENATATION.
+IT JUST MEANS THAT WE GO CLOCK-WISE FOR THE NEXT AVAILABLE SERVER
+
+Since we have the keys for both the objects and the servers on the 
+same circle, we may define a simple rule to associate the former 
+with the latter: Each object key will belong in the server whose 
+key is closest, in a counterclockwise direction (or clockwise, 
+depending on the conventions used). In other words, to find out 
+which server to ask for a given key, we need to locate the key on the 
+circle and move in the ascending angle direction until we find a server.
+
+
+From a programming perspective, what we would do is keep a sorted 
+list of server values (which could be angles or numbers in any 
+real interval), and walk this list (or use a binary search) 
+to find the first server with a value greater than, or equal to, 
+that of the desired key. 
+If no such value is found, we need to wrap around, 
+taking the first one from the list.
+
+hash_func(1) = (360/n)*(9)-> FIND THE RANGE IN HASHMAP AND ITERATE
+
+To ensure object keys are evenly distributed among servers, 
+we need to apply a simple trick: To assign not one, 
+but many labels (angles)(RANGES) to each server. 
+So instead of having labels A, B and C, we could have, say, 
+A0 .. A9, B0 .. B9 and C0 .. C9, all interspersed along the circle. 
+The factor by which to increase the number of labels (server keys), 
+known as weight, depends on the situation 
+(and may even be different for each server) to adjust the 
+probability of keys ending up on each. 
+For example, if server B were twice as powerful as the rest, 
+it could be assigned twice as many labels, and as a result, 
+it would end up holding twice as many objects (on average).
+
+For our example we’ll assume all three servers have an equal weight of 10 
+(this works well for three servers, for 10 to 50 servers, 
+a weight in the range 100 to 500 would work better, 
+and bigger pools may need even higher weights):
+
+SERVER FAILURE/REMOVAL
+
+So, what’s the benefit of all this circle approach? 
+Imagine server C is removed. To account for this, we must 
+remove labels C0 .. C9 from the circle. 
+This results in the object keys formerly adjacent to the deleted 
+labels now being randomly labeled Ax and Bx, 
+reassigning them to servers A and B.
+
+But what happens with the other object keys, 
+the ones that originally belonged in A and B? Nothing! 
+That’s the beauty of it: The absence of Cx labels does not 
+affect those keys in any way. So, removing a server results 
+in its object keys being randomly reassigned to the rest of the 
+servers, leaving all other keys untouched.
+
+Finally syncing service updates the hash table

@@ -1,6 +1,7 @@
 package Java_DS_Algo;
 
-import utilCustom.*;
+// import utilCustom.*;
+// import 
 
 import java.util.*;
 
@@ -115,6 +116,7 @@ class Array {
             // update i, as j is at 0
             i = j;
         }
+        Utility.print1DMatrix(nums);
         return max;
     }
 

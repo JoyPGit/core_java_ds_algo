@@ -358,7 +358,7 @@ public class SlidingWindow {
      * length is checked only when map size = k, so trim if larger
     */
     // https://www.geeksforgeeks.org/longest-subarray-not-k-distinct-elements/
-    int longestSubArraytWithkEls(int[] arr, int k){
+    int longestSubArrayWithkEls(int[] arr, int k){
         int n = arr.length;
         int left = 0; int length = Integer.MIN_VALUE;
         HashMap<Integer, Integer> map = new HashMap<>();

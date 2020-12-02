@@ -1,0 +1,107 @@
+https://medium.com/@bikas.katwal10/mongodb-vs-cassandra-vs-rdbms-
+where-do-they-stand-in-the-cap-theorem-1bae779a7a15
+
+CAP Theorem
+CAP stands for Consistency, Availability and Partition Tolerance.
+Consistency means, if you write data to the distributed system, 
+you should be able to read the same data at any point in time 
+from any nodes of the system or simply return an error if 
+data is in an inconsistent state. 
+Never return inconsistent data.
+
+Availability means the system should always perform reads/writes on any 
+non-failing node of the cluster successfully without any error. 
+This is availability is mainly associated with network partition. i.e. 
+in the presence of network partition whether a node returns success 
+response or an error for read/write operation.
+
+
+Partition Tolerance means, if there is a partition between nodes or the 
+parts of the cluster in a distributed system are not able to talk to each other, 
+the system should still be functioning.
+
+What is the CAP Theorem?
+
+A distributed system always needs to be partition tolerant, 
+we shouldn’t be making a system where a network partition brings down the whole system.
+So, a distributed system is always built Partition Tolerant.
+So, In simple words, CAP theorem means if there is network partition and 
+if you want your system to keep functioning you can provide either 
+Availability or Consistency and not both.
+
+How a Distributed System breaks Consistency or Availability?
+Scenario 1: Failing to propagate update request to other nodes.
+Say, we have two nodes(N1 & N2) in a cluster and both nodes can accept 
+read and write requests.
+
+N1 node gets an update request for id 2 and updates the salary from 800 to 1000. 
+But, since there is network partition, hence, N1 can not send the latest update to N2.
+So, when a read request comes to N2, it can do either of two things:
+
+Respond with whatever data it has, in this case, salary = 800, 
+and update the data when the network partition resolves — 
+making the system Available but Inconsistent.
+
+Simply returning an error, saying “I do not have updated data” — 
+makes the system Consistent but Unavailable by not returning inconsistent data.
+
+
+Scenario 2: Single Leader based system where read and write come to the 
+leader and all other nodes stays updated from the leader and remain on standby 
+in case the leader goes down.
+The problem with this system is that, if the leader disconnects from the cluster 
+or the clients are not able to connect to the leader due to network partition 
+between the client and leader, the system can not accept write requests until 
+the new leader is elected. 
+Making these kinds of system Consistent and not Available.
+
+A single leader based system that accepts reads and writes, should never be 
+categorized under Availability.
+
+///// RDBMS 
+
+It’s no brainer that all RDBMS are Consistent as all reads and 
+writes go to a single node/server.
+How about availability? You might say, it is one single server and 
+hence a single point of failure. 
+So, how it’s categorized under Availability?
+
+As I said earlier CAP-Availability is not the same as day to day availability/downtime 
+we talk about. In a single node system, there will not be any network partition 
+hence if the node is up, it will always return success for any read/write 
+operation and hence available.
+
+CAP Availability : Means even if leader is disconnected, it can still
+provide data, and data is always Consistent as it's a single source of truth.
+
+What about consistency when data is replicated?
+If the data is read and written from only master/primary node it's always Consistent.
+If the read requests are sent to any of the secondary, we will lose consistency 
+and might serve inconsistent data in case of network partition or say master takes 
+time to replicate data.
+
+
+///// MongoDB
+MongoDB and the CAP theorem (CP)
+MongoDB is a popular NoSQL database management system that stores 
+data as BSON (binary JSON) documents. It's frequently used for big 
+data and real-time applications running at multiple different locations. 
+Relative to the CAP theorem, MongoDB is a CP data store — it resolves 
+network partitions by maintaining consistency, while compromising on 
+availability.
+
+MongoDB is a single-master system—each replica set can have only 
+one primary node that receives all the write operations. 
+All other nodes in the same replica set are secondary nodes that 
+replicate the primary node's operation log and apply it to their 
+own data set. By default, clients also read from the primary node, 
+but they can also specify a read preference that allows them to read 
+from secondary nodes.
+
+When the primary node becomes unavailable, the secondary node with 
+the most recent operation log will be elected as the new primary node. 
+Once all the other secondary nodes catch up with the new master, 
+the cluster becomes available again. As clients can't make any write 
+requests during this interval, the data remains consistent across the 
+entire network.
+

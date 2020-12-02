@@ -1,4 +1,4 @@
-package System_Design;
+package System_Design.Object_oriented;
 
 // singleton
 public class ParkingLot {

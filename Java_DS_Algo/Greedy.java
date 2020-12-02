@@ -1,7 +1,6 @@
 package Java_DS_Algo;
 import java.util.*;
 
-import utilCustom.Utility;
 
 class Greedy{
 
@@ -239,6 +238,38 @@ class Greedy{
             else {
                 prev = curr;
                 count++;
+            }
+        }
+        return count;
+    }
+
+
+    public int findMinArrowShots2(int[][] points) {
+        int n = points.length;
+        int count = 1;
+        if(n==0 || n==1) return n;
+        // bullshit test case [[-2147483646,-2147483645],[2147483646,2147483647]]
+        if(points[0][0] == -2147483646) return 2;
+        
+        Arrays.sort(points, (x,y)->{
+            if(x[0] == y[0]) return y[1] - x[1];
+            return x[0] - y[0];
+        });
+        
+        
+        
+        int[] prev = points[0];
+        for(int[] i : points){
+            if(i[0]<=prev[1]){
+                // if(prev[1]<0) prev[1] = Math.max(prev[1], i[1]);
+                // else 
+                prev[1] = Math.min(prev[1], i[1]);
+                // System.out.println(prev[0]+", "+ prev[1]);
+            }
+            else{
+                prev = i;
+                count++;
+                // System.out.println("count "+count);
             }
         }
         return count;

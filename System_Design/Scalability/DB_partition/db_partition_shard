@@ -1,0 +1,31 @@
+
+1 Start with indexing
+
+2 DB partitioning (Replication, Sharding)
+
+connection pooling
+write to master db, sync slave dbs
+
+with Sharding, 
+transactions are difficult
+Joins are difficult
+Shards are inflexible, you cant increase range
+Use manager for hierarchical sharding
+
+Application level
+DB level
+
+but in app level, there is tight coupling
+
+The choice of shard key determines three important things:
+The distribution of reads and writes. 
+The size of your chunks.
+The number of shards each query hits. ...
+Hashed id. ...
+Multi-tenant compound index.
+
+Strategies :
+Hashing : compute a hash key of the shard key's value
+How to choose a shard key?
+
+https://www.youtube.com/watch?v=ON3h1_bzg6g

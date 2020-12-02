@@ -1,0 +1,178 @@
+
+https://docs.microsoft.com/en-us/archive/msdn-magazine/2009/
+brownfield/distributed-caching-and-scalability
+
+CACHING (READ THROUGH, WRITE BEHIND) 
+-> DB (REPLICATE, PARTITION)
+-> SYNCHRONIZATION (EVENT BASED, POLLING)
+
+As mentioned earlier, databases are always the bottleneck in 
+high-transaction environments, and they become bottlenecks due 
+mostly to excessive read operations, which also slow down write 
+operations. 
+
+
+
+TYPES : 
+
+1 READ THROUGH: 
+
+In a nutshell, read-through is a feature that allows your cache to 
+directly read data from your data source, whatever that may be. 
+You write a read-through handler and register it with your cache, 
+and then your cache calls this handler at appropriate times.
+
+One important capability of a read-through 
+handler is that the data you cache is fetched by the cache directly 
+from the database. They can just fetch data from the cache, and if 
+the cache doesn't have it, the cache goes and takes it from the database.
+
+The cache uses only one thread, one database trip, to reload that 
+data from the database, whereas you might have thousands of users 
+trying to access that same data. If you did not have read-through 
+capability, all those users would be going directly to the database, 
+inundating the database with thousands of parallel requests.
+
+
+However, keep in mind that read-through is not a substitute for 
+performing some complex joined queries in the database. A typical 
+cache does not let you do these types of queries. A read-through 
+capability works well for individual object read operations but not 
+in operations involving complex joined queries, which you always need 
+to perform on the database.
+
+Write Through, Write Behind
+
+WRITE THROUGH synchronously :
+
+Write-through is just like read-through: you provide a handler, 
+and the cache calls the handler, which writes the data to the database 
+whenever you update the cache. One major benefit is that your 
+application doesn't have to write directly to the database because 
+the cache does it for you. This simplifies your application code 
+because the cache, rather than your application, has the data access code.
+
+Normally, your application issues an update to the cache 
+(for example, Add, Insert, or Remove). The cache updates itself 
+first and then issues an update call to the database through your 
+write-through handler. Your application waits until both the cache 
+and the database are updated.
+
+WRITE BEHIND asynchronously :
+
+What if you want to wait for the cache to be updated, but you don't 
+want to wait for the database to be updated because that slows down 
+your application's performance? That's where write-behind comes in, 
+which uses the same write-through handler but updates the cache 
+synchronously and the database asynchronously. This means that your 
+application waits for the cache to be updated, but you don't wait for 
+the database to be updated.
+
+You know that the database update is queued up and that the 
+database is updated fairly quickly by the cache. This is another 
+way to improve your application performance. You have to write to 
+the database anyway, but why wait? If the cache has the data, you 
+don't even suffer the consequences of other instances of your 
+application not finding the data in the database because you just 
+updated the cache, and the other instances of your application will 
+find the data in the cache and won't need to go to the database.
+
+
+
+Synchronizing a Cache with Other Environments
+
+Expirations and cache dependency features are intended to help 
+you keep the cache fresh and correct. You also need to synchronize 
+your cache with data sources that you and your cache don't have access 
+to so that changes in those data sources are reflected in your cache to 
+keep it fresh.
+
+For example, let's say your cache is written using the 
+Microsoft .NET Framework, but you have Java or C++ applications 
+modifying data in your master data source. You want these 
+applications to notify your cache when certain data changes in the 
+master data sources so that your cache can invalidate a corresponding 
+cached item.
+
+But in a real-life environment, that's not always the case. 
+Whenever a third party or any other application changes the database 
+data, you want the cache to reflect that change. The cache reflects 
+changes by reloading the data, or at least by not having the older 
+data in the cache.
+
+If the cache has an old copy and the database a new copy, you now 
+have a data integrity problem because you don't know which copy is right. 
+Of course, the database is always right, but you don't always go to the 
+database. You get data from the cache because your application trusts 
+that the cache will always be correct or that the cache will be correct 
+enough for its needs.
+
+Synchronizing with the database can mean invalidating the related item 
+in the cache so that the next time your application needs it, it will 
+fetch it from the database. One interesting variant to this process is 
+when the cache automatically reloads an updated copy of the object when 
+the data changes in the database.
+
+
+EVENT FIRE TO synchronize :
+
+If a row is updated, the DBMS fires an event that your cache catches. 
+It then knows which cached item is related to this row in the database 
+and invalidates that cached item.
+
+It would be nice if your cache could poll your database on 
+configurable intervals and detect changes in 
+certain rows in a table. If those rows have changed, your cache 
+invalidates their corresponding cached items.
+
+POLLING BASED synchronization :
+
+The second situation is when data in your database is frequently 
+changing and .NET events are becoming too chatty. This occurs because 
+a separate .NET event is fired for each SqlCacheDependency change, 
+and if you have thousands of rows that are updated frequently, this 
+could easily crowd your cache. In such cases, it is much more efficient 
+to rely on polling, where with one database query you can fetch 
+hundreds or thousands of rows that have changed and then invalidate 
+corresponding cached items. Of course, polling creates a slight delay 
+in synchronization (maybe 15–30 seconds), but this is acceptable in 
+many cases.
+
+
+
+Cache Performance and Scalability
+
+REPLICATED CACHING (READS >> WRITES)
+
+In most distributed cache situations, you have two or more cache 
+servers hosting the cache. I'll use the term "cache cluster" to indicate 
+two or more cache servers joined together to form one logical cache. 
+A replicated cache copies the entire cache on each cache server in the 
+cache cluster. This means that a replicated cache provides high 
+availability. If any one cache server goes down, you don't lose any 
+data in the cache because another copy is immediately available to 
+the application. It's also an extremely efficient topology and 
+provides great scalability if your application needs to do a lot of 
+read-intensive operations. As you add more cache servers, you add 
+that much more read-transaction capacity to your cache cluster. 
+But a replicated cache is not the ideal topology for write-intensive 
+operations. If you are updating the cache as frequently as you are 
+reading it, don't use the replicated topology.
+
+
+TRANSACTIONAL DATA CACHING (READS == WRITES)
+
+A partitioned cache breaks up the cache into partitions and then 
+stores one partition on each cache server in the cluster. This 
+topology is the most scalable for transactional data caching 
+(when writes to the cache are as frequent as reads). As you add more 
+cache servers to the cluster, you increase not only the transaction 
+capacity but also the storage capacity of the cache, since all those 
+partitions together form the entire cache.
+
+Many distributed caches provide a variant of a partitioned cache 
+for high availability, where each partition is also replicated so 
+that one cache server contains a partition and a copy or a backup 
+of another server's partition. This way, you don't lose any data 
+if any one server goes down. Some caching solutions allow you to 
+create more than one copy of each partition for added reliability.

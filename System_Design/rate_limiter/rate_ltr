@@ -1,0 +1,43 @@
+
+https://www.youtube.com/watch?v=mhUQe4BKZXs
+
+Rate Limiters :
+
+these are mostly required in case of a surge in requests, and can
+additionally handle malicious requests, 
+
+Layer of operation : where jwt is authenticated,
+we can extract payload and check in memchache or redis
+
+for single system, we can use 
+1 leaky bucket
+2 sliding window counter
+
+leaky bucket is basically a queue, which when full will result in 
+discarding of further requests until a slot in the queue opens up
+
+sliding window counter
+hold a json object {user_id, timestamp, counter}
+When a request comes, check if the the last timestamp is less than 
+1 minute distant and if counter is less than the alloowable limit.
+if not, drop the request
+else make an entry and decrement the counter.
+
+Also remove the jsons with timestamps more than one minute old, 
+so as to free up memory in cache.
+
+Distributed systems :
+We can use the same but there are 2 common challenges : 
+1 race condition
+2 inconsistency
+3 In case of rejection, Round Trip Time(RTT) will be too long
+
+Solutions:
+1 Load Balancer is a must
+2 Sticky Sessions
+3 locks while fetching json
+4 In memory caching with Sync Service (RTT)
+Sync service will update the global counter
+
+
+https://www.youtube.com/watch?v=FU4WlwfS3G0

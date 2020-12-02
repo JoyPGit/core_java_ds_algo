@@ -263,7 +263,7 @@ public class Recursion {
     }
 
     /////////////////////// INCLUDE-EXCLUDE
-    // rod, knapsack, coins
+    // rod, knapsack, coins, combination sum
     /** 
      * THE SAME PIECE CAN BE USED MULTIPLE TIMES, HENCE  
      * index IS NOT DECREMENTED WHEN SELECTED
@@ -357,6 +357,32 @@ public class Recursion {
             return true;
         return subsetSum(arr, sum - arr[index], index + 1) || subsetSum(arr, sum, index + 1);
     }
+
+    /**
+     * // INCLUDE -EXCLUDE PRINCIPLE
+     * sum, sum+arr[index]
+    */
+    // https://leetcode.com/problems/combination-sum
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        
+        helper(res, curr, candidates, 0, 0, target);
+        return res;
+    }
+    
+    void helper(List<List<Integer>> res, List<Integer> curr, int[] arr, int index, int sum, int target){
+        if(sum>target  || index >= arr.length) return;
+        if(sum == target){
+            if(!res.contains(curr)) res.add(new ArrayList<>(curr));
+        }
+        
+        helper(res, curr, arr, index+1, sum, target);
+        curr.add(arr[index]);
+        helper(res, curr, arr, index, sum+arr[index], target);
+        curr.remove(curr.size()-1);
+    }
+
 
     // https://www.youtube.com/watch?v=wvaYrOp94k0
     // TLE

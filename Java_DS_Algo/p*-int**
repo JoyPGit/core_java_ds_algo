@@ -1,6 +1,6 @@
 // closures, callbacks
 
-let f =(i, o)=>{
+let f = (i, o)=>{
     let variableOff
     if(i==2){
         g(j,()=>{
@@ -20,7 +20,7 @@ let f =(i, o)=>{
 };
 
 
-let g= f();
+let g = f();
 
 let x = new Promise((res, rej)=>{
     if(){

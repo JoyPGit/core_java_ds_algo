@@ -1,10 +1,42 @@
 https://www.softwaretestinghelp.com/core-java-interview-questions/
 
+https://www.geeksforgeeks.org/java-not-purely-object-oriented-language/
+
+1 Primitive Data Type ex. int, long, bool, float, char, etc as Objects: 
+2 The static keyword:  static class can be used without instantiation
+
+3 Wrapper Class: Wrapper class provides the mechanism to convert 
+primitive into object and object into primitive. In Java, you can 
+use Integer, Float etc. instead of int, float etc. 
+
+We can communicate with objects without calling their methods. 
+ex. using arithmetic operators.
+String s1 = "ABC" + "A" ;
+Even using Wrapper classes does not make Java a pure OOP language, 
+as internally it will use the operations like Unboxing and Autoboxing. 
+So if you create instead of int Integer and do any mathematical 
+operation on it, under the hoods Java is going to use primitive type int.
+
+
+public class BoxingExample  
+{ 
+    public static void main(String[] args)  
+    { 
+        Integer i = new Integer(10); 
+        Integer j = new Integer(20); 
+        // internal int addition
+        Integer k = new Integer(i.intValue() + j.intValue()); 
+        System.out.println("Output: "+ k); 
+    } 
+} 
+
+
+
 JIT
 
 access specifiers, static method
 final
-public vs private vs protectedvs default
+public vs private vs protected vs default
 private -> only itself
 protected -> only subclasses
 default -> visible in same package
@@ -19,12 +51,31 @@ Whereas encapsulation can be implemented using by access modifiers
 i.e. private, protected and public.
 
 polymorphism -> Animal animal = new Dog();
+In Compile time Polymorphism, the call is resolved by the compiler. 
+In Run time Polymorphism, the call is not resolved by the compiler.
+Method overriding is the runtime polymorphism having same method with 
+same parameters or signature, but associated in different classes.
 
 method overriding vs overloading
 same class vs subclass
+Java Method Overloading
 
+In Java, two or more methods can have same name if they differ 
+in parameters (diff number of parameters, diff types of parameters, or both). 
+These methods are called overloaded methods and this feature 
+is called method overloading. For example:
+
+void func() { ... }
+void func(int a) { ... }
+float func(double a) { ... }
+float func(int a, float b) { ... }
 
 interface vs abstract class
+5
+
+In a word - yes. Actually, many classes in the JDK implement 
+multiple interfaces. E.g., ArrayList implements List, RandomAccess, 
+Cloneable, and Serializable.
 
 abstract method
 The method which has only the declaration and not the implementation is called the abstract method and it has the keyword called “abstract”. Declarations ends with a semicolon.
@@ -39,7 +90,15 @@ Buffer is thread safe, Builder is not
 Exception handling
 final vs static
 
+In Java, serialization is a concept using which we can write the 
+state of an object into a byte stream so that we can transfer it 
+over the network (using technologies like JPA and RMI).
+
+But, static variables belong to class therefore, you cannot serialize 
+static variables in Java.
+
 threads, 
+
 Runnable, join, yield
 start vs run
 start() creates a new thread and 
@@ -69,8 +128,8 @@ we can extend only one class.
 
 yield() vs run()
 A yield () method moves the currently running thread to a runnable state 
-and allows the other threads for execution. So that eq
-ual priority threads have a chance to run. It is a static method. 
+and allows the other threads for execution. So that equal 
+priority threads have a chance to run. It is a static method. 
 It doesn’t release any lock.
 
 
@@ -79,3 +138,159 @@ Locks are per objects. Every Java object has a lock.
 A lock has only one key. A thread can access a synchronized method only if
 the thread can get the key to the objects to lock.
 Synchronization makes only one thread to access a block of code at a time.
+
+
+Process
+A process is a self contained execution environment and it can be seen 
+as a program or application. However a program itself contains multiple 
+processes inside it. Java runtime environment runs as a single process 
+which contains different classes and programs as processes.
+
+Thread
+Thread can be called lightweight process. 
+Thread requires less resources to create and exists in the process, 
+thread shares the process resources.
+
+
+Processes and Threads
+In concurrent programming, there are two basic units of execution: 
+processes and threads. In the Java programming language, 
+concurrent programming is mostly concerned with threads. 
+However, processes are also important.
+
+A computer system normally has many active processes and threads. 
+This is true even in systems that only have a single execution core, 
+and thus only have one thread actually executing at any given moment. 
+Processing time for a single core is shared among processes and 
+threads through an OS feature called time slicing.
+
+It's becoming more and more common for computer systems to have 
+multiple processors or processors with multiple execution cores. 
+This greatly enhances a system's capacity for concurrent execution 
+of processes and threads — but concurrency is possible even on 
+simple systems, without multiple processors or execution cores.
+
+Processes
+A process has a self-contained execution environment. 
+A process generally has a complete, private set of basic run-time 
+resources; in particular, each process has its own memory space.
+
+Processes are often seen as synonymous with programs or applications. 
+However, what the user sees as a single application may in fact be 
+a set of cooperating processes. To facilitate communication between 
+processes, most operating systems support 
+Inter Process Communication (IPC) resources, such as pipes and sockets. 
+IPC is used not just for communication between processes on 
+the same system, but processes on different systems.
+
+Most implementations of the Java virtual machine run as a single process. 
+A Java application can create additional processes using a 
+ProcessBuilder object. Multiprocess applications are beyond 
+the scope of this lesson.
+
+Threads
+Threads are sometimes called lightweight processes. 
+Both processes and threads provide an execution environment, 
+but creating a new thread requires fewer resources than creating 
+a new process.
+
+Threads exist within a process — every process has at least one. 
+Threads share the process's resources, including memory and open files. 
+This makes for efficient, but potentially problematic, communication.
+
+Multithreaded execution is an essential feature of the Java platform. 
+Every application has at least one thread — or several, 
+if you count "system" threads that do things like memory management and 
+signal handling. But from the application programmer's point of view, 
+you start with just one thread, called the main thread. 
+This thread has the ability to create additional threads, 
+as we'll demonstrate in the next section.
+
+Each thread is associated with an instance of the class Thread. 
+There are two basic strategies for using Thread objects to create a 
+concurrent application :
+
+1 To directly control thread creation and management, simply instantiate 
+Thread each time the application needs to initiate an asynchronous task.
+
+2 To abstract thread management from the rest of your application, 
+pass the application's tasks to an executor.
+
+
+class Multi3 implements Runnable{  
+    public void run(){
+        System.out.println("thread is running...");  
+    }  
+  
+    public static void main(String args[]){  
+        Multi3 m1=new Multi3();  
+        Thread t1 =new Thread(m1);  
+        t1.start();  
+    }  
+}  
+
+https://www.tutorialspoint.com/java/java_multithreading.htm
+
+class RunnableDemo implements Runnable {
+   private Thread t;
+   private String threadName;
+   
+   RunnableDemo( String name) {
+      threadName = name;
+      System.out.println("Creating " +  threadName );
+   }
+   
+   public void run() {
+      System.out.println("Running " +  threadName );
+      try {
+         for(int i = 4; i > 0; i--) {
+            System.out.println("Thread: " + threadName + ", " + i);
+            // Let the thread sleep for a while.
+            Thread.sleep(50);
+         }
+      } catch (InterruptedException e) {
+         System.out.println("Thread " +  threadName + " interrupted.");
+      }
+      System.out.println("Thread " +  threadName + " exiting.");
+   }
+   
+   public void start () {
+      System.out.println("Starting " +  threadName );
+      if (t == null) {
+         t = new Thread (this, threadName);
+         t.start ();
+      }
+   }
+}
+
+public class TestThread {
+
+   public static void main(String args[]) {
+      RunnableDemo R1 = new RunnableDemo( "Thread-1");
+      R1.start();
+      
+      RunnableDemo R2 = new RunnableDemo( "Thread-2");
+      R2.start();
+   }   
+}
+This will produce the following result −
+
+Output
+Creating Thread-1
+Starting Thread-1
+Creating Thread-2
+Starting Thread-2
+Running Thread-1
+Thread: Thread-1, 4
+Running Thread-2
+Thread: Thread-2, 4
+Thread: Thread-1, 3
+Thread: Thread-2, 3
+Thread: Thread-1, 2
+Thread: Thread-2, 2
+Thread: Thread-1, 1
+Thread: Thread-2, 1
+Thread Thread-1 exiting.
+Thread Thread-2 exiting.
+
+

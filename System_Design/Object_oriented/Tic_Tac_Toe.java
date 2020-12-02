@@ -1,4 +1,4 @@
-package System_Design;
+package System_Design.Object_oriented;
 
 import java.util.*;
 // use .java 
@@ -72,6 +72,8 @@ public class Tic_Tac_Toe {
 class Board{
     int[][] board;
     int boardSize;
+    
+
     Player p1; Player p2;
     // using int board, and p1 has symbol 1
     Board(int size, Player a, Player b){
@@ -80,7 +82,7 @@ class Board{
         board = new int[boardSize][boardSize];
         System.out.println("board of size "+size+"*"+size+ " created.");
     }
-
+    
     void printBoard(){
         for(int i =0; i<boardSize; i++){
             for(int j = 0; j<boardSize; j++){
@@ -123,6 +125,7 @@ class Board{
         return new int[]{x,y};
     }
 
+    // int[] row; int[] col int[] dia 
     // for faster check the row, col need to be passed
     // count needs to be stored for checking
     boolean checkWinner(int playerNumber){
@@ -182,6 +185,8 @@ class Board{
         // no conflict, winner found
         return false;
     }
+
+    
 }
 
 class Player{

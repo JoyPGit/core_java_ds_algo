@@ -1,0 +1,107 @@
+
+Level :
+Application level, Network level
+
+Strategies:
+Round robin
+Session affinity or sticky session
+IP Address affinity
+
+Server Addition/Removal/Failure
+Consistent Hashing
+
+
+Layer 4 Load Balancing and NAT
+
+Today the term “Layer 4 load balancing” most commonly refers to a 
+deployment where the load balancer’s IP address is the one advertised to 
+clients for a web site or service (via DNS, for example). As a result, 
+clients record the load balancer’s address as the destination IP address 
+in their requests.
+
+When the Layer 4 load balancer receives a request and makes the load 
+balancing decision, it also performs Network Address Translation (NAT) 
+on the request packet, changing the recorded destination IP address from 
+its own to that of the content server it has chosen on the internal network. 
+Similarly, before forwarding server responses to clients, the load balancer 
+changes the source address recorded in the packet header from the 
+server’s IP address to its own. 
+(The destination and source TCP port numbers recorded in the packets are 
+sometimes also changed in a similar way.)
+
+Layer 4 load balancers make their routing decisions based on address 
+information extracted from the first few packets in the TCP stream, 
+and do not inspect packet content. A Layer 4 load balancer is often 
+a dedicated hardware device supplied by a vendor and runs proprietary 
+load-balancing software, and the NAT operations might be performed by 
+specialized chips rather than in software.
+
+Layer 4 load balancing was a popular architectural approach to traffic 
+handling when commodity hardware was not as powerful as it is now, and 
+the interaction between clients and application servers was much less 
+complex. It requires less computation than more sophisticated load 
+balancing methods (such as Layer 7), but CPU and memory are now 
+sufficiently fast and cheap that the performance advantage for Layer 4 
+load balancing has become negligible or irrelevant in most situations.
+
+Comparing Layer 4 and Layer 7 Load Balancers
+Layer 7 load balancers operate at the highest level in the OSI model, 
+the application layer (on the Internet, HTTP is the dominant protocol at 
+this layer). Layer 7 load balancers base their routing decisions on various 
+characteristics of the HTTP header and on the actual contents of the 
+message, such as the URL, the type of data (text, video, graphics), or 
+information in a cookie.
+
+Taking into consideration so many more aspects of the information 
+being transferred can make Layer 7 load balancing more expensive than 
+Layer 4 in terms of time and required computing power, but it can 
+nevertheless lead to greater overall efficiency. For instance, 
+because a Layer 7 load balancer can determine what type of data 
+(video, text, and so on) a client is requesting, you don’t have to 
+duplicate the same data on all of the load-balanced servers.
+
+Modern general-purpose load balancers, such as NGINX Plus and the 
+open source NGINX software, generally operate at Layer 7 and serve as 
+full reverse proxies. Rather than manage traffic on a packet-by-packet 
+basis like Layer 4 load balancers that use NAT, Layer 7 load balancing 
+proxies can read requests and responses in their entirety. 
+They manage and manipulate traffic based on a full understanding of the 
+transaction between the client and the application server.
+
+
+COMPUTER NETWORKS, PROTOCOLS AND LOAD BALANCERS
+
+There are multiple protocols defined at each level, but the following 
+are the protocols and levels relevant to load balancing of website traffic:
+
+Internet Protocol (IP) operates at the internetwork layer (Layer 3). 
+Its PDUs are called packets, and IP is responsible for delivering 
+them from a origin host to a destination host, usually across the 
+boundaries between the multiple smaller networks that make up the Internet. 
+Each device that is directly connected to the Internet has a unique 
+IP address, which is used to locate the device as the recipient of packets.
+
+Transmission Control Protocol (TCP) operates at the transport layer 
+(Layer 4). TCP effectively creates a virtual connection between the 
+host where the browser is running and the host where a server application 
+is running. Because of the unreliable nature of networks, IP packets 
+can be lost, corrupted, or arrive out of order. TCP has mechanisms for 
+correcting these errors, transforming the stream of IP packets into a 
+reliable communication channel. Each application is assigned a unique 
+TCP port number to enable delivery to the correct application on hosts 
+where many applications are running.
+
+Hypertext Transfer Protocol (HTTP) operates at the application layer 
+(Layer 7). It defines how data is encoded for communication between 
+web browsers and web servers (or any application that understands HTTP 
+encoding).
+
+As this list makes clear, referring to “Layer 4 load balancing” of 
+Internet traffic is a convenient shorthand, but the more accurate term 
+is “Layer 3/4 load balancing” – because the load balancer bases its 
+decision on both the IP addresses of the origin and destination servers 
+(Layer 3) and the TCP port number of the applications (Layer 4). 
+
+The more exact term for “Layer 7 load balancing” might be “Layer 5 
+through 7 load balancing” because HTTP combines the functions of OSI 
+Layers 5, 6, and 7.

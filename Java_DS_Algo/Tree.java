@@ -355,43 +355,57 @@ public class Tree {
      * MOST IMP : KEEP TRACK OF SIZE OF QUEUE ALWAYS, THIS HELPS KEEP TRACK OF ALL
      * ELS IN THIS LEVEL
      * 
-     * LEVEL ORDER 2 WAYS : USE QUEUE OR USE LEVEL USING RECURSION 1 MAINTAIN A
-     * HASHMAP 2 SEARCH FOR LEVEL IN MAP AND ADD TO IT 3 TRICKY PART IS TO ADD FROM
-     * HASHMAP TO RES AS MAP ISN'T NECESSARILY SORTED 4 START FROM 0, FETCH i AND
+     * LEVEL ORDER 2 WAYS : USE QUEUE OR USE LEVEL USING RECURSION 
+     * 1 MAINTAIN A HASHMAP 
+     * 2 SEARCH FOR LEVEL IN MAP AND ADD TO IT 
+     * 3 TRICKY PART IS TO ADD FROM HASHMAP TO RES AS MAP ISN'T ALWAYS SORTED 
+     * 4 START FROM 0, FETCH i AND
      * ADD for(int i =0; i<map.size(); i++) res.add(i, map.get(i));
      * 
-     * 
-     * QUEUE: 1 ADD TO Q, 2 KEEP TRACK OF SIZE, 3 CREATE A NEW LIST 4 WHILE REMOVING
-     * THE CURR EL, KEEP ADDING TO LIST 5 ADD LIST TO RES
+     * imp : run for all heights and use level flag
      *
      */
     // RECURSIVE, using hashmap
     // https://leetcode.com/problems/binary-tree-level-order-traversal
     public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null)
-            return res;
+        int h = height(root);
         HashMap<Integer, List<Integer>> map = new HashMap<>();
-        preOrder(map, root, 0);
+    
+        for(int i =0; i<h; i++){
+            helper(root, i, i, map);
+        }
 
-        for (int i = 0; i < map.size(); i++)
+        List<List<Integer>> res = new ArrayList<>();
+        
+        for (int i = 0; i < map.size(); i++){
             res.add(i, map.get(i));
-
+        }
         return res;
     }
-    // https://www.geeksforgeeks.org/check-if-all-levels-of-two-trees-are-anagrams-or-not
-
-    void preOrder(HashMap<Integer, List<Integer>> map, TreeNode root, int level) {
-        if (root == null)
+    
+    void helper(TreeNode root, int index, int level, HashMap<Integer, List<Integer>> map){
+        if(root == null) return;
+        if(index == 0) {
+            List<Integer> curr = map.getOrDefault(level, new ArrayList<>());
+            curr.add(root.val);
+            map.put(level, curr);
             return;
-        List<Integer> curr = map.getOrDefault(level, new ArrayList<>());
-        curr.add(root.val);
-        map.put(level, curr);
-
-        preOrder(map, root.left, level + 1);
-        preOrder(map, root.right, level + 1);
+        }
+        
+        helper(root.left, index-1 ,level, map);
+        helper(root.right, index-1, level, map);
     }
 
+    // https://www.geeksforgeeks.org/check-if-all-levels-of-two-trees-are-anagrams-or-not
+
+    /** 
+     * QUEUE: 1 ADD TO Q, 2 KEEP TRACK OF SIZE, 
+     * 3 CREATE A NEW LIST 
+     * 4 WHILE REMOVING THE CURR EL, KEEP ADDING TO LIST 
+     * 5 ADD LIST TO RES
+     * 
+     * imp : size of q
+    */
     // ITERATIVE
     public List<List<Integer>> levelOrderIterative(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();

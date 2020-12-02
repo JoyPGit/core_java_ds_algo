@@ -130,16 +130,19 @@ class StringPractice {
         return true;
     }
 
+    // take care of i++ in loop, assign j-1
     // https://leetcode.com/problems/consecutive-characters/
     public int maxPower(String s) {
-        int max = 1; int i = 0;
-        while(i<s.length()){
-            int j = i;
-            while(j<s.length() && s.charAt(j) == s.charAt(i)) j++;
-            max = Math.max(max, j-i); 
-            i = j+1;
+        int n = s.length();
+        int j = 0; int len = 1;
+        
+        for(int i =0; i<n; i++){
+            j = i;
+            while(j<n && s.charAt(i) == s.charAt(j)) j++;
+            len = Math.max(len, j-i);
+            i = j-1;
         }
-        return max;
+        return len;
     }
      
     // https://leetcode.com/problems/length-of-last-word
@@ -152,12 +155,14 @@ class StringPractice {
         return (words[words.length-1]).length();
     }
 
-    // GO TILL n-i-1
+    // USE lo, hi
     // https://leetcode.com/problems/reverse-string/
     public void reverseString(char[] s) {
         int n = s.length;
-        
-        for(int i =0; i<n/2; i++) swap(s, i, n-i-1);
+        int lo = 0; int hi = n-1;
+        while(lo<=hi){
+            swap(s, lo++, hi--);
+        }
     }
     
     void swap(char[] ch, int a, int b){
@@ -167,7 +172,29 @@ class StringPractice {
         ch[b] = temp;
     }
 
-    void reverseRecursive(String word) {
+    // recursive
+    public void reverseRecursive(char[] s) {
+        int n = s.length;
+        helper(s, 0, n-1);
+    }
+    
+    
+    void helper(char[] arr, int lo, int hi){
+        if(lo>hi) return;
+        swap(arr, lo, hi);
+        helper(arr, ++lo, --hi);
+    }
+    
+    
+
+    // https://leetcode.com/problems/shuffle-string
+    public String restoreString(String s, int[] indices) {
+        int n = indices.length;
+        char[] res = new char[n];
+        for(int i =0; i<n; i++){
+            res[indices[i]] = s.charAt(i);
+        }
+        return new String(res);
     }
 
     // https://practice.geeksforgeeks.org/problems/reverse-words-in-a-given-string/0
@@ -219,10 +246,44 @@ class StringPractice {
         return String.valueOf(s);
     }
 
+
+    // https://leetcode.com/problems/reverse-vowels-of-a-string
+    public String reverseVowels(String s) {
+        char[] ch = s.toCharArray();
+        int n = ch.length;
+        if(n == 0) return s;
+        
+        HashSet<Character> vowel = new HashSet<>();
+        vowel.add('a'); vowel.add('e'); vowel.add('i');
+        vowel.add('o'); vowel.add('u');
+         vowel.add('A'); vowel.add('E'); vowel.add('I');
+        vowel.add('O'); vowel.add('U');
+        
+        if(n==1 && !vowel.contains(s.charAt(0))) return s;
+        int lo = 0; int hi = n-1;
+        
+        while(lo<=hi){
+            while(!vowel.contains(s.charAt(lo))) {
+                lo++;
+                if(lo>=n) break;
+            }
+            while(!vowel.contains(s.charAt(hi))) {
+                hi--;
+                if(hi<0) break;
+            }
+            // System.out.println("lo "+lo+" "+s.charAt(lo));
+            // System.out.println("hi "+hi+" "+s.charAt(hi));
+            if(lo>hi) break;
+            swap(ch, lo++, hi--);
+        }
+    
+        return new String(ch);
+    }
+
     /** POINTS:
      * 1 HOW TO CONVERT TO UPPER AND LOWER CASE(-'a'+'A')
      * 2 USE SPLIT TO CONVERT TO ARRAY AND THE SORT
-     * STRING ARRAUY VS STRING
+     * STRING ARRAY VS STRING
      * 3 A LOT OF CODE HAS GONE INTO HANDLING BULLSHIT TESTCASE,
      * ESPECIALLY THE textNew
      */
@@ -246,6 +307,24 @@ class StringPractice {
         return res;
     }
 
+
+    // https://leetcode.com/problems/shifting-letters/
+    public String shiftingLetters(String str, int[] shifts) {
+        int n = shifts.length;
+        if (n == 0) return str;
+        
+        char[] ch = str.toCharArray();
+        int shift = 0;
+        for(int i =0; i<n; i++){
+            shift = shifts[i]%26;
+            for(int j = 0; j<=i; j++){
+                ch[j] = (char)((ch[j]-'a'+shift)%26+'a'); 
+                // System.out.println(ch[j]);
+            }
+            
+        }
+        return new String(ch);
+    }
 
     // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
     public String removeDuplicates(String str) {
@@ -2240,12 +2319,14 @@ class StringPractice {
 
     // https://leetcode.com/problems/multiply-strings/
     // https://leetcode.com/problems/boats-to-save-people/
-    // https://leetcode.com/problems/shifting-letters/
     // https://leetcode.com/problems/count-unique-characters-of-all-substrings-of-a-given-string/
     // https://leetcode.com/problems/camelcase-matching/
     // https://leetcode.com/problems/implement-trie-prefix-tree/
     // https://leetcode.com/problems/string-to-integer-atoi/discuss/4922/Java-Simple-clean-and-fast!
 
+    // https://www.geeksforgeeks.org/minimum-cost-to-partition-the-given-binary-string/
+    // https://stackoverflow.com/questions/32907406/
+    // is-there-an-efficient-algorithm-for-integer-partitioning-with-restricted-number
     public static void main(String[] args) {
         StringPractice string = new StringPractice();
         // System.out.println(string.reverse("word of"));

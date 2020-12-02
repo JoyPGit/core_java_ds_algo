@@ -1,5 +1,5 @@
 package Java_DS_Algo;
-import utilCustom.Utility;
+
 import java.util.*;
 
 class ListNode {
@@ -231,42 +231,29 @@ class LinkedPractice {
     }
 
     
-    // https://leetcode.com/problems/remove-nth-node-from-end-of-list/
-    /**
-     * boundary conditions : n=4 and {1,2,3,4}; n=3 and {1,2,3,4} here tracker goes
-     * till end and ptr is at head, so return head as soon as tracker is null as n
-     * is then beyond the length of list.
-     * 
-     * if ptr == head, just set ptr.next = ptr.next.next and return head; POINTS:
-     * LENGTH GREATER, TRACKER = NULL, RETURN PTR == HEAD, PTR.NEXT = PTR.NEXT.NEXT,
-     * RETURN
-     * 
-     * * INSTEAD OF TRAVERSING TWICE, RUN LOOP FOR N-K TIMES
-     * 
-     */
+    /** 
+     * [1,2], 2 tricky, [1], 1
+     * imp :  return head.next if(q == null)
+     * */ 
+    // https://leetcode.com/problems/remove-nth-node-from-end-of-list
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        if (head == null || n == 0)
-            return head;
-        ListNode tracker = head;
-        ListNode ptr = head;
-
-        for (int i = 0; i < n; i++) {
-            tracker = tracker.next;
-            if (tracker == null) {
-                head = head.next;
-                return head;
-            }
+        // p needs to be at 3, q at 5.next ultimately
+        // so move q to 4, calculate how much to traverse, n or n-1
+        ListNode p = head; ListNode q = head;
+        for(int i = 0; i<=n; i++){
+            // this is for only one test case [1,2], 2
+            if(q == null) return head.next;
+            q = q.next;
         }
-
-        while (tracker.next != null) {
-            tracker = tracker.next;
-            ptr = ptr.next;
+        
+        while(q!=null){ //use q not q.next
+            p = p.next; q = q.next;
         }
-
-        ptr.next = ptr.next.next;
-
+        
+        p.next = p.next.next;
         return head;
     }
+
 
     // imp : compare length of list and k 
     // [1], 99; [1], 1; [1,2,3,4,5], 10

@@ -1,4 +1,4 @@
-package utilCustom;
+package Java_DS_Algo;
 
 import java.util.*;
 
@@ -36,7 +36,7 @@ public class Utility {
      * Since they occupy same amount of bits, the amount of numbers each is capable 
      * to express are nearly equal (actually, double can represent fewer numbers).
     */
-    void hashiterator(HashMap<Integer, Integer> map) {
+    public void hashiterator(HashMap<Integer, Integer> map) {
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
@@ -53,7 +53,7 @@ public class Utility {
     int[] resCourse = Arrays.stream(set.toArray()).mapToInt(o -> (int)o).toArray();
 
     // coverting min heap to max heap
-    void maxheap() {
+    public void maxheap() {
         PriorityQueue<Integer> pq = new PriorityQueue<>((x, y) -> y - x);
         pq.add(10);
         pq.add(5);
@@ -71,7 +71,7 @@ public class Utility {
      * 
      * NO NEED TO USE SUBSTRING, S.deleteCharAt
      */
-    void sortString(String original) {
+    public void sortString(String original) {
         char[] chars = original.toCharArray();
         Arrays.sort(chars);
         String sorted = new String(chars);
@@ -83,7 +83,7 @@ public class Utility {
 
     // check for integer if(a!=(int)a) return res;
 
-    void intTodouble(int n) {
+    public void intTodouble(int n) {
         /*
          * valueOf() method of Double class converts the passed value to the double
          * value.
@@ -91,7 +91,7 @@ public class Utility {
         Double dnum = Double.valueOf(n);
     }
 
-    void doubleToint(double n) {
+    public void doubleToint(double n) {
         int value = (int) n;
     }
 
@@ -109,7 +109,7 @@ public class Utility {
      * String.valueOf() method and then passing the converted value to the method.
      */
 
-    void charToint() {
+    public void charToint() {
         char ch = '9';
 
         /*
@@ -122,7 +122,7 @@ public class Utility {
         System.out.println(num);
     }
 
-    void stringToint(String s) {
+    public void stringToint(String s) {
         char[] ch = s.toCharArray();
         int num = Integer.parseInt(new String(ch));
         System.out.println(num);

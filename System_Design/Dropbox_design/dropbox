@@ -1,0 +1,136 @@
+System design Dropbox or Google drive.
+Narendra L
+Dec 6, 2018·5 min read
+
+
+I am pretty sure you have used either Google Drive or Dropbox!!
+Have you ever wondered how these services works internally to provide 
+features like File Upload, Update, Delete and Download?
+File versioning
+File and folder sync
+Here is the high-level explanation of how these systems works under the hood
+
+The problem statement!! Where and how to save file?
+While providing file upload and sync as service it is not a good 
+idea to save the file as a whole. The reasons being
+Bandwidth and cloud space utilization: Whenever we want to sync the same 
+file in different clients or keep multiple version of the file to 
+provide history of updates to the file. It isn’t good idea to always 
+backup and transfer the whole file to and fro as it takes more space!!
+Latency or Concurrency utilization: It takes more time to upload single 
+file as a whole. Also we cant upload file concurrently using multi threads 
+or multi processes.
+
+So the better model is to break the files in to multiple chunks and 
+then its easier to upload, save and keep multiple version of files by 
+just saving the chunks which are updated upon file update.
+These chunks are named by the hash of the chunk’s content itself.
+We also need to store all the chunks names and order(metadata) 
+information to recreate the file using chunks when we download/Sync.
+
+Now System design:
+
+Lets assume we have file upload client installed on computer/mobile
+Desktop Client Application monitors the folders that are identified 
+as workspace or sync folders and synchronizes them with the remote 
+Cloud Storage. 
+
+The Desktop Client interacts with the Synchronization Service to handle 
+file metadata updates (e.g. file name, size, modification date, etc). 
+It also interacts with the backend Cloud Storage for storing 
+the actual files. 
+Some of the most important requirements of the Desktop Client include 
+upload and download of the files, detecting file changes in the sync folder, 
+and handling conflicts due to offline or concurrent updates. 
+
+The main components of the desktop client are 
+Watcher, Chunker, Indexer, and Internal DB :
+
+• Watcher monitors the sync folders and notifies the Indexer of any 
+action performed by the user for example when user create, delete
+or update files or folders.
+
+• Chunker splits the files into smaller pieces called chunks. 
+To reconstruct a file, chunks will be joined back together in the 
+correct order. A chunking algorithm can detect the parts of the files 
+that have been modified by user and only transfer those parts to the 
+Cloud Storage, saving on cloud storage space, bandwidth usage, and 
+synchronization time.
+
+• Indexer processes the events received from the Watcher and updates 
+the internal database with information about the chunks of the modified 
+files. Once the chunks are successfully submitted to the Cloud Storage, 
+the Indexer will communicate with the Synchronization Service using the 
+Message Queuing Service to update the Metadata Database with the changes.
+
+• Internal Database keeps track of the chunks, files, their versions, 
+and their location in the file system
+
+
+Metadata Database
+The Metadata Database is responsible for maintaining the versioning 
+and metadata information about files/chunks, users, and workspaces. 
+The Metadata Database can be a relational database such as MySQL, 
+or a NoSQL database. we just need to make sure we meet the data consistency.
+Here is sample metadata json
+
+
+Message Queuing Service
+
+
+An important part of our reference architecture is a messaging middleware 
+that should be able to handle a substantial amount of reads and writes. 
+A scalable Message Queuing Service that supports asynchronous 
+message-based communication between clients and the Synchronization 
+Service instances best fits the requirements of our application. 
+The Message Queuing Service supports asynchronous and 
+loosely coupled message-based communication between distributed 
+components of the system. The Message Queuing Service should be of 
+high performance, highly scalable, and be able to persistently store 
+any number of messages in a highly available and reliable queue. 
+
+
+The Message Queuing Service also provides load balancing and elasticity 
+for multiple instances of the Synchronization Service. 
+Figre 3 illustrates two types of 
+queues that are used in our Message Queuing Service. 
+
+The Request Queue is a global queue that is shared among all clients. 
+Clients’ requests to update the Metadata Database through the 
+Synchronization Service will be sent to the Request Queue. 
+
+The Response Queues that correspond to individual subscribed clients 
+are responsible for delivering the update messages to each client. 
+Since a message will be deleted from the queue once received by a client, 
+we need to create separate Response Queues for each client to be able to 
+share an update message which should be sent to multiple subscribed clients
+
+Synchronization Service
+
+The Synchronization Service is the component that processes file 
+updates made by a client and applies these changes to other subscribed 
+clients. It also synchronizes clients’ local databases with the 
+information stored in the Metadata Database. This is the most 
+important part of the system architecture due to its critical role 
+in managing the metadata and synchronizing users’ files. Desktop 
+clients communicate with the Synchronization Service to either 
+obtain updates from the Cloud Storage, or send files and updates 
+to the Cloud Storage and potentially other users.
+If a client was offline for a period of time, it polls the system 
+for new updates as soon as it goes online. When the Synchronization 
+Service receives an update request, it checks with the Metadata Database 
+for consistency and then proceeds with the update. Subsequently, 
+a notification is sent to all subscribed users or devices to report 
+the file update.
+
+Cloud Storage
+Cloud Storage/Block server stores the chunks of the files uploaded by 
+the users. Clients directly interact with the Cloud Storage to send and 
+receive objects using the API provided by the cloud provider. 
+You can use Amazon s3 like service if you dont want to build and maintain 
+the cloud storage.
+
+WRITTEN BY
+
+Narendra L
+Techdummies@YouTube
