@@ -23,7 +23,7 @@ You write a read-through handler and register it with your cache,
 and then your cache calls this handler at appropriate times.
 
 One important capability of a read-through 
-handler is that the data you cache is fetched by the cache directly 
+handler is that the data you cache, is fetched by the cache directly 
 from the database. They can just fetch data from the cache, and if 
 the cache doesn't have it, the cache goes and takes it from the database.
 
@@ -161,6 +161,7 @@ reading it, don't use the replicated topology.
 
 
 TRANSACTIONAL DATA CACHING (READS == WRITES)
+ONE PARTITION IN EACH SERVER
 
 A partitioned cache breaks up the cache into partitions and then 
 stores one partition on each cache server in the cluster. This 

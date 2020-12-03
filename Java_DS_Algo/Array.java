@@ -65,9 +65,21 @@ class Array {
      * 7 USING XOR
      * 8 CIRCULAR ARRAY 
      */
+
+    int binarrySearch(int[] arr, int key){
+        int n = arr.length; int res = -1; 
+        int lo = 0; int hi = n-1;
+        while(lo<=hi){
+            int mid = lo+ (hi-lo)/2;
+            if(arr[mid] == key) res = mid;
+            else if(arr[mid]>key) hi= mid-1;
+            else lo = mid+1;
+        }
+        return res;
+    }
    
 
-
+    // 2nd SECOND TEMPLATE OF BS, 
     /** 
      * 3 STEP BINARY
      * POINTS :
@@ -78,7 +90,6 @@ class Array {
      * 5 RETURN nums[low]
      */
     // [4,5,1,2,3]
-    // 2nd SECOND TEMPLATE OF BS, 
     // WORKS FOR DUPLICATES TOO (high--)
     // move towards smaller el, if(mid>hi) lo = mid+1
     // https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
@@ -137,6 +148,25 @@ class Array {
         return false;
     }
     
+    // https://leetcode.com/problems/intersection-of-two-arrays
+    public int[] intersection(int[] nums1, int[] nums2) {
+        HashSet<Integer> set = new HashSet<>();
+        List<Integer> list = new ArrayList<>();
+        
+        for(int i : nums1) set.add(i);
+        for(int i : nums2){
+            if(set.contains(i)) {
+                list.add(i);
+                set.remove(i);
+            }
+        }
+        
+        int[] res = new int[list.size()]; int index = 0;
+        for (int i : list) {
+            res[index++] = i;
+        }
+        return res;
+    }
 
     /**
      * 3 TECHNIQUES:

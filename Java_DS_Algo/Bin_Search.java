@@ -1,7 +1,7 @@
 package Java_DS_Algo;
 import java.util.*;
 // import utilCustom.Utility;
-public class Searching {
+public class Bin_Search {
     
     /**
      * find min : compare with hi, return lo
@@ -12,7 +12,7 @@ public class Searching {
      * high = mid -1;
      * only in 2nd template high = mid
      */
-    Searching(){}
+    Bin_Search(){}
 
     int binarySearch(int[] arr, int key){
         int low = 0; int high = arr.length-1;
@@ -707,7 +707,7 @@ public class Searching {
     // queries-to-find-kth-greatest-character-in-a-range-l-r-from-a-string-with-updates/
     // ?ref=leftbar-rightbar
     public static void main(String[] args){
-        Searching coronaSearch = new Searching();
+        Bin_Search coronaSearch = new Bin_Search();
         int[] arr = {1,3,3,5,8,11,14};//,4,6,7,9,21,43};
 
         // coronaSearch.findFloor(arr, 5);

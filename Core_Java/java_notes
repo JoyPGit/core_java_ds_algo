@@ -146,10 +146,6 @@ as a program or application. However a program itself contains multiple
 processes inside it. Java runtime environment runs as a single process 
 which contains different classes and programs as processes.
 
-Thread
-Thread can be called lightweight process. 
-Thread requires less resources to create and exists in the process, 
-thread shares the process resources.
 
 
 Processes and Threads
@@ -273,6 +269,7 @@ public class TestThread {
       R2.start();
    }   
 }
+
 This will produce the following result −
 
 Output

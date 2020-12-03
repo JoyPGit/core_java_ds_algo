@@ -1,0 +1,77 @@
+Ethernet
+
+Posted by: Margaret Rouse
+WhatIs.com
+  
+Contributor(s): Wesley Chai, Alissa Irei and John Burke
+
+Ethernet is the traditional technology for connecting devices in a 
+wired local area network (LAN) or wide area network (WAN), enabling 
+them to communicate with each other via a protocol -- a set of rules 
+or common network language. Ethernet describes how network devices can 
+format and transmit data so other devices on the same local or campus 
+area network segment can recognize, receive and process the information. 
+An Ethernet cable is the physical, encased wiring over which the data 
+travels.
+
+Connected devices accessing a geographically localized network with a 
+cable -- that is, with a wired rather than wireless connection -- 
+likely use Ethernet.
+
+Advantages :
+
+relatively low cost;
+backward compatibility;
+generally resistant to noise;
+good data transfer quality;
+speed;
+reliability; and
+data security -- common firewalls can be used.
+
+
+Disadvantages :
+
+It is intended for smaller, shorter distance networks.
+Mobility is limited.
+Use of longer cables can create crosstalk.
+It does not work well with real-time or interactive applications.
+Increased traffic makes the Ethernet speed go down.
+Receivers do not acknowledge the reception of data packets.
+When troubleshooting, it is hard to trace which specific cable or 
+node is causing the issue.
+
+How Ethernet works
+
+IEEE specifies in the family of standards called IEEE 802.3 that the 
+Ethernet protocol touches both Layer 1 (physical layer) and Layer 2 
+(data link layer) on the Open Systems Interconnection (OSI) network 
+protocol model.
+
+Ethernet defines two units of transmission: packet and frame. 
+The frame includes not just the payload of data being transmitted, 
+but also the following:
+
+1 the physical media access control (MAC) addresses of both the sender 
+and receiver;
+2 virtual LAN (VLAN) tagging and quality of service (QoS) information; and
+error correction information to detect transmission problems.
+3 Each frame is wrapped in a packet that contains several bytes of 
+information to establish the connection and mark where the frame starts.
+
+HUBS TO SWITCHES
+Later, Ethernet hubs largely gave way to network switches. 
+Because a hub cannot discriminate between points on a network segment, 
+it can't send data directly from point A to point B. Instead, whenever 
+a network device sends a transmission via an input port, the hub copies 
+the data and distributes it to all the available output ports.
+
+In contrast, a switch intelligently sends any given port only the 
+traffic intended for its devices rather than copies of any and all the 
+transmissions on the network segment, thus improving security and efficiency.
+
+Like with other network types, involved computers must include a 
+network interface card (NIC) to connect to Ethernet.
+
+
+
+

@@ -411,6 +411,8 @@ public class Heap {
      * 3 IF SIZES ARE SAME, EVEN SO AVERAGE OF TOP ELS
      * ELSE MAX.PEEK()
      * 
+     * aisa
+     * max->min->size->max
     */
     class MedianFinder {
         // https://leetcode.com/problems/find-median-from-data-stream

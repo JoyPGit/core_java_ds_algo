@@ -47,8 +47,8 @@ The main components of the desktop client are
 Watcher, Chunker, Indexer, and Internal DB :
 
 • Watcher monitors the sync folders and notifies the Indexer of any 
-action performed by the user for example when user create, delete
-or update files or folders.
+action performed by the user for ex when user creates, deletes
+or updates files or folders.
 
 • Chunker splits the files into smaller pieces called chunks. 
 To reconstruct a file, chunks will be joined back together in the 

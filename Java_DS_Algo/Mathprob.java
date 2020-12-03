@@ -168,6 +168,50 @@ public class Mathprob {
         return res;
     }
 
+    /** 
+     * POINTS :
+     * 1 MARK -VE, ONLY IF +VE
+     * 2 ITERATE AGAIN AND ADD INDEX+1 WHERE nums[index] > 0
+     * 
+     * imp : nums[Math.abs(i)-1]
+    */
+    // https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        int n = nums.length;
+        List<Integer> res = new ArrayList<>();
+        for(int i : nums){
+            if(nums[Math.abs(i)-1]>0) nums[Math.abs(i)-1]*=-1; // 1
+        }
+        
+        for(int i=0; i<n; i++){
+            if(nums[i]>0) res.add(i+1); // 2
+        }
+        return res;
+    }
+    
+
+    // imp : add to set, remove from set
+    // https://leetcode.com/problems/intersection-of-two-arrays
+    public int[] intersection(int[] nums1, int[] nums2) {
+        HashSet<Integer> set = new HashSet<>();
+        List<Integer> list = new ArrayList<>();
+        
+        for(int i : nums1) set.add(i);
+        for(int i : nums2){
+            if(set.contains(i)) {
+                list.add(i);
+                set.remove(i);
+            }
+        }
+        
+        int[] res = new int[list.size()]; int index = 0;
+        for (int i : list) {
+            res[index++] = i;
+        }
+        return res;
+    }
+
+
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
     public int maxProfit(int[] prices) {
         int n = prices.length;
@@ -180,22 +224,20 @@ public class Mathprob {
         return profit;
     }
 
+    /** 
+     * if mod == 0 add one to numBottles
+    */
     // https://leetcode.com/problems/water-bottles/
     public int numWaterBottles(int numBottles, int numExchange) {
-        int i = 0; 
-        while(i <= numBottles){
-            if(i%numExchange==0) {
-                numBottles++;
-            }
-            i++;
+        int count = 0; int empty = 0;
+        while(numBottles>0){
+            count++; empty++;
+            if(empty%numExchange == 0) numBottles++;
+            numBottles--;
         }
-
-        // for(i =1; i<=numBottles; i++){
-        //     if(i%numExchange==0) numBottles++;
-        // }
-        // System.out.println(numBottles);
-        return numBottles;
+        return count;
     }
+
     
     // https://www.youtube.com/watch?v=UcTKk2y_3s4
     // https://leetcode.com/problems/excel-sheet-column-title/

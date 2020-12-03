@@ -237,20 +237,19 @@ class LinkedPractice {
      * */ 
     // https://leetcode.com/problems/remove-nth-node-from-end-of-list
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        // p needs to be at 3, q at 5.next ultimately
-        // so move q to 4, calculate how much to traverse, n or n-1
         ListNode p = head; ListNode q = head;
-        for(int i = 0; i<=n; i++){
-            // this is for only one test case [1,2], 2
-            if(q == null) return head.next;
+        for(int i =0; i<n; i++){
+            p = p.next;
+        }
+        if(p == null){
+            head = head.next;
+            return head;
+        }
+        while(p.next!=null){
+            p = p.next;
             q = q.next;
         }
-        
-        while(q!=null){ //use q not q.next
-            p = p.next; q = q.next;
-        }
-        
-        p.next = p.next.next;
+        q.next = q.next.next;
         return head;
     }
 
