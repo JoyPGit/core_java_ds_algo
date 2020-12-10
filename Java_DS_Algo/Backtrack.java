@@ -646,6 +646,12 @@ public class Backtrack {
      * 4 imp row offset and col offset
      * board[3*(row/3) + i/3][3*(col/3) + i%3] == c
      * 
+     * f(){
+     *  if('.') {
+     *     c = '1'-'9'
+     *     f();
+     *  } else c = '.'
+     * }
      */
     // https://leetcode.com/problems/sudoku-solver
     public void solveSudoku(char[][] board) {

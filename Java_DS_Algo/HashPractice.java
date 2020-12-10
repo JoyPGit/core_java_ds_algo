@@ -4,6 +4,8 @@ import java.util.*;
 
 //how hashmaps work https://www.youtube.com/watch?v=c3RVW3KGIIE
 
+// https://www.geeksforgeeks.org/internal-working-of-hashmap-java/
+
 /** 
  * ** min window
  * subarray sums div by k, longest subarray of 0s and 1s
@@ -669,6 +671,23 @@ class HashPractice{
     // 895204/Java-DFS-2-ms-faster-than-100.00-39-MB-less-than-12.94
 
 
+    /** 
+     * 1 max = -1, return -1 if no such el exists
+     * 2 iterate over arr and check if -ve exists, if yes then update max
+    */
+    // { 3, 2, -2, 5, -3 };
+    // https://leetcode.com/discuss/interview-question/406031/
+    public int largestPositiveNegativeK(int[] arr){
+        HashSet<Integer> set = new HashSet<>();
+        int max = -1;
+        for(int i : arr){
+            if(set.contains((-1)*i)){
+                max = Math.max(max, Math.abs(i));
+            }
+            else set.add(i);
+        }
+        return max;
+    }
     // https://www.geeksforgeeks.org/find-pair-with-greatest-product-in-array/
 
     // https://leetcode.com/problems/pairs-of-songs-with-total-durations-divisible-by-60/
@@ -678,6 +697,7 @@ class HashPractice{
 
     // https://leetcode.com/problems/longest-consecutive-sequence/
     
+
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();

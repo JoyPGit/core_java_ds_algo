@@ -398,6 +398,32 @@ class LinkedPractice {
         return dummy.next;
     }
 
+
+    /** 
+     * GO TILL MID AND THEN REVERSE FROM MID.NEXT
+     * TRAVERSE BOTH LISTS SIMULTANEOUSLY
+     * IF VALUE IS NOT SAME RETURN FALSE
+    */
+    // https://www.geeksforgeeks.org/function-to-check-if-a-singly-linked-list-is-palindrome/
+    boolean isPalindrome(ListNode head){
+        //Your code here
+        ListNode fast = head, slow = head;
+        while(fast.next!=null && fast.next.next!=null){
+            fast = fast.next.next; 
+            slow = slow.next;
+        }
+
+        ListNode newHead = reverse(slow.next);
+        fast = head;
+        slow = newHead;
+        while(fast!=null && slow!=null){
+            if(fast.val != slow.val) return false;
+            fast = fast.next; slow = slow.next;
+        }
+        return true;
+        
+    } 
+
     // DIVIDING INTO TWO LISTS, USING DUMMY NODES
     /**
      * WHILE CONDN (p!=null) AS ALL NODES AHEV TOP BE TRAVERSED 
@@ -606,17 +632,15 @@ class LinkedPractice {
      * null, so c goes null before, put a check
      */
     public ListNode reverseList(ListNode head) {
-        if (head == null)
-            return head;
+        if (head == null) return head;
+
         ListNode a = null;
         ListNode b = head;
         ListNode c = head.next;
         while (b != null) {
             b.next = a;
-            a = b;
-            b = c;
-            if (c != null)
-                c = c.next;
+            a = b; b = c;
+            if (c != null) c = c.next;
         }
         return a;
     }

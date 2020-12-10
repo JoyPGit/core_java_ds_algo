@@ -414,6 +414,19 @@ class Array {
         return ++j;
     }
 
+    // recursive, return when index == n
+    public int removeDuplicates2(int[] nums) {
+        return removeHelper(nums, 0, 0);
+    }
+    
+    int removeHelper(int[] arr, int index, int j){
+        if(index == arr.length) return j+1;
+        
+        if(arr[index]!=arr[j]){
+            arr[++j] = arr[index];
+        }
+        return removeHelper(arr, index+1, j);
+    }
     
     ////////////////////////// 2 SUM, 3 SUM
 
@@ -942,6 +955,7 @@ class Array {
         return count;
     }
 
+    // https://www.geeksforgeeks.org/sum-of-all-subarrays/
 
     // https://leetcode.com/problems/next-permutation/
 

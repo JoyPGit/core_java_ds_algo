@@ -581,6 +581,56 @@ class Greedy{
         }
         return res.size()-j;
     }
+
+
+    /** 
+     * POINTS:
+     * 1 KEEP COUNT IN CUSTOM OBJ
+     * 2 USE A HASHSET TO STORE FREQ
+     * 3 KEEP DECREASING FREQ TILL THE NEW FREQ DOESN'T EXIST
+     * OR 0 IS REACHED
+     * 4 ADD REDUCED FREQ TO SET
+    */
+    class Node{
+        char c; int freq;
+        Node(char c, int f){
+            this.c = c; this.freq = f;
+        }
+    }
+    
+    public int minDeletions(String s) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        HashSet<Integer> freqSet = new HashSet<>();
+        
+        for(int i =0; i<s.length(); i++){
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
+        }
+        
+        List<Node> res = new ArrayList<>();
+        
+        for(HashMap.Entry<Character, Integer> e: map.entrySet()){
+            res.add(new Node(e.getKey(), e.getValue()));   
+            freqSet.add(e.getValue()); 
+        }
+        
+        Collections.sort(res, (x,y)->x.freq-y.freq); // 2
+
+        int count = 0;
+        for(int i =0; i<res.size(); i++){
+            int j = i+1;
+            while(j<res.size() && res.get(i).freq == res.get(j).freq) {
+                int freq = res.get(j).freq;
+                while(freq>0 && freqSet.contains(freq)){ // 3
+                    freq--;
+                    count++;
+                }
+                freqSet.add(freq); // 4
+                j++;
+            }
+            i = j-1;
+        }
+        return count;
+    }
     
     ////////////////////////////////////////
 

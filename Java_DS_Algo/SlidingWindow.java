@@ -410,6 +410,34 @@ public class SlidingWindow {
         return len;
     }
 
+    /** 
+     * OPTIMISED:
+     * 1 IF SET CONTAINS s.charAt(i), KEEP REMOVING TILL 
+     * s.charAt(i) IS REMOVED.
+     * 2 WHILE REMOVING DON'T UPDATE LENGTH AS IT WILL 
+     * ALWAYS BE SMALLER AS left++
+     * 3 GO TILL left!=i
+     * 4 
+    */
+    public int lengthOfLongestSubstring2(String s) {
+        int len = 0; int left = 0;
+        HashSet<Character> set = new HashSet<>();
+        
+        for(int i =0; i<s.length(); i++){
+            if(!set.contains(s.charAt(i))){
+                set.add(s.charAt(i));
+                len = Math.max(len, i - left+1);
+            }
+            else{
+                while(left!=i && set.contains(s.charAt(i))){
+                    set.remove(s.charAt(left++));
+                }
+                set.add(s.charAt(i));
+            }
+        }
+        return len;
+    }
+
     // similar
     // https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/
 

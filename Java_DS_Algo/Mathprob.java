@@ -14,6 +14,18 @@ public class Mathprob {
         return gcd(b, a%b);
     }
 
+    // https://practice.geeksforgeeks.org/problems/power-of-2-1587115620/1
+    // Function to check if given number is power of two
+    public static boolean isPowerofTwo(long n){
+        long x = 2;
+        if(n == 1 || n == 2) return true;
+        while(x<n){
+            x*=2;
+            if(n==x) return true;
+        }
+        return false;
+    }
+
     // https://leetcode.com/problems/count-primes/
     public int countPrimes(int n) {
         int count =0;

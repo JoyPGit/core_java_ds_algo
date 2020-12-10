@@ -1212,59 +1212,51 @@ class Matrix {
     }
 
     
-    // Java program to print a given matrix in spiral form
-
-    // int i, k = 0, l = 0;
     /*
-     * k - starting row index m - ending row index l - starting column index n -
-     * ending column index i - iterator
+     * POINTS :
+     * 1 USE 4 VARS rS, rE, cS, cE
+     * 2 BASE CONDITION while(rS <= rE && cS<=cE)
+     * 
+     * 3 MOVE FROM CS TILL CE, NEXT START FROM RS, SO RS++
+     * the row or col from where the next print will start is 
+     * changed.
+     * 
+     * 4 ENSURE rS<rE AND cS<cE, ELSE CONTINUE
+     * 
      */
-    // }
-
-    void printSpiral29Apr(int[][] arr) {
-        int rowEnd = arr.length - 1;
-        int colEnd = arr[0].length - 1;
-
-        int i, rowStart = 0, colStart = 0;
-        /*
-         * k - starting row index m - ending row index l - starting column index n -
-         * ending column index i - iterator
-         */
-
-        while (rowStart <= rowEnd && colStart <= colEnd) {
-            // Print the first row from the remaining rows
-            for (i = colStart; i <= colEnd; ++i) {
-                System.out.print(arr[rowStart][i] + " ");
+    // https://leetcode.com/problems/spiral-matrix/
+    public List<Integer> spiralOrder(int[][] matrix) {
+        int m = matrix.length; int n = matrix[0].length;
+        int rS = 0; int cS = 0; int rE = m-1; int cE = n-1;
+        List<Integer> res = new ArrayList<>();
+        
+        while(rS <= rE && cS<=cE){
+            for(int i = cS; i<=cE; i++){
+                res.add(matrix[rS][i]);    
             }
-            rowStart++;
-            /**
-             * for the row the column counters are used, and the rowstart is constant whihc
-             * is changed after the loop
-             */
+            rS++;
 
-            // Print the last column from the remaining columns
-            for (i = rowStart; i <= rowEnd; ++i) {
-                System.out.print(arr[i][colEnd] + " ");
+            for(int i = rS; i<=rE; i++){
+                res.add(matrix[i][cE]);    
             }
-            colEnd--;
+            cE--;
 
-            // Print the last row from the remaining rows */
-            if (rowStart <= rowEnd) {
-                for (i = colEnd; i >= colStart; --i) {
-                    System.out.print(arr[rowEnd][i] + " ");
-                }
-                rowEnd--;
+            if (rS > rE) continue;
+            for(int i = cE; i>=cS; i--){
+                res.add(matrix[rE][i]);    
             }
+            rE--;
 
-            // Print the first column from the remaining columns */
-            if (colStart <= colEnd) {
-                for (i = rowEnd; i >= rowStart; --i) {
-                    System.out.print(arr[i][colStart] + " ");
-                }
-                colStart++;
+            if (cS > cE) continue;
+            for(int i = rE; i>=rS; i--){
+                res.add(matrix[i][cS]);    
             }
+            cS++;
         }
+        return res;
     }
+
+    
 
     void antiDiaPrint(int[][] arr) {
         int sum = 0;
