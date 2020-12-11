@@ -1042,35 +1042,34 @@ class StringPractice {
 
     /** 
      * POINTS : 
-     * 1 FOR EACH CHAR, IF NOT PRESENT IN MAP, FIND LENGTH
-     * 2 IF PRESENT, UPDATE LEFT
-     * 3 PUT IN MAP
+     * 1 FOR EACH CHAR, IF PRESENT IN SET, REMOVE CHAR AT LEFT TILL 
+     * CURRENT CHAR IS REMOVED.
+     * 2 PUT IN MAP
+     * 3 UPDATE LENGTH
      * 
      * handle aab, pwwke, dvdf
      * 
     */
     // https://leetcode.com/problems/longest-substring-without-repeating-characters
     public int lengthOfLongestSubstring(String s) {
-        int n = s.length();
-        if(n == 0) return n;
-        HashMap<Character, Integer> map = new HashMap<>();
-        int len = 0; 
-        int left = 0;
-        
-        for(int i =0; i<n; i++){
-            if(map.containsKey(s.charAt(i))) {
-                left = Math.max(left, map.get(s.charAt(i))+1);
+        HashSet<Character> set = new HashSet<>();
+        int left = 0; int len = 0;
+        for(int i =0; i<s.length(); i++){
+            if(set.contains(s.charAt(i))) {
+                while(set.contains(s.charAt(i)) && left!=i) set.remove(s.charAt(left++));
             }
-            len = Math.max(len, i-left+1);   
-            map.put(s.charAt(i), i);
+            set.add(s.charAt(i));
+            len = Math.max(len, i- left+1);
         }
         return len;
     }
 
     /**
-     * IMP TECHNIQUE TO GENERATE SUBSTRINGS 1 i = 0 till n-1 2 j = 0 till n
+     * IMP TECHNIQUE TO GENERATE SUBSTRINGS 
+     * 1 i = 0 till n-1 2 j = 0 till n
      * substring takes start and end ptr, includes start but excludes end ex.
-     * ("abc").subsring(2,3) = "c" index 2 = 2 till index 3. Out of bounds error
+     * ("abc").subsring(2,3) = "c" index 2 = 2 till index 
+     * 3. Out of bounds error
      * doesn't occur
      */
 
@@ -1121,6 +1120,77 @@ class StringPractice {
             return;
         }
         recPalindromeUtil(ch, start + 1, end - 1);
+    }
+
+
+    /** 
+     * Min Adj Swaps to Make Palindrome :
+     * 1 START FROM LEFT AND GO TILL n/2; FOR EVEN AND ODD BOTH
+     * 2 COMPARE I AND RIGHT, IF NOT SAME MOVE p TILL SAME CHAR IS FOUND
+     * 3 IF i== p, MIDDLE CHAR, HENCE MOVE TO MID
+     * 4 USE A FLAG WHEN MOVE TO MID OCCURS
+     * 5 
+     * 
+    */
+    // https://www.youtube.com/watch?v=zXpYs8j5oI8
+    // abaeacabdcccd 21, asflkj -1, 
+    // https://leetcode.com/discuss/interview-question/351783/
+    int swapCount = -1;
+    int minSwaps(String str){
+        if(!canBePalindorme(str)) {
+            System.out.println("can't be made a palindrome");
+            return swapCount;
+        }
+        int n= str.length();
+        swapCount = 0;
+        char ch[] = str.toCharArray();
+        int right = n-1;
+        boolean midChar = false;
+        for(int i =0; i<n/2; i++){
+            int p = right;
+            if(ch[i] != ch[p]){
+                System.out.println("i "+i+" right "+right);
+                while(ch[p] != ch[i] && p>=i) {
+                    // middle char, single occurence
+                    p--;
+                    if(i == p){
+                        System.out.println("in here with "+ch[p]);
+                        midChar = true;
+                        move(ch, i, n/2);
+                        continue;
+                    }
+                }
+                if(!midChar)move(ch, p, right);
+            }
+            if(midChar){
+                // moving to same i in case of middle char
+                i--;
+            }else{
+                right--;
+            }
+            midChar = false;
+
+        }
+        System.out.println("no of adj swaps needed "+swapCount);
+        return swapCount;
+    }
+
+    void move(char[] ch, int start, int end){
+        char temp = ch[start];
+        for(int i =start; i<end; i++){
+            ch[i] = ch[i+1];
+            swapCount++;
+        }
+        ch[end] = temp;
+        System.out.println("start "+start+" end "+end + " "+ new String(ch));
+    }
+
+    boolean canBePalindorme(String str){
+        int odd = 0;
+        int[] ch = new int[26];
+        for(char c: str.toCharArray()) ch[c-'a']++;
+        for (int i : ch) if (i % 2 != 0) odd++;
+        return odd <= 1;
     }
 
     // https://leetcode.com/problems/palindromic-substrings/
@@ -2378,7 +2448,7 @@ class StringPractice {
 
         String s = "othello";
         String s1  = "aba";
-        System.out.println(s+" is palindrome "+string.palindrome(s));
+        // System.out.println(s+" is palindrome "+string.palindrome(s));
         // System.out.println(s.substring(2,3));
         // System.out.println(string.lexicographicSubConcat(s));
 
@@ -2423,6 +2493,9 @@ class StringPractice {
 
         char a = 'a'; char b = 'b';
         // System.out.println(a-b);
+
+        String strSwap = "abaeacabdcccd";//"abaeacdcccdab";//"asflkj";//"mamadee";//"mademaed";//
+        string.minSwaps(strSwap);
 
     }
 }
