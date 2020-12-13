@@ -4,7 +4,8 @@ import java.util.*;
 class Matrix {
     /** 
      * 
-     * PACIFIC ATLANTIC, OBSTACLES, WALLS AND GATES, WORD SEARCH
+     * PACIFIC ATLANTIC, OBSTACLES, WALLS AND GATES, 
+     * LONGEST PATH, WORD SEARCH
      * SPIRAL PRINT
      * PATH WITH OBSTACLES (USE DP, NO DFS)
      * 
@@ -538,52 +539,9 @@ class Matrix {
     }
 
     
-    /**
-     * 1 pass Integer.MAX_VALUE AS prev, TO START FIRST DFS 
-     * 2 pass current value for subsequent 
-     * 3 DON'T ADD DP CONDITION IN IN ISSAFE
-     */
-    void goldMine(int[][] grid) {
-        int max = -1;
-        int m = grid.length; int n =grid[0].length; 
-        int[][] dp = new int[m][n];
-        
-        int j, i;
-        for (i = 0; i < grid.length; i++) {
-            for (j = 0; j < grid[0].length; j++) {
-                max = Math.max(max,
-                    goldMineHelper(grid, i, j, dp, Integer.MIN_VALUE)); // 1 min_value
-            }
-        }
-        System.out.println("max gold is " + max);
-    }
+    // GOLD MINE
 
-    int goldMineHelper(int[][] grid, int row, int col, int[][] dp, int prev) {
 
-        if (isSafeGold(grid, row, col, prev)) { 
-            if (dp[row][col] != 0) return dp[row][col]; // 2
-
-            int curr = grid[row][col]; // 3
-
-            int left = goldMineHelper(grid, row, col - 1, dp, curr);
-            int right = goldMineHelper(grid, row, col + 1, dp, curr);
-            int up = goldMineHelper(grid, row - 1, col, dp, curr);
-            int down = goldMineHelper(grid, row + 1, col, dp, curr);
-
-            dp[row][col] = Math.max(left, Math.max(right, Math.max(up, down))) + curr; // 4
-
-            System.out.println("dp[" + row + "][" + col + "] " + dp[row][col]);
-            return dp[row][col]; // 5
-        } 
-        return 0;
-    }
-
-    boolean isSafeGold(int[][] grid, int row, int col, int prev){
-        if(row>=0 && row<grid.length
-        && col>=0 && col<grid[0].length
-        && grid[row][col] > prev) return true; // 5 > prev
-        return false;
-    }
     // https://www.techiedelight.com/probability-alive-after-taking-n-steps-island/
     
 
@@ -975,64 +933,73 @@ class Matrix {
 	 * NOES ARE UPDATED BEFORE ANY NODE WITH GREATER DISTANCE.
 	 * 
 	 * we add alls 2s, so all 2s will update neighbouring 1s at 
-	 * teh same time. so there won't be a case where a 1 farther
+	 * the same time. so there won't be a case where a 1 farther
 	 * is updated first.
+     * 
+     * imp : mark visited index and use size
 	 * 
 	 */
 	// https://leetcode.com/problems/rotting-oranges/
 	// NORMAL BFS
-	class Orange1 {
-		int row, col, val, time;
-
-		Orange1(int r, int c, int v, int t) {
-			this.row = r;
-			this.col = c;
-			this.val = v;
-			this.time = t;
-		}
-	}
-
-	public int orangesRotting1(int[][] grid) {
-		Deque<Orange1> q = new LinkedList<>();
-		int maxTime = 0;
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 2) q.add(new Orange1(i, j, 2, 0));
-			}
-		}
-
-		int[] rows = { -1, 0, 0, 1 };
-		int[] cols = { 0, -1, 1, 0 };
-		while (q.size() != 0) {
-			Orange1 curr = q.removeFirst();
-
-			for (int i = 0; i < rows.length; i++) {
-				int newX = curr.row + rows[i];
-				int newY = curr.col + cols[i];
-				if (isSafeOrange(grid, newX, newY)) {
-					grid[newX][newY] = 2;
-					q.addLast(new Orange1(newX, newY, 2, curr.time + 1));
-					maxTime = curr.time + 1;
-				}
-			}
-		}
-
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 1) return -1;
-			}
-		}
-		return maxTime;
-	}
-
-	boolean isSafeOrange(int[][] grid, int row, int col) {
-		if (row >= 0 && row < grid.length 
-		&& col >= 0 && col < grid[0].length 
-		// checking only if not visited
-		&& grid[row][col] == 1) return true;
-		return false;
+	class Node{
+        int row, col;
+        Node(int r, int c){
+            this.row = r; this.col = c;
+        }
+    }
+    public int orangesRotting(int[][] grid) {
+        Deque<Node> q = new LinkedList<>();
+        int m = grid.length; int n = grid[0].length;
+        int counter = -1;
+        
+        int[] rows = new int[]{0, -1, 1, 0};
+        int[] cols = new int[]{-1, 0, 0, 1};
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(grid[i][j] == 2) q.addLast(new Node(i, j));
+            }
+        }
+        
+        while(q.size()!=0){
+            // use size
+            int size = q.size();
+            for(int i =0; i<size; i++){
+                Node curr = q.removeFirst();
+                int row = curr.row; int col = curr.col;
+                for(int k =0; k<rows.length; k++){
+                    if(isSafe(grid, row+rows[k], col + cols[k])) {
+                        // mark
+                        grid[row+rows[k]][col + cols[k]] = 2;
+                        q.addLast(new Node(row+rows[k], col+cols[k]));
+                    }
+                }
+            }
+            counter++;
+        }
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(grid[i][j] == 1) return -1;
+            }
+        }
+        return counter<0?0:counter;
     }
     
+    boolean isSafe(int[][] grid, int row, int col){
+        if(row>= 0 && row<grid.length
+          && col>=0 && col<grid[0].length
+          && grid[row][col] == 1) return true;
+        return false;
+    }
+    
+    // https://tenderleo.gitbooks.io/leetcode-solutions-/content/GoogleHard/317.html
+    /** 
+     * 1 RUN BFS FROM ALL BUILDINGS.
+     * 2 STORE DIST IN A NEW 2D MATRIX (DISTANCE)
+     * 3 ALSO STORE IF THAT INDEX IS REACHABLE FROM THE BUILDINGS (REACH)
+     * 4 TRAVERSE THE DISTANCE MATRIX AND IF REACH == NO OF BUILDINGS
+     * STORE THE INDEX OF MIN DIST
+    */
 
     // all paths from a to b 
     // https://www.geeksforgeeks.org/print-paths-given-source-destination-using-bfs/
@@ -1041,6 +1008,7 @@ class Matrix {
 
 
     ///////////////////////////////// ROTATION
+    
     void rotateMatrix(int m, int n, int[][] arr) {
 
         int row = 0;

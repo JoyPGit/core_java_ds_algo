@@ -230,46 +230,34 @@ public class Heap {
      * 
      */
     // https://leetcode.com/problems/top-k-frequent-words/
-
-    class KFreq {
-        int freq;
-        String str;
-
-        KFreq(int f, String s) {
-            this.freq = f;
-            this.str = s;
+    class Node{
+        String word; int freq;
+        Node(String s, int f){
+            this.word =s; this.freq = f;
         }
     }
-
-    public ArrayList<String> topKFrequent(String[] words, int k) {
-        int n = words.length;
-        ArrayList<String> res = new ArrayList<>();
-        HashMap<String, Integer> map = new HashMap<>();
-
-        System.out.println('a' - 'b');
-        for (int i = 0; i < n; i++) {
-            map.put(words[i], map.getOrDefault(words[i], 0) + 1);
-        }
-
-        PriorityQueue<KFreq> heap = new PriorityQueue<KFreq>((x, y) -> {
-            if (x.freq == y.freq)
-                return x.str.compareTo(y.str);
-            // y.str.charAt(0) - x.str.charAt(0);
+    
+    public List<String> topKFrequent(String[] words, int k) {
+        
+        PriorityQueue<Node> pq = new PriorityQueue<>((x,y)->{
+            if(x.freq == y.freq) return (x.word).compareTo(y.word);
             return y.freq - x.freq;
         });
-
-        for (Map.Entry<String, Integer> e : map.entrySet()) {
-            String s = e.getKey();
-            int freq = e.getValue();
-            heap.add(new KFreq(freq, s));
+        
+        HashMap<String, Integer> map = new HashMap<>();
+        
+        for(String str : words){
+            map.put(str, map.getOrDefault(str, 0)+1);
         }
-        int counter = 0;
-
-        while (heap.size() != 0 && counter<k) {
-            System.out.println((heap.remove().str));
-            counter++;
+        
+        for(HashMap.Entry<String, Integer> e : map.entrySet()){
+            pq.add(new Node(e.getKey(), e.getValue()));
         }
-
+        
+        List<String> res = new ArrayList<>();
+        for(int i =0; i<k; i++){
+            res.add(pq.remove().word);
+        }
         return res;
     }
 
@@ -286,6 +274,16 @@ public class Heap {
      * INITIALIZE PREVFREQ BY POPPING ONCE KFREQ CURR
      * THEN RUN WHILE LOOP
      */
+    class KFreq {
+        int freq;
+        String str;
+
+        KFreq(int f, String s) {
+            this.freq = f;
+            this.str = s;
+        }
+    }
+    
     public ArrayList<String> topKFrequentDiff(String[] words, int k) {
         int n = words.length;
         ArrayList<String> res = new ArrayList<>();

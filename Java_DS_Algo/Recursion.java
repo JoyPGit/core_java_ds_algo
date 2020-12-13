@@ -538,6 +538,44 @@ public class Recursion {
         }
     }
 
+    /** 
+     * GENERATE ALL SUBSETS
+     * CHECK FOR DUPLICATE
+     * KEEP TRACK OF MAX
+    */
+    // ["a", "abc", "d", "de", "def"]
+    // https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters
+    int max = 0;
+    public int maxLength(List<String> arr) {
+        dfs(0, arr, "");
+        return max;
+    }
+    
+    void dfs(int index, List<String> list, String str){
+        max = Math.max(max, str.length());
+        if(index == list.size()) {
+            return;
+        }
+        
+        for(int i = index; i<list.size(); i++){
+            if(hasDuplicate(str+list.get(i))) continue;
+            str+=list.get(i);
+            // System.out.println("before "+str);
+            dfs(i+1,list, str);
+            str = str.substring(0, str.length() - list.get(i).length());
+            // System.out.println("after "+str);
+        }
+    }
+    
+    boolean hasDuplicate(String str){
+        int[] ch = new int[26];
+        for(char c : str.toCharArray()){
+            if(ch[c-'a']!=0) return true;
+            ch[c-'a']++;
+        }
+        return false;
+    }
+
     // dfs using backtracking
     // need to remove to get paths with same ancestors
     int n;
@@ -565,7 +603,9 @@ public class Recursion {
     
     void dfs(List<List<Integer>> res, List<Integer> curr, HashMap<Integer, List<Integer>> map, int start){
         if(start == n-1) res.add(new ArrayList<>(curr));
+
         if(!map.containsKey(start)) return;
+        
         List<Integer> list = map.get(start);
         for(int i : list){
             curr.add(i);

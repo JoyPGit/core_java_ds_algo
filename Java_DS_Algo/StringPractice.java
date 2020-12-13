@@ -1137,7 +1137,7 @@ class StringPractice {
     // https://leetcode.com/discuss/interview-question/351783/
     int swapCount = -1;
     int minSwaps(String str){
-        if(!canBePalindorme(str)) {
+        if(!canBePalindrome(str)) {
             System.out.println("can't be made a palindrome");
             return swapCount;
         }
@@ -1185,7 +1185,7 @@ class StringPractice {
         System.out.println("start "+start+" end "+end + " "+ new String(ch));
     }
 
-    boolean canBePalindorme(String str){
+    boolean canBePalindrome(String str){
         int odd = 0;
         int[] ch = new int[26];
         for(char c: str.toCharArray()) ch[c-'a']++;
