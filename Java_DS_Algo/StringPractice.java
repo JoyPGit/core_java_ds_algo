@@ -14,7 +14,7 @@ class StringPractice {
     // https://www.geeksforgeeks.org/string-data-structure/
     /**
      * string patterns
-     * no fo substrings all 3 chars,
+     * no of substrings containing all 3 chars,
      * longest repeating
      * longest palindrome
      * longest happy prefix
@@ -22,6 +22,7 @@ class StringPractice {
      * 
      * 
      * QUES : VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
+     * DECODE STRING, NO OF DECODINGS
      * WORD SEARCH, WORD LADDER, REORGANIZE, NUMBER OF DECODINGS,
      * LARGEST TIME
      * detect capital
@@ -637,7 +638,33 @@ class StringPractice {
         return gcd(b, a%b);
     }
 
+    /** 
+     * POINTS:
+     * 1 SWAP EACH CHAR WITH ALL ITS SUCCEEDING INDEXES
+     * 2 START FROM index = 0 
+     * 3 FOR SUBSEQUENT ITERATION index+1
+     * 4 
+    */
+    // all permutations
+    // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+    // List<List<String>> 
+    void allPermutations(String str){
+        char[] ch = str.toCharArray();
+        permHelper(ch, 0);
+    }
 
+    void permHelper(char[] ch, int index){
+        if(index == ch.length) System.out.println(new String(ch));
+        // swap with itself, so is starts from index
+        for(int i =index; i<ch.length; i++){
+            swap(ch, index, i);  
+            permHelper(ch, index+1);
+            // swapping back to prreserve the original order of string chars
+            swap(ch, index, i);
+        }
+    }
+
+    
     // https://leetcode.com/problems/sort-characters-by-frequency
     class SortFreq{
         char c; int count;
@@ -726,6 +753,46 @@ class StringPractice {
           && col>=0 && col<board[0].length
           && board[row][col] == ch) return true;
         return false;
+    }
+
+    /** 
+     * POINTS :
+     * 1 RUN 2 LOOPS 
+     * 2 CHECK IF dp[i][j] > j-i
+     * 3 UPPER HALF 
+     * 
+     * imp : fill first row and check for overlap dp[i][j] > j-i
+    */
+    int longestRepeatedNonOverlappingSubstring(String str) {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+        int max = 0;
+        // first row filled with 0 or 1
+        for(int i =1; i<n; i++){
+            if(str.charAt(0) == str.charAt(i)) dp[0][i] = 1;
+        }
+
+        for(int i =1; i<n; i++){
+            for(int j = i+1; j<n; j++){
+                if(str.charAt(i) == str.charAt(j)){
+                    if(i == 0) dp[i][j] = 0;
+                    else dp[i][j] = 1 + dp[i-1][j-1];
+
+                    // overlap
+                    if(dp[i][j]> j-i) dp[i][j] = 0;
+                    max = Math.max(max, dp[i][j]);
+                }
+            }
+        }
+
+        for(int i =0; i<n; i++){
+            for(int j = 0; j<n; j++){
+                System.out.print(dp[i][j]+", ");
+            }
+            System.out.println();
+        }
+        System.out.println("longest length repeated non-overlapping susbstring is "+max);
+        return max;
     }
 
 
@@ -846,6 +913,7 @@ class StringPractice {
         // match j with b.length()
         return j==b.length();
     }
+
 
     /** 
      * POINTS :
@@ -2418,6 +2486,8 @@ class StringPractice {
         // System.out.println(string.reverseWordOrderInAString("I love Java
         // Programming"));
         // string.convertToTitle(3);
+        String perm = "ABC";
+        string.allPermutations(perm);
 
         // string.reverse("abc");
         String x = "123";
@@ -2495,7 +2565,7 @@ class StringPractice {
         // System.out.println(a-b);
 
         String strSwap = "abaeacabdcccd";//"abaeacdcccdab";//"asflkj";//"mamadee";//"mademaed";//
-        string.minSwaps(strSwap);
+        // string.minSwaps(strSwap);
 
     }
 }

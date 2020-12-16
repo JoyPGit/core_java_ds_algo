@@ -154,6 +154,44 @@ public class Partition{
         return partitions<=maxPartitions;
     }
 
+    // kadane, but in dp format
+    // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
+    // maxSubArray(A, i) = maxSubArray(A, i - 1) > 0 ? maxSubArray(A, i - 1) : 0 + A[i]; 
+    // [-2,-1]
+    // https://leetcode.com/problems/maximum-subarray    
+    public int maxSubArray(int[] nums) {
+        if(nums.length == 1) return nums[0];
+        int sum = 0; int max = Integer.MIN_VALUE;
+        for(int i : nums){
+            sum+=i;
+            
+            max = Math.max(max, sum);
+            if(sum<0) sum = 0;
+            
+            
+        }
+        return max;
+    }
+
+
+    public int maxProductSubArray(int[] arr) {
+        int curr_min = arr[0];
+        int curr_max = arr[0];
+        int prev_min = arr[0];
+        int prev_max = arr[0];
+        int ans = arr[0];
+
+        for(int i =1; i<arr.length; i++){
+            curr_max = Math.max(prev_max*arr[i], Math.max(prev_min*arr[i], arr[i]));
+            curr_min = Math.min(prev_max*arr[i],Math.min(prev_min*arr[i], arr[i]));
+            
+            ans = Math.max(ans, curr_max);
+            prev_max = curr_max; prev_min = curr_min;
+        }
+        System.out.println("max prod subarray "+ans);
+        return ans;
+    }
+
     /** 
      * POINTS :
      * 1 FILL DP ARRAY FOR FIRST K ELS, THEN FOR OTHER ELS
@@ -226,7 +264,7 @@ public class Partition{
         int n = nums.length; int sum = 0;
         for (int i = 0; i < nums.length; i++) sum += nums[i];
         if (sum%k != 0) return false;
-        
+
         int individual = sum/k;
         boolean[] visited = new boolean[n];
 
@@ -252,6 +290,80 @@ public class Partition{
     }
 
 
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        List<String> curr = new ArrayList<>();
+        helper(res, curr, s, 0);
+        return res;
+    }
+    
+    void helper(List<List<String>> res, List<String> curr, String str, int index){
+        if(index == str.length()) {
+            // System.out.println("curr "+curr);
+            res.add(new ArrayList(curr));
+            return;
+        }
+        for(int i = index+1; i<=str.length(); i++){
+            if(isPalindrome(str.substring(index, i))){
+                // System.out.println(str.substring(index, i));
+                curr.add(str.substring(index, i));
+                helper(res, curr, str, i);
+                curr.remove(curr.size()-1);
+            }
+        }
+    }
+    
+    boolean isPalindrome(String str){
+        
+        int lo = 0; int hi = str.length()-1;
+        while(lo<=hi){
+            if(str.charAt(lo) != str.charAt(hi)) return false;
+            lo++; hi--;
+        }
+        return true;
+    }
+
+    /** 
+     * POINTS : 
+     * 1 USE l<=n
+     * 2 SUBSTRING WORKS WITH 2 ARGS, FOR PRINTING SINGLE CHAR, USE i, i+1
+     * 3 k goes from i till j; dp[i][k] && dp[k+1][j] 
+     * 
+     * "applepeneapple", ["apple,pen"]
+     * using s.substring(i,k+1) &&  s.substring(k+1,j+1) at 5 fails
+     * 
+    */
+    // https://leetcode.com/problems/word-break/
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+        if(n == 0) return false;
+        
+        for(int i =0; i<wordDict.size(); i++) wordDict.add(wordDict.get(i));
+        if(wordDict.contains(s)) return true;
+        
+        boolean[][] dp = new boolean[n][n];
+        
+        for(int l=1; l<=n; l++){//2
+            for(int i =0; l+i-1<n; i++){
+                int j = i+l-1;
+                if(wordDict.contains(s.substring(i,j+1))) {//4
+                    dp[i][j] =true;
+                }else{
+                    // k<j
+                    for(int k = i;k<j; k++){
+                        // 5
+                        if(dp[i][k] == true && dp[k+1][j] == true) dp[i][j] = true;
+                    }
+                }
+            }
+        }
+        return dp[0][n-1];
+    }
+
+
+    // https://www.geeksforgeeks.org/count-possible-decodings-given-digit-sequence/
+
+
     // https://stackoverflow.com/questions/63329608/
     // how-can-i-divide-an-array-into-k-sub-arrays-such-that-the-sum-of-the-number-of-d#new-answer
 
@@ -267,8 +379,8 @@ public class Partition{
         System.out.println("enter array size");
         int n  = Integer.parseInt(input.nextLine());
         int[] arr = new int[n]; 
-        int index =0;
-        
+        int index = 0;
+
         for(int i = 0; i<n; i++){
             System.out.println("enter next entry");
             arr[index++] = Integer.parseInt(input.nextLine());

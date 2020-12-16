@@ -115,6 +115,39 @@ public class Backtrack {
 
     //28 apr
 
+    /** 
+     * POINTS:
+     * 1 SWAP EACH CHAR WITH ALL ITS SUCCEEDING INDEXES
+     * 2 START FROM index = 0 
+     * 3 FOR SUBSEQUENT ITERATION index+1
+     * 4 
+    */
+    // all permutations
+    // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+    // List<List<String>> 
+    void allPermutations(String str){
+        char[] ch = str.toCharArray();
+        permHelper(ch, 0);
+    }
+
+    void permHelper(char[] ch, int index){
+        if(index == ch.length) System.out.println(new String(ch));
+        // swap with itself, so is starts from index
+        for(int i =index; i<ch.length; i++){
+            swap(ch, index, i);  
+            permHelper(ch, index+1);
+            // swapping back to prreserve the original order of string chars
+            swap(ch, index, i);
+        }
+    }
+
+    void swap(char[] ch, int a, int b){
+        char temp = ch[a];
+        ch[a] = ch[b];
+        ch[b] = temp;
+    }
+
+
     // Subsets : https://leetcode.com/problems/subsets/
     /** 
      * use BACKTRACKING FORMAT

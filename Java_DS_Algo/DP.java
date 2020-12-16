@@ -5,7 +5,7 @@ import java.util.*;
 public class DP {
 
     /**
-     * 
+     * DECODE WAYS, WORD BREAK, STOCK BUY SELL K
      * RELN -> PAINTER, STAIRS
      * coin min
      * dp[i][j] = Math.min(dp[i-1][j], dp[i][j-coins[i-1]]+1);
@@ -167,7 +167,42 @@ public class DP {
         return dp[n-1];
     }
 
+    // https://medium.com/@saurav.agg19/paint-house-problem-1e711754c8c9#:~:
+    // text=1%20min%20read-,Problem%3A,houses%20have%20the%20same%20color.
+    int getMinCostPaint(int[][] prices){
+        int n = prices.length; int m = prices[0].length;
+
+        for(int i =1; i<n; i++){
+            prices[i][0]+= Math.min(prices[i-1][1], prices[i][2]);
+            prices[i][1]+= Math.min(prices[i-1][0], prices[i][2]);
+            prices[i][2]+= Math.min(prices[i-1][0], prices[i][1]);
+        }
+        int min = Integer.MAX_VALUE;
+        for(int i =0; i<m; i++){
+            min = Math.min(min, prices[n-1][i]);
+        }
+        return min;
+    }
+
     //////////// MAX PROD SUBARRAY
+    // kadane, but in dp format
+    // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
+    // maxSubArray(A, i) = maxSubArray(A, i - 1) > 0 ? maxSubArray(A, i - 1) : 0 + A[i]; 
+    // [-2,-1]
+    // https://leetcode.com/problems/maximum-subarray    
+    public int maxSubArray(int[] nums) {
+        if(nums.length == 1) return nums[0];
+        int sum = 0; int max = Integer.MIN_VALUE;
+        for(int i : nums){
+            sum+=i;
+            
+            max = Math.max(max, sum);
+            if(sum<0) sum = 0;
+            
+            
+        }
+        return max;
+    }
 
     // https://leetcode.com/explore/interview/card/
     // top-interview-questions-hard/121/dynamic-programming/860/
@@ -241,7 +276,6 @@ public class DP {
         return dp[lastDay];
     }
 
-    
 
     // https://leetcode.com/problems/decode-ways/
     public int numDecodings(String s) {
@@ -378,6 +412,10 @@ public class DP {
     /////////////////////////// PARTITION
     // LIKE CLIMBING STAIRS
 
+    /** 
+     * PAINTER, PALINDROME PARTITION
+     * MCM, 
+    */
     /** 
      * 1 THE APPROX RELATON IS 
      * f(painters, 0) = sum(0, k)+ f(painters-1); // for loop
@@ -624,6 +662,7 @@ public class DP {
      * BURSTING BALLOONS
      * PAINTER'S PARTITION
      * PALINDROMIC PARTITIONING
+     * WORD SUBSETS
      * */
 
     /**
@@ -1770,6 +1809,48 @@ public class DP {
 
 
     ////////////////////////// STRING DP
+
+    /** 
+     * POINTS :
+     * 1 RUN 2 LOOPS 
+     * 2 CHECK IF dp[i][j] > j-i
+     * 3 UPPER HALF 
+     *
+     * https://www.youtube.com/watch?v=KRQSOygJvuU
+     *  
+     * imp : fill first row and check for overlap dp[i][j] > j-i
+    */
+    int longestRepeatedNonOverlappingSubstring(String str) {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+        int max = 0;
+        // first row filled with 0 or 1
+        for(int i =1; i<n; i++){
+            if(str.charAt(0) == str.charAt(i)) dp[0][i] = 1;
+        }
+
+        for(int i =1; i<n; i++){
+            for(int j = i+1; j<n; j++){
+                if(str.charAt(i) == str.charAt(j)){
+                    if(i == 0) dp[i][j] = 0;
+                    else dp[i][j] = 1 + dp[i-1][j-1];
+
+                    // overlap
+                    if(dp[i][j]> j-i) dp[i][j] = 0;
+                    max = Math.max(max, dp[i][j]);
+                }
+            }
+        }
+
+        for(int i =0; i<n; i++){
+            for(int j = 0; j<n; j++){
+                System.out.print(dp[i][j]+", ");
+            }
+            System.out.println();
+        }
+        System.out.println("longest length repeated non-overlapping susbstring is "+max);
+        return max;
+    }
     // if similar, refer diagonally upper el
     /** 
      * size m+1, no filling row col
@@ -2157,15 +2238,15 @@ public class DP {
         }
     }
 
-
     
     /** 
      * POINTS :
-     * 1 USE A DP OF SIZE m+1, n+1
-     * IT'S DIFFICULT TO HANDLE CASES OF SINGLE ROW CONTAINING 1
+     * 1 USE A DP OF SIZE m+1, n+1 AS IT'S 
+     * DIFFICULT TO HANDLE CASES OF SINGLE ROW CONTAINING 1
      * 2 if(matrix[i-1][j-1] == '1')
-     * 3 RESULT IS MAX OF ALL VALUES, not dp[m][n]
-     * 4 RETURN RESULT*RESULT
+     * 3 min of all three + 1;
+     * 4 USE MAX VAR
+     *
     */
     // https://leetcode.com/problems/maximal-square/
     public int maximalSquare(char[][] matrix) {
@@ -2185,7 +2266,6 @@ public class DP {
                 }
             }
         }
-        Utility.printMatrix(dp);
         System.out.println(result);
         return result*result;
     }
@@ -2225,6 +2305,9 @@ public class DP {
         // System.out.println(dp.factorial(4));
 
         // dp.perfectSquares(12);
+
+        int[][] cost = {{17, 2, 1}, {16, 16, 1}, {14, 3, 19}, {3, 1, 8}};
+        dp.getMinCostPaint(cost);
 
         int[][] arr = { { 8, 2, 1 }, { 3, 9, 7 }, { 2, 1, 8 } };
         // dp.countPathsMatrixDP(arr);
@@ -2354,8 +2437,8 @@ public class DP {
 
         int subSetDP[] = {1,5,5,11};//{3, 34, 16, 12, 5, 2}; 
         int subsetSum = 16;
-        dp.subsetSum(subSetDP, sum, 0);
-        dp.subsetSumDP(subSetDP, subsetSum);
+        // dp.subsetSum(subSetDP, sum, 0);
+        // dp.subsetSumDP(subSetDP, subsetSum);
         // System.out.println("can be partitioned :"+ dp.canPartition(subSetDP));
         // dp.canPartition2(subSetDP);
 
@@ -2416,8 +2499,9 @@ public class DP {
         wordDict.add("leet"); wordDict.add("code");
         // wordDict.add("i");  wordDict.add("a"); wordDict.add("am"); 
         // wordDict.add("ace");
-        dp.wordBreak(s, wordDict);
+        // dp.wordBreak(s, wordDict);
 
+        dp.longestRepeatedNonOverlappingSubstring("netaseta");
 
         String palin = "abacba";
         // dp.longestPalindromeSubseq(palin);

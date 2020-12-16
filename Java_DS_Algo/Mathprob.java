@@ -452,6 +452,80 @@ public class Mathprob {
         return perimeter;
     }
     
+    /** 
+     * 1 IF PEEK IS LARGER, REMOVE
+     * 2 ADD CURRENT AFTER REMOVAL
+     * 3 CHECK IF COUNT<K
+     * 4 REMOVE PRECEDING ZEROES
+     * 5 COMPARE WITH '0'
+     * 
+    */
+    // https://leetcode.com/problems/remove-k-digits/
+    // leading zeroes
+    // ascending, descending
+    // "10", 1
+    public String removeKdigits(String num, int k) {
+        int n = num.length();
+        if(n == k) return "0";
+        Deque<Character> q = new LinkedList<>(); // 
+        int count = 0;
+        
+        for(int i =0; i<n; i++){
+            while(q.size()!=0 && q.getLast()>num.charAt(i) && count<k) {
+                q.removeLast(); count++;
+            }
+            q.addLast(num.charAt(i)); // 
+        }
+        
+        while(count<k){
+            q.removeLast(); count++;
+        }
+        
+        String res = "";
+        while(q.size()!=0) res+=q.removeFirst();
+        
+        int j = 0;
+        for(int i =0; i<res.length(); i++){ //
+            if(res.charAt(i) == '0') j++; //
+            else break;
+        }
+        
+        return res.substring(j).compareTo("") == 0?"0":res.substring(j);
+    }
+
+
+    /** 
+     * POINTS :
+     * 1 USE DP TABLE
+     * 2 res = m+n + (sum of all els apart from first row and col)
+     * 3 dp[i][j] = dp[i-1][j] + dp[i][j-1];
+    */
+    // https://math.stackexchange.com/questions/3396050/magnificent-necklace-combinatorics-problem#:~:text=
+    // You%20have%20to%20make%20a,be%20formed%20with%20such%20condition.
+    int numberOfNecklaces(int n, int lm, int hm){
+        int m = hm-lm+1;
+        int[][] dp = new int[n][m];
+        int res = m+n;
+
+        Arrays.fill(dp[0], 1);
+        for(int i =0; i<n; i++){
+            dp[i][0] = 1;
+        }
+
+        for(int i =1; i<n; i++){
+            for(int j = 1; j<m; j++){
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+                res+=dp[i][j];
+            }
+        }
+        for(int i =0; i<n; i++){
+            for(int j =0; j<m; j++){
+                System.out.print(dp[i][j]+", ");
+            }
+            System.out.println();
+        }
+        return res;
+    }
     // https://leetcode.com/problems/maximum-swap/
     // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
     // https://leetcode.com/problems/power-of-four
@@ -461,6 +535,7 @@ public class Mathprob {
         // math.power(99, 9);
         // math.isPerfectSquare(2);
         math.isPerfectSquare(81);
+        math.numberOfNecklaces(3, 6, 9);
     }
 
 }

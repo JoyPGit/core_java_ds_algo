@@ -68,10 +68,66 @@ public class StackPractice {
         return res;    
     }
 
+    /** 
+     * https://www.youtube.com/watch?v=vXPL6UavUeA
+     * STEPS:
+     * 1 ADD OPERAND TO RES
+     * 2 ADD OPERATOR TO STACK IF LOWER OF SIMILAR PRECEDENCE
+     * 3 IF HIGHER, POP TILL LOWER IS FOUND AND ADD TO RES
+     * 4 OPEN BRACKET HAS LOWEST PRIORITY
+     * 5 IF CLOSED BRACKET, POP EVEVYTHING TILL OPEN BRACKET AND ADD TO RES
+     * 
+     * 
+     * A+B/C*D+E-F; ABC/DE+*+F-
+    */
+    String infixToPostfix(String str){
+        int n = str.length();
+        String res = "";
+        Deque<Character> q = new LinkedList<>();
+
+        for(int i =0; i<n; i++){
+            if(Character.isLetter(str.charAt(i))  // 
+            // str.charAt(i) != '+' || str.charAt(i) != '-'
+            // || str.charAt(i) != '*' || str.charAt(i) != '/'
+            ) res+=str.charAt(i);
+            else{
+                if(str.charAt(i) == ')'){
+                    while(q.size()!=0 && str.charAt(i)!='(') res+=q.removeLast();
+                    if(q.size()!=0 && q.getLast() == '(')q.removeLast();
+                    continue;
+                }
+                while(q.size()!=0 &&  // 
+                str.charAt(i) != '(' &&
+                compareOperators(q.getLast(), str.charAt(i)) >= 0) {
+                    if(q.getLast() == '(') {
+                        q.removeLast();
+                        continue;
+                    }
+                    res+=q.removeLast();
+                }
+
+                q.addLast(str.charAt(i));
+            }
+            System.out.println("res "+res);
+        }
+        System.out.println("infix to postfix "+ res);
+        return res;
+    }
+
+    // if greater return true, needs to be popped
+    int compareOperators(char a, char b){
+        HashMap<Character, Integer> map = new HashMap<>();
+        map.put('(', 1); 
+        map.put('+', 2); map.put('-', 2);
+        map.put('*', 3); map.put('/', 3);
+    
+        return map.get(a) - map.get(b);
+    }
+
     // Microsoft
     /**
      * USE STACK TO COMPARE THE INCOMING EL
-     * IF SAME COMPAE COST
+     * IF SAME COMPARE COST
      * ELSE ADD TO STACK
      */
     class Cost{
@@ -198,7 +254,7 @@ public class StackPractice {
      * 1 IF PEEK IS LARGER, REMOVE
      * 2 IF LARGER ADD
      * 3 IF K!=0 STILL REMOVE
-     * 4 RMEOVE PRECEDING ZEROES
+     * 4 REMOVE PRECEDING ZEROES
      * 
     */
     // https://leetcode.com/problems/remove-k-digits/
@@ -372,7 +428,7 @@ public class StackPractice {
             System.out.println("sum "+sum);
 
         }
-        Utility.printListOfLists(res);
+        // Utility.printListOfLists(res);
         for(int i =0; i<res.size(); i++){
             Collections.sort(res.get(i));
             if((res.get(i)).size()==0) continue;
@@ -436,7 +492,7 @@ public class StackPractice {
             res[i] = list.removeFirst();
             i++;
         }
-        Utility.print1DMatrix(res);
+        // Utility.print1DMatrix(res);
         return res;
     }
 
@@ -671,6 +727,24 @@ public class StackPractice {
         System.out.println("letter "+letter);
     }
 
+
+    public String decodeString1(String s) {
+        Deque<Character> q= new LinkedList<>();
+        String res = "";
+        for(int i =0; i<s.length(); i++){
+            if(s.charAt(i) != ')') q.addLast(s.charAt(i));
+            else{
+                StringBuilder str = new StringBuilder();
+                while(q.getLast() != '(') str.append(q.removeLast());
+                int n = q.removeLast();
+                for(int j =0; j<n; j++){
+                    
+                }
+            }
+        }
+        return res;
+    }
+
     /** 
      * POINTS :1
      * 1 REVERSE DOESN'T TAKE ANY PARAM, INSERT TAKES ONE
@@ -702,6 +776,9 @@ public class StackPractice {
         insertAtBottom(stack, num);
         stack.addLast(top);
     }
+
+    // https://www.geeksforgeeks.org/design-a-stack-that-supports-getmin-in-o1-time-and-o1-extra-space/
+
 
     // https://leetcode.com/problems/sum-of-subarray-minimums/
     // https://leetcode.com/problems/maximal-rectangle/
@@ -780,6 +857,9 @@ public class StackPractice {
         String dup = "ibdyigbklifapflhpafjstizipojdrsykvskxtzadkdblmikwlofjiujlnpr";
         // stack.removeDuplicates(dup);
 
+        String expression = "(A+B/C*(D+E)-F)";
+        stack.infixToPostfix(expression);
+
         int[] price = 
         // { 10, 4, 5, 90, 120, 80 }; 
         {100, 80,60,70,60,75,85};
@@ -811,7 +891,7 @@ public class StackPractice {
         // stack.reverseParentheses(bracketReverse);
 
         String brackets = ")(())())";
-        stack.longestValidParentheses(brackets);
+        // stack.longestValidParentheses(brackets);
 ;
         String decode = "100[leetcode]";// "3[a2[c]]";//"3[a]2[bc]";
         // stack.decodeString(decode);
@@ -823,7 +903,7 @@ public class StackPractice {
         // System.out.println(stackToReverse);
 
         String S = "aaaabbcc"; int[] C = new int[]{1,2,1,3,1,2,1,2}; // 3
-        stack.removeDuplicateCharCost(S, C);
+        // stack.removeDuplicateCharCost(S, C);
     }
 
 }

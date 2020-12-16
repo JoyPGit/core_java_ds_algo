@@ -261,7 +261,7 @@ public class Tree {
     }
 
     //////////////////////////////////////////// PREORDER/////
-
+    // SIMPLE : USE STACK, POP, ADD TO RES, ADD LEFT TO STACK, ADD RIGHT TO STACK
     void preOrder(TreeNode x) {
         if (root == null)
             return;
@@ -318,10 +318,8 @@ public class Tree {
         while (!q.isEmpty()) {
             TreeNode curr = q.removeLast();
             res.add(curr.val);
-            if (curr.left != null)
-                q.addLast(curr.left);
-            if (curr.right != null)
-                q.addLast(curr.right);
+            if (curr.left != null) q.addLast(curr.left);
+            if (curr.right != null) q.addLast(curr.right);
         }
         Collections.reverse(res);
         return res;
@@ -592,17 +590,17 @@ public class Tree {
     }
 
     class Key {
-        Node node;
+        TreeNode node;
         int dist;
 
-        Key(Node n, int d) {
+        Key(TreeNode n, int d) {
             this.node = n;
             this.dist = d;
         }
     }
 
     // Method that returns the bottom view.
-    ArrayList<Integer> bottomView(Node root){
+    ArrayList<Integer> bottomView(TreeNode root){
         // Code here
         List<Key> holder = new ArrayList<>();
         HashMap<Integer, Key> map = new HashMap<>();

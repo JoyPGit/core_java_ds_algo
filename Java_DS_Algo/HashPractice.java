@@ -11,6 +11,7 @@ import java.util.*;
  * subarray sums div by k, longest subarray of 0s and 1s
  * AP HASH, WORD SUBSETS
  * 
+ * ds all operations in O(1)
  * SMALLEST SUBSEQUENCE, MIN WINDOW SUBSTRING
  * 
  * 0s and 1s, prefix sum
@@ -698,6 +699,52 @@ class HashPractice{
     // https://leetcode.com/problems/longest-consecutive-sequence/
     
 
+    /** 
+     * POINTS :
+     * 1 USE HASHMAP AND ARRAYLIST
+     * 2 ADD TO LIST AND UPDATE KEY WITH INDEX IN MAP
+     * 3 FOR DELETION, SSWAP LAST WIITH INDEX
+     * 4 USE TOP FLAG OR LIST.SIZE () CAN ALSO BE USED
+     * 
+     * imp : add checks if el exists or not in map
+    */
+    // https://www.geeksforgeeks.org/design-a-data-structure-that-supports-insert-delete
+    // -search-and-getrandom-in-constant-time/
+    class SpecialStructure{
+        List<Integer> list;
+        HashMap<Integer, Integer> map;
+        int top;
+        SpecialStructure(){
+            this.list = new ArrayList<>();
+            this.map = new HashMap<>();
+            this.top = 0;
+        }
+
+        // add to list , update index in map
+        void add(int num){
+            if(map.containsKey(num)) return;
+            this.list.add(num);
+            map.put(num, ++top);
+        }
+
+        void delete(int num){
+            if(!map.containsKey(num)) return;
+            int index = map.get(num);
+            Collections.swap(this.list, index, top);
+            list.remove(top--);
+            map.put(list.get(top), index);
+            map.remove(num);
+        }
+
+        boolean search(int num){
+            if(map.containsKey(num)) return true;
+            return false;
+        }
+
+        int getRandom(){
+            return list.get((int)Math.random()*top);
+        }
+    }
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();
