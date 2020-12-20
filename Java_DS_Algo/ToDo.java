@@ -6,6 +6,9 @@ public class ToDo {
      * https://www.geeksforgeeks.org/count-possible-decodings-given-digit-sequence/
      * https://www.youtube.com/watch?v=axUs-p27xzA&feature=em-comments
      * 
+     * https://leetcode.com/problems/consecutive-numbers-sum/
+     * 
+     * 
      * no of subarrays (hash, sliding)
      * kth el in matrix
      * largest sum rect in matrix

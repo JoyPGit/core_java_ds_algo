@@ -380,6 +380,119 @@ class StringPractice {
         return res.toString();
     }
 
+    /** 
+     * min dist b/w two words
+     * POINTS :
+     * 1 RUN A LOOP
+     * 2 IF word[i] MATCHES EITHER WORD1 OR WORD2, UPDATE MINDIST
+     * 3 
+     * 
+    */
+    // https://leetcode.com/discuss/interview-question/124615/
+    // given-a-list-of-words-find-the-absolute-minimum-distance-between-two-words
+    int distance(String s,String w1,String w2){
+        int index1 = 0; int index2 = 0;
+        int minDist = 0;
+        String[] words = s.split(" ");
+        for(int i =0; i<words.length; i++){
+            if(((w1.compareTo(words[i]) == 0) || (w2.compareTo(words[i])==0) )){
+                if(w1.compareTo(words[i])==0) index1 = i;
+                else if(w2.compareTo(words[i])==0) index2 = i;
+                
+                minDist = Math.min(minDist, Math.abs(index1 - index2+1));
+            }
+            
+        }
+        System.out.println(minDist);
+        return minDist;
+    }
+
+    /** 
+     * POINTS : 
+     * 1 RUN TWO LOOPS, LEFT TO RIGHT AND VICE-VERSA
+     * 2 USE STACK TO FIND DIST.
+     * 3 FILL WITH N-1 AND arr[i] = 0 for C.
+     * 
+    */
+    // "aaba", "b"; fill with n-1 and ch[C] = 0
+    // https://leetcode.com/problems/shortest-distance-to-a-character/
+    class Node{
+        char ch; int index;
+        Node(char c, int i){
+            this.ch = c;
+            this.index = i;
+        }
+    }
+    
+    public int[] shortestToChar(String S, char C) {
+        int n = S.length();
+        Deque<Node> q = new LinkedList<>();
+        int[] ch = new int[n];
+        Arrays.fill(ch, n-1);
+        for(int i =0; i<n; i++){
+            if(S.charAt(i) == C){
+                while(q.size()!=0){
+                    Node curr = q.removeLast();
+                    ch[curr.index] = i-curr.index;
+                }
+                ch[i] = 0;
+            }
+            else{
+                q.addLast(new Node(S.charAt(i), i));
+            }
+        }
+        
+        for(int i = n-1; i>=0; i--){
+            if(S.charAt(i) == C){
+                while(q.size()!=0){
+                    Node curr = q.removeLast();
+                    ch[curr.index] = Math.min(ch[curr.index], Math.abs(i-curr.index));
+                }
+                ch[i] = 0;
+            }
+            else{
+                q.addLast(new Node(S.charAt(i), i));
+            }
+        }
+        return ch;
+        
+    }
+
+    // OPTIMIZED
+    /** 
+     * 1 START FILLING TO THE RIGHT OF FIRST OCCURENCE OF C WHILE GOING FROM L TO R
+     * 2 THEN FILL TO THE LEFT
+     * 3 START WITH A VALUE OF pos SUCH THAT DIST IS MAX
+     * 
+     * pos = -n
+     * ch[i] = i-pos;
+     * 
+     * 4 FINALLY TAKE MIN OF BOTH DISTANCES HIE FILLING FROM RIGHT
+    */
+    // "aaba", "b"; fill with n-1 and ch[C] = 0
+    // https://leetcode.com/problems/shortest-distance-to-a-character/
+    public int[] shortestToChar2(String S, char C) {
+        int n = S.length();
+        int[] ch = new int[n];
+        int pos = -n;
+        for(int i =0; i<n; i++){
+            if(S.charAt(i) == C){
+                pos = i;
+            }
+            ch[i] = i - pos;
+        }
+        
+        for(int i = n-1; i>=0; i--){
+            if(S.charAt(i) == C){
+                pos = i;
+            }
+            ch[i] = Math.min(Math.abs(i - pos), ch[i]);
+        }
+        return ch;
+        
+    }
+
+    
     // https://leetcode.com/discuss/interview-question/851939/ancestor-problem
     class Name{
         String first;
@@ -977,6 +1090,8 @@ class StringPractice {
         System.out.println("count " + count);
         return count;
     }
+
+
 
     // RABIN KARP algo pattern searching
         /** 

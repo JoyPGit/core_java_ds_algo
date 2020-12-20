@@ -15,6 +15,30 @@ public class Partition{
      * then we need to decrease the capacity
     */
 
+    // go till N; if sum>N break; start++
+    // https://leetcode.com/problems/consecutive-numbers-sum/
+    public int consecutiveNumbersSum(int N) {
+        int start = 1; int end = N;//(N+1)/2;
+        int count = 0;
+        
+        while(start<=end){
+            int sum = 0;
+            
+            for(int i = start; i<=N; i++){
+                sum+=i;
+                // System.out.println("sum "+sum);
+                if(sum == N) {
+                    count++;
+                    break;
+                }
+                if(sum>N) break;
+            }
+            start++;
+        }
+        return count;
+    }
+
+    
     // https://www.geeksforgeeks.org/split-the-given-array-into-k-sub-arrays-
     // such-that-maximum-sum-of-all-sub-arrays-is-minimum/
     int minSplit(int[] arr, int k){
@@ -360,6 +384,7 @@ public class Partition{
         return dp[0][n-1];
     }
 
+    
 
     // https://www.geeksforgeeks.org/count-possible-decodings-given-digit-sequence/
 

@@ -334,7 +334,6 @@ class Greedy{
         return (List<Integer>) res;
     }
 
-    // https://leetcode.com/problems/delete-columns-to-make-sorted/
     /** points:
      * 1 string -> length()
      * 2 how to check for string at index x and character at index y?
@@ -346,6 +345,7 @@ class Greedy{
                 if (A[i].charAt(j) > A[i + 1].charAt(j)) {
         i is used for string index
      */
+    // https://leetcode.com/problems/delete-columns-to-make-sorted/
     public int minDeletionSize(String[] A) {
         int index =0; int count =0;
         
@@ -391,9 +391,15 @@ class Greedy{
     }
 
 
-    // [[1,10],[2,2],[2,2],[2,2],[2,2]] repeat
-    // [[1,2],[2,3],[3,4],[1,2]] spread over 2 days
-    // either run a loop for days and add events
+    /* 
+     * [[1,10],[2,2],[2,2],[2,2],[2,2]] check repeated
+     * 
+     * [[1,2],[1,2],[3,3],[1,5],[1,5]] so sort x[1] - y[1]; 
+     * 3,3 is rejected as on 3rd day 1,5 is attended
+     * 
+     * [[1,2],[2,3],[3,4],[1,2]] spread over 2 days
+     * either run a loop for days and add events
+     * */
 
     public int maxEvents1(int[][] events) {
         int n = events.length;
@@ -432,6 +438,8 @@ class Greedy{
         return count;    
     }
 
+    // BRUTE FORCE, PREFERRED WAY
+    // greedily grab the frst available day
     // or run a loop for events and find days
     // https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended
     public int maxEvents2(int[][] events) {

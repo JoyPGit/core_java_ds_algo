@@ -405,6 +405,32 @@ public class Mathprob {
         }
     }
 
+    /* 
+     * r^2 - x^2 must be a perfect sq
+     * result = 4 for (r,0); (-r, 0); (0, r); (0-r);
+     * 
+     * for r = 5
+     * result - 4 for (5,0)...
+     * 3-> (3,4); (-3, 4); (3,-4); (-3, -4)
+     * same for 4;
+     * 
+    */
+    // trick to check perfect sq : take sqrt and then square to get back
+    // https://www.geeksforgeeks.org/circle-lattice-points/
+    int latticePoints(int radius){
+        int result = 4;
+        int rSquare = radius*radius;
+        int ySquare = 0;
+        for(int i =0; i < radius; i++){
+            ySquare = rSquare - (i*i);
+            int y = (int)Math.sqrt(ySquare);
+
+            if(y*y == ySquare) result +=4;
+        }
+        return result;
+    }
+
+
     // https://leetcode.com/problems/elimination-game
     public int lastRemaining(int n) {
         int start  = 0; boolean ltor = true;
@@ -429,6 +455,29 @@ public class Mathprob {
             start++;
         }
         return list.get(0);
+    }
+
+    // go till N; if sum>N break; start++
+    // https://leetcode.com/problems/consecutive-numbers-sum/
+    public int consecutiveNumbersSum(int N) {
+        int start = 1; int end = N;//(N+1)/2;
+        int count = 0;
+        
+        while(start<=end){
+            int sum = 0;
+            
+            for(int i = start; i<=N; i++){
+                sum+=i;
+                // System.out.println("sum "+sum);
+                if(sum == N) {
+                    count++;
+                    break;
+                }
+                if(sum>N) break;
+            }
+            start++;
+        }
+        return count;
     }
 
     // why -2? we are taking into acount the oundary of the upper cell
