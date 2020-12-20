@@ -1,4 +1,4 @@
-package Core_Java;
+package Core_Java.Inheritance;
 
 public class Canine_subclass extends Animal_superClass{
 

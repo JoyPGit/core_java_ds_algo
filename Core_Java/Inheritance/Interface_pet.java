@@ -1,4 +1,4 @@
-package Core_Java;
+package Core_Java.Inheritance;
 
 public interface Interface_pet {
     // int petType;

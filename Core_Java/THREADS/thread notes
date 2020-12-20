@@ -1,0 +1,79 @@
+THREE WAYS :
+1 THREADS SYNCHRONIZED
+2 SEMPAHORES
+3 BLOCKING QUEUES
+
+start, sleep, wait, lock, notify
+
+start -> thread starts, t = new Thread( obj, "thread_name"); t.start();
+
+wait -> forces the current thread to wait until some other thread invokes notify() or notifyAll() 
+on the same object; makes thread relinquish the lock
+
+notify -> notifies other threads; Since notify() wakes up a single random thread it can be 
+used to implement mutually exclusive locking where threads are doing similar tasks, 
+but in most cases, it would be more viable to implement notifyAll().
+
+lock
+
+
+---------------------------------------------------------------
+A Java synchronized block marks a method or a block of code as synchronized. 
+A synchronized block in Java can only be executed as a single thread at a time (depending on how you use it). 
+Java synchronized blocks can thus be used to avoid race conditions.
+
+The synchronized keyword can be used to mark four different types of blocks:
+
+Instance methods
+Static methods
+Code blocks inside instance methods
+Code blocks inside static methods
+
+
+http://tutorials.jenkov.com/java-concurrency/synchronized.html
+
+synchronized void printOdd(int number) {
+    while (isOdd) {
+        try {
+            System.out.println("before wait");
+            wait();
+            System.out.println("after wait");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    System.out.println(Thread.currentThread().getName() + " : " + number);
+    isOdd = true;
+    notify();
+    
+}
+
+Volatile keyword is used to modify the value of a variable by different threads. 
+It is also used to make classes thread safe. It means that multiple threads can use a 
+method and instance of the classes at the same time without any problem.
+
+* The awakened thread will not be able to proceed until the current thread 
+* relinquishes the lock on this object. Hence thread enters while loop.
+* 'wait' makes it relinquish the lock.
+
+----------------------------------------------------------
+Should i use synchronized in each thread class
+or use a single synchronized method and make threads access it?
+
+* Producer-Consumer uses 2 synchronized methods
+* for printing even odd, also used 2
+
+but for synchronized to work a critical resource is required, either
+the synchronized block beomes the critical resource or a common 
+no primitive data structure is chosen.
+
+
+----------------------------------------------------------
+
+ERRORS :
+
+Syntax error, insert "... VariableDeclaratorId" to complete FormalParameterList
+
+You can't have arbitrary code like that directly in the class body. 
+It must be in a method (or constructor, or initialization block).
+

@@ -362,28 +362,32 @@ public class Backtrack {
     }
 
 
-    // take care of starting index
-    // Combination Sum : https://leetcode.com/problems/combination-sum/
     // can reuse the same element, start with i again in btk()
-    public List<List<Integer>> combinationSum(int[] nums, int target) {
+    // select only higher indexes
+    // https://leetcode.com/problems/combination-sum/
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> res = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        // Arrays.sort(nums); not reqd
-        backtrack(res, list, nums, target, 0);
+        List<Integer> curr = new ArrayList<>();
+        helper(res, curr, candidates, 0, 0, target);
         return res;
     }
     
-    private void backtrack(List<List<Integer>> res, List<Integer> list, 
-    int [] nums, int remain, int start){
-        if(remain < 0) return;
-        else if(remain == 0) res.add(new ArrayList<>(list));
-        else{ 
-            for(int i = start; i < nums.length; i++){ //
-                list.add(nums[i]);
-                backtrack(res, list, nums, remain - nums[i], i); // 
-                // not i + 1 because we can reuse same elements
-                list.remove(list.size() - 1);
-            }
+    
+    void helper(List<List<Integer>> res, List<Integer> curr, int[] arr, int index, int sum, int target){
+        if(sum>target) return;
+        // System.out.println(sum);
+        
+        if(sum == target){
+            // System.out.println(curr);
+            res.add(new ArrayList<>(curr));
+            // return;
+        }
+        for(int i =index; i<arr.length; i++){
+            sum+=arr[i];
+            curr.add(arr[i]);
+            helper(res, curr, arr, i, sum, target);
+            sum-=arr[i];
+            curr.remove(curr.size()-1);
         }
     }
 

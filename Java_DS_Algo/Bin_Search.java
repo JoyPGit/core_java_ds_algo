@@ -689,6 +689,33 @@ public class Bin_Search {
         return days<=D;
     }
 
+
+    /** 
+     * case 1: citations[mid] == len-mid, then it means there are citations[mid] papers 
+     * that have at least citations[mid] citations.
+     * case 2: citations[mid] > len-mid, then it means there are citations[mid] papers that 
+     * have more than citations[mid] citations, so we should continue searching in the left half
+     * case 3: citations[mid] < len-mid, we should continue searching in the right side.
+     * After iteration, it is guaranteed that right+1 is the one we need to find 
+     * (i.e. len-(right+1) papars have at least len-(righ+1) citations)
+    */
+    // https://leetcode.com/problems/h-index-ii
+    public int hIndex(int[] citations) {
+        int n = citations.length;
+        int lo = 0; int hi = n-1;
+        
+        while(lo<=hi){
+            int mid = lo + (hi-lo)/2;
+            if(citations[mid]==n-mid) return citations[mid];
+            else if(citations[mid]> n-mid){
+                // System.out.println("mid "+mid+" "+citations[mid]);
+                hi = mid-1;
+            }
+            else lo = mid+1;
+        }
+        return n - lo;
+    }
+
     // https://leetcode.com/tag/binary-search/
     // https://leetcode.com/problems/h-index-ii/
     

@@ -427,6 +427,32 @@ class Array {
         }
         return removeHelper(arr, index+1, j);
     }
+
+    /** 
+     * POINTS:
+     * 1 USE CONCEPT OF MERGING INTO A NEW ARRAY
+     * 2 START FROM MAX ELS AS FOR FINDING MIN EL ONE EXTRA PASS IS NEEDED [-5, -3, -2, -1]
+     * 3 
+    */
+    // https://leetcode.com/problems/squares-of-a-sorted-array/
+    public int[] sortedSquares(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[n];
+        
+        int left = 0; int right = n-1; int index = n-1;
+        
+        while(left<=right){
+            if(nums[left]*nums[left] < nums[right]*nums[right]){
+                res[index--] = nums[right]*nums[right];
+                right--;
+            }
+            else {
+                res[index--] = nums[left]*nums[left];
+                left++;
+            }
+        }
+        return res;
+    }
     
     ////////////////////////// 2 SUM, 3 SUM
 

@@ -333,7 +333,7 @@ public class StackPractice {
      *
      * 3 AREA IS (RIGHT - LEFT) * HEIGHT
      *  
-     * imp fill left with -1 and right with n
+     * imp : fill left with -1 and right with n, store indexes
     */
     // https://www.youtube.com/watch?v=0do2734xhnU
     // {2,1,5,6,2,3};
@@ -375,6 +375,37 @@ public class StackPractice {
         }
         return maxArea;
     }
+
+    /** 
+     * POINTS : 
+     * 1 SIMILAR TO LARGEST RECT IN HISTOGRAM
+     * 2 JUST ADD EACH ROW TO A HOLDER ARRAY SUCCESSIVELY
+     * 
+     * 3 IF matrix[i][j] == '0', holder[j] = 0 AS BASE OF A TOWER CAN'T BE 0.
+     * 4 
+    */
+    // https://leetcode.com/problems/maximal-rectangle/submissions/
+    public int maximalRectangle(char[][] matrix) {
+        int m = matrix.length; 
+        if(m == 0) return 0;
+        int n = matrix[0].length;
+        int[] holder = new int[n];
+        int max = 0;
+        
+        
+        for(int i = 0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(matrix[i][j] == '0') holder[j] = 0;
+                else{
+                    holder[j] += 1;
+                }
+            }
+            max = Math.max(max, largestRectangleArea(holder));
+        }
+        return max;
+    }
+
+
 
     // https://leetcode.com/problems/evaluate-reverse-polish-notation/
     public int evalRPN(String[] tokens) {;
@@ -661,89 +692,50 @@ public class StackPractice {
     // https://leetcode.com/problems/minimum-insertions-to-balance-a-parentheses-string/
     // discuss/?currentPage=1&orderBy=most_votes&query=
 
-
+    /** 
+     * POINTS :
+     * 1 ADD TO STACK TILL ']'
+     * 2 POP TILL '[' IS FOUND
+     * 3 FIND PRECEDING NUMBER, use Character.isDigit() as number can be 100
+     * 4 StringBuilder has reverse and append.
+     * 5 
+    */
     // https://leetcode.com/problems/decode-string/
     public String decodeString(String s) {
-        int n = s.length();
-        if(n==1) return s;
-        
-        Deque<Integer> num = new LinkedList<>();
-        Deque<Character> letter = new LinkedList<>();
-        
-        String res= "";
-        
-        for(int i =0; i<n; i++){
-            if(Character.isDigit(s.charAt(i))){
-                int count = check(s, num, i);
-                if(count>1){
-                    while(count-->0)i++;
-                }
-                // num.addLast(Integer.parseInt(String.valueOf(s.charAt(i))));
-            }
-            else if(s.charAt(i) == '['){
-                letter.addLast(s.charAt(i));
-            }
-            else if(s.charAt(i) == ']'){
-                process(letter, num);
-            }
-            else if(Character.isLetter(s.charAt(i))){
-                letter.addLast(s.charAt(i));
-            }
-        }
-
-        // for(int i =0; i<=letter.size(); i++){
-        while(letter.size()!=0){
-            res+=letter.removeFirst();
-        }
-
-        System.out.println("final "+res);
-        return res;
-    }
-
-    int check(String s, Deque<Integer> num, int i){
-        String number = ""; int c = 0;
-        int index = i;
-        while(s.charAt(index)!='[') {
-            number+=s.charAt(index); index++; c++;
-        }
-        System.out.println("number "+number);
-        System.out.println("count "+c);
-        num.addLast(Integer.parseInt(number));
-        return c;
-    }
-    void process(Deque<Character> letter, Deque<Integer> number){
-        String res = "";
-        while(letter.size()!=0 && letter.peekLast()!='['){
-            res = letter.removeLast()+ res;
-        }
-        if(letter.size()!=0)letter.removeLast();
-        int n = number.removeLast();
-        System.out.println("num "+n);
-        for(int i =0; i<n; i++){
-            for(char s : res.toCharArray()){
-                letter.addLast(s);
-            }
-        }
-        System.out.println("letter "+letter);
-    }
-
-
-    public String decodeString1(String s) {
         Deque<Character> q= new LinkedList<>();
-        String res = "";
+        
+        String res =""; 
+        
         for(int i =0; i<s.length(); i++){
-            if(s.charAt(i) != ')') q.addLast(s.charAt(i));
+            if(s.charAt(i) != ']') q.addLast(s.charAt(i));
             else{
-                StringBuilder str = new StringBuilder();
-                while(q.getLast() != '(') str.append(q.removeLast());
-                int n = q.removeLast();
+                String temp = "";
+                String curr = "";
+                while(q.getLast()!='[') curr += q.removeLast();
+                q.removeLast();
+                int n = findNumber(q);
+
                 for(int j =0; j<n; j++){
-                    
+                    temp += curr;
+                }
+                
+                for(int k =temp.length()-1; k>=0; k--){
+                    q.addLast(temp.charAt(k));
                 }
             }
         }
+        
+        while(q.size()!=0) res+=q.removeFirst();
         return res;
     }
+    
+    int findNumber(Deque<Character> q){
+        StringBuilder num = new StringBuilder();
+        while(q.size()!=0 && Character.isDigit(q.getLast())) num.append(q.removeLast());
+        String res = new String(num.reverse());
+        return Integer.parseInt(res);
+    }
+
 
     /** 
      * POINTS :1

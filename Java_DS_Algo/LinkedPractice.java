@@ -138,6 +138,70 @@ class LinkedPractice {
         return slow;
     }
 
+    // SAME AS ABOVE (fast.next != null && fast.next.next != null)
+    // PUT THE CHECK AT THE END imp
+    // https://leetcode.com/problems/linked-list-cycle/
+    public boolean hasCycle(ListNode head) {
+        if(head == null || head.next == null) return false;
+        
+        ListNode slow = head, fast = head;
+        
+        while(fast.next != null && fast.next.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) return true; // imp
+        }
+        return false;
+    }
+
+    /** 
+     * to find the start of the loop, 2 ways :
+     * 1 use a hashset and check if node has entry in set
+     * or
+     * 2 use fast and slow
+    */
+    // [1,2], 0; []
+    // https://leetcode.com/problems/linked-list-cycle-ii
+    public ListNode detectCycle(ListNode head) {
+        HashSet<ListNode> set = new HashSet<>();
+        ListNode s = head;
+        set.add(s);
+        
+        while(s!=null){ // s.next? -> check needed for head = []
+            s = s.next;
+            if(set.contains(s)) return s;
+            set.add(s);
+        }
+        return null;
+    }
+
+    // https://leetcode.com/problems/linked-list-cycle-ii/discuss/44774/
+    // Java-O(1)-space-solution-with-detailed-explanation.
+    /** 
+     * When fast and slow meet at point p, the length they have run are 'a+2b+c' and 'a+b'.
+     * Since the fast is 2 times faster than the slow. So a+2b+c == 2(a+b), then we get 'a==c'.
+     * So when another slow2 pointer run from head to 'q', at the same time, 
+     * previous slow pointer will run from 'p' to 'q', so they meet at the pointer 'q' together.
+     * 
+    */
+    public ListNode detectCycle2(ListNode head) {
+        ListNode f = head, s = head;
+        
+        while(f.next!=null && f.next.next!=null){ // imp f.next && f.next.next
+            f = f.next.next;
+            s = s.next;
+            if(f == s) {
+                // now p covers 'a' dist and slow covers 'c' distance, check resources
+                ListNode p = head;
+                while(p!=s) {
+                    p = p.next;
+                    s = s.next;
+                }
+                return p;
+            }
+        }
+        return null;
+    }
 
     ListNode reverse(ListNode curr){
         ListNode a = null; ListNode b = curr; ListNode c= curr.next;
@@ -194,21 +258,6 @@ class LinkedPractice {
         return a;
     }
 
-    // SAME AS ABOVE (fast.next != null && fast.next.next != null)
-    // PUT THE CHECK AT THE END imp
-    // https://leetcode.com/problems/linked-list-cycle/
-    public boolean hasCycle(ListNode head) {
-        if(head == null || head.next == null) return false;
-        
-        ListNode slow = head, fast = head;
-        
-        while(fast.next != null && fast.next.next != null){
-            slow = slow.next;
-            fast = fast.next.next;
-            if(slow == fast) return true; // imp
-        }
-        return false;
-    }
 
     // if no common
     // counter won't work as lists can be of diff length

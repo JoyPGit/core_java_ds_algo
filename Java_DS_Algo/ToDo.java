@@ -3,7 +3,10 @@ package Java_DS_Algo;
 public class ToDo {
 
     /**
+     * https://www.geeksforgeeks.org/count-possible-decodings-given-digit-sequence/
+     * https://www.youtube.com/watch?v=axUs-p27xzA&feature=em-comments
      * 
+     * no of subarrays (hash, sliding)
      * kth el in matrix
      * largest sum rect in matrix
      * implement O(1) ds
