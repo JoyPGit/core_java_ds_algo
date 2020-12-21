@@ -51,6 +51,7 @@ public class Three_threads implements Runnable {
      * n++;
      * notifyAll();
     */
+    // synchronized 
     public void run(){
         while(number<10){
             synchronized (lock){
@@ -84,26 +85,5 @@ public class Three_threads implements Runnable {
     }
 }
 
-class CommonResource{
-    int commonNumber;
-    int remainder;
-    CommonResource(){
 
-    }
-
-    synchronized void printNumber(int n){
-        while(commonNumber%3 != remainder){
-            try {
-                wait();
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
-        }
-
-        System.out.println(Thread.currentThread()+"-"+n);
-        commonNumber++;
-        notifyAll();
-    }
-}
 

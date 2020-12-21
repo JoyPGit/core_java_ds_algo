@@ -6,3 +6,10 @@ method is resolved at runtime rather than compile-time.
 https://java2blog.com/core-java-interview-questions-and-answers/
 
 https://java2blog.com/java-interview-questions-for-5-years-experience/
+
+concurrent hashmap
+type erasure
+https://www.baeldung.com/java-equals-hashcode-contracts#:~:text=3.-,hashCode(),have%20to%20override%20hashCode().
+
+ssl 
+dns server

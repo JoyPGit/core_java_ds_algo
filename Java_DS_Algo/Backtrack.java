@@ -133,7 +133,7 @@ public class Backtrack {
     void permHelper(char[] ch, int index){
         if(index == ch.length) System.out.println(new String(ch));
         // swap with itself, so is starts from index
-        for(int i =index; i<ch.length; i++){
+        for(int i = index; i<ch.length; i++){
             swap(ch, index, i);  
             permHelper(ch, index+1);
             // swapping back to prreserve the original order of string chars
