@@ -384,7 +384,12 @@ public class Partition{
         return dp[0][n-1];
     }
 
+    // https://leetcode.com/problems/partition-labels/
+
     
+    // https://www.geeksforgeeks.org/split-array-into-maximum-subarrays-such-that-
+    // every-distinct-element-lies-in-a-single-subarray/?ref=rp
+
 
     // https://www.geeksforgeeks.org/count-possible-decodings-given-digit-sequence/
 

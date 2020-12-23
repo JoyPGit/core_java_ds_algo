@@ -20,6 +20,8 @@ public class Questions {
     }
 
     public static void main(String[] args) throws Exception {
+        // https://www.youtube.com/watch?v=FB6RsHx7S6A
+
         // ques 1 : the line below prints or not?    
         //\u000d System.out.println("comment prints");
         
@@ -60,6 +62,7 @@ public class Questions {
         // ques 4 static in nested class; final -> constant
         final class Constants{
             public final static String name = "Pi";
+            
             Thread t = new Thread(new Runnable(){
         
                 @Override
@@ -78,15 +81,6 @@ public class Questions {
 
 
         // interface -> functional, marker(when no method)
-
-
-        // Polymorphism
-        /**
-         * Polymorphism is the ability of an object to take on many forms. 
-         * The most common use of polymorphism in OOP occurs when a parent class reference is used 
-         * to refer to a child class object.
-         */
-
          
         // interface can be used as reference to class implementing it, polymorphism
         IFruit if1 = new Fruit();
@@ -98,13 +92,12 @@ public class Questions {
         Boy b = ()->{System.out.println("m1 of Boy interface implemented");};
         b.m1();
 
-        // another func interface x with Runnable
+        // another func interface example with Runnable
         // Emp e1 = new Emp();
         // Thread t1 = new Thread(e1);
         // t1.start();
 
         
-
         // same code with lambda
         Runnable r1 = ()->{
             for(int i =0; i<5; i++){
@@ -123,53 +116,6 @@ public class Questions {
 
         // transient is for variables, using transient keyword stops the value of variable 
         // from being stored during serialization; default or null is stored in place
-
-        /** 
-         * Serialization and De-serialization :
-         * serialization is the conversion of a Java object into a static stream (sequence) of bytes 
-         * which can then be saved to a database or transferred over a network.
-         * 
-         * The serialization process is instance-independent, i.e. objects can be serialized on one platform and deserialized on another. 
-         * 
-         * Classes that are eligible for serialization need to implement a special marker interface Serializable.
-         * Serializable is a marker interface (no methods, no body)
-         * 
-         * When a class implements the java.io.Serializable interface, all its sub-classes are 
-         * serializable as well. On the contrary, when an object has a reference to another object, 
-         * these objects must implement the Serializable interface separately, 
-         * or else a NotSerializableException will be thrown:
-         * 
-         * If a serializable class doesn't declare a serialVersionUID, 
-         * the JVM will generate one automatically at run-time.
-        */
-        ObjSave save1 = new ObjSave(3);
-
-        try {
-            File f = new File("serialize_Obj.txt");
-            // for writing data to a file
-            FileOutputStream fos = new FileOutputStream(f);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            // writes specifed obj to output stream
-            oos.writeObject(save1);
-            oos.flush();
-            oos.close();
-        
-            // same file reference
-            FileInputStream fis = new FileInputStream(f);
-            ObjectInputStream ios = new ObjectInputStream(fis);
-            ObjSave deserializedObj = (ObjSave)(ios.readObject());
-            ios.close();
-
-            System.out.println("deserialized obj int i "+deserializedObj.i);
-            System.out.println(save1.equals(deserializedObj));
-            // after implementing equals, both will be equal
-    
-        } catch (Exception e) {
-            //TODO: handle exception
-            e.printStackTrace();
-            throw new Exception();
-        }
-        
 
 
         // volatile is applicable only for variables
@@ -251,15 +197,5 @@ class Emp implements Runnable{
         for(int i =0; i<5; i++){
             System.out.println("child thread with lambda");
         }
-    }
-}
-
-// java.io.NotSerializableException: ObjSave
-// java.io.eofexception
-class ObjSave implements Serializable{
-    // private static final long serialVersionUID = 1L;
-    int i;
-    ObjSave(int i){
-        this.i = i;
     }
 }

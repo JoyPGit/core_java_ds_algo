@@ -1704,6 +1704,7 @@ class StringPractice {
      * 4 ADD A BOUNDARY CONDN AT LAST res.add(i - currStart + 1);
      * 
      */
+    // https://leetcode.com/problems/partition-labels/
     public List<Integer> partitionLabels(String S) {
         HashMap<Character, Integer> map = new HashMap<>();
         char[] ch = S.toCharArray();

@@ -84,4 +84,32 @@ It must be in a method (or constructor, or initialization block).
 executor framework
 join
 
+concurrent hashmap vs hashmap
 future
+
+44
+
+ConcurrentHashMap has :
+
+1 Multiple partitions which can be locked independently. (16 by default)
+2 Using concurrent Locks operations for thread safety instead of synchronized.
+3 Has thread safe Iterators. synchronizedCollection's iterators are not thread safe.
+4 Does not expose the internal locks. synchronizedCollection does.
+
+ConcurrentHashMap does not lock the Map while you are reading from it. 
+Additionally,ConcurrentHashMap does not lock the entire Mapwhen writing to it. 
+It only locks the part of the Map that is being written to, internally.
+
+Hashtable’s offer concurrent access to their entries, with a small caveat, 
+the entire map is locked to perform any sort of operation. While this overhead is ignorable in a web 
+application under normal load, under heavy load it can lead to delayed response times and 
+overtaxing of your server for no good reason.
+
+This is where ConcurrentHashMap’s step in. They offer all the features of Hashtable with a 
+performance almost as good as a HashMap. ConcurrentHashMap’s accomplish this by a very simple mechanism. 
+Instead of a map wide lock, the collection maintains a list of 16 locks by default, each of which is 
+used to guard (or lock on) a single bucket of the map. This effectively means that 16 threads can 
+modify the collection at a single time (as long as they’re all working on different buckets). 
+Infact there is no operation performed by this collection that locks the entire map. 
+The concurrency level of the collection, the number of threads that can modify it at the same time 
+without blocking, can be increased. However a higher number means more overhead of maintaining this list of locks.

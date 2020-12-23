@@ -1,0 +1,181 @@
+https://java2blog.com/garbage-collection-java/
+
+Young generation is divided into 3 parts.
+
+Eden space
+Survivor space S0
+Survivor space S1
+
+All newly created objects are allocated in eden space.
+
+When Eden space is completely filled with objects then minor GC will occur. 
+
+All the objects which are not dead or unreferenced will be moved to one of the survivors spaces. 
+In our case, let’s say all the objects are moved to S0.
+
+When Eden space is filled again, then all the live objects in Eden space and
+Survivor space S0 will be moved to Survivor space S1.
+
+Once objects have survived multiple cycles of minor GC, they will be moved to old generation. 
+You can control this threshold by MaxTenuringThreshold. 
+The actual tenuring threshold is dynamically adjusted by JVM.
+
+
+If you have lots of temporary objects then there will be lot of minor gc. You can provide 
+arguments XX:NewRatio=1 to distribute 50% to young generation and 50% to old.
+
+By default, NewRatio=2 hence young Generation is 1/3 of total heap.
+Similarly, If you have too many long-lived objects, then you might need to increase size of tenure space 
+by putting high value of NewRatio.
+
+
+Why two survivor spaces?
+You must be wondering why do we have 2 survivor space. We have 2 survivor spaces to avoid memory fragmentation. 
+Each time you copy objects from eden to survivor and you get empty eden space and 1 empty survivor space.
+
+Garbage Collection in java
+PreviousNext
+In this post, we will see about Garbage Collection in java.
+
+I will try to explain with the help of diagrams and examples rather than theory.
+
+JVM Memory is divided into three parts
+
+Young generation
+Old generation
+Metaspace (Perm Gen)
+Young Generation
+As the name suggests, young generation is the area where newly created objects are allocated.
+
+When young generation fills up, it cause minor garbage collection aka Minor GC.
+When minor Gcs occurs, dead objects will be removed from young generation.
+If you have lot of dead objects in young generation, Minor GC will be perfomed faster.
+All minor GCs are “stop the world” events, so when minor GCs occurs, application threads will also stop.
+Let’s understand more about how objects are allocated in Young generation.
+
+Learn about Garbage collection in java
+VDO.AI
+Young generation is divided into 3 parts.
+
+Eden space
+Survivor space S0
+Survivor space S1
+Here is illustration of the young and old generation.
+YoungOldGeneration
+
+All newly created objects are allocated in eden space.
+When Eden space is completely filled with objects then minor GC will occur. All the objects which are not dead or unreferenced will be moved to one of the survivors spaces. In our case, let’s say all the objects are moved to S0.
+
+S0AllocatedObjects
+
+When Eden space is filled again, then all the live objects in Eden space andSurvivor space S0 will be moved to Survivor space S1.
+S0T0S1AlloactedObjects
+S1AllocatedObjects
+
+Once objects are survived multiple cycles of minor GC, they will be moved to old generation. You can control this threshold by MaxTenuringThreshold. The actual tenuring threshold is dynamically adjusted by JVM.
+Let’s try to demonstrate this behavior with the help of example:
+You have below class in which I am creating short-lived objects for demonstration.
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+ 
+package org.arpit.java2blog;
+ 
+import java.math.BigDecimal;
+ 
+public class GCCollectorExample {
+	public static void main(String args[])
+	{
+		createObjects();
+	}
+	private static void createObjects() {
+ 
+		long count = 0;
+		
+		while(true) { 
+			// Creating short-lived objects just for illustration
+			BigDecimal shortLivedBigDecimal1 = new BigDecimal(count++);
+		}
+	}
+}
+ 
+When you run the program. Let’s check memory allocation in Visual GC (A visualVM plugin)
+
+S0AndEdenDemonstation-1024x422
+As you can see, we have few objects in S0 and once eden space is completely filled, all referenced objects will be moved to S1.
+
+S1FilledAndEdenDemonstration
+
+Old generation
+It is used to hold old long surviving objects
+It is generally larger than the young generation.
+When tenured space is completely filled(or predefined threshold) with objects then Major GC will occur. It will reclaim the memory and free up space.
+Often, Major GCs are slower and less frequent than minor GC.
+How can you use this information to optimize memory?
+It depends on nature of application.
+If you have lots of temporary objects then there will be lot of minor gc. You can provide arguments XX:NewRatio=1 to distribute 50% to young generation and 50% to old.
+By default, NewRatio=2 hence young Generation is 1/3 of total heap.
+Similarly, If you have too many long-lived objects, then you might need to increase size of tenure space by putting high value of NewRatio.
+
+Why two survivor spaces?
+You must be wondering why do we have 2 survivor space. We have 2 survivor spaces to avoid memory fragmentation. Each time you copy objects from eden to survivor and you get empty eden space and 1 empty survivor space.
+
+Garbage Collection Algorithms
+JVM comes with several algorithms for young and old generation. There are 3 types of algorithms
+
+Serial collector : It uses single thread to perform all the garbage collection
+Parallel collector : uses multiple CPUs, While serial collector uses 1 thread to perform GC, 
+parallel GC uses several threads to perform GC 
+
+
+Concurrent collector : performs garbage collection with application threads. 
+It is useful for applications which have medium to large datasets and require quick response time.
+
+
+The java.lang.Object.finalize() is called by the garbage collector on an object when 
+garbage collection determines that there are no more references to the object. 
+A subclass overrides the finalize method to dispose of system resources or to perform other cleanup.
+
+public class ObjectDemo extends GregorianCalendar {
+
+   public static void main(String[] args) {
+      try {
+         // create a new ObjectDemo object
+         ObjectDemo cal = new ObjectDemo();
+
+         // print current time
+         System.out.println("" + cal.getTime());
+
+         // finalize cal
+         System.out.println("Finalizing...");
+         cal.finalize();
+         System.out.println("Finalized.");
+
+      } catch (Throwable ex) {
+         ex.printStackTrace();
+      }
+   }
+}
+
+Calling the gc method suggests that the Java Virtual Machine expend effort toward 
+recycling unused objects in order to make the memory they currently occupy available for quick reuse.
+

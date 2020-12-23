@@ -22,13 +22,31 @@ public class points {
         List<Laptop> list = new ArrayList<>();
         list.add(l1); list.add(l2); list.add(l3);
 
-        Collections.sort(list);
-        for(Laptop l : list) System.out.print("brand "+l.brand+ " ram "+l.ram+", ");
+        // using comparator interface
+        Collections.sort(list,new Comparator() {
+ 
+            @Override
+            public int compare(Laptop o1, Laptop o2) {
+                // TODO Auto-generated method stub
+                if(l1.brand.compareTo(l2.brand)==0){
+                    return l1.price - o2.price;
+                }
+                else {
+                    return o1.name.compareTo(o2.name);
+                }
+            }
+        });
 
         Collections.sort(list,(x, y)-> (x.brand).compareTo(y.brand));
         System.out.println();
         System.out.println("sorting with comparator");
         for(Laptop l : list) System.out.println("brand "+l.brand+ " ram "+l.ram+", ");
+
+
+        // using comparable's compareTo
+        Collections.sort(list);
+        for(Laptop l : list) System.out.print("brand "+l.brand+ " ram "+l.ram+", ");
+        
     }
 
 }
@@ -54,5 +72,7 @@ class Laptop implements Comparable<Laptop>{
         else if(this.ram<l.ram)return -1;
         else return 0;
     }
+
+    
     
 }

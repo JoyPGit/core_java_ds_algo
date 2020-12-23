@@ -56,6 +56,8 @@ In Run time Polymorphism, the call is not resolved by the compiler.
 Method overriding is the runtime polymorphism having same method with 
 same parameters or signature, but associated in different classes.
 
+operator overloading is not allowe din Java
+
 method overriding vs overloading
 same class vs subclass
 Java Method Overloading
@@ -78,14 +80,15 @@ multiple interfaces. E.g., ArrayList implements List, RandomAccess,
 Cloneable, and Serializable.
 
 abstract method
-The method which has only the declaration and not the implementation is called the abstract method and it has the keyword called “abstract”. Declarations ends with a semicolon.
+The method which has only the declaration and not the implementation is called the abstract method and 
+it has the keyword called “abstract”. Declarations ends with a semicolon.
+It doesn't have a body.
 
 multiple inheritance 
 
 
 Difference between String, String Builder, and String Buffer.
 Buffer is thread safe, Builder is not
-
 
 
 
@@ -314,3 +317,6 @@ https://java2blog.com/java-interview-questions-for-5-years-experience/
 https://www.youtube.com/watch?v=FB6RsHx7S6A
 
 static in interface?
+
+
+https://java2blog.com/oops-interview-questions-answers-java/

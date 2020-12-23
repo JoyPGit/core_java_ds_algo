@@ -279,6 +279,26 @@ class LinkedPractice {
         return p;
     }
 
+    // simpler, use a flag to check if second time reset
+    public ListNode getIntersectionNode2(ListNode headA, ListNode headB) {
+        ListNode a = headA; ListNode b = headB;
+        boolean firsta = false; boolean firstb = false;
+        while(a!=null && b!=null){
+            if(a == b) return a;
+            a = a.next; b = b.next;
+            if(a == null && !firsta) {
+                a = headB;
+                firsta = true;
+            }
+            if(b == null && !firstb) {
+                b = headA;
+                firstb = true;
+            }
+        }
+        // if it breaks out of loop then either a or b node is null;
+        return null;
+    }
+
     
     /** 
      * [1,2], 2 tricky, [1], 1
