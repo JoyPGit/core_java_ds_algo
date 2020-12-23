@@ -23,8 +23,6 @@
  * */
 package Core_Java.THREADS;
 
-import java.util.*;
-
 public class Three_threads implements Runnable {
     // volatile int commonNumber;
     int remainder;

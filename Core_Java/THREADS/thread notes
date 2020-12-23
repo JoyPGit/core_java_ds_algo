@@ -1,4 +1,5 @@
 THREE WAYS :
+
 1 THREADS SYNCHRONIZED
 2 SEMPAHORES
 3 BLOCKING QUEUES
@@ -70,6 +71,8 @@ no primitive data structure is chosen.
 
 ----------------------------------------------------------
 
+
+----------------------------------------------------------
 ERRORS :
 
 Syntax error, insert "... VariableDeclaratorId" to complete FormalParameterList
