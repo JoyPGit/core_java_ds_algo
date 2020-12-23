@@ -1,6 +1,6 @@
 package Core_Java.Inheritance;
 
-class Animal_superClass {
+public class Animal_superClass {
     int superVar; 
     Animal_superClass(int a){
         this.superVar = a;
@@ -11,7 +11,7 @@ class Animal_superClass {
     }
 
     public void roam(){
-        System.out.println("roaming");
+        System.out.println("roaming super");
     }
 
 
