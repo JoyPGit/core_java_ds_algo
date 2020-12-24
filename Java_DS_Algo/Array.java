@@ -189,6 +189,37 @@ class Array {
         }
     }
 
+    // https://leetcode.com/problems/minimum-absolute-difference/discuss/388289/Java-sorting-beats-100-explained
+    /** 
+     * can be optimized, if current diff is lesser than min,
+     * clear res and add current pair. 
+     * else if diff  = min, add current pair.
+    */
+    // https://leetcode.com/problems/minimum-absolute-difference/
+    public List<List<Integer>> minimumAbsDifference(int[] arr) {
+        int n = arr.length;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        
+        List<List<Integer>> res = new ArrayList<>();
+            
+        Arrays.sort(arr);
+        for(int i =0; i<n-1; i++){
+            min = Math.min(Math.abs(arr[i] - arr[i+1]), min);
+        }
+        
+        
+        for(int i =0; i<n-1; i++){
+            if(Math.abs(arr[i] - arr[i+1]) == min){
+                List<Integer> curr = new ArrayList<>();
+                curr.add(arr[i]); curr.add(arr[i+1]);
+                res.add(curr);
+            }
+            
+        }
+        return res;
+    }
+
 
     // PIVOT
     // https://leetcode.com/problems/find-pivot-index/
@@ -427,6 +458,9 @@ class Array {
         }
         return removeHelper(arr, index+1, j);
     }
+
+    // https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/discuss/968604/
+    // java-on-commented-code-remove-duplicates-1-2
 
     /** 
      * POINTS:
@@ -979,6 +1013,36 @@ class Array {
             map.put(sum, map.getOrDefault(sum, 0)+1);
         }
         return count;
+    }
+
+    /** 
+     * 1 scan from both sides consecutively
+     * 2 from left to right, if ratings[i]>ratings[i-1] ratings[i] = ratings[i-1]+1
+     * 3 from right to left, select max as lower rating can cause conflict
+     * 
+    */
+    // https://leetcode.com/problems/candy
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        int sum = 0;
+        int[] res = new int[n];
+        
+        Arrays.fill(res, 1); // 1
+        
+        for(int i =1; i<n; i++){
+            if(ratings[i]>ratings[i-1]){
+                res[i] = res[i-1]+1; // 2
+            }
+        }
+        
+        for(int i =n-2; i>=0; i--){
+            if(ratings[i]>ratings[i+1]){
+                res[i] = Math.max(res[i+1]+1, res[i]); // 3
+            }
+        }
+        
+        for(int i : res) sum+=i;
+        return sum;
     }
 
     // https://www.geeksforgeeks.org/sum-of-all-subarrays/

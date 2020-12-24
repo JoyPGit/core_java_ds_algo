@@ -2,28 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a25cbdf-8ab2-4633-8fb8-8a1de50ac99c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core_Java.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hashcode.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Inheritance/Animal_superClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Inheritance/Animal_superClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Inheritance/Dog_subclass.java" beforeDir="false" afterPath="$PROJECT_DIR$/Inheritance/Dog_subclass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Inheritance/Interface_pet.java" beforeDir="false" afterPath="$PROJECT_DIR$/Inheritance/Interface_pet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Inheritance/access_specifiers.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Questions/Questions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Questions/all ques" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Questions/interfacerelation.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Questions/serialize_Obj.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/comparable_comparator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_8_features/JVM-Architecture.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_8_features/Screenshot 2020-12-21 at 2.08.51 PM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_8_features/Screenshot 2020-12-21 at 2.11.43 PM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_architecture" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/java_notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Interview/Interview" beforeDir="false" afterPath="$PROJECT_DIR$/../Interview/Interview" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/LinkedPractice.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/LinkedPractice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/JVM_architecture" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/JVM_architecture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/all_ds_ques" beforeDir="false" afterPath="$PROJECT_DIR$/all_ds_ques" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

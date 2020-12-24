@@ -109,3 +109,18 @@ In JVM, Java code is compiled to bytecode. This bytecode gets interpreted on dif
 JIT stands for Just-in-time compiler. JIT is the part of the Java Virtual Machine (JVM). 
 It is used to speed up the execution time.
 In comparison to other compiler machines, JVM in Java may be slow in execution.
+
+JIT vs JVM
+
+The main difference between JVM and JIT is their purpose, the main goal of JVM is to 
+provide platform independence while the objective of JIT is to improve performance of JVM, 
+by compiling more code into machine language.
+
+There is a threshold set up, if some code executes more than that threshold 
+then it become eligible for just in time compiled. 
+By the way, Hotspot is not the only JVM that contains Just in time compilers, 
+there are other JVM as well e.g. Oracle's original JRockit one. 
+
+JIT improves the speed of JVM
+
+Read more: https://www.java67.com/2013/02/difference-between-jit-and-jvm-in-java.html#ixzz6hYKZXlih

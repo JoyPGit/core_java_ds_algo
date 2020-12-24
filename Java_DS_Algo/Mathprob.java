@@ -253,6 +253,45 @@ public class Mathprob {
         return profit;
     }
 
+    // here we can buy and sell on the same day, so just check if next
+    // price is greater; 
+    // [1,2,3,4,5] buy on 1, sell on 2; buy on2, sell on 3
+    // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii
+    public int maxProfit2(int[] prices) {
+        int n = prices.length;
+        int profit = 0;        
+        int index = 0;
+        
+        for(int i =0; i<n-1; i++){
+            if(prices[i]<prices[i+1]) profit += prices[i+1] - prices[i];
+        }
+        
+        return profit;
+    }
+
+    // mismatch b/w my ans and gfg's
+    // reset min and max when min is encountered
+    // if max is found, update diff
+    // https://practice.geeksforgeeks.org/problems/maximum-difference-1587115620/1#
+    int findMaxDiff(int arr[], int n){
+	    int min = Integer.MAX_VALUE; int max = Integer.MIN_VALUE;
+	    int diff = 0;
+	    
+	    for(int i = 0; i<n; i++){
+	        if(min > arr[i]){
+	            min = arr[i]; max = arr[i];
+	        }
+	        if(arr[i]>max){
+	            max = arr[i];    
+	            diff = Math.max(diff, max-min);
+	        }
+	 
+        }
+        System.out.println("max diff is "+ diff);
+	    return diff;
+    }
+
+
     /** 
      * if mod == 0 add one to numBottles
     */
@@ -372,8 +411,8 @@ public class Mathprob {
 
     /**
      * [1,7,9,9,8,3] 
-     * index = 1
-     * sort from index 3 till end
+     * index = 0
+     * sort from index 2 till end
      * swap 7 with just larger to right
      * 
      * Why flip? 
@@ -391,18 +430,18 @@ public class Mathprob {
         int index = -1; int i = n-1;
         while(i>0){
             if(nums[i]>nums[i-1]) {
-                index = i-1;
+                index = i;
                 break;
             }
             i--;
         }
         
-        // all desc, flip to smallest
-        if(index == -1) flip(nums, index+1, n-1);
+        // all desc, flip from index till end
+        if(index == -1) flip(nums, index, n-1);
         else{
-            flip (nums, index+1, n-1);
+            flip (nums, index, n-1);
             for(i = index+1; i<n; i++){
-                if(nums[i]>nums[index]) {
+                if(nums[i]>nums[index-1]) {
                     swap(nums, index, i);
                     break;
                 }   
@@ -420,6 +459,102 @@ public class Mathprob {
         while(start <= end){
             swap(arr, start++, end--);
         }
+    }
+
+    // see above; 3 step process
+    // find index; flip from index till end
+    // swap index-1 with first greater
+    // 230241, 12443322
+    // https://leetcode.com/problems/next-greater-element-iii/
+    public int nextGreaterElement(int N) {
+        if( N == 1999999999 || N == 2147483647) return -1;
+        String str = ""+N;
+        int n = str.length();
+        if(n == 1) return -1;
+        int[] res = new int[n];
+        
+        for(int i =0; i<n; i++) res[i] = str.charAt(i)-'0';
+        
+        int index = 0;
+        
+        for(int i = n-1; i>0; i--){
+            if(res[i]>res[i-1]){
+                // index is el just before the smallest 
+                index = i;
+                break;
+            }  
+            if(i == 1) return -1;
+        }
+        
+        // Arrays.sort(res, index, n);
+        // as array is in descending order till this index, flipping will be faster        
+        flip(res, index, n-1);
+        for(int i = index; i<n; i++){
+            if(res[i]>res[index-1]) {
+                swap(res, index-1, i);
+                break;
+            }
+        }
+        
+        String s = "";
+        for(int i : res) s+=i;
+        return Integer.parseInt(s);
+    }
+    
+    // imp : hi = m * n - 1;
+    // mid = (lo + hi) / 2; midVal = matrix[mid/n][mid%n];
+    // https://leetcode.com/problems/search-a-2d-matrix/
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        if (m == 0) {
+            return false;
+        }
+        int n = matrix[0].length;
+        int lo = 0; 
+        int hi = m * n - 1;
+        int mid = 0;
+        
+        while (lo <= hi) {
+            mid = (lo + hi) / 2;
+            int midVal = matrix[mid/n][mid%n];
+            if (midVal == target) {
+                return true;
+            } else if (midVal < target) {
+                lo = mid + 1;
+            } else hi = mid - 1;
+        }
+        return false;
+    }
+
+    /** 
+     * 1 scan from both sides consecutively
+     * 2 from left to right, if ratings[i]>ratings[i-1] ratings[i] = ratings[i-1]+1
+     * 3 from right to left, select max as lower rating can cause conflict
+     * 
+    */
+    // https://leetcode.com/problems/candy
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        int sum = 0;
+        int[] res = new int[n];
+        
+        Arrays.fill(res, 1);
+        
+        for(int i =1; i<n; i++){
+            if(ratings[i]>ratings[i-1]){
+                res[i] = res[i-1]+1;
+            }
+        }
+        
+        for(int i =n-2; i>=0; i--){
+            
+            if(ratings[i]>ratings[i+1]){
+                res[i] = Math.max(res[i+1]+1, res[i]);
+            }
+        }
+        
+        for(int i : res) sum+=i;
+        return sum;
     }
 
     /* 
@@ -602,6 +737,13 @@ public class Mathprob {
         // math.isPerfectSquare(2);
         math.isPerfectSquare(81);
         math.numberOfNecklaces(3, 6, 9);
+        int[] diff = new int[]{
+            87, 78, 16, 94, 36, 87, 93, 50, 22, 63, 28, 91, 60, 64, 27, 41, 27, 73, 37, 12, 69, 
+            68, 30, 83, 31, 63, 24, 68, 36, 30, 3, 23, 59, 70, 68, 94, 57, 12, 43, 30, 74, 22, 
+            20, 85, 38, 99, 25, 16, 71, 14, 27, 92, 81, 57, 74, 63, 71, 97, 82, 6, 26, 85, 28,
+            37, 6, 47, 30, 14, 58, 25, 96, 83, 46, 15, 68, 35, 65, 44, 51, 88, 9, 77, 79, 89};
+        // Correct output : 79, 96
+        math.findMaxDiff(diff, diff.length);
     }
 
 }
