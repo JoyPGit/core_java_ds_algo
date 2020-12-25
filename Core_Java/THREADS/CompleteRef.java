@@ -1,24 +1,282 @@
+import java.io.IOException;
 import java.util.*;
 
+/** 
+ * threads need not always run when accessing critical or shared resources
+ * 
+ * thread needs an object ref to run. so this is passed if inside the class, else 
+ * an instance is passed during thread creation if outside
+ * 
+ * 2 ways using implements Runnable:
+ * 
+ * 1 create a new object, pass this to a new Thread(); t.start()
+ * 2 create a new thread inside constructor; pass (this) and start the thread;
+ * 
+ * when extending
+ * no need to use run(); but start the thread inside constructor;
+ * 
+ * using lambda: call refVar.run(); as rub is the only method of Runnable fucntional interface
+ * 
+ * 
+ * 
+*/
 public class CompleteRef {
     
     public static void main(String[] args) {
-        new NewThread();
+        // new NewThread1();
+
+        /** 
+         *  NewThread2 runnableThread = new NewThread2();
+         * Thread outside = new Thread(runnableThread);
+         * outside.start();
+         * 
+         * Runnable r = ()->{
+         *     try {
+         *         for(int i = 6; i<11; i++){
+         *             System.out.println("using lambda "+ i);
+         *             Thread.sleep(1000);
+         *         }
+         *     } catch (Exception e) {
+         *       //TODO: handle exception
+         *     }
+         *  
+         * };
+         * r.run();
+         */
+         
+        // 2 threads named one and two 
+        // new NewThread2("one");
+        // new NewThread2("two");
+
+        /** 
+         * synchronized is used on same shared object, here same instance of Shared is passed
+         * to sync_one and sync_two;
+         * 
+         * synchronized is used on shared's method
+         * Threads inside Synch will call sychronized method of shared
+         * start threads inside class and call shared inside run().
+        */
+        // Shared shared = new Shared();
+        // Synch sync_one = new Synch("sync_one", shared);
+        // Synch sync_two = new Synch("sync_two", shared);
+        try {
+            // join just waits for a thread to die, se same technique of starting thread inside constructor
+            // sync_one.t.join();
+            // sync_two.t.join(); 
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+
+        Food f = new Food();
+        Producer p = new Producer(f);
+        Consumer c = new Consumer(f);
     }
 }
 
-// threads need not always run when accessing critical or shared resources
-class NewThread extends Thread{
+
+// extending Thread
+// thread can be started inside constructor
+class NewThread1 extends Thread{
     int num;
 
-    NewThread(){
+    NewThread1(){
         super("thread1");
         start();
     }
 
     public void run() {
-        for (int i = 0; i < 5; i++) {
-            System.out.println(++num);
+        try {
+            for (int i = 0; i < 5; i++) {
+                System.out.println(++num);
+                Thread.sleep(1000);
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        
+    }
+}
+
+
+// implements Runnable
+class NewThread2 implements Runnable{
+    int num;
+    Thread t;
+
+    NewThread2(String s){
+        // need to pass object to run
+        this.t = new Thread(this, s);
+        this.t.start();
+    }
+
+    public void run() {
+        try {
+            for(int i =0; i<5; i++){
+                System.out.println(t.getName()+" " + ++num);
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        System.out.println(t.getName()+" exiting");
+    }
+}
+
+class Shared{
+
+    // not using instance var as I want to pass the value from thread
+    // so passing arg to sync method
+    Shared(){}
+    // synchronized on shared resource
+    // if synchronized is not used, as soon as Thread1 goes to sleep , thread2 starts printing
+    /**
+     * non synchronized :
+     * [sync_one
+     * [sync_two
+     * ]
+     * ]
+     * 
+     * synchronized :
+     * [sync_one
+     * ]
+     * [sync_two
+     * ]
+     * 
+     * synchronized And sleep causes everything in sync
+     * synchronized and wait causes non sync
+     * 
+     * sleep() is a method which is used to hold the process for few seconds or the time 
+     * you wanted but in case of wait() method thread goes in waiting state and 
+     * it won’t come back automatically until we call the notify() or notifyAll().
+     * 
+     * The major difference is that wait() releases the lock or monitor while sleep() doesn’t 
+     * release any lock or monitor while waiting. 
+     * Wait is used for inter-thread communication while sleep is used to introduce pause 
+     * on execution, generally.
+     * 
+    */
+    synchronized void print(String msg){
+        System.out.println('['+ msg);
+
+        try {
+            wait(1000);
+            // Thread.sleep(1000);
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        System.err.println(']');
+    }
+}
+// Synchronized method is used to lock an object for any shared resource.
+// so it must be used on a common class's method not on run
+class Synch implements Runnable{
+    String name;
+    Thread t;
+    Shared shared;
+
+    Synch(String s, Shared sharedObjInstance){
+        this.name = s;
+        shared = sharedObjInstance;
+        this.t = new Thread(this); // 1 which class to pass
+        // this.t = new Thread(shared);
+        t.start();
+    }
+
+    public void run(){
+        try {
+            shared.print(this.name);
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
         }
     }
 }
+
+class Food {
+    List<Integer> list;
+    boolean isEmpty;
+
+    Food(){
+        this.isEmpty = true;
+        this.list = new ArrayList<>();
+    }
+
+    synchronized void get(){
+        while(true){
+            try {
+                while(isEmpty){
+                    wait();
+                    // not using notify() causes deadlock as both are in waiting mode
+                }    
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
+            while(list.size()!=0){
+                System.out.println("in get "+list.remove(0));
+            }
+            isEmpty = true;
+            notify();
+        }
+        
+    }
+
+    synchronized void put(){
+        while(true){
+            try {
+                while(!isEmpty){
+                    wait();
+                }    
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
+            for(int i =0; i<5; i++) {
+                list.add((int)(Math.random()*10*i));
+                System.out.println("in put "+list.get(list.size()-1));
+            }
+    
+            isEmpty = false;
+            notify();
+
+        }
+    }
+}
+
+class Producer implements Runnable{
+    Thread t;
+    Food food;
+
+    Producer(Food f){
+        this.t = new Thread(this);
+        t.start();
+        this.food = f;
+    }
+
+    public void run(){
+        while(true) this.food.put();
+    }
+}
+
+class Consumer implements Runnable{
+    Thread t;
+    Food food;
+
+    Consumer(Food f){
+        this.t = new Thread(this);
+        t.start();
+        this.food = f;
+    }
+
+    public void run(){
+        while(true) this.food.get();
+    }
+}
+
+// using semaphore
+
+// using blockingQueue
