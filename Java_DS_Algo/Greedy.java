@@ -275,7 +275,10 @@ class Greedy{
         return count;
     }
 
-    void MaxTipCalculator(){}
+    // https://www.hackerearth.com/submission/29190987/
+    void MaxTipCalculator(){
+        
+    }
 
     // https://leetcode.com/problems/course-schedule-iii/
 
