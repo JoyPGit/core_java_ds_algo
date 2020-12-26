@@ -1051,6 +1051,45 @@ class Array {
 
     // CIRCULAR ARRAY 
     // https://leetcode.com/problems/next-greater-element-ii/
+    public int[] nextGreaterElements(int[] nums) {
+        int n = nums.length;
+        int[] res = new int[n];
+        
+        for(int i = 0; i<n; i++){
+            int j = i+1;
+            while(j%n!=i && nums[j%n] <= nums[i]){
+                j++;
+            }    
+            if(j%n == i) res[i] = -1;
+            else if(nums[j%n] > nums[i]) res[i] = nums[j%n];
+        }
+        return res;
+    }
+
+    // The first typical way to solve circular array problems is to extend the original array 
+    // to twice length, 2nd half has the same element as first half.
+    public int[] nextGreaterElements2(int[] nums) {
+        Deque<Integer> q = new LinkedList<>();
+        
+        int n = nums.length;
+        int[] res = new int[n];
+        Arrays.fill(res, -1); // 1
+
+        for(int i =0; i<n*2; i++){ // 2
+            if(q.size() == 0) {
+                q.addLast(i);
+                continue;
+            }
+            
+            // i%n
+            while(q.size()!=0 && nums[q.getLast()]<nums[i%n]){
+                res[q.removeLast()] = nums[i%n];
+            }
+            
+            if(i<n)q.addLast(i);
+        }
+        return res;
+    }
 
     
     public static void main(String[] args) {

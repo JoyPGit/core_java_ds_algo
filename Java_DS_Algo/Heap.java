@@ -323,6 +323,37 @@ public class Heap {
         return res;
     }
 
+    /** 
+     * idea is simple, add els of first row
+     * remove and add next el of curr col;
+     * if x == m-1 continue;
+     * run k-1 times
+    */
+    // https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix
+    class Node{
+        int x, y, val;
+        Node(int x, int y, int v){
+            this.x = x; this.y =y; this.val = v;
+        }
+    }
+    public int kthSmallest(int[][] matrix, int k) {
+        int m = matrix.length; int n = matrix[0].length;
+        
+        PriorityQueue<Node> pq = new PriorityQueue<>((x,y)->x.val - y.val);
+        
+        for(int i =0; i<m; i++){
+            pq.add(new Node(0 , i, matrix[0][i]));
+        }
+        
+        for(int i =0; i<k-1; i++){
+            Node curr = pq.remove();
+            // System.out.println(curr.val);
+            if(curr.x == m-1) continue;
+            
+            pq.add(new Node(curr.x+1, curr.y, matrix[curr.x+1][curr.y] ));
+        }
+        return pq.remove().val;
+    }
 
     /** 
      * 1 create a custom class to hold index, row and val
