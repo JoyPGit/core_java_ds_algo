@@ -68,9 +68,15 @@ public class CompleteRef {
             e.printStackTrace();
         }
 
-        Food f = new Food();
-        Producer p = new Producer(f);
-        Consumer c = new Consumer(f);
+        // Food f = new Food();
+        // Producer p = new Producer(f);
+        // Consumer c = new Consumer(f);
+
+        Printer printer = new Printer();
+        new NumberPrinter(1, printer, "thread_one");
+        new NumberPrinter(2, printer, "thread_two");
+        new NumberPrinter(0, printer, "thread_three");
+
     }
 }
 
@@ -280,3 +286,49 @@ class Consumer implements Runnable{
 // using semaphore
 
 // using blockingQueue
+
+
+class Printer{
+    int commonNumber;
+    
+    Printer(){
+        this.commonNumber = 1;
+    }
+
+    synchronized void print(int remainder){
+        while(commonNumber<10){
+            while(commonNumber%3!=remainder){
+                try {
+                    wait();
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+            }
+
+            // to control the case when threads enter when commonNUmber is <9 and end up
+            // printing 10, 11, use condition in the run block, like passing an arg 
+            // which is checked in shared method
+            System.out.println(Thread.currentThread().getName()+" -> "+ commonNumber);
+            commonNumber++;
+            notifyAll();
+        }
+        
+    }
+}
+
+class NumberPrinter implements Runnable{
+    Thread t;
+    int remainder;
+    Printer p;
+    
+    NumberPrinter (int r, Printer p, String name){
+        this.p = p;
+        this.remainder = r;
+        this.t = new Thread(this, name);
+        this.t.start();
+    }
+
+    public void run(){
+        p.print(this.remainder);
+    }
+}
