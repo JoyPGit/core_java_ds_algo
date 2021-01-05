@@ -3,6 +3,17 @@ Runtime Polymorphism in Java.
 Runtime polymorphism or Dynamic Method Dispatch is a process in which a call to an overridden 
 method is resolved at runtime rather than compile-time.
 
+
+Difference between abstract class and interface
+1 Abstract class can have abstract and non-abstract methods. Interface can have only abstract methods. 
+Since Java 8, it can have default and static methods also.
+
+2 Interface supports multiple inheritance.
+
+diff b/w path and class path
+
+stack vs heap memory
+
 https://www.baeldung.com/java-type-erasure
 Type erasure can be explained as the process of enforcing type constraints only at compile time 
 and discarding the element type information at runtime.
@@ -76,3 +87,5 @@ https://www.youtube.com/watch?v=FB6RsHx7S6A
 static in interface?
 
 https://stackoverflow.com/questions/16750772/instantiating-interfaces-in-java
+
+https://www.javatpoint.com/difference-between-abstract-class-and-interface

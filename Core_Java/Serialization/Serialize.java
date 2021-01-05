@@ -43,7 +43,7 @@ public class Serialize {
      * writeObject() and readObject() method and need to throw NotSerializableException from this methods.
      * 
      * Question 10 :What is externalizable interface?
-     * Answer: As name suggest it is externalilizing your serialization. If you want to customize your 
+     * Answer: As name suggests it is externalizing your serialization. If you want to customize your 
      * serialization mechanism then you can use it. It uses custom written mechanism to 
      * perform marshalling and unmarshalling of objects.
      * Externalizable interface extends Serializable interface. 
@@ -97,6 +97,7 @@ class ObjSave implements Serializable{
 
     private static final long serialVersionUID = 1L;
     int i;
+    // transient won't be serialized with its value, it will hold feault value
     transient int secret;
     ObjSave(int i){
         this.i = i;

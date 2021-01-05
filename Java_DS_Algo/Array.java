@@ -675,6 +675,20 @@ class Array {
             }
         }
     }
+    
+    // https://leetcode.com/problems/shuffle-the-array/
+    public int[] shuffle(int[] nums, int N) {
+        int n = nums.length;
+        
+        int[] res= new int[n];
+        
+        int lo= 0; int hi = N; int index = 0;
+        for(int i = 0; i<N; i++){
+            res[index++] = nums[lo++];
+            res[index++] = nums[hi++];
+        }
+        return res;
+    }
 
     // https://leetcode.com/problems/wiggle-sort-ii/
     /** technique is to sort and then fill with elements 

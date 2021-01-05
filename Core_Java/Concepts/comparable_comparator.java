@@ -1,9 +1,8 @@
-package Core_Java;
 
 import java.util.*;
 
 
-public class points {
+public class comparable_comparator {
     // Comparable vs Comparator
     /** 
      * Comparable is an interface and to compare objects of a class a compareTo
@@ -28,13 +27,25 @@ public class points {
             @Override
             public int compare(Laptop o1, Laptop o2) {
                 // TODO Auto-generated method stub
-                if(l1.brand.compareTo(l2.brand)==0){
-                    return l1.price - o2.price;
+                if(o1.brand.compareTo(o2.brand)==0){
+                    return o1.price - o2.price;
                 }
                 else {
-                    return o1.name.compareTo(o2.name);
+                    return o1.brand.compareTo(o2.brand);
                 }
             }
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                // TODO Auto-generated method stub
+                if(o1.brand.compareTo(o2.brand)==0){
+                    return o1.price - o2.price;
+                }
+                else {
+                    return o1.brand.compareTo(o2.brand);
+                }
+            }
+
         });
 
         Collections.sort(list,(x, y)-> (x.brand).compareTo(y.brand));

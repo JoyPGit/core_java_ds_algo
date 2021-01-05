@@ -44,23 +44,24 @@ Question 38 : Find the Contiguous Subarray with Sum to a Given Value in an array
 Question 39 : Longest Common Prefix in an array of Strings in java.
 Question 40 : Find all subsets of set (power set) in java.
 Stack
-Question 41:  Implement a stack using array.
-Question 42: Implement a stack using Linked List.
-Question 43:  Implement a stack using two queues.
+Question 41 :  Implement a stack using array.
+Question 42 : Implement a stack using Linked List.
+Question 43 :  Implement a stack using two queues.
 Question 44 : Sort an stack using another stack
 Queue
-Question 45:  Implement Queue using Array in java.
-Question 46:  Implement a stack using two queues .
+Question 45 : Implement Queue using Array in java.
+Question 46 : Implement a stack using two queues .
 Linked List
 Question 47 : Implement singly linked list in java.
-Question 48: How to reverse linked list in java.
-Question 49: How to find middle element of linked list.
+Question 48 : How to reverse linked list in java.
+Question 49 : How to find middle element of linked list.
 Question 50 : How to find nth element from end of linked list .
 Question 51 : How to detect a loop in linked list. If linked list has loop, find the start node for the loop.
-Question 52: How to check if linked list is palindrome or not?
-Question 53 :  Find intersection of two linked lists?
-Question 54 :  How to reverse a linked list in pairs?
-Question 55 :  Implement Doubly linked list in java?
+Question 52 : How to check if linked list is palindrome or not?
+Question 53 : Find intersection of two linked lists?
+Question 54 : How to reverse a linked list in pairs?
+Question 55 : Implement Doubly linked list in java?
+
 Binary Tree
 Question 56 : How can you traverse binary tree?
 Question 57 : Write an algorithm to do level order traversal of binary tree?
@@ -74,6 +75,7 @@ Question 64 : How to find lowest common ancestor(LCA) in binary tree.
 Question 65 : How to do boundary traversal of binary tree.
 Question 66 : How to print vertical sum of binary tree?
 Question 67 : Count subtrees with Sum equal to target in binary tree?
+
 Binary Search tree
 Question 68 : What is binary search tree?
 Question 69 : Can you write algorithm to insert a node in binary search tree.

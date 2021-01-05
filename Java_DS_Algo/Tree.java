@@ -1,4 +1,4 @@
-package Java_DS_Algo;
+
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -141,8 +141,7 @@ public class Tree {
     // mirror
     // https://leetcode.com/problems/invert-binary-tree
     public TreeNode invertTree(TreeNode root) {
-        if (root == null)
-            return root;
+        if (root == null) return root;
         TreeNode holder = root.left;
         root.left = invertTree(root.right);
         root.right = invertTree(holder);
@@ -169,7 +168,9 @@ public class Tree {
     }
 
     /**
-     * STEPS : 3 LEFT, PRED, LINK LEFT == NULL PRINT, MOVE RIGHT ELSE, FIND PRED ->
+     * STEPS : 3 
+     * LEFT, PRED, LINK LEFT == NULL PRINT, 
+     * MOVE RIGHT ELSE, FIND PRED ->
      * PRED'S RIGHT NULL, LINK -> MOVE LEFT -> ELSE UNLINK, PRINT, MOVE RIGHT
      * 
      * MORRIS INORDER TRAVERSAL SET CURRENT'S PREDECESSOR'S RIGHT TO CURRENT IF THE
@@ -209,9 +210,10 @@ public class Tree {
     }
 
     /**
-     * POTNTS : 1 PREV MUST BE LESS THAN ROOT, INORDER TRAVERSAL OF BST IS SORTED 2
-     * WHENEVER CONDN IS VIOLATED, ASSIGN FIRST AND SECOND SIMULTANEOUSLY MORRIS
-     * INORDER USED HERE
+     * POTNTS : 1 PREV MUST BE LESS THAN ROOT, INORDER TRAVERSAL OF BST IS SORTED 
+     * 2 WHENEVER CONDN IS VIOLATED, ASSIGN FIRST AND SECOND SIMULTANEOUSLY 
+     * 
+     * MORRIS INORDER USED HERE
      * 
      */
     // https://leetcode.com/problems/recover-binary-search-tree
@@ -271,12 +273,12 @@ public class Tree {
     }
 
     // ITERATIVE
+    // add right and then left, pop and add to res
     // ADD THE RIGHT AND THEN THE LEFT TO STACK
     // https://leetcode.com/problems/binary-tree-preorder-traversal
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
-        if (root == null)
-            return res;
+        if (root == null) return res;
 
         Deque<TreeNode> q = new LinkedList<>();
         q.addLast(root);
@@ -284,10 +286,8 @@ public class Tree {
         while (q.size() != 0) {
             TreeNode curr = q.removeLast();
             res.add(curr.val);
-            if (curr.right != null)
-                q.addLast(curr.right);
-            if (curr.left != null)
-                q.addLast(curr.left);
+            if (curr.right != null) q.addLast(curr.right);
+            if (curr.left != null) q.addLast(curr.left);
         }
         return res;
     }
@@ -299,28 +299,31 @@ public class Tree {
     }
 
     /**
-     * POINTS : 1 ADD TO STACK, REMOVE CURR, ADD LEFT AND RIGHT 2
-     * 4,2,6-------STACK------RES 4----------4---------- 2,6--------2,6----------4
-     * --------------------4,6,2 LEFT IS ADDED AND THEN WHILE ADDING TO RES, FIRST
+     * POINTS : 
+     * 1 ADD TO STACK, REMOVE CURR, ADD LEFT AND RIGHT 
+     * 2 4,2,6-------STACK------RES 4----------4---------- 2,6--------2,6----------4
+     * --------------------4,6,2 
+     * LEFT IS ADDED AND THEN WHILE ADDING TO RES, FIRST
      * RIGHT IS ADDED. SO FINAL ANS IS REVERSED
      * 
-     *
+     * add, remove, reverse (for post)
      */
     // PREORDER -> RIGHT, LEFT; POST -> LEFT, RIGHT
     // https://leetcode.com/problems/binary-tree-postorder-traversal
     public List<Integer> postorderTraversal(TreeNode root) {
-        Deque<TreeNode> q = new LinkedList<>();
         List<Integer> res = new ArrayList<>();
-        if (root == null)
-            return res;
+        if (root == null) return res;
 
+        Deque<TreeNode> q = new LinkedList<>();
         q.addLast(root);
-        while (!q.isEmpty()) {
+
+        while (q.size()!=0) {
             TreeNode curr = q.removeLast();
             res.add(curr.val);
             if (curr.left != null) q.addLast(curr.left);
             if (curr.right != null) q.addLast(curr.right);
         }
+
         Collections.reverse(res);
         return res;
     }
@@ -338,8 +341,7 @@ public class Tree {
     }
 
     void preOrder(TreeNode root, HashSet<Integer> set, PriorityQueue<Integer> pq) {
-        if (root == null)
-            return;
+        if (root == null) return;
         if (!set.contains(root.val)) {
             set.add(root.val);
             pq.add(root.val);
@@ -525,15 +527,18 @@ public class Tree {
     }
 
     /**
-     * VIEWS FOR RIGHT VIEW DO REVERSE PREORDER TRAVERSAL FOR LEFT, DO NORMAL
-     * PREORDER
+     * VIEWS : FOR RIGHT VIEW DO REVERSE PREORDER TRAVERSAL 
+     * FOR LEFT, DO NORMAL PREORDER
      */
 
     /**
-     * 1 a bit tricky, add dist and node in map 2 if dist exists, don't add 3 IMP :
-     * how to get nodes sorted by dist? start from 0 till map.size and add by
+     * 1 a bit tricky, add dist and node in map 
+     * 2 if dist exists, don't add 
+     * 3 IMP : how to get nodes sorted by dist? start from 0 till map.size and add by
      * fetching i from map
      * 
+     * 
+     * if inorder then overwrite dist, if reverse inorder, check if dist entry exists
      */
     // right view
     // https://leetcode.com/problems/binary-tree-right-side-view
@@ -550,10 +555,8 @@ public class Tree {
     }
 
     void dfs(HashMap<Integer, TreeNode> map, TreeNode root, int dist) {
-        if (root == null)
-            return;
-        if (!map.containsKey(dist))
-            map.put(dist, root);
+        if (root == null) return;
+        if (!map.containsKey(dist)) map.put(dist, root);
 
         dfs(map, root.right, dist + 1);
         dfs(map, root.left, dist + 1);
@@ -576,13 +579,11 @@ public class Tree {
 
             for (int i = 0; i < size; i++) {
                 TreeNode curr = q.removeFirst();
-                if (i == 0 || i == size - 1)
-                    res.add(curr.val); // boundary nodes
-                // System.out.println(curr.val);
-                if (curr.left != null)
-                    q.addLast(curr.left);
-                if (curr.right != null)
-                    q.addLast(curr.right);
+                // boundary nodes
+                if (i == 0 || i == size - 1) res.add(curr.val); 
+
+                if (curr.left != null) q.addLast(curr.left);
+                if (curr.right != null) q.addLast(curr.right);
             }
         }
         System.out.println(res);
@@ -695,7 +696,9 @@ public class Tree {
     // https://www.geeksforgeeks.org/diagonal-traversal-of-binary-tree/
     HashMap<Integer, List<Integer>> diaMap = new HashMap<>();
     void diagonalTraversal(TreeNode root){
+
         diaHelper(root, 0);
+
         for(Map.Entry<Integer, List<Integer>> entry : diaMap.entrySet()){
             List<Integer> curr = entry.getValue();
             System.out.println(curr);
@@ -704,6 +707,7 @@ public class Tree {
 
     void diaHelper(TreeNode root, int dia){
         if(root == null) return;
+
         List<Integer> curr = diaMap.getOrDefault(dia, new ArrayList<>());
         curr.add(root.val);
         diaMap.put(dia, curr);
@@ -1081,8 +1085,9 @@ public class Tree {
     // SIMPLE PREORDER FOR BOTH SIMULTANEOUSLY
     public boolean isSameTree(TreeNode p, TreeNode q) {
         if(p == null && q == null) return true;
-        if(p == null || q == null) return false; // p== null && q == null
+        if(p == null || q == null) return false; // p == null && q == null
         if(p.val != q.val) return false;
+
         boolean left = isSameTree(p.left, q.left) ;
         boolean right = isSameTree(p.right, q.right);
         return left && right;
@@ -1289,8 +1294,8 @@ public class Tree {
         if(root == null) return;
         sum-=root.val;
         curr.add(root.val);
-        if(sum == 0 && root.left == null && root.right == null) 
-            res.add(new ArrayList<>(curr));
+        if(sum == 0 && root.left == null && root.right == null) res.add(new ArrayList<>(curr));
+
         dfs(root.left, sum, res, curr);
         dfs(root.right, sum, res, curr);
         curr.remove(curr.size()-1);
@@ -1393,29 +1398,28 @@ public class Tree {
     // int currSum = sum+root.val;
     // if(currSum == target) pathCounter++; 
 
+    // CAN BE SOLVED USING HASHMAP ALSO
+
     // https://leetcode.com/problems/path-sum-iii/
-    int pathCounter = 0; int target = 0;
+    int count = 0;
+    
     public int pathSum3(TreeNode root, int sum) {
-        if (root == null) return 0;
-        target = sum;
-        outerDfs(root);
-        return pathCounter;
+        outerDfs(root, sum, 0);
+        return count;
     }
     
-    void outerDfs(TreeNode root){
+    void outerDfs(TreeNode root, int sum, int curr){
         if(root == null) return;
-        innerDfs(root, 0); // 
-        outerDfs(root.left);
-        outerDfs(root.right);
+        outerDfs(root.left, sum, curr);
+        outerDfs(root.right, sum, curr);
+        innerDfs(root, sum, root.val);
     }
     
-    void innerDfs(TreeNode root, int sum){
-        if(root == null) return;
-        int currSum = sum+root.val;
-        // System.out.println(currSum);
-        if(currSum == target) pathCounter++;
-        innerDfs(root.left, currSum);
-        innerDfs(root.right, currSum);
+    void innerDfs(TreeNode root, int sum, int curr){
+        if(curr == sum) count++;
+        
+        if(root.left != null)innerDfs(root.left, sum, curr+root.left.val);
+        if(root.right != null)innerDfs(root.right, sum, curr+root.right.val);
     }
 
 
@@ -1710,6 +1714,7 @@ public class Tree {
     // https://leetcode.com/problems/validate-binary-search-tree/
     class BSTCustomLong{
         long max; long min; long sum;
+        
         BSTCustomLong(long m1, long m2, long s){
             this.max = m1; this.min = m2; this.sum =s;
         }

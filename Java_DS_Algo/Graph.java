@@ -1322,6 +1322,60 @@ class Graph {
 	}
 
 
+	// https://leetcode.com/problems/network-delay-time/
+    // bfs with loops
+    // visited or distance lesser?
+    class Node{
+        int vertex, dist;
+        
+        Node(int v, int d){
+            this.vertex =v; 
+            this.dist = d;
+        }
+    }
+    
+    
+    public int networkDelayTimeBFS(int[][] times, int N, int K) {
+        int n = N+1;
+        int[] distance = new int[n];
+        int[] visited = new int[n];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        
+        int[][] g = new int[n][n];
+        for(int i = 0; i<n; i++) Arrays.fill(g[i], -1);
+        
+        for(int i =0; i<times.length; i++){
+            g[times[i][0]][times[i][1]] = times[i][2];
+        }
+        Deque<Node> q = new LinkedList<>();
+        int max =0;
+        q.addLast(new Node(K, 0));
+        distance[K] = 0;
+        visited[K] = 1;
+        
+        while(q.size()!=0){
+            int size = q.size();
+            for(int i =0; i<size; i++){
+                Node curr = q.removeFirst();
+                // System.out.println(curr.vertex + " "+ curr.dist);
+                for(int j = 0; j<n; j++){
+                    if(g[curr.vertex][j]!=-1 //&& visited[j] == 0
+                      && distance[j]>curr.dist+g[curr.vertex][j]){
+                        visited[j] = 1;
+                        distance[j] = curr.dist+g[curr.vertex][j];
+                        q.addLast(new Node(j, distance[j])); 
+                    }
+                }
+            }
+        }
+        
+        for(int i = 1; i<n; i++){
+            if(distance[i] == Integer.MAX_VALUE) return -1;
+            max = Math.max(max, distance[i]);
+        }
+        return max;
+    }
+
 	// https://leetcode.com/problems/possible-bipartition/
 	
 	// https://www.techiedelight.com/print-k-colorable-configurations-graph-vertex-coloring-graph
@@ -1418,8 +1472,8 @@ class Graph {
 	/** 
 	 * WHY NOT BFS? BECAUSE BFS CAN'T GUARANTEE SHORTEST TIME AS IT
 	 * DOESN'T MAINTAIN DISTANCES, ONLY VISITED ARRAY.
-	 * SO SHORTER PATH MINGHT BE FOUND BUT NOT UPATED AS
-	 * NODE AHS ALREADY BEEN VISITED
+	 * SO SHORTER PATH MIGHT BE FOUND BUT NOT UPATED AS
+	 * NODE HAS ALREADY BEEN VISITED
 	 * 
 	 * MAJOR PINTS OF FAILURE:
 	 * 1 0 WT EDGES, SO g[curr.node][i]!=0 FAILS

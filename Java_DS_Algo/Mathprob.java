@@ -1,4 +1,3 @@
-package Java_DS_Algo;
 import java.util.*;
 
 // https://leetcode.com/problems/distribute-candies-to-people
@@ -100,7 +99,73 @@ public class Mathprob {
         return false;
     }
 
+    /** 
+     * start from i till n
+     * maintain count
+    */
+    // https://leetcode.com/problems/the-kth-factor-of-n
+    public int kthFactor(int n, int k) {
+        if(k == 1) return 1;
+        int count = 1;
+        for(int i = 2; i<=n; i++){
+            if(n%i == 0) count++;
+            if(count == k) return i;
+        }
+        return count<k?-1:1;
+    }
 
+    //////////// MAX PROD SUBARRAY
+    // kadane
+    // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
+    // maxSubArray(A, i) = maxSubArray(A, i - 1) > 0 ? maxSubArray(A, i - 1) : 0 + A[i]; 
+    // [-2,-1]
+    // https://leetcode.com/problems/maximum-subarray    
+    public int maxSubArray(int[] nums) {
+        if(nums.length == 1) return nums[0];
+        int sum = 0; int max = Integer.MIN_VALUE;
+        for(int i : nums){
+            sum+=i;
+            
+            max = Math.max(max, sum);
+            if(sum<0) sum = 0;
+            
+            
+        }
+        return max;
+    }
+
+    // https://leetcode.com/explore/interview/card/
+    // top-interview-questions-hard/121/dynamic-programming/860/
+    /** 
+     * max prod in contiguous subarray 
+     * we basically hold 4 variables and an ans var
+     * prev is assigned to curr,
+     * max is max of prev*arr[i], arr[i];
+     * same for min
+    */
+    // https://www.youtube.com/watch?v=vtJvbRlHqTA
+    int maxProdSubarray(int[] arr){
+        if(arr.length == 0) return -1;
+
+        int curr_min = arr[0];
+        int curr_max = arr[0];
+        int prev_min = arr[0];
+        int prev_max = arr[0];
+        int ans = arr[0];
+
+        for(int i =1; i<arr.length; i++){
+            curr_max = Math.max(prev_max*arr[i], Math.max(prev_min*arr[i], arr[i]));
+            curr_min = Math.min(prev_max*arr[i], Math.min(prev_min*arr[i], arr[i]));
+            // update ans
+            ans = Math.max(ans, curr_max);
+            // reassign prev
+            prev_max = curr_max; prev_min = curr_min;
+        }
+        System.out.println("max prod subarray "+ans);
+        return ans;
+    }
+
+    
     /** 
      * POINTS :
      * 1 BINARY CARRY = SUM/2;
@@ -306,6 +371,26 @@ public class Mathprob {
         return count;
     }
 
+    // https://www.geeksforgeeks.org/sort-an-almost-sorted-array-where-only-two-elements-are-swapped/
+    void sortByOneSwap(int arr[]){
+        for(int i =1; i<arr.length; i++){
+            if(arr[i]<arr[i-1]){
+                System.out.println("i-1"+arr[i-1]);
+
+                for(int k = i; k<arr.length-1; k++){
+                    if(arr[k]>arr[k+1]) {
+                        
+                        System.out.println("k+1 "+arr[k+1]);
+                        int temp = arr[i-1];
+                        arr[i-1] = arr[k+1];
+                        arr[k+1] = temp;
+                        // swap(arr, i, k+1);
+                    }
+                }
+            }
+        }
+        for(int i : arr) System.out.print(i+", ");
+    }
     
     // https://www.youtube.com/watch?v=UcTKk2y_3s4
     // https://leetcode.com/problems/excel-sheet-column-title/
@@ -735,7 +820,7 @@ public class Mathprob {
         Mathprob math = new Mathprob();
         // math.power(99, 9);
         // math.isPerfectSquare(2);
-        math.isPerfectSquare(81);
+        // math.isPerfectSquare(81);
         math.numberOfNecklaces(3, 6, 9);
         int[] diff = new int[]{
             87, 78, 16, 94, 36, 87, 93, 50, 22, 63, 28, 91, 60, 64, 27, 41, 27, 73, 37, 12, 69, 
@@ -743,7 +828,11 @@ public class Mathprob {
             20, 85, 38, 99, 25, 16, 71, 14, 27, 92, 81, 57, 74, 63, 71, 97, 82, 6, 26, 85, 28,
             37, 6, 47, 30, 14, 58, 25, 96, 83, 46, 15, 68, 35, 65, 44, 51, 88, 9, 77, 79, 89};
         // Correct output : 79, 96
-        math.findMaxDiff(diff, diff.length);
+        // math.findMaxDiff(diff, diff.length);
+
+        int[] arr2Swap = new int[]{10, 20, 60, 40, 50, 30} ;
+        math.sortByOneSwap(arr2Swap);
+
     }
 
 }

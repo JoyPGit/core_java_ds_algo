@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3a25cbdf-8ab2-4633-8fb8-8a1de50ac99c" name="Default Changelist" comment="" />
+    <list default="true" id="3a25cbdf-8ab2-4633-8fb8-8a1de50ac99c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/Garbage_collection" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/Garbage_collection" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/Hashcode.java" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/Hashcode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/JVM_architecture" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/JVM_architecture" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/all ques" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/all ques" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/THREADS/CompleteRef.java" beforeDir="false" afterPath="$PROJECT_DIR$/THREADS/CompleteRef.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Interview/Interview" beforeDir="false" afterPath="$PROJECT_DIR$/../Interview/Interview" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Graph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Greedy.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Greedy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/QueuePrac.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/QueuePrac.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/StringPractice.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/StringPractice.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -9,6 +23,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedIndex" value="1" />
   </component>
   <component name="ProjectId" id="1m1PtiKRf24wXHX4x8PMHwncaaJ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">

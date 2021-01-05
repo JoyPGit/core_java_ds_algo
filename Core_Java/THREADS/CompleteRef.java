@@ -1,5 +1,6 @@
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 /** 
  * threads need not always run when accessing critical or shared resources
@@ -72,11 +73,35 @@ public class CompleteRef {
         // Producer p = new Producer(f);
         // Consumer c = new Consumer(f);
 
-        Printer printer = new Printer();
-        new NumberPrinter(1, printer, "thread_one");
-        new NumberPrinter(2, printer, "thread_two");
-        new NumberPrinter(0, printer, "thread_three");
+        // Printer printer = new Printer();
+        // new NumberPrinter(1, printer, "thread_one");
+        // new NumberPrinter(2, printer, "thread_two");
+        // new NumberPrinter(0, printer, "thread_three");
 
+
+        ExecutorService es = Executors.newFixedThreadPool(3);
+        Future<Integer> f1;
+        Future<Integer> f2;
+        Future<Integer> f3;
+
+        System.out.println("starting executor");
+
+        f1 = es.submit((Callable<Integer>) new Task1(1, 2));
+        f2 = es.submit((Callable<Integer>) new Task2(1, 2));
+        f3 = es.submit((Callable<Integer>) new Task3(2, 3));
+
+        try {
+            System.out.println(f1.get());
+            System.out.println(f2.get());
+            System.out.println(f3.get());
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+
+        System.out.println("all tasks completed, in main");
+        es.shutdown();
+        System.out.println("executor service shut down");
     }
 }
 
@@ -330,5 +355,50 @@ class NumberPrinter implements Runnable{
 
     public void run(){
         p.print(this.remainder);
+    }
+}
+
+// .get calls call
+// arg passed in constructor
+// 
+
+
+// Tasks
+class Task1 implements Callable<Integer>{
+    int num1, num2;
+    Task1(int a, int b){
+        this.num1 =a; this.num2 = b;
+    }
+
+    public Integer call() throws Exception {
+        // TODO Auto-generated method stub
+        System.out.println("multiplication");
+        return num1+num2;
+    }
+}
+
+class Task2 implements Callable{
+    int num1, num2;
+    Task2(int a, int b){
+        this.num1 =a; this.num2 = b;
+    }
+
+    public Integer call() throws Exception {
+        // TODO Auto-generated method stub
+        System.out.println("multiplication");
+        return num1-num2;
+    }
+}
+
+class Task3 implements Callable<Integer>{
+    int num1, num2;
+    Task3(int a, int b){
+        this.num1 =a; this.num2 = b;
+    }
+
+    public Integer call() throws Exception {
+        // TODO Auto-generated method stub
+        System.out.println("multiplication");
+        return num1*num2;
     }
 }

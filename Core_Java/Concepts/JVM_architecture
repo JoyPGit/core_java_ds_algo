@@ -6,6 +6,8 @@ For C -> compiler ->.exe file
 For JS -> interpreter -> line by line, slow
 
 .class file is bytecode
+Java applications are compiled into bytecode which is stored in class files and loaded in a JVM.
+
 JVM converts bytecode to machine code
 
 programs communicate with OS using system calls

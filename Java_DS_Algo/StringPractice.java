@@ -19,7 +19,7 @@ class StringPractice {
      * longest palindrome
      * longest happy prefix
      * 
-     * 
+     * max length of concatenated string, phone no combinations
      * 
      * QUES : VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
      * DECODE STRING, NO OF DECODINGS
@@ -405,6 +405,23 @@ class StringPractice {
         }
         System.out.println(minDist);
         return minDist;
+    }
+
+    // how to map index with freq? iterate over the string twice and check in ch[]
+    // https://practice.geeksforgeeks.org/problems/non-repeating-character-1587115620/1
+    static char nonRepeatingCharacter(String S)
+    {
+        char[] ch = new char[26];
+        //Your code here
+        for(int i =0; i<S.length(); i++){
+            ch[S.charAt(i)-'a']++;
+        }    
+        
+        for(int i =0; i<S.length(); i++){
+            if(ch[S.charAt(i)-'a'] == 1) return S.charAt(i);
+        }
+        
+        return '$';
     }
 
     /** 
@@ -909,13 +926,17 @@ class StringPractice {
         return false;
     }
 
-    /** 
+    /**
+     * https://www.youtube.com/watch?v=KRQSOygJvuU
+     * netaseta, 
+     *  
      * POINTS :
      * 1 RUN 2 LOOPS 
      * 2 CHECK IF dp[i][j] > j-i
      * 3 UPPER HALF 
      * 
      * imp : fill first row and check for overlap dp[i][j] > j-i
+     * 
     */
     int longestRepeatedNonOverlappingSubstring(String str) {
         int n = str.length();
@@ -994,7 +1015,6 @@ class StringPractice {
         return new String(ch1).compareTo(new String(ch2)) == 0 ? true : false;
     }
 
-    // https://leetcode.com/problems/group-anagrams/
     /**
      * ["eat","tea","tan","ate","nat","bat"] {aet=[eat, tea, ate], abt=[bat],
      * ant=[tan, nat]}
@@ -1008,6 +1028,7 @@ class StringPractice {
      * 4 NEW ARRAYLIST<>(MAP.VALUES())
      * 
      */
+    // https://leetcode.com/problems/group-anagrams/
     public List<List<String>> groupAnagrams(String[] strs) {
         if (strs == null || strs.length == 0)
             return new ArrayList<>();
@@ -1843,46 +1864,54 @@ class StringPractice {
      * 
      * f(index){
      *  if(index == length) res.add() // base condition
-            for( c: array){
-                temp += c;        //add
-                f(index+1);
-                temp = temp.substring(temp.length()-1);  //remove
-            }
+        for( c: array){
+            temp += c;        //add
+            f(index+1);
+            temp = temp.substring(temp.length()-1);  //remove
+        }
      * }
+     * 
+     * imp : 2 indexes, one for given and one for curr
+     * 2 Arrays.asList();
+     * 3 str.charAt(i) - '0'
     */
-    // https://leetcode.com/problems/letter-combinations-of-a-phone-number/
-    public List<String> letterCombinations(String digits) {
-        HashMap<Character, char[]> map = new HashMap<>();
-        map.put('2', new char[]{'a','b','c'});
-        map.put('3', new char[]{'d','e','f'});
-        map.put('4', new char[]{'g','h','i'});
-        map.put('5', new char[]{'j','k','l'});
-        map.put('6', new char[]{'m','n','o'});
-        map.put('7', new char[]{'p','q','r','s'});
-        map.put('8', new char[]{'t','u','v'});
-        map.put('9', new char[]{'w','x','y','z'});
 
+
+    // https://leetcode.com/problems/letter-combinations-of-a-phone-number
+    public List<String> letterCombinations(String digits) {
         List<String> res = new ArrayList<>();
-        String temp = "";
-        btk(map, 0, digits, res, temp);
-        System.out.println("final res "+res);
+        if(digits.length() == 0) return res;
+        HashMap<Integer, List<Character>> map = new HashMap<>();
+        
+        map.put(2, Arrays.asList('a', 'b', 'c')); // 1
+        map.put(3, Arrays.asList('d', 'e', 'f'));
+        map.put(4, Arrays.asList('g', 'h', 'i'));
+        map.put(5, Arrays.asList('j', 'k', 'l'));
+        map.put(6, Arrays.asList('m', 'n', 'o'));
+        map.put(7, Arrays.asList('p', 'q', 'r', 's'));
+        map.put(8, Arrays.asList('t', 'u', 'v'));
+        map.put(9, Arrays.asList('w', 'x', 'y', 'z'));
+        
+        
+        helper(res, "", digits, map, 0);
         return res;
     }
-
-    void btk(HashMap<Character, char[]> map, int index, String digits, List<String> res, String temp){
-        if(index==digits.length()) {
-            System.out.println("res "+res);
-            res.add(temp);
+    
+    // imp parameters 2 indexes, one for digits, one for list
+    void helper(List<String> res, String curr, String digits, HashMap<Integer, List<Character>> map, int index){ 
+        if(index == digits.length()) {
+            res.add(new String(curr));
             return;
         }
-        char[] curr = map.get(digits.charAt(index));
-        for(char c : curr){
-            temp+=c;
-            btk(map, index+1, digits, res, temp);
-            temp = temp.substring(0, temp.length()-1);
+        
+        List<Character> list = map.get(digits.charAt(index) - '0'); // 2
+        
+        for(int i =0; i<list.size(); i++){
+            curr+=list.get(i);
+            helper(res, curr, digits, map, index+1);
+            curr = curr.substring(0,curr.length()-1);
         }
     }
-
     // NEEDS TO BE OPTIMIZED
     // https://leetcode.com/problems/decode-string/
     public String decodeString(String s) {

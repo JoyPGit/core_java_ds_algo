@@ -1,4 +1,3 @@
-package Java_DS_Algo;
 
 import java.util.*;
 
@@ -71,7 +70,6 @@ public class DP {
      * subsetSumHelper(arr, dp, sum , index+1); //elem is ignored
      */
 
-    Utility utility = new Utility();
 
     // https://leetcode.com/problems/fibonacci-number
     public int fib(int N) {
@@ -167,15 +165,21 @@ public class DP {
         return dp[n-1];
     }
 
+    /** 
+     * house-paint
+     * 
+     * start from row 1 till n-1, select the other two houses for each house
+     * finally take min of all three in last row
+    */
     // https://medium.com/@saurav.agg19/paint-house-problem-1e711754c8c9#:~:
     // text=1%20min%20read-,Problem%3A,houses%20have%20the%20same%20color.
     int getMinCostPaint(int[][] prices){
         int n = prices.length; int m = prices[0].length;
 
         for(int i =1; i<n; i++){
-            prices[i][0]+= Math.min(prices[i-1][1], prices[i][2]);
-            prices[i][1]+= Math.min(prices[i-1][0], prices[i][2]);
-            prices[i][2]+= Math.min(prices[i-1][0], prices[i][1]);
+            prices[i][0]+= Math.min(prices[i-1][1], prices[i-1][2]);
+            prices[i][1]+= Math.min(prices[i-1][0], prices[i-1][2]);
+            prices[i][2]+= Math.min(prices[i-1][0], prices[i-1][1]);
         }
         int min = Integer.MAX_VALUE;
         for(int i =0; i<m; i++){
@@ -185,7 +189,7 @@ public class DP {
     }
 
     //////////// MAX PROD SUBARRAY
-    // kadane, but in dp format
+    // kadane
     // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
     // maxSubArray(A, i) = maxSubArray(A, i - 1) > 0 ? maxSubArray(A, i - 1) : 0 + A[i]; 
     // [-2,-1]
@@ -225,9 +229,10 @@ public class DP {
 
         for(int i =1; i<arr.length; i++){
             curr_max = Math.max(prev_max*arr[i], Math.max(prev_min*arr[i], arr[i]));
-            curr_min = Math.min(prev_max*arr[i],Math.min(prev_min*arr[i], arr[i]));
-            
+            curr_min = Math.min(prev_max*arr[i], Math.min(prev_min*arr[i], arr[i]));
+            // update ans
             ans = Math.max(ans, curr_max);
+            // reassign prev
             prev_max = curr_max; prev_min = curr_min;
         }
         System.out.println("max prod subarray "+ans);
@@ -2026,7 +2031,7 @@ public class DP {
             }
         }
         
-        Utility.printMatrix(dp);
+        // Utility.printMatrix(dp);
         int i = str1.length(); int j = str2.length();
         StringBuilder res = new StringBuilder();
         
@@ -2116,7 +2121,7 @@ public class DP {
                 }
             }
         }
-        Utility.printMatrix(dp);
+        // Utility.printMatrix(dp);
         System.out.println("longest palindromic substring : " + s.substring(start, start + maxlen));
         return s.substring(start, start + maxlen);
     }
