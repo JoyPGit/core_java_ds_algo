@@ -1,4 +1,5 @@
-package Core_Java.THREADS;
+// package Core_Java.Threads;
+
 import java.util.*;
 
 // https://www.baeldung.com/java-even-odd-numbers-with-2-threads
@@ -10,6 +11,13 @@ import java.util.*;
  * The methods used are wait, notify, and notifyAll, which are all inherited from the Object class.
 */
 
+/** 
+ * passing Obj param to new Thread and t.start outside
+ * or using Thread as instance var and t.start in constructir
+ * in both cases class needs to implement runnable as 
+ * thread only runs code inside run()
+ * 
+*/
 
 
 public class Prod_Cons {

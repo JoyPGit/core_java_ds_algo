@@ -69,8 +69,45 @@ class String_immutable_pool{
     // static String s3 = "ABC";
     // static String s4 = new String("ABC");
     
+    void generateAllBinary(int n){
+        helper("0", 1, n);
+        helper("1", 1, n);
+    }
+
+    void helper(String curr, int index, int n){
+        if(index == n) {
+            System.out.println(curr);
+            return;
+        }
+        helper(curr+"0", index+1, n);
+        helper(curr+"1", index+1, n);
+    }
+
+    /** 
+     * here same string is used so need to remove
+    */
+    void generateAllBinary1(int n){
+        String curr = "";
+        helper1(curr, 0, n);
+    }
+    void helper1(String curr, int index, int n){
+        if(index == n){
+            System.out.println(curr);
+            return;
+        }
+        curr+="0";
+        helper1(curr, index+1, n);
+        curr = curr.substring(0, curr.length()-1);
+        curr+="1";
+        helper1(curr, index+1, n);
+        curr = curr.substring(0, curr.length()-1);
+    }
     public static void main(String[] args) {
 
+        String_immutable_pool sip = new String_immutable_pool();
+        sip.generateAllBinary(3);
+        System.out.println();
+        sip.generateAllBinary1(3);
         String s1 = "ABC";
         String s2 = new String("ABC");
         String s3 = "ABC";

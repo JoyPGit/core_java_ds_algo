@@ -1281,6 +1281,7 @@ public class Tree {
      * 3 REMOVE AT END(dry run code to get an idea)
      */
     // https://leetcode.com/problems/path-sum-ii/
+    // add sum and calculate, leaf node, remove
     public List<List<Integer>> pathSum(TreeNode root, int sum) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> curr = new ArrayList<>();
@@ -1292,7 +1293,8 @@ public class Tree {
     
     void dfs(TreeNode root, int sum, List<List<Integer>> res, List<Integer> curr){
         if(root == null) return;
-        sum-=root.val;
+        // do these 2 operations for curr node and then calculate
+        sum-=root.val; 
         curr.add(root.val);
         if(sum == 0 && root.left == null && root.right == null) res.add(new ArrayList<>(curr));
 
@@ -1312,7 +1314,7 @@ public class Tree {
     int pathCounter1 = 0; int target1 = 0;
     public int pathSumHash(TreeNode root, int sum) {
         if (root == null) return 0;
-        target = sum;
+        target1 = sum;
         HashMap<Integer, Integer> map = new HashMap<>();
         map.put(0,1); // 2
         innerDfs(root, map, 0); // 1
@@ -1322,7 +1324,7 @@ public class Tree {
     void innerDfs(TreeNode root, HashMap<Integer, Integer> map, int sum){
         if(root == null) return;
         int currSum = sum+root.val;
-        pathCounter1+=map.getOrDefault(currSum - target, 0); // 3
+        pathCounter1+=map.getOrDefault(currSum - target1, 0); // 3
         map.put(currSum, map.getOrDefault(currSum,0)+1); // 4 
         innerDfs(root.left, map, currSum);
         innerDfs(root.right, map, currSum);

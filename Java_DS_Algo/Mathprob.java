@@ -114,6 +114,18 @@ public class Mathprob {
         return count<k?-1:1;
     }
 
+
+    // after sorting, the smallest -ve numbers will be at 0 and 1, their product can be +ve, so 
+    // those two are multiplied with largest num nums[n-1];
+    // https://leetcode.com/problems/maximum-product-of-three-numbers
+    public int maximumProduct(int[] nums) {
+        int n = nums.length;
+        Arrays.sort(nums);
+        int a = nums[n-1]*nums[n-2]*nums[n-3];
+        int b = nums[0]*nums[1]*nums[n-1];
+        return Math.max(a, b);
+    }
+
     //////////// MAX PROD SUBARRAY
     // kadane
     // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
@@ -151,21 +163,21 @@ public class Mathprob {
         int curr_max = arr[0];
         int prev_min = arr[0];
         int prev_max = arr[0];
-        int ans = arr[0];
+        int max = arr[0];
 
         for(int i =1; i<arr.length; i++){
             curr_max = Math.max(prev_max*arr[i], Math.max(prev_min*arr[i], arr[i]));
             curr_min = Math.min(prev_max*arr[i], Math.min(prev_min*arr[i], arr[i]));
             // update ans
-            ans = Math.max(ans, curr_max);
+            max = Math.max(max, curr_max);
             // reassign prev
             prev_max = curr_max; prev_min = curr_min;
         }
-        System.out.println("max prod subarray "+ans);
-        return ans;
+        System.out.println("max prod subarray "+max);
+        return max;
     }
 
-    
+
     /** 
      * POINTS :
      * 1 BINARY CARRY = SUM/2;
@@ -494,6 +506,40 @@ public class Mathprob {
         return false;
     }
 
+    /** 
+     * Arrays.sort() doesn't accept custom comparator, use Collections.sort
+     * compare on the basis of a+b and b+a
+     * also check if first char is 0, thrn return 0
+    */
+    // 3, 300
+    // https://leetcode.com/problems/largest-number/
+    int compare(int a, int b){
+        int i =0, j= 0, index = 0;
+        String str1 = ""+a+b;
+        String str2 = ""+b+a;
+
+        // return Long.parseLong(str1) > Long.parseLong(str2)?-1:1;
+        return str1.compareTo(str2)>0?-1:1;
+    }
+    
+    public String largestNumber(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        for(int i : nums) list.add(i);
+        
+        Collections.sort(list, (x,y)->{
+            return compare(x,y);
+        });
+        
+        // for(int i : list) System.out.print(i+", ");
+        
+        String res = "";
+        for(int i : list) res+=i;
+        if(res.charAt(0) == '0'){
+            if(Long.parseLong(res) == 0) return "0";
+        }
+        return res;
+    }
+
     /**
      * [1,7,9,9,8,3] 
      * index = 0
@@ -743,40 +789,34 @@ public class Mathprob {
      * 2 ADD CURRENT AFTER REMOVAL
      * 3 CHECK IF COUNT<K
      * 4 REMOVE PRECEDING ZEROES
-     * 5 COMPARE WITH '0'
+     * 
+     * check if first char is 0, keep removing till 0 is there
+     * add remaining to res and return
      * 
     */
     // https://leetcode.com/problems/remove-k-digits/
     // leading zeroes
-    // ascending, descending
     // "10", 1
-    public String removeKdigits(String num, int k) {
-        int n = num.length();
-        if(n == k) return "0";
-        Deque<Character> q = new LinkedList<>(); // 
-        int count = 0;
+    public String removeKdigits(String str, int k) {
+        Deque<Character> q = new LinkedList<>();
         
-        for(int i =0; i<n; i++){
-            while(q.size()!=0 && q.getLast()>num.charAt(i) && count<k) {
-                q.removeLast(); count++;
-            }
-            q.addLast(num.charAt(i)); // 
+        for(int i =0; i<str.length(); i++){
+            while(q.size()!=0 && q.getLast()>str.charAt(i) && k-->0) q.removeLast();
+            q.addLast(str.charAt(i));
         }
         
-        while(count<k){
-            q.removeLast(); count++;
-        }
+        // System.out.println(q.size());
+        // what if k!=0?
+        while(k-->0) q.removeLast();
         
         String res = "";
-        while(q.size()!=0) res+=q.removeFirst();
-        
-        int j = 0;
-        for(int i =0; i<res.length(); i++){ //
-            if(res.charAt(i) == '0') j++; //
-            else break;
+        while(q.size()!=0 && q.getFirst() == '0'){
+            q.removeFirst();
         }
+        if(q.size() == 0) return "0";
         
-        return res.substring(j).compareTo("") == 0?"0":res.substring(j);
+        while(q.size()!=0) res+=q.removeFirst();
+        return res;
     }
 
 

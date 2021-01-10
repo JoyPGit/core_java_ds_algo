@@ -3,6 +3,10 @@ package Java_DS_Algo;
 public class ToDo {
 
     /**
+     * max-tip
+     * string concat
+     * merge, heap
+     * 
      * https://www.geeksforgeeks.org/count-possible-decodings-given-digit-sequence/
      * https://www.youtube.com/watch?v=axUs-p27xzA&feature=em-comments
      * 

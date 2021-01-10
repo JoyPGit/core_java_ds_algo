@@ -38,7 +38,9 @@ public class Partition{
         return count;
     }
 
-    
+    /** 
+     * search from max till sum
+    */
     // https://www.geeksforgeeks.org/split-the-given-array-into-k-sub-arrays-
     // such-that-maximum-sum-of-all-sub-arrays-is-minimum/
     int minSplit(int[] arr, int k){
@@ -54,7 +56,7 @@ public class Partition{
         while(lo<=hi){
             int mid = lo + (hi-lo)/2;
             int x = maxPartition(arr, mid);
-            if(x<=k){
+            if(x<=k){    // larger pieces
                 res = mid; hi = mid-1;
             }
             else lo = mid+1;
@@ -143,39 +145,45 @@ public class Partition{
      * 3 IF SUM EXCEEDS MID, TAKE A NEW PARTITION
      * 4 RETURN TRUE ONLY IF NO OF PARTITIONS IS <= m
      * 
-     * imp : partitions = 1
+     * imp : count = 1
     */
     // https://leetcode.com/problems/split-array-largest-sum/
     public int splitArray(int[] nums, int m) {
-        int sum =0, max = 0;
+        int sum = 0, max = -1;
+        
         for(int i : nums){
-            max = Math.max(max, i);
-            sum+= i;
+            sum+=i; max = Math.max(max, i);
         }
         
-        int lo = max; int hi = sum;
+        int lo = max, hi = sum, res = 0;
         
-        while(lo<=hi){ //
-            int mid= lo +(hi-lo)/2;
+        while(lo<=hi){
+            int mid = lo + (hi-lo)/2;
             
-            boolean x = checkMax(nums, mid, m);
-            if(x) hi = mid - 1;
-            else lo = mid + 1;
+            int x = findPartitions(nums, mid, m);
+            // if larger pieces, then lesser partitions, so we need to lessen the size, hence
+            // hi = mid-1;
+            if(x <= m){
+                res = mid;
+                hi = mid-1;
+            }
+            else if(x>m){
+                lo = mid+1;
+            }
         }
-        return lo;
+        return res;
     }
     
-    boolean checkMax(int[] nums, int limit, int maxPartitions){
-        int sum = 0; int partitions = 1; // 
-        for(int i : nums){
+    int findPartitions(int[] nums, int mid, int m){
+        int sum = 0, count = 1;  // imp count = 1
+        for(int i :nums){
             sum+=i;
-            if(sum>limit){
-                partitions++;
+            if(sum>mid){
+                count++;
                 sum = i;
             }
         }
-        
-        return partitions<=maxPartitions;
+        return count;
     }
 
     // kadane, but in dp format
@@ -191,8 +199,6 @@ public class Partition{
             
             max = Math.max(max, sum);
             if(sum<0) sum = 0;
-            
-            
         }
         return max;
     }
@@ -383,6 +389,9 @@ public class Partition{
         }
         return dp[0][n-1];
     }
+
+    
+    // https://leetcode.com/problems/partition-array-for-maximum-sum
 
     // https://leetcode.com/problems/partition-labels/
 

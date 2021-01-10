@@ -89,3 +89,37 @@ static in interface?
 https://stackoverflow.com/questions/16750772/instantiating-interfaces-in-java
 
 https://www.javatpoint.com/difference-between-abstract-class-and-interface
+
+https://www.youtube.com/watch?v=Ud0zfImgbYw
+interface 100% abstract class,
+abstract method no body
+
+interface -> multiple inheritance
+when no idea of implementation, use interface
+methods in interfaces are public
+
+abstract class can have abstract as well as concrete methods, 
+
+we can have functional interface, ()=>{};
+
+multiple inheritance in interface
+
+methods in interface 
+
+variables in interface are public static and need to be initialised
+variables in classes can be final, non-final, static, non-static
+
+abstract class can have a constructor
+
+constructors are mostly for instantiating non static variables, not object creation
+
+/**
+     * Some research. What is an Integer? And why cannot we use int in an ArrayList?
+     * An Integer is a reference type (a class). An int is a value. And: The
+     * ArrayList requires, in its implementation, a reference type. So int is not
+     * allowed.
+     * 
+     * Quote: The Integer class wraps a value of the primitive type int in an
+     * object. An object of type Integer contains a single field whose type is int
+     * (Java Documentation).
+     */

@@ -12,7 +12,8 @@ public class Serialize {
      * serialization is the conversion of a Java object into a static stream (sequence) of bytes 
      * which can then be saved to a database or transferred over a network.
      * 
-     * The serialization process is instance-independent, i.e. objects can be serialized on one platform and deserialized on another. 
+     * The serialization process is instance-independent, i.e. objects can be 
+     * serialized on one platform and deserialized on another. 
      * 
      * Classes that are eligible for serialization need to implement a special marker interface Serializable.
      * Serializable is a marker interface (no methods, no body)

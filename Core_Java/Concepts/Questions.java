@@ -128,7 +128,19 @@ public class Questions {
 
         // final, finalize, finally
 
+        // variable -> static, final
+        // methods -> statci abstract, final
 
+        /**
+         * Some research. What is an Integer? And why cannot we use int in an ArrayList?
+         * An Integer is a reference type (a class). An int is a value. And: The
+         * ArrayList requires, in its implementation, a reference type. So int is not
+         * allowed.
+         * 
+         * Quote: The Integer class wraps a value of the primitive type int in an
+         * object. An object of type Integer contains a single field whose type is int
+         * (Java Documentation).
+        */
 
     }
 }

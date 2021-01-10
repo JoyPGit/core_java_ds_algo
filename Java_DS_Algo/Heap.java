@@ -2,6 +2,7 @@ package Java_DS_Algo;
 import java.util.*;
 public class Heap {
     /** 
+     * kth smallest in matrix
      * HEAPSORT, SMALLEST RANGE, MEDIAN
      * 
      * IMP POINTS :
@@ -330,27 +331,28 @@ public class Heap {
      * run k-1 times
     */
     // https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix
-    class Node{
+    class Node1{
         int x, y, val;
-        Node(int x, int y, int v){
+        Node1(int x, int y, int v){
             this.x = x; this.y =y; this.val = v;
         }
     }
     public int kthSmallest(int[][] matrix, int k) {
         int m = matrix.length; int n = matrix[0].length;
         
-        PriorityQueue<Node> pq = new PriorityQueue<>((x,y)->x.val - y.val);
+        PriorityQueue<Node1> pq = new PriorityQueue<>((x,y)->x.val - y.val);
         
+        // add first row
         for(int i =0; i<m; i++){
-            pq.add(new Node(0 , i, matrix[0][i]));
+            pq.add(new Node1(0 , i, matrix[0][i]));
         }
         
         for(int i =0; i<k-1; i++){
-            Node curr = pq.remove();
+            Node1 curr = pq.remove();
             // System.out.println(curr.val);
             if(curr.x == m-1) continue;
-            
-            pq.add(new Node(curr.x+1, curr.y, matrix[curr.x+1][curr.y] ));
+            // next el in same col
+            pq.add(new Node1(curr.x+1, curr.y, matrix[curr.x+1][curr.y] ));
         }
         return pq.remove().val;
     }

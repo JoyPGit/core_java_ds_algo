@@ -1,3 +1,5 @@
+// package Core_Java.Threads;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -5,8 +7,8 @@ import java.util.concurrent.*;
 /** 
  * threads need not always run when accessing critical or shared resources
  * 
- * thread needs an object ref to run. so this is passed if inside the class, else 
- * an instance is passed during thread creation if outside
+ * thread needs an object ref to run. so this is passed if thread is instantiated inside the class, 
+ * else an instance is passed during thread creation if outside
  * 
  * 2 ways using implements Runnable:
  * 
@@ -27,7 +29,7 @@ public class CompleteRef {
         // new NewThread1();
 
         /** 
-         *  NewThread2 runnableThread = new NewThread2();
+         * NewThread2 runnableThread = new NewThread2();
          * Thread outside = new Thread(runnableThread);
          * outside.start();
          * 
@@ -377,6 +379,8 @@ class Task1 implements Callable<Integer>{
     }
 }
 
+// Callable is a raw type. References to generic type Callable<V> should be parameterized
+// Callable<Integer>
 class Task2 implements Callable{
     int num1, num2;
     Task2(int a, int b){

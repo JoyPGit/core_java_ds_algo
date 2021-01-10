@@ -141,7 +141,7 @@ class Matrix {
      * 
     */
     
-
+    
     // DFS TEMPLATE
     /**  
      * POINTS :
@@ -1446,6 +1446,40 @@ class Matrix {
         return res;
     }
 
+    /** 
+     * idea is simple, add els of first row
+     * remove and add next el of curr col;
+     * if x == m-1 continue;
+     * run k-1 times
+    */
+    // https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix
+    class Node1{
+        int x, y, val;
+        Node1(int x, int y, int v){
+            this.x = x; this.y =y; this.val = v;
+        }
+    }
+    public int kthSmallest(int[][] matrix, int k) {
+        int m = matrix.length; int n = matrix[0].length;
+        
+        PriorityQueue<Node1> pq = new PriorityQueue<>((x,y)->x.val - y.val);
+        
+        // add first row
+        for(int i =0; i<m; i++){
+            pq.add(new Node1(0 , i, matrix[0][i]));
+        }
+        
+        for(int i =0; i<k-1; i++){
+            Node1 curr = pq.remove();
+            // System.out.println(curr.val);
+            if(curr.x == m-1) continue;
+            // next el in same col
+            pq.add(new Node1(curr.x+1, curr.y, matrix[curr.x+1][curr.y] ));
+        }
+        return pq.remove().val;
+    }
+
+    
 
     // https://leetcode.com/problems/check-if-there-is-a-valid-path-in-a-grid/
     // discuss/547633/Python-SUPER-EASY-Idea%3A-just-walk-the-maze-based-on-the-rule

@@ -721,6 +721,106 @@ class HashPractice{
     
 
     /** 
+     * BASICALLY WE USE A HASHAMP TO MAP THE ADDRESS OF EACH NODE WITH ITS CLONE, 
+     * IF NOT NULL.
+     * 
+     * POINTS :
+     * 1 FOR EACH NODE WE CREATE CLONE
+     * map.put(random2, new ListNode(random2.val));
+     * 2 IF CLOBE EXISTS, MAP TO P2' RANDOM OR NEXT
+     * 
+    */
+    // https://leetcode.com/problems/copy-list-with-random-pointer
+    public ListNode copyRandomList(ListNode head) {
+        if(head == null) return null;
+        
+        ListNode h2 = new ListNode(head.val);
+        ListNode p2 = h2;
+        HashMap<ListNode, ListNode> map = new HashMap<>();
+        map.put(head, h2);
+        ListNode p = head;
+        
+        while(p!=null){
+            // System.out.println(map);
+            ListNode random1Clone = p.random;
+            ListNode next1Clone = p.next;
+            
+            if(random1Clone!=null) {
+                if(!map.containsKey(random1Clone)) 
+                    map.put(random1Clone, new ListNode(random1Clone.val));
+            }
+            
+            if(next1Clone!=null){
+                if(!map.containsKey(next1Clone)) 
+                    map.put(next1Clone, new ListNode(next1Clone.val));
+            }
+            
+            p2.random = map.get(random1Clone);
+            p2.next = map.get(next1Clone);
+            
+            p2 = p2.next;
+            p = p.next;
+        }
+        
+        return h2;
+    }
+
+    /** 
+    https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/discuss/143798/
+    1ms-beat-100-simple-Java-dfs-with(without)-hashmap-including-explanation
+     * 1 we do a traversal till we find target node, once we find we make an entry 
+     * and return 0, for all nodes in the path from root till target, 
+     * an entry is made in hashmap with dist from target
+     * 
+     * 2 left = find; if(left !=-1) map.put(root, left+1)
+     * same for right
+     * if left = -1 and right = -1, return -1; not found 
+     * 
+     * 3 now in dfs, we fetch the dist from map, and 
+     * if found, start dfs from this length
+     * else start with the initial length (map.get(root))
+     * 
+     * 4 how this works once the dist till root is found, say x
+     * the subtree not containing the target is traversed till a depth of
+     * dist - x, as we fetch the length from map
+     * and the subtree containing the target is traversed by fetching the dist at 
+     * each node, so when dist = k, it is added.
+     * 
+     * 7 points to remember
+     * 
+     */
+    // https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        ArrayList<Integer> res = new ArrayList<>();
+        HashMap<TreeNode, Integer> map = new HashMap<TreeNode, Integer>();
+
+        findK(root, target, map);//1
+       
+        dfsK(root, target, map, k, map.get(root), res);//2
+        return (List<Integer>)res;
+    }
+
+    int findK(TreeNode root, TreeNode target, HashMap<TreeNode, Integer> map){
+        if(root == null) return -1;//3
+        if(root == target) {
+            map.put(root, 0);//4
+            return 0;
+        }
+        int left = findK(root, target, map);
+        if(left!=-1) {
+            map.put(root, left+1);//5
+            return left+1;
+        }
+        int right = findK(root, target, map);
+        if(right!=-1) {
+            map.put(root, right+1);
+            return right+1;
+        }
+
+        return -1;
+    }
+    
+    /** 
      * POINTS :
      * 1 USE HASHMAP AND ARRAYLIST
      * 2 ADD TO LIST AND UPDATE KEY WITH INDEX IN MAP

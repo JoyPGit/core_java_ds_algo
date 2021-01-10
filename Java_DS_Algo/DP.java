@@ -1,5 +1,6 @@
-
 import java.util.*;
+
+// import Java_DS_Algo.Utilty.java;
 
 public class DP {
 
@@ -26,7 +27,9 @@ public class DP {
      * palin.    1,0         ldia+2, max 
      *           match, no    match, no
      * 
-     * 
+     * max prod subarray
+     * decode ways
+     * train ticket
      * job scheduling
      * stairs, uniqe paths, house robber
      * knapsack, subset, coin change(no of ways),
@@ -216,8 +219,11 @@ public class DP {
      * prev is assigned to curr,
      * max is max of prev*arr[i], arr[i];
      * same for min
+     * 
+     * https://www.youtube.com/watch?v=vtJvbRlHqTA
+     * 
     */
-    // https://www.youtube.com/watch?v=vtJvbRlHqTA
+    // https://leetcode.com/problems/maximum-product-subarray/
     int maxProdSubarray(int[] arr){
         if(arr.length == 0) return -1;
 
@@ -363,6 +369,26 @@ public class DP {
         return dp[index] = min; // 6
     }
 
+    /** 
+     * reach nth index, starting from 0
+     * initialize dp[0] and dp[1]
+     * the last step's cost is also included if it is used for climbing i.e. reaching to n
+    */
+    // https://leetcode.com/problems/min-cost-climbing-stairs/
+    public int minCostClimbingStairsDP(int[] cost) {
+        int n = cost.length;
+        
+        int[] dp = new int[n+1];
+        
+        dp[0] = cost[0]; dp[1] = cost[1];
+        
+        for(int i =2; i<n; i++){
+            dp[i] = Math.min(dp[i-2]+cost[i], dp[i-1]+cost[i]);
+        }
+        
+        dp[n] = Math.min(dp[n-3]+cost[n-1], dp[n-2]);
+        return dp[n];
+    }
 
     ////////////// JUMP GAME
 
@@ -1630,7 +1656,7 @@ public class DP {
      * ARR[END] IS NOT ADDED AS IT GOES TO PLAYER 2
      */
     int twoPlayerStoneGame(int[] arr, int start, int end){
-        // if(end<start) return 0;
+        // if(end<start) return Integer.MAX_VALUE;
         if(end - start == 1) return Math.max(arr[start], arr[end]);
 
         return Math.max(
@@ -1655,37 +1681,32 @@ public class DP {
     */
     // https://leetcode.com/problems/stone-game/
     boolean twoPlayerStoneGameDP(int[] piles){
-        int n = piles.length; int i =0; int sum = 0; int half = 0;
+        int sum = 0, n = piles.length;
+        
+        for(int i : piles) sum+=i;
         
         int[][] dp = new int[n][n];
         
-        for(i=0; i<n; i++) {
-            dp[i][i] = piles[i];
-            sum+=piles[i];
-        }
-        
-        half = sum/2; //
-        
-        for(int l=1; l<=n;l++){
-            for( i = 0; i+l-1<n;i++){
+        // length type
+        for(int l= 1; l<=n; l++){
+            for(int i =0; i+l-1<n; i++){
                 int j = i+l-1;
+                
                 if(l==1) {
-                    dp[i][i] = piles[i];
+                    dp[i][j] = piles[i];
                     continue;
                 }
-                // i and j are adjacent
-                int a = i+1<=j-1?dp[i+1][j-1]:0;
-                int b = i+2<=j?dp[i+2][j]:0;
-                int c = i<=j-2?dp[i][j-2]:0;
                 
-                dp[i][j] = Math.max(piles[i] + Math.min(a,b), 
-                               piles[j]+ Math.min(a,c));
+                
+                int a = i+2<j?dp[i+2][j]:0;
+                int b = i+1<j-1?dp[i+1][j-1]:0;
+                int c = i<j-2?dp[i][j-2]:0;
+                
+                dp[i][j] = Math.max(piles[i] + Math.min(a,b),
+                                   piles[j] + Math.min(b,c));
             }
         }
-        
-        Utility.printMatrix(dp);
-        if(dp[0][n-1]>=half) return true; //
-        return false;
+        return dp[0][n-1]>sum/2?true:false;
     }
 
     //////////////////////////////// MATRIX DP
@@ -1957,7 +1978,6 @@ public class DP {
      *           match, no    match, no
      * 
      */
-
      
 
     /** 
@@ -1975,6 +1995,7 @@ public class DP {
      * imp : [m+1][n+1], start from i = 1, compare i-1 but update dp[i][j]
      * match dp[i-][j-1]+1
      * else max
+     * 
     */
     int longestCommonSubsequence(String str1, String str2) {
         int m = str1.length(); int n = str2.length();
@@ -2065,6 +2086,7 @@ public class DP {
 
     // https://leetcode.com/problems/distinct-subsequences/
 
+
     /////////////////////////////////// PALINDROME
 
     // SAME STRING, SO UPPPER TRIANGULAR
@@ -2076,7 +2098,7 @@ public class DP {
      * 
      * 
      * POINTS :
-     * 1 l RUNS FROM 1 TILL N
+     * 1 l RUNS FROM 1 TILL n
      * 2 CHECK FOR l=2 AS dp[i + 1][j - 1] CAN'T HANDLE LENGTH 2
      * 
      * 3 FOR ALL OTHER LENGTHS, IF CHARS AT i AND j MATCH
@@ -2110,6 +2132,7 @@ public class DP {
                     maxlen = 2;
                     start = i;
                 }
+                
                 // all other lengths
                 // substring is contiguous, so inner els need to match
                 // i+1 == j-1
@@ -2162,7 +2185,7 @@ public class DP {
         return count;
     }
 
-     /** 
+    /** 
      * DIFF : PALINDROMIC SUBSTRING VS SUBSEQUENCE,
      * 
      * match : substr maxLen, subseq dp[i][j]+2
@@ -2177,7 +2200,8 @@ public class DP {
      * longest.  udia+1, 0   udia+1, max
      * palin.    1,0         ldia+2, max 
      *           match, no    match, no
-     */
+     * 
+    */
 
     /** diagonally up, comparing around middle
      * aba (0,2)-> 'a' matches 'a' then dp[0][2] = dp[1][1] + 2;
@@ -2193,6 +2217,7 @@ public class DP {
      * charAt(i-1);
      * dp[i][j]
      * return dp[1][n]
+     * 
     */
     // "bbbab", 4
     // https://leetcode.com/problems/longest-palindromic-subsequence/
@@ -2262,9 +2287,9 @@ public class DP {
         int[][] dp = new int[m+1][n+1];//
         
         int result = 0;
-        for(int i = 1; i<=m; i++){ //1
-            for(int j = 1; j<=n; j++){ //2
-                if(matrix[i-1][j-1] == '1'){//3
+        for(int i = 1; i<=m; i++){ // 1
+            for(int j = 1; j<=n; j++){ // 2
+                if(matrix[i-1][j-1] == '1'){ // 3
                     dp[i][j] = 
                         Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1]))+1;//
                     result = Math.max(result, dp[i][j]); //4 
@@ -2303,6 +2328,7 @@ public class DP {
     // https://leetcode.com/problems/maximum-length-of-repeated-subarray/
 
     // https://www.geeksforgeeks.org/probability-knight-remain-chessboard/
+
     public static void main(String[] args) {
         DP dp = new DP();
 

@@ -1,7 +1,12 @@
-package Core_Java.THREADS;
+// package Core_Java.Threads;
 
 import java.util.*;
 
+/** 
+ * here 2 approaches 
+ * one is synchronized block iun runner class when shared class method is not synchronized
+ * second is synchronized method in shared and each thread uses 
+*/
 /** 
  * A SYNCHRONIZED BLOCK INSIDE RUN;
  * LOCK ON OBJECT 

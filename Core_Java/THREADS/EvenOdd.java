@@ -1,9 +1,9 @@
-package Core_Java.THREADS;
+// package Core_Java.Threads;
 
 // https://www.baeldung.com/java-even-odd-numbers-with-2-threads
 
 public class EvenOdd implements Runnable {
-    // critical resource(s) being shared
+    // critical resource(s) Printer being shared
     private int max;
     private Printer print;
     private boolean isEvenNumber;
