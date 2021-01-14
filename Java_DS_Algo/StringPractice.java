@@ -355,6 +355,25 @@ class StringPractice {
         return res.toString();
     }
 
+    // https://leetcode.com/problems/strobogrammatic-number/
+    public boolean isStrobogrammatic(String num) {
+        int lo = 0, hi = num.length()-1;
+        // if(num.length() == 1) return true;
+        
+        while(lo<=hi){
+            if((num.charAt(lo) == '0' && num.charAt(hi) =='0')
+              || (num.charAt(lo) == '1' && num.charAt(hi) =='1')
+              || (num.charAt(lo) == '6' && num.charAt(hi) =='9')
+              || (num.charAt(lo) == '8' && num.charAt(hi) =='8')
+              || (num.charAt(lo) == '9' && num.charAt(hi) =='6')
+              ) {
+                hi--; lo++;
+            }
+            else return false;
+        }
+        return true;
+    }
+
 
     // STRINGBUILDER - > 4 METHODS append, delete, deleteCharAt, reverse, toString
     // ddd, dee, deee

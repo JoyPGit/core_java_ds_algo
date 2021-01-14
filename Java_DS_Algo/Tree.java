@@ -438,6 +438,7 @@ public class Tree {
     /**
      * POINTS : 1 KEEP TRACK OF DIRECTION USING A BOOLEAN FLAG 2 SIMILAR TO LEVEL
      * ORDER 3 WHEN DIR IS FALSE, REVERSE CURR LIST AND THEN ADD TO RES
+     * spiral
      */
     // https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
@@ -1478,6 +1479,22 @@ public class Tree {
     //////////////////////////. BST. ////////////////////////
     //    TEMPLATE       .left = (); .right =() type
     
+    // https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree
+    public TreeNode lowestCommonAncestorBST(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == p || root == q) return root;
+        if(p.val<root.val && root.val <q.val) return root;
+        if(q.val<root.val && root.val <p.val) return root;
+        return helper(root, p, q);
+    }
+    
+    TreeNode helper(TreeNode root, TreeNode p, TreeNode q){
+        if(root == null) return null;
+        
+        if(root.val > p.val && root.val >q.val) return helper(root.left, p, q);
+        else if(root.val <p.val && root.val <q.val) return helper(root.right, p, q);
+        else return root;
+    }
+
     // INSERT INTO BST
     // https://leetcode.com/problems/insert-into-a-binary-search-tree
     public TreeNode insertIntoBST(TreeNode root, int val) {
@@ -1582,10 +1599,10 @@ public class Tree {
 
 
     // SIMILAR TO BUILDING FROM SORTED ARRAY, BUILD NEW
-    // https://leetcode.com/problems/balance-a-binary-search-tree/
     /** basically two pointers are needed which will store the start and end indexes
      * and use 3rd style of function root.left = f(left) and root.right  = f(right)
      */
+    // https://leetcode.com/problems/balance-a-binary-search-tree/
     public TreeNode balanceBST(TreeNode root) {
         ArrayList<Integer> list = new ArrayList<>();
         // add to sorted list
@@ -1805,8 +1822,7 @@ public class Tree {
     
     
     BSTNode helperBST(TreeNode root){
-        if(root == null) 
-            return new BSTNode(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
+        if(root == null) return new BSTNode(Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
         BSTNode left = helperBST(root.left);
         BSTNode right = helperBST(root.right);
         
@@ -1821,7 +1837,6 @@ public class Tree {
         }
         else {
             return new BSTNode(Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
-
         }
     }
     ////////////////////////////////////////////////////////////

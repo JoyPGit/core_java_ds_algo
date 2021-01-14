@@ -99,6 +99,58 @@ public class Mathprob {
         return false;
     }
 
+    // https://leetcode.com/problems/robot-bounded-in-circle/
+    public boolean isRobotBounded(String instructions) {
+        int x = 0, y = 0;
+        String dir = "up";
+        
+        for(char c : instructions.toCharArray()){
+            if(c == 'G') {
+                if(dir.equals("up")) y++;
+                else if(dir.equals("right")) x++;
+                else if(dir.equals("left")) x--;
+                else if(dir.equals("down")) y--;
+            }
+            if(c == 'L') {
+                if(dir.equals("up")) dir = "left";
+                else if(dir.equals("down")) dir = "right";
+                else if(dir.equals("right")) dir = "up";
+                else if(dir.equals("left")) dir = "down";
+            }
+            if(c == 'R') {
+                if(dir.equals("up")) dir = "right";
+                else if(dir.equals("down")) dir = "left";
+                else if(dir.equals("right")) dir = "down";
+                else if(dir.equals("left")) dir = "up";
+            }
+            System.out.println("x "+x+" y "+y+" "+dir);
+        }
+        
+        if(x==0 && y == 0) return true;
+        // any other dirn will revert back
+        if (dir.equals("up")) return false;
+        return false;
+    }
+
+    // https://leetcode.com/problems/strobogrammatic-number/
+    public boolean isStrobogrammatic(String num) {
+        int lo = 0, hi = num.length()-1;
+        // if(num.length() == 1) return true;
+        
+        while(lo<=hi){
+            if((num.charAt(lo) == '0' && num.charAt(hi) =='0')
+              || (num.charAt(lo) == '1' && num.charAt(hi) =='1')
+              || (num.charAt(lo) == '6' && num.charAt(hi) =='9')
+              || (num.charAt(lo) == '8' && num.charAt(hi) =='8')
+              || (num.charAt(lo) == '9' && num.charAt(hi) =='6')
+              ) {
+                hi--; lo++;
+            }
+            else return false;
+        }
+        return true;
+    }
+    
     /** 
      * start from i till n
      * maintain count

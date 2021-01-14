@@ -1,10 +1,52 @@
+array 
+3sum, K-diff Pairs in an Array, Last Substring in Lexicographical Order, trapping rainwater
+Median of Two Sorted Arrays, Shortest Subarray with Sum at Least K
+
+linked list 
+reverse nodes in k group
+
 backtracking
+max length concat, sudoku, n-queen
+
 recursion
+pattern, tip calculator 
+
 Sorting
-parition
+heap, merge, quick, Longest Word in Dictionary through Deleting
+
+heap
+median from data stream
+
+partition
+
 tree
+path sum 3, flatten, 
+
 dp
+coin change, max profit in job scheduling, Knight Probability in Chessboard, paint house,
+Longest increasing path in matrix
+
 String
+gcd, String Compression, Palindromic Substrings, wildcard matching, decode string, decode ways,
+word search, strobogrammatic, longest Palindromic Substring
+
 trie
 lru
+
+matrix
+search in sorted, spiral, walls and gates, rotate matrix
+
 graph
+bipartite
+
+Math
+Fraction Addition and Subtraction, Check If Array Pairs Are Divisible by k,
+Consecutive Numbers Sum, 
+Pairs of Songs With Total Durations Divisible by 60, Check If Array Pairs Are Divisible by k,
+Robot Bounded In Circle
+
+Greedy
+reconstruct itinerary, reorganize string, merge intervals, Maximum Number of Events That Can Be Attended
+
+Hashmap
+subarray sum equals k

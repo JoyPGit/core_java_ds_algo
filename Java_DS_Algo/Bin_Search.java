@@ -170,13 +170,13 @@ public class Bin_Search {
 
 
 
-    // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     /** POINTS :
      * 1 USE TWO BINARY SEACH FUNCS, TO FIND FIRST AND LAST
      * 2 THE FIRST USES HIGH = MID-1 AS ONCE WE FIND A MATCHING INDEX, 
      *   WE NEED TO GO LEFT TO FIND IF SMALLER EXISTS
      * 3 THE LAST USED LOW = MID+1
      */
+    // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     public int[] searchRange(int[] nums, int target) {
         int n = nums.length; 
         if(n ==1 && nums[0]!= target) return new int[]{-1, -1};
