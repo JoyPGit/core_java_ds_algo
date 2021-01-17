@@ -99,6 +99,55 @@ public class SlidingWindow {
         return res;
     }
 
+    /** 
+    POINTS : 
+     * MOST IMP ANAGRAM SO WINDOW SIZE WILL REMAIN SAME
+     * ARRAYS.EQUALS
+     * 
+     * 1 USE A CHAR ARRAY NOT A HASHMAP, IT'S EASIER TO COMPARE WITH ARRAYS.EQUALS
+     * 2 STORE PATTERN'S COUNT IN A CHAR ARRAY(NAMED 'BASE') OF SIZE 26
+     * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 2 STEPS : 
+     * FIRST WINDOW AND THEN ALL OTHER WINDOWS,
+     * 
+     * TRAVERSE FROM i TILL n (PATTERN LENGTH) 
+     * AND STORE IN A NEW ARRAY--> FIRST WINDOW
+     * THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
+     * 
+     * 4 COMPARE IF ARRAYS ARE EQUAL 
+     * WE KEEP THE BASE ARRAY AS A REFERENCE AND THE CURR ARRAY HOLDS 
+     * THE STATE OF THE CURRENT SLIDING WINDOW
+
+     * 5 IF ARRAYS ARE EQUAL STORE START INDEX OF THIS WINDOW
+     * 
+     * use left to decrement count
+    */	
+    // https://leetcode.com/problems/find-all-anagrams-in-a-string
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList<>();
+        
+        if(s.length()==0 || s.length() < p.length()) return res;
+        char[] base = new char[26];
+        for(char c: p.toCharArray()) base[c-'a']++;
+        
+        int left = 0;
+        
+        char[] curr = new char[26];
+        for(int i = 0; i<p.length(); i++){
+            curr[s.charAt(i) - 'a']++;
+        }
+        
+        // for starting index, consider length of p
+        if(Arrays.equals(base, curr)) res.add(0);
+        
+        for(int i =p.length(); i<s.length(); i++){
+            curr[s.charAt(left)-'a']--;
+            left++;
+            curr[s.charAt(i)-'a']++;
+            if(Arrays.equals(base, curr)) res.add(left);
+        }
+        return res;
+    }
+
     
 
     /** tricky thing here is to check for the list size and add the incoming el
@@ -446,9 +495,11 @@ public class SlidingWindow {
 
     // https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/
 
+    // at most, at least
 
     ///////////////// COUNT += 
 
+    // if distinct no of els, then use hashmap, else sliding window
     /** 
      * POINTS :
      * 1 USE MAP.SIZE, NOT INDIVIDUAL COUNTS
@@ -457,6 +508,7 @@ public class SlidingWindow {
      * 2 IF FREQ == 0, REMOVE FROM MAP
      * 3 left++
      * 
+     * at least 3 chars
     */
     // https://leetcode.com/problems/number-of-substrings-containing-all-three-characters
     public int numberOfSubstrings(String s) {
@@ -466,6 +518,8 @@ public class SlidingWindow {
         
         for(int i =0; i<s.length(); i++){
             map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
+
+            // this is to remove invalid els
             while(map.size() == 3){
                 // while size == 3, we move left, so
                 // that count+=left will have all valid substrings
@@ -473,15 +527,22 @@ public class SlidingWindow {
                 if(map.get(s.charAt(left)) == 0) map.remove(s.charAt(left));
                 left++;
             }
+            // if valid, update count
             count+=left;
         }
             
         return count;
     }
 
+    /** 
+     * https://leetcode.com/discuss/interview-question/370157
+     * Amazon | OA 2019 | Substrings with exactly K distinct chars
+     * https://www.youtube.com/watch?v=shsYUyF7pEs
+     * 
+    */
     /**  
-     * https://leetcode.com/problems/subarray-product-less-than-k/discuss/
-     * 741191/JAVA-Simple-Solution%3A-Sliding-Window
+     * https://leetcode.com/problems/subarray-product-less-than-k/discuss/741191/
+     * JAVA-Simple-Solution%3A-Sliding-Window
      * 
      * nums = [10, 5, 2, 6], k = 100; Output: 8
      * 
@@ -495,6 +556,12 @@ public class SlidingWindow {
      * remove product>k in while and then update
      * move left as when prod<k, left will hold count of all
      * subarrays, which can be used as count+=i-left+1
+     * 
+     * I think the trickiest part is why the number of newly introduced subarrays is j - i + 1.
+     * Say now we have {1,2,3} and add {4} into it. Apparently, the new subarray introduced here are:
+     * {1,2,3,4}, {2,3,4}, {3,4}, {4}, which is the number of elements in the new list.
+     * If we also remove some at the left, say we we remove 1, then subarrays are:
+     * {2,3,4}, {3,4}, {4}. It is easy to get the result is j - i + 1.
     */
     // https://leetcode.com/problems/subarray-product-less-than-k/
     public int numSubarrayProductLessThanK(int[] nums, int k) {
@@ -552,55 +619,6 @@ public class SlidingWindow {
 		return (matrix[a][b] == 1) ? true : false; 
 	} 
 
-
-    /** 
-    POINTS : 
-     * MOST IMP ANAGRAM SO WINDOW SIZE WILL REMAIN SAME
-     * ARRAYS.EQUALS
-     * 
-     * 1 USE A CHAR ARRAY NOT A HASHMAP, IT'S EASIER TO COMPARE WITH ARRAYS.EQUALS
-     * 2 STORE PATTERN'S COUNT IN A CHAR ARRAY(NAMED 'BASE') OF SIZE 26
-     * 3 NOW SLIDING WINDOW CONCEPT COMES. IT IS DONE IN 2 STEPS : 
-     * FIRST WINDOW AND THEN ALL OTHER WINDOWS,
-     * 
-     * TRAVERSE FROM i TILL n (PATTERN LENGTH) 
-     * AND STORE IN A NEW ARRAY--> FIRST WINDOW
-     * THEN SLIDE RIGHT BOUNDARY TILL END(STRING LENGTH) --> OTHER WINDOWS
-     * 
-     * 4 COMPARE IF ARRAYS ARE EQUAL 
-     * WE KEEP THE BASE ARRAY AS A REFERENCE AND THE CURR ARRAY HOLDS 
-     * THE STATE OF THE CURRENT SLIDING WINDOW
-
-     * 5 IF ARRAYS ARE EQUAL STORE START INDEX OF THIS WINDOW
-     * 
-     * use left to decrement count
-    */	
-    // https://leetcode.com/problems/find-all-anagrams-in-a-string
-    public List<Integer> findAnagrams(String s, String p) {
-        List<Integer> res = new ArrayList<>();
-        
-        if(s.length()==0 || s.length() < p.length()) return res;
-        char[] base = new char[26];
-        for(char c: p.toCharArray()) base[c-'a']++;
-        
-        int left = 0;
-        
-        char[] curr = new char[26];
-        for(int i = 0; i<p.length(); i++){
-            curr[s.charAt(i) - 'a']++;
-        }
-        
-        // for starting index, consider length of p
-        if(Arrays.equals(base, curr)) res.add(0);
-        
-        for(int i =p.length(); i<s.length(); i++){
-            curr[s.charAt(left)-'a']--;
-            left++;
-            curr[s.charAt(i)-'a']++;
-            if(Arrays.equals(base, curr)) res.add(left);
-        }
-        return res;
-    }
 
     /** 
      * POINTS : 
@@ -679,17 +697,34 @@ public class SlidingWindow {
         return min;
     }
 
-
+    /* 
+     * while condition, count+= 
+     * left if atleast k
+     * i-left+1 at most k
+     *
+     * 
+    */
+    // https://leetcode.com/problems/minimum-size-subarray-sum
     // https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/
 
+    // number-of-substrings-containing-all-three-characters/
+    // no of substrings (at least) +=left
 
-    // Count Number of Nice Subarrays
+    // subarrays-with-k-different-integers use at most technique +=i-left+1
+    // = most(k) = most(k-1)
+    // at most = count+=i-left+1
+    // https://leetcode.com/problems/subarray-product-less-than-k/discuss/108861/
+    // JavaC%2B%2B-Clean-Code-with-Explanation
+
+    // subarray-product-less-than-k +=i-left+1
+
+    // Count Number of Nice Subarrays prefix sum
+
     // Replace the Substring for Balanced String
     // Max Consecutive Ones III
     // Binary Subarrays With Sum
     // Subarrays with K Different Integers
     // Fruit Into Baskets
-    // Shortest Subarray with Sum at Least K
     // Minimum Size Subarray Sum
     public static void main(String[] args) {
         SlidingWindow slide = new SlidingWindow();

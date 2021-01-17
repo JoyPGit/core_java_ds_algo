@@ -204,24 +204,6 @@ public class Partition{
     }
 
 
-    public int maxProductSubArray(int[] arr) {
-        int curr_min = arr[0];
-        int curr_max = arr[0];
-        int prev_min = arr[0];
-        int prev_max = arr[0];
-        int ans = arr[0];
-
-        for(int i =1; i<arr.length; i++){
-            curr_max = Math.max(prev_max*arr[i], Math.max(prev_min*arr[i], arr[i]));
-            curr_min = Math.min(prev_max*arr[i],Math.min(prev_min*arr[i], arr[i]));
-            
-            ans = Math.max(ans, curr_max);
-            prev_max = curr_max; prev_min = curr_min;
-        }
-        System.out.println("max prod subarray "+ans);
-        return ans;
-    }
-
     /** 
      * POINTS :
      * 1 FILL DP ARRAY FOR FIRST K ELS, THEN FOR OTHER ELS
@@ -319,7 +301,7 @@ public class Partition{
         return false;
     }
 
-
+    // ALL PALINDROMIC SUBSTRINGS TILL END?
     public List<List<String>> partition(String s) {
         List<List<String>> res = new ArrayList<>();
         List<String> curr = new ArrayList<>();
@@ -352,6 +334,54 @@ public class Partition{
         }
         return true;
     }
+
+    /** 
+     * https://www.youtube.com/watch?v=lDYIvtBVmgo
+     * POINTS :
+     * 1 SAME AS MATRIX MULTIPLICATION
+     * 2 FOR PALINDROME ALWAYS USE SAME SIZED ARRAY, NOT n+1
+     * 3 FOR (l=1) USE 0 AS INDIVIDUAL LETTER IS A PALINDROME 
+     * 
+     * 4 l = 1 to n; i = 0 to i+l-1<n; j = i+l-1
+     * 
+     * 5 for(k = i; k < j)
+     *    min = (dp[i][k] + dp[k+1][j])
+     * 
+     * 6 dp[i][j] = min+1;
+     * 
+    */
+    // https://leetcode.com/problems/palindrome-partitioning-ii/
+    public int minCutDP(String s) {
+        if(Utility.isPalindrome(s)) return 0;
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        
+        for(int l =1; l<=n; l++){
+            for(int i=0; i+l-1<n; i++){
+                int j = i+l-1;
+                if(l==1) {
+                    dp[i][j] = 0; continue;
+                }
+                if(Utility.isPalindrome(s.substring(i,j+1))) dp[i][j] = 0;
+                else{
+                    int min = Integer.MAX_VALUE;
+                    for(int k = i; k<j; k++){
+                        min = Math.min(min, dp[i][k] + dp[k+1][j]);
+                    }
+                    dp[i][j] = min+1;    
+                    System.out.println("dp["+i+"]["+j+"] "+dp[i][j]);
+                }
+            }
+        }
+        Utility.printMatrix(dp);
+        return dp[0][n-1];
+    }
+
+
+    // similar 
+    // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
+
+
 
     /** 
      * POINTS : 

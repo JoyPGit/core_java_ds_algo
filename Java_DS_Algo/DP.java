@@ -113,6 +113,73 @@ public class DP {
     }
 
 
+
+    //////////////////// UNIQUE PATHS
+     /**
+     * the trick is to convert a recursive relation to a dp relation 
+     * dfs(r,c) = dfs(r+1,c)+dfs(r,c+1);
+     * 
+     * but the relation here for dp is built in bottom up manner
+     */
+    // https://leetcode.com/problems/unique-paths/
+    int uniquePaths(int[][] arr) {
+        int m = arr.length; int n = arr[0].length;
+        int[][] dp = new int[m][n];
+        
+        for(int i = 0; i<m; i++){
+            for(int j =0; j<n; j++){
+                // top row and left col
+                if(i==0 || j==0) dp[i][j] = 1;
+                else dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+
+
+    /** 
+     * SAME AS ABOVE UNIQUE PATHS
+     * 1 ONLY DIFF IS WHEN FILLING FIRST ROW AND COL
+     * 2 AND WHEN 1 IS SEEN MARK dp[i][j] = 0
+     * 3 CHECK dp[0][0] FOR OBSTACLES TOO
+     * 
+    */
+    // [[1]]
+    // https://leetcode.com/problems/unique-paths-ii/submissions/
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        
+        // boundary
+        if(m==0 || n==0) return 0;
+        int[][] dp = new int[m][n];
+        
+        // 
+        dp[0][0] = obstacleGrid[0][0] == 1?0:1;
+        
+        //row
+        for(int i =1; i<n; i++){
+            if(obstacleGrid[0][i] == 1) dp[0][i] = 0;
+            else dp[0][i] = dp[0][i-1];
+        }
+
+        // col
+        for(int i =1; i<m; i++){
+            if(obstacleGrid[i][0] == 1) dp[i][0] = 0;
+            else dp[i][0] = dp[i-1][0];
+        }
+        
+        for(int i = 1; i<m; i++){
+            for(int j =1; j<n; j++){
+                if(obstacleGrid[i][j] == 1) dp[i][j] = 0;
+                else dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+
     /////////////////////////// HOUSE ROBBER
     /**
      * 1 add boundary condition check for n= 0 and 1 
@@ -726,71 +793,6 @@ public class DP {
         return dp[0][arr.length-1];
     }
 
-    //////////////////// UNIQUE PATHS
-     /**
-     * the trick is to convert a recursive relation to a dp relation 
-     * dfs(r,c) = dfs(r+1,c)+dfs(r,c+1);
-     * 
-     * but the relation here for dp is built in bottom up manner
-     */
-    // https://leetcode.com/problems/unique-paths/
-    int uniquePaths(int[][] arr) {
-        int m = arr.length; int n = arr[0].length;
-        int[][] dp = new int[m][n];
-        
-        for(int i = 0; i<m; i++){
-            for(int j =0; j<n; j++){
-                // top row and left col
-                if(i==0 || j==0) dp[i][j] = 1;
-                else dp[i][j] = dp[i-1][j] + dp[i][j-1];
-            }
-        }
-        
-        return dp[m-1][n-1];
-    }
-
-
-    /** 
-     * SAME AS ABOVE UNIQUE PATHS
-     * 1 ONLY DIFF IS WHEN FILLING FIRST ROW AND COL
-     * 2 AND WHEN 1 IS SEEN MARK dp[i][j] = 0
-     * 3 CHECK dp[0][0] FOR OBSTACLES TOO
-     * 
-    */
-    // [[1]]
-    // https://leetcode.com/problems/unique-paths-ii/submissions/
-    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-        int m = obstacleGrid.length;
-        int n = obstacleGrid[0].length;
-        
-        // boundary
-        if(m==0 || n==0) return 0;
-        int[][] dp = new int[m][n];
-        
-        // 
-        dp[0][0] = obstacleGrid[0][0] == 1?0:1;
-        
-        //row
-        for(int i =1; i<n; i++){
-            if(obstacleGrid[0][i] == 1) dp[0][i] = 0;
-            else dp[0][i] = dp[0][i-1];
-        }
-
-        // col
-        for(int i =1; i<m; i++){
-            if(obstacleGrid[i][0] == 1) dp[i][0] = 0;
-            else dp[i][0] = dp[i-1][0];
-        }
-        
-        for(int i = 1; i<m; i++){
-            for(int j =1; j<n; j++){
-                if(obstacleGrid[i][j] == 1) dp[i][j] = 0;
-                else dp[i][j] = dp[i-1][j] + dp[i][j-1];
-            }
-        }
-        
-        return dp[m-1][n-1];
-    }
 
 
     //////////////////////////// LIS
@@ -1008,7 +1010,7 @@ public class DP {
     // october-leetcoding-challenge/560/week-2-october-8th-october-14th/3494/
 
 
-    ///////////////////IMP JOB SCHEDULING
+    /////////////////// IMP JOB SCHEDULING
     /**
      * Also the masseuse problem, NOT GREEDY BUT DP
      * IMP : SORT ON THE BASIS OF END TIME AND START FROM

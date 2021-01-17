@@ -178,6 +178,7 @@ public class Mathprob {
         return Math.max(a, b);
     }
 
+
     //////////// MAX PROD SUBARRAY
     // kadane
     // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
@@ -332,8 +333,7 @@ public class Mathprob {
 
     // similar to stairs
     // https://www.geeksforgeeks.org/count-ofdifferent-ways-express-n-sum-1-3-4/
-    int countWays(int n) 
-    { 
+    int countWays(int n) { 
         int dp[] = new int[n + 1]; 
   
         // base cases 
@@ -566,7 +566,6 @@ public class Mathprob {
     // 3, 300
     // https://leetcode.com/problems/largest-number/
     int compare(int a, int b){
-        int i =0, j= 0, index = 0;
         String str1 = ""+a+b;
         String str2 = ""+b+a;
 

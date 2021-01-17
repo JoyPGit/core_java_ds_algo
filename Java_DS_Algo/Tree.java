@@ -37,11 +37,16 @@ public class Tree {
 
     /**
      * 
-     * prune, ancestor, nodes at dist k
+     * prune, ancestor, nodes at dist k, tree from inorder and preorder
+     * morris inorder
      * 
      * 
-     * * TEMPLATES : 1 HEIGHT -> ANCESTOR (REMOVE GLOBAL), VALID BST(POST) 2 TREE
-     * PRUNING 3 PATH SUM 3, IS SUBTREE, VALID BST(PRE)
+     * * TEMPLATES : 1 HEIGHT -> ANCESTOR (REMOVE GLOBAL), VALID BST(POST) 
+     * 2 DELETE BST, TREE PRUNING 
+     * 3 PATH SUM 3, IS SUBTREE, VALID BST(PRE)
+     * 4 ALL ROOT TO LEAF PATHS
+     * 
+     * where to go for left, right and where to check for leaf only and revert?
      * 
      * function h(root){ if(root == null) return 0; int left = h(left); int right =
      * h(right); return max(left, right)+1; }
@@ -187,6 +192,7 @@ public class Tree {
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
         TreeNode curr = root;
+
         while (curr != null) {
             if (curr.left == null) {
                 res.add(curr.val);
@@ -954,6 +960,7 @@ public class Tree {
     }
 
 
+
     /////////////////////// HEIGHT AND RECURSION LEFT, RIGHT
     // find height of tree
     int height(TreeNode root) {
@@ -1209,6 +1216,69 @@ public class Tree {
         root.right = helper(data);
         return root;
     }
+    
+    ///////////////////////////////// ALL PATHS RECURSION AND BACKTRACKING
+    /** 
+     * IN RECURSION A SEPARATE STRING IS PASSED HENCE NO NEED TO REMOVE
+     * ALSO ADD AT LEAF, SO NO POSTO ORDER LIKE LEFT, RIGHT
+    */
+    // RECURSION
+    // https://leetcode.com/problems/binary-tree-paths
+    List<String> resPaths = new ArrayList<>();
+    
+    public List<String> binaryTreePaths(TreeNode root) {
+        dfs(root, "");
+        return resPaths;
+    }
+    
+    void dfs(TreeNode root, String curr){
+        if(root == null) return;
+        if(root.left == null && root.right == null){
+            curr+=root.val;
+            resPaths.add(curr);
+        }
+        dfs(root.left, curr+root.val+"->");
+        dfs(root.right, curr+root.val+"->");
+    }
+
+    /** 
+     * A COMMON LIST IS USED BY ALL, HENCE REMOVAL IS IMP
+     * ADD AT LEAF AND REMOVE
+     * ALSO REMOVE ROOT, SO POST ORDER
+    */
+    //BACKTRACKING
+    public List<String> binaryTreePaths2(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        
+        dfs(res, list, root);
+        
+        List<String> result = new ArrayList<>();
+        // System.out.println(res);
+        
+        for(List<Integer> l : res){
+            String curr = ""+l.get(0);
+            for(int i = 1; i<l.size(); i++) curr+="->"+l.get(i);
+            result.add(curr);
+        }
+        return result;
+    }
+    
+    void dfs(List<List<Integer>> res, List<Integer> list, TreeNode root){
+        if(root == null) return;
+        if(root.left == null && root.right == null){
+            list.add(root.val);
+            res.add(new ArrayList<>(list));
+            list.remove(list.size()-1);
+        }
+        list.add(root.val);
+        dfs(res, list, root.left);
+        dfs(res, list, root.right);
+        list.remove(list.size()-1);
+    }
+
+    // similar, but not on tree
+    // https://leetcode.com/problems/all-paths-from-source-to-target/
 
     ///////////////////////////////// PATH SUM
     /// SIMILAR TO HEIGHT AND ANCESTOR TEMPLATE

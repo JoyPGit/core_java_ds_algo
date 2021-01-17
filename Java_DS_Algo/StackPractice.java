@@ -208,34 +208,24 @@ public class StackPractice {
     */
     // https://leetcode.com/problems/sliding-window-maximum/
     public int[] maxSlidingWindow(int[] nums, int k) {
-        int n = nums.length;
-        int[] res = new int[n-k+1]; //
-        if(n==0) return res;
+        int left = 0, n = nums.length, index = 0;
+        int[] res = new int[n-k+1];
         
-        if(n==1) {
-            res[0] = nums[0];
-            return res;
-        }
-        
-        int index = 0;
         Deque<Integer> q = new LinkedList<>();
-        for(int i =0; i<k; i++){
-            while(q.size()!=0 && nums[i] > nums[q.getLast()]){
-                q.removeLast();
-            }
-            q.addLast(i);
-        }
-        // index denotes the min of this window
-        res[index++] = nums[q.getFirst()];
         
-        for(int i = k; i<n; i++){
-            // need to remove the outgoing            
-            if(q.getFirst() == i-k) q.removeFirst();
-            while(q.size()!=0 && nums[i] > nums[q.getLast()]){
-                q.removeLast();
-            }
-            q.addLast(i);
-            res[index++] = nums[q.getFirst()];
+        for(int i =0; i<k; i++){
+            while(q.size()!=0 && q.getLast()<nums[i]) q.removeLast();
+            q.addLast(nums[i]);
+        }
+        
+        res[index++] = q.getFirst();
+        
+        for(int i =k; i<n; i++){
+            // remove outgoing index el
+            if(q.getFirst() == nums[i-k]) q.removeFirst();
+            while(q.size()!=0 && q.getLast()<nums[i]) q.removeLast();
+            q.addLast(nums[i]);
+            res[index++] = q.getFirst();
         }
         return res;
     }

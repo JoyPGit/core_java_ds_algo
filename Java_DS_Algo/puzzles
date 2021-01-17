@@ -1,0 +1,10 @@
+https://www.geeksforgeeks.org/puzzle-73-the-card-game/?ref=rp
+
+https://www.geeksforgeeks.org/puzzle-the-number-game/?ref=rp
+When Ankur chooses a number between 1 and n, here n=10000, Vijay should start guessing 
+√n, 2√n, 3√n, 4√n, and so on. The first time his guess exceeds Ankur’s number, the range of 
+numbers has been narrowed down to √n numbers; he then starts guessing sequentially in that range.
+
+https://www.geeksforgeeks.org/puzzle-round-table-coin-game/
+
+https://www.geeksforgeeks.org/the-counterfeit-coin/?ref=rp

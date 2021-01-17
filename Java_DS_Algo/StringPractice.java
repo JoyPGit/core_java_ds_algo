@@ -257,7 +257,7 @@ class StringPractice {
         HashSet<Character> vowel = new HashSet<>();
         vowel.add('a'); vowel.add('e'); vowel.add('i');
         vowel.add('o'); vowel.add('u');
-         vowel.add('A'); vowel.add('E'); vowel.add('I');
+        vowel.add('A'); vowel.add('E'); vowel.add('I');
         vowel.add('O'); vowel.add('U');
         
         if(n==1 && !vowel.contains(s.charAt(0))) return s;
@@ -426,23 +426,7 @@ class StringPractice {
         return minDist;
     }
 
-    // how to map index with freq? iterate over the string twice and check in ch[]
-    // https://practice.geeksforgeeks.org/problems/non-repeating-character-1587115620/1
-    static char nonRepeatingCharacter(String S)
-    {
-        char[] ch = new char[26];
-        //Your code here
-        for(int i =0; i<S.length(); i++){
-            ch[S.charAt(i)-'a']++;
-        }    
-        
-        for(int i =0; i<S.length(); i++){
-            if(ch[S.charAt(i)-'a'] == 1) return S.charAt(i);
-        }
-        
-        return '$';
-    }
-
+    
     /** 
      * POINTS : 
      * 1 RUN TWO LOOPS, LEFT TO RIGHT AND VICE-VERSA
@@ -956,6 +940,7 @@ class StringPractice {
      * 
      * imp : fill first row and check for overlap dp[i][j] > j-i
      * 
+     * DP
     */
     int longestRepeatedNonOverlappingSubstring(String str) {
         int n = str.length();
@@ -1062,6 +1047,7 @@ class StringPractice {
         }
         return new ArrayList<>(map.values());
     }
+
 
     /** 
      * POINTS : 
@@ -1270,37 +1256,37 @@ class StringPractice {
     // s = "ADOBECODEBANC", t = "ABC"
     // https://leetcode.com/problems/minimum-window-substring
     public String minWindow(String s, String t) {
-    if(s == null || s.length() < t.length() || s.length() == 0) return "";
-    HashMap<Character, Integer>map = new HashMap<>();
-    
-    for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
-    
-    int start = 0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
-    
-    for(int i =0; i<s.length(); i++){
-        if(map.containsKey(s.charAt(i))){
-            map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
-            if(map.get(s.charAt(i)) >= 0) count++;
-        }
+        if(s == null || s.length() < t.length() || s.length() == 0) return "";
+        HashMap<Character, Integer>map = new HashMap<>();
         
-        while(count == t.length()) {
-            // if smaller len found, update len and starting char
-            if(i-left+1 < len){
-                start = left;
-                len = i-left+1;
+        for(char c : t.toCharArray()) map.put(c, map.getOrDefault(c, 0)+1);
+        
+        int start = 0; int left = 0; int count = 0; int len = Integer.MAX_VALUE;
+        
+        for(int i =0; i<s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                map.put(s.charAt(i), map.get( s.charAt(i) ) -1);
+                if(map.get(s.charAt(i)) >= 0) count++;
             }
-            // now increment the freq which was reduced
-            if(map.containsKey(s.charAt(left))){
-                map.put(s.charAt(left), map.get(s.charAt(left))+1);
-                if(map.get(s.charAt(left))>0) count--;
+            
+            while(count == t.length()) {
+                // if smaller len found, update len and starting char
+                if(i-left+1 < len){
+                    start = left;
+                    len = i-left+1;
+                }
+                // now increment the freq which was reduced
+                if(map.containsKey(s.charAt(left))){
+                    map.put(s.charAt(left), map.get(s.charAt(left))+1);
+                    if(map.get(s.charAt(left))>0) count--;
+                }
+                left++;
             }
-            left++;
         }
-    }
-    if(len>s.length()) return ""; 
+        if(len>s.length()) return ""; 
 
-    return s.substring(start, start+len);
-}
+        return s.substring(start, start+len);
+    }
 
     // https://leetcode.com/problems/word-subsets/
 
@@ -1556,7 +1542,7 @@ class StringPractice {
      * 1 CREATE AN ARRAY TO SERVE AS A PRIMARY MAP(OR DICTIONARY)
      * WHICH WILL STORE THE COMMON ELEMENTS
      * 2 CREATE A NEW ARRAY FOR EACH SUBSEQUENT STRING AND STORE THE FREQ
-     * 3 UPDATE THE PRIMARY ARAY TO STORE COMMON OF BOTH PRIMARY ABND CURR
+     * 3 UPDATE THE PRIMARY ARAY TO STORE COMMON OF BOTH PRIMARY AND CURR
      * 
      * SIMILAR TO INTERSECTION OF 2 ARRAYS
      */
@@ -2087,7 +2073,7 @@ class StringPractice {
      * 3 start from i=1, j=1 and word.charAt(i-1) && word.charAt(j-1)
      * 
     */
-    // https://leetcode.com/problems/edit-distance/submissions/
+    // https://leetcode.com/problems/edit-distance
     public int minEditDistance(String word1, String word2) {
         int m = word2.length();
         int n = word1.length();
@@ -2244,11 +2230,12 @@ class StringPractice {
         return dp[n];
     }
 
+
     /**
      * IMP : x.str.compareTo(y.str);
      * 
      * POINTS :
-     * 1 PUT FREQIN HASHMAP
+     * 1 PUT FREQ IN HASHMAP
      * 2 CREATE A CUSTOM CLASS TO STORE STRING AND CORR FREQ
      * 3 USE A PQUEUE TO SSORT STRINGS
      * ((x,y)->{
@@ -2257,7 +2244,6 @@ class StringPractice {
      * })
      * 
     */
-
     // https://leetcode.com/problems/top-k-frequent-words
     class Frequency{
         String str; int freq;
@@ -2324,11 +2310,10 @@ class StringPractice {
     public List<Integer> findAnagrams(String s, String t) {
         char[] base = new char[26];
         List<Integer> res = new ArrayList<>();
-        if (s.length() == 0)
-            return res;
+        if (s.length() == 0) return res;
         int n = t.length();
-        if (n > s.length())//1
-            return res;
+        
+        if (n > s.length()) return res; // 1 
 
         for (char c : t.toCharArray()) base[c - 'a']++; //2
 

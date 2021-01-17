@@ -679,7 +679,6 @@ class Graph {
 	 * 
 	 */
 	// https://leetcode.com/problems/course-schedule/
-	// https://leetcode.com/problems/course-schedule/
     boolean isLoop = false;
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         int n = prerequisites.length;
@@ -1147,6 +1146,47 @@ class Graph {
 		return false;
 	}
 
+	// always keep track of q size in BFS
+	// https://leetcode.com/problems/shortest-path-in-binary-matrix
+    class Node{
+        int row, col, dist;
+        Node(int a, int b, int c){
+            this.row = a; this.col = b; this.dist = c;
+        }
+    }
+    
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        Deque<Node> q = new LinkedList<>();
+        int m = grid.length-1, n = grid[0].length-1;
+        
+        if(grid[0][0] !=0) return -1;
+        if(grid[m][n] !=0) return -1;
+        if(m == 0 && n==0) return 1;
+        
+        q.addLast(new Node(0, 0, 1));
+    
+        int[] rows = {-1,0,1,1,1,0,-1,-1};
+        int[] cols = {1,1,1,0,-1,-1,-1,0};
+        
+        while(q.size()!=0){
+            int size = q.size();
+            for(int i =0; i<size; i++){
+                Node curr = q.removeFirst();
+                // System.out.println(curr.row+" "+curr.col);
+                for(int j =0; j<8; j++){
+                    int x = curr.row + rows[j];
+                    int y = curr.col + cols[j];
+                    if(x == m && y ==n) return curr.dist+1;
+                    
+                    if(x>=0 && x<=m && y>=0 && y<= n && grid[x][y] == 0){
+                        q.addLast(new Node(x, y, curr.dist+1));
+                        grid[x][y] = 2;
+                    }                    
+                }
+            }
+        }
+        return -1;
+    }
 
 	/** 
 	 * NORMAL BFS

@@ -901,6 +901,30 @@ public class Backtrack {
         return false;
     }
 
+    // https://leetcode.com/problems/all-paths-from-source-to-target/
+	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+
+		List<List<Integer>> res = new ArrayList<>();
+		List<Integer> list = new ArrayList<>();
+
+		list.add(0);
+		dfs(res, list, graph, 0);
+		return res;
+	}
+
+	void dfs(List<List<Integer>> res, List<Integer> list, int[][] graph, int curr) {
+		if (curr == graph.length - 1) {
+			// temp.add(curr);
+			res.add(new ArrayList<>(list));
+			return;
+		}
+		for (int j : graph[curr]) {
+			list.add(j);
+			dfs(res, list, graph, j);
+			list.remove(list.size() - 1);
+		}
+    }
+    
 
     // https://leetcode.com/explore/challenge/card/august-leetcoding-challenge/
     // 551/week-3-august-15th-august-21st/3428/

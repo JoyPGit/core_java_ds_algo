@@ -1,52 +1,142 @@
 array 
-3sum, K-diff Pairs in an Array, Last Substring in Lexicographical Order, trapping rainwater
-Median of Two Sorted Arrays, Shortest Subarray with Sum at Least K
+kadane, moore's voting, candy
+wiggle sort, dutch national, max Consecutive ones, sorted squares
+3sum, K-diff Pairs in an Array, Last Substring in Lexicographical Order, 
+Median of Two Sorted Arrays, Find Minimum in Rotated Sorted Array
 
 linked list 
-reverse nodes in k group
+reverse nodes in k group, add nos
 
 backtracking
-max length concat, sudoku, n-queen
+max length concat, sudoku, n-queen, letter combinations, word ladder, word search, subsets,
+palindrome partitioning
 
 recursion
-pattern, tip calculator 
+target sum, pattern, 
+include-exclude pattern -> similar to backtracking w/o remove, 
+return value instead of global var
+tip calculator 
 
 Sorting
 heap, merge, quick, Longest Word in Dictionary through Deleting
+
+binary search
+floor, ceiling,first and last posn, 
+find min, find min with duplicates
+find peak, search matrix, find first missing positive
+leaderboard, h-index
+
+
+Stack
+trapping rainwater, infix to postfix, next greater el, remove k digits, largest rect area
+maximal rect, longest valid parentheses, reverse stack using recursion
 
 heap
 median from data stream
 
 partition
+word break, split-the-given-array-into-k-sub-arrays-such-that-maximum-sum-of-all-sub-arrays-is-minimum
+split-array-largest-sum, partition-array-for-maximum-sum, 
+palindromic partition , with dp
 
 tree
-path sum 3, flatten, 
+morris inorder,recover BST
+iterative preorder, postorder
+boundary, bottom view, 
+nodes at dist k
+height, LCA
+is symmetric, is same
+valid BST, largest sum subtree BST, tree pruning
+all paths, path sum 3
+leaf nodes, remove half nodes
+tree from sorted, tree from preorder and inorder
+n-ary trees
+Given a n-array tree, find all the paths from root to leaf nodes.
+path sum 3, flatten, Given a binary tree, pruning
+find the number of subtrees which has all the nodes is that entire subtree with same node data value.
+Given a BST, print the all nodes which do not have siblings. o/p in preorder fashion.
+
 
 dp
-coin change, max profit in job scheduling, Knight Probability in Chessboard, paint house,
+fibonacci, stairs, jump
+house robber, del and earn, min cost paint
+max prod subarray, min cost tickets, no of decodings(excel col)
+painter's partition, word break, stock buy sell 4, palindromic partitioning
+LIS, russian doll, 
+JOB SCHEDULING
 Longest increasing path in matrix
+knapsack, rod cutting, coin change, Knight Probability in Chessboard,
+Subsets - partition, min diff, max size subset
+stone game
+edit distance
+longest common subseq, Substring
+longest palindromic subseq, Substring
+
 
 String
-gcd, String Compression, Palindromic Substrings, wildcard matching, decode string, decode ways,
-word search, strobogrammatic, longest Palindromic Substring
+first unique char, shortest dist to a char, 
+royal names, longest prefix
+maximum-length-of-a-concatenated-string-with-unique-characters
+Smallest Subsequence of Distinct Characters // lexicographically smallest
+longest repeated non overlapping substring
+all permutations of a String
+camel case matching
+min swaps to make palindrome
+gcd, String Compression, Palindromic Substrings, wildcard matching, 
+version compare, decode string, decode ways,
+word subsets
+word search, word ladder, strobogrammatic, longest Palindromic Substring, Minimum Window Substring
+find min diff, largest time
+
 
 trie
 lru
 
 matrix
-search in sorted, spiral, walls and gates, rotate matrix
+Longest increasing path in matrix (dp)
+search in sorted, spiral, walls and gates, rotate matrix, maximal sq, kth smallest el in matrix
 
 graph
-bipartite
+dfs, time to inform, course schedule, bipartite, tps, bipartite, n/w delay, cheapest flights (dijkstra), server
+all paths from src to target
 
 Math
+sieve of eratosthenes, robot, max prod subarray, climb stairs,
+stock buy sell, excel sheet col title, is path crossing, 
+largest no, next permutation, remove k digits
 Fraction Addition and Subtraction, Check If Array Pairs Are Divisible by k,
 Consecutive Numbers Sum, 
 Pairs of Songs With Total Durations Divisible by 60, Check If Array Pairs Are Divisible by k,
 Robot Bounded In Circle
+Given n number of rectangles, find the union of all rectangles (only algorithm).
+contiguous subarray prod == k, like kadane,
+largest no from an array
 
 Greedy
+max CPU load
 reconstruct itinerary, reorganize string, merge intervals, Maximum Number of Events That Can Be Attended
+jump game 2, pairs div by k, can complete circuit
+
 
 Hashmap
-subarray sum equals k
+2 sum, prefix sum, 
+subarray sum equals k, no of nice subarrays, max lengh equal no 0s and 1s
+smallest subsequence of distinct chars,
+word subsets, path sum 3, 
+special O(1) data structure
+
+
+sliding Window
+subarrays mostly; keep track q size, Shortest Subarray with Sum at Least K
+longest subarray with k els, anagrams in a string
+max consecutive 1s 3, length of longest substring
+
+
+Design
+Design a custom Iterator in Java, which will have same methods like hashNext() and next(), 
+but the user will be able to provide the starting index(m) from which the iteration will start and
+then once it reaches the end, it will start from beginning index (0th index) and print till 
+(m-1)th index. After that asked to write whole code for the class.
+
+
+https://www.geeksforgeeks.org/mentor-graphics-siemens-interview-experience-for-experience-3-yrs-sr-mts/?ref=rp

@@ -29,7 +29,7 @@ class Array {
      * 
      * 
      * 
-     * int, float and other primitive data types ar passed by value
+     * int, float and other primitive data types are passed by value
      * object by reference, like array, arraylist, pQueue etc.
      * the object name points to the same entity
      * 

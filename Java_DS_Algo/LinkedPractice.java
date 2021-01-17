@@ -39,7 +39,7 @@ class ListNode {
  *     a = c; b = d;
  * }
  * 
- * odd even traversal type(revrsal and merging mostly)
+ * odd even traversal type(reversal and merging mostly)
  * 
  * duplicates, 
  * 
@@ -521,7 +521,7 @@ class LinkedPractice {
         return head;
     }
 
-    // https://leetcode.com/problems/sort-list/submissions/
+    // https://leetcode.com/problems/sort-list
     /** POINTS : 
      * 1 FAST.next!=NULL AND FAST.NEXT.next!=NULL
      * 2 TEMP = SLOW.next
@@ -895,7 +895,7 @@ class LinkedPractice {
      * 
      * same code for each remaining list
     */
-    // https://leetcode.com/problems/add-two-numbers/submissions/
+    // https://leetcode.com/problems/add-two-numbers/
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         int carry = 0;
         ListNode res = new ListNode(-1); ListNode p = res;
