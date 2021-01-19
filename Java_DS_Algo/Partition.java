@@ -38,45 +38,7 @@ public class Partition{
         return count;
     }
 
-    /** 
-     * search from max till sum
-    */
-    // https://www.geeksforgeeks.org/split-the-given-array-into-k-sub-arrays-
-    // such-that-maximum-sum-of-all-sub-arrays-is-minimum/
-    int minSplit(int[] arr, int k){
-        int max = 0, sum = 0;
-        int res= 0;
-
-        for(int i : arr){
-            max = Math.max(max, i);
-            sum+=i;
-        }
-
-        int lo = max, hi = sum;
-        while(lo<=hi){
-            int mid = lo + (hi-lo)/2;
-            int x = maxPartition(arr, mid);
-            if(x<=k){    // larger pieces
-                res = mid; hi = mid-1;
-            }
-            else lo = mid+1;
-        }
-        System.out.println("minimized max sum subarray is "+res);
-        return res;
-    }
-
-    int maxPartition(int[] arr, int capacity){
-        int sum = 0; int partition = 0;
-        for(int i : arr){
-            sum+=i;
-            if(sum>capacity) {
-                sum = i;
-                partition++;
-            }
-        }
-        return partition;
-    }
-
+    
     /** 
      * POINTS :
      * 1 IF CAPACITY = SUM OF ALL WTS, IT CAN BE TRANSFERRED IN A DAY
@@ -102,34 +64,40 @@ public class Partition{
     */
     // https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
     public int shipWithinDays(int[] weights, int D) {
-        int sum = 0; int max = 0;
-        for(int i : weights){
-            sum+=i;
+        int n = weights.length;
+        int sum  = 0; int max = 0;
+        for(int i : weights) {
             max = Math.max(max, i);
+            sum+=i;
         }
-        
-        int minW = max; int maxW = sum;
-        
-        while(minW<maxW){
-            int mid = minW + (maxW - minW)/2;
-            if(isSafe(mid, weights, D)){
-                maxW = mid;
-            } else minW = mid+1;
+
+        // capacity starts from max
+        int lo = max; int hi = sum; int res = 0;
+        while(lo<=hi){
+            int mid = lo + (hi-lo)/2;
+            if(isSafe(weights, mid, D)) {
+                res = mid;
+                hi = mid-1;
+            }
+            else lo = mid+1; 
         }
-        return minW;
+        return res;
     }
     
-    boolean isSafe(int capacity, int[] weights, int D){
+    
+    boolean isSafe(int[] weights, int capacity, int maxDays){
         int sum = 0; int days = 1;
-        
-        for(int w : weights){
-            if(sum+w<=capacity) sum+=w;
-            else{
+        for(int i : weights){
+            sum+=i;
+            if(sum>capacity) {
                 days++;
-                sum = w;
+                sum = i;
+                
+                // System.out.println("sum "+sum +" cap "+capacity+" days " +days);
             }
         }
-        return days<=D;
+        if(days>maxDays) return false;
+        return true;
     }
 
     /** 
@@ -146,6 +114,8 @@ public class Partition{
      * 4 RETURN TRUE ONLY IF NO OF PARTITIONS IS <= m
      * 
      * imp : count = 1
+     * 
+     * largest contiguous sum with m partitions
     */
     // https://leetcode.com/problems/split-array-largest-sum/
     public int splitArray(int[] nums, int m) {
@@ -161,14 +131,14 @@ public class Partition{
             int mid = lo + (hi-lo)/2;
             
             int x = findPartitions(nums, mid, m);
-            // if larger pieces, then lesser partitions, so we need to lessen the size, hence
-            // hi = mid-1;
-            if(x <= m){
+
+            // if larger no of partitions, smaller pieces, so we need to lessen the size
+            if(x>m){
+                lo = mid+1;
+            }
+            else {
                 res = mid;
                 hi = mid-1;
-            }
-            else if(x>m){
-                lo = mid+1;
             }
         }
         return res;
@@ -186,24 +156,17 @@ public class Partition{
         return count;
     }
 
-    // kadane, but in dp format
-    // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
-    // maxSubArray(A, i) = maxSubArray(A, i - 1) > 0 ? maxSubArray(A, i - 1) : 0 + A[i]; 
-    // [-2,-1]
-    // https://leetcode.com/problems/maximum-subarray    
-    public int maxSubArray(int[] nums) {
-        if(nums.length == 1) return nums[0];
-        int sum = 0; int max = Integer.MIN_VALUE;
-        for(int i : nums){
-            sum+=i;
-            
-            max = Math.max(max, sum);
-            if(sum<0) sum = 0;
-        }
-        return max;
-    }
+    /** 
+     * the above ques is for finding largest contiguous sum with m partitions
+     * this one below is for minimizing the max sum after partitioning into k subarrays
+     * both are same
+     * 
+     * https://www.geeksforgeeks.org/split-the-given-array-into-k-sub-arrays-such-that-maximum-
+     * sum-of-all-sub-arrays-is-minimum/
+    */
 
 
+    /// TRICKY
     /** 
      * POINTS :
      * 1 FILL DP ARRAY FOR FIRST K ELS, THEN FOR OTHER ELS
@@ -248,6 +211,9 @@ public class Partition{
         return dp[n-1];
     }
 
+
+    ////// SUBSETS
+    
     // https://leetcode.com/problems/partition-equal-subset-sum/
     // size, first row
     public boolean canPartition(int[] nums) {
@@ -300,6 +266,8 @@ public class Partition{
         }
         return false;
     }
+
+    // above with dp?
 
     // ALL PALINDROMIC SUBSTRINGS TILL END?
     public List<List<String>> partition(String s) {
@@ -381,8 +349,6 @@ public class Partition{
     // similar 
     // https://leetcode.com/problems/partition-to-k-equal-sum-subsets/
 
-
-
     /** 
      * POINTS : 
      * 1 USE l<=n
@@ -421,7 +387,7 @@ public class Partition{
     }
 
     
-    // https://leetcode.com/problems/partition-array-for-maximum-sum
+    // https://leetcode.com/problems/partition-array-for-maximum-sum (dp based)
 
     // https://leetcode.com/problems/partition-labels/
 

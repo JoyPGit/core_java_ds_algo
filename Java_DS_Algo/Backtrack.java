@@ -4,19 +4,67 @@ import java.util.*;
 
 public class Backtrack {
 
+    // 6 june
+    // multiple jumps allowed
+    // https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
+    boolean solveNJumpsRatMaze(int[][] maze) {
+        int n = maze.length;
+        int[][] visited = new int[n][n];
+        
+        System.out.println("in n rat multiple jumps");
+        if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
+
+        Utility.printMatrix(visited);
+        System.out.println("sol found");
+        return true;
+    }
+
+    boolean solveNRatMazeUtil(int[][] maze, int[][] visited, int row, int col) {
+        if (isNSafeRatMaze(maze, row, col)) {
+            if(row == maze.length-1 && col == maze[0].length-1) return true;
+
+            // same as graph
+            visited[row][col] = 1;
+
+            for (int i = 1; i <= maze[row][col]; i++) {
+                if (solveNRatMazeUtil(maze, visited, row + i, col)) return true;
+                if (solveNRatMazeUtil(maze, visited, row, col + i)) return true;
+            }
+
+            visited[row][col] = 0;// backtrack
+            return false;
+        }
+        return false;
+    }
+
+    boolean isNSafeRatMaze(int[][] grid, int rowIndex, int colIndex) {
+        if(rowIndex >= 0 && rowIndex < grid.length 
+        && colIndex >= 0 && colIndex < grid[0].length
+        && grid[rowIndex][colIndex] != 0) return true;
+        return false;
+    }
+
+    
     /**  
      * sorting is necessary to remove [7,1]
      * [1,7],[2,6],[2,1,5],[7,1]]
      * 
-     * if individual duplicates are to be removed, use hashset
-     * for dup sets, use res.contains(curr)
+     * for combinations and subsets, always use Arrays.sort()
+     * for permutations, use visited and start from 0
+     * for sum always use exit condition(sum>target)
+     * 
+     * for no duplicates, use nums[i] == num[i-1] (sort already used)
+     * for reusing same el, recur from i
+     * 
+     * for no duplicate sets, use global hashset or !res.contains()
+     * 
      * 
      * subsets-ii, all subsets w/o dups
      * (sort and check if same, continue)
      * 
      * comb-ii, 
      * no dup sets (res.contains)
-     * no dup in the same set(sort and run check)
+     * no dup in the same set (sort and run check)
      * 
      * perm-i
      * 
@@ -72,9 +120,9 @@ public class Backtrack {
      *  btk(){
      *   res.add;
      *   for(){
-     *    add(i)                   //ADD
-     *    btk(i+1)
-     *    remove(list.size()-1)    //REMOVE
+     *    add(i)                   // ADD
+     *    btk(i+1)                 // imp index+1
+     *    remove(list.size()-1)    // REMOVE
      *   }
      *  }
      * 
@@ -83,7 +131,7 @@ public class Backtrack {
      * ELSE START WITH i
      * -----------------------------------------
      * WHENEVER UNIQUE,
-     * ARRAYS.SORT(NUMS) && !RES.CONTAINS(LIST) 
+     * !RES.CONTAINS(LIST) 
      * -----------------------------------------
      * Arrays.sort(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE 
      *  COUNTED SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7
@@ -114,80 +162,6 @@ public class Backtrack {
     */
 
     //28 apr
-
-    /** 
-     * POINTS:
-     * 1 SWAP EACH CHAR WITH ALL ITS SUCCEEDING INDEXES
-     * 2 START FROM index = 0 
-     * 3 FOR SUBSEQUENT ITERATION index+1
-     * 4 
-    */
-    // all permutations
-    // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
-    // List<List<String>> 
-    void allPermutations(String str){
-        char[] ch = str.toCharArray();
-        permHelper(ch, 0);
-    }
-
-    void permHelper(char[] ch, int index){
-        if(index == ch.length) System.out.println(new String(ch));
-        // swap with itself, so is starts from index
-        for(int i = index; i<ch.length; i++){
-            swap(ch, index, i);  
-            permHelper(ch, index+1);
-            // swapping back to prreserve the original order of string chars
-            swap(ch, index, i);
-        }
-    }
-
-    void swap(char[] ch, int a, int b){
-        char temp = ch[a];
-        ch[a] = ch[b];
-        ch[b] = temp;
-    }
-
-
-    // Subsets : https://leetcode.com/problems/subsets/
-    /** 
-     * use BACKTRACKING FORMAT
-     * btk(){
-     *  add;
-     *  for(){
-     *   add
-     *   btk
-     *   remove   
-     *  }
-     * }
-     * 
-     * 
-     * empty is copied and added
-     * list refers to the original list always, 
-     * whenever we add, we pass the current state of list to the consructor
-     * which copies the state and adds the new cloned ArrayList
-     * all operations are done on the original list, 
-     * we add different states of it to res
-     * 
-     * IF SUBSETS OF SIZE K ARE NEEDED, ADD CHECK
-     * IF(SIZE == K) RES.ADD(LIST)
-     * IF(I = ARR.LENGTH-1) RES.ADD(LIST)
-    */
-    public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        backtrack(res, list, nums, 0);
-        Utility.printListOfLists(res);
-        return res;
-    }
-    
-    private void backtrack(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
-        res.add(new ArrayList<>(list));
-        for(int i = start; i < nums.length; i++){
-            list.add(nums[i]);
-            backtrack(res, list, nums, i + 1);
-            list.remove(list.size() - 1);
-        }
-    }
 
     // ["a", "abc", "d", "de", "def"]
     // https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters
@@ -222,10 +196,108 @@ public class Backtrack {
         return false;
     }
 
-    // Subsets II (contains duplicate elements) : 
+    /** 
+     * POINTS:
+     * 1 SWAP EACH CHAR WITH ALL ITS SUCCEEDING INDEXES
+     * 2 START FROM index = 0 
+     * 3 FOR SUBSEQUENT ITERATION index+1
+     * 4 
+    */
+    // all permutations
+    // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+    // List<List<String>> 
+    void allPermutations(String str){
+        char[] ch = str.toCharArray();
+        permHelper(ch, 0);
+    }
+
+    void permHelper(char[] ch, int index){
+        if(index == ch.length) System.out.println(new String(ch));
+        // swap with itself, so is starts from index
+        for(int i = index; i<ch.length; i++){
+            swap(ch, index, i);  
+            permHelper(ch, index+1);
+            // swapping back to prreserve the original order of string chars
+            swap(ch, index, i);
+        }
+    }
+
+    void swap(char[] ch, int a, int b){
+        char temp = ch[a];
+        ch[a] = ch[b];
+        ch[b] = temp;
+    }
+
+
+    
+    /** 
+     * use BACKTRACKING FORMAT
+     * btk(){
+     *  add;
+     *  for(){
+     *   add
+     *   btk
+     *   remove   
+     *  }
+     * }
+     * 
+     * 
+     * empty is copied and added
+     * list refers to the original list always, 
+     * whenever we add, we pass the current state of list to the consructor
+     * which copies the state and adds the new cloned ArrayList
+     * all operations are done on the original list, 
+     * we add different states of it to res
+     */
+
+    /**
+     * 
+     * SUBSETS VS PERMUTATIONS VS COMBINATIONS:
+     * 1 res.add(); add only when size == length; size == length
+     * 2 start from index, start from 0; start from index
+     * 3 for no dups, use nums[i] == nums[i-1]; Arrays .sort;  for perms use visited set
+     * 4 for reuse, recur from same index, but add exit condition
+     * 
+     * perm start from 0 , so visited
+     * comb, start from index, so sort and nums[i] == nums[i-1]
+     * 
+     * IF SUBSETS OF SIZE K ARE NEEDED, ADD CHECK
+     * IF(SIZE == K) RES.ADD(LIST)
+     * IF(I = ARR.LENGTH-1) RES.ADD(LIST)
+     * 
+     * 
+     * in subsets and combinations it's better to sort as [1,2,5] and [5,2,1] are same.
+     * so sorting helps avoid duplication of subsets.
+    */
+    // https://leetcode.com/problems/subsets/
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+        backtrack(res, list, nums, 0);
+        Arrays.sort(nums);
+
+        Utility.printListOfLists(res);
+        return res;
+    }
+    
+    private void backtrack(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
+        res.add(new ArrayList<>(list));
+
+        for(int i = start; i < nums.length; i++){
+            list.add(nums[i]);
+            backtrack(res, list, nums, i + 1);
+            list.remove(list.size() - 1);
+        }
+    }
+
+
+    // Subsets II  : 
     /** can use a HashMap to keep track
      * or
      * if(i > start && nums[i] == nums[i-1]) continue;
+     * 
+     * no duplicate subsets, use global hashset or res.contains
+     * sort must
      */
     // https://leetcode.com/problems/subsets-ii/
     public List<List<Integer>> subsetsWithDup(int[] nums) {
@@ -237,9 +309,9 @@ public class Backtrack {
     }
     
     private void btk2(List<List<Integer>> res, List<Integer> list, int [] nums, int start){
-        res.add(new ArrayList<>(list));
+        if(!res.contains(list)) res.add(new ArrayList<>(list));
         for(int i = start; i < nums.length; i++){
-            if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
+            // if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
             list.add(nums[i]);
             btk2(res, list, nums, i + 1);
             list.remove(list.size() - 1);
@@ -249,89 +321,87 @@ public class Backtrack {
     
     // Given a collection of distinct integers, return all possible permutations
     /** 
-     * what's the diff w.r.t combinations?
+     * what's the diff w.r.t combinations and subsets?
      * 1 Arrays.sort(nums) is not used
      * 
      * 2 only add when size == nums.length, 
      * 
-     * 3 start from 0th index always, AND THE CHECK IS NOT ON INDEX
-     *   RATHER ON THE PRESENCE OF THE EL, AS WE ITERATE FROM START
-     *   EVERY TIME
+     * 3 start from 0th index always, AND CHECK IF VISITED
      * 
-     * 4 IMP IF NO HASHMAP; LIST.CONTAINS WORKS
-     *   use hashmap
-     *   (or) nums[i] == nums[i-1] && i>start
+     * 4 IMP USE visited
+     *  IF NO HASHMAP; LIST.CONTAINS WORKS
+     *  use hashmap
+     *  FOR SUBSETS nums[i] == nums[i-1] && i>start
+     * 
+     * 5 IN SUBSETS, NO VISITED SET IS MAINTAINED
+     * 
+     * no sort, start from 0, add when size == length, use visited setl visited[i] == 0 continue
+     * in perm no duplicate indexes are allowed, so for unique perms, use a global hashset
      */
-    // Permutations : https://leetcode.com/problems/permutations/
+    // https://leetcode.com/problems/permutations/
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
-        backtrack(res, list, nums);
+        int[] visited = new int[nums.length];
+        backtrack(res, list, nums, visited);
         return res;
     }
     
-    private void backtrack(List<List<Integer>> res, List<Integer> list, int [] nums){
+    private void backtrack(List<List<Integer>> res, List<Integer> list, int [] nums, int[] visited){
         if(list.size() == nums.length) res.add(new ArrayList<>(list));
         for(int i = 0; i < nums.length; i++){
-            if(list.contains(nums[i])) continue; //no duplicates, if present don't add
+
+            // if(list.contains(nums[i])) continue; //no duplicates, if present don't add
+            if(visited[i] != 0) continue;
+            visited[i] = 1;
             list.add(nums[i]);
-            backtrack(res, list, nums);
+
+            backtrack(res, list, nums, visited);
             list.remove(list.size() - 1);
+            visited[i] = 0;
         }
     } 
-
-    // Permutations II (contains duplicates) : 
-    // return all possible unique permutations.
-    /**  
-     * 1 if(used[i] || (i>0 && nums[i] == nums[i-1]) && !used[i - 1]) continue;
-     * https://ibb.co/Sw0fgk5
-     * 
-     * IN SHORT, IF PRECEDING VAL IS SAME AND IS UNUSED, WE CAN'T PROCEED
-     * AS THE PRECEDING VAL NEEDS TO BE SELECTED FIRST
-     * 
-     * The difficulty is to handle the duplicates.
-     * With input as [1a, 1b, 2a] (duplicate 1),
-     * If we don't handle the duplicates, 
-     * the result will be: [1a, 1b, 2a], [1b, 1a, 2a]..,
-     * so we must make sure 1a goes before 1b to avoid duplicates
-     * 
-     * 2 By using nums[i-1]==nums[i] && !used[i-1], 
-     * we can make sure that 1b is not chosen before 1a
-     * 
-     * 3 similar to subsets, extra operation of setting used[i] as true and false in the end
-     */
+ 
+    /////////////// UNIQUE -> USE HASHSET
+    /** 
+     * instead of res.contains, use a HashSet (like graph all paths)
+    */
+    // Permutations II (contains duplicates) : easier than below
     // https://leetcode.com/problems/permutations-ii/
-    public List<List<Integer>> permuteUnique(int[] nums) {
+    HashSet<List<Integer>> set = new HashSet<>();
+    public List<List<Integer>> permuteUnique1(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        boolean[] used = new boolean[nums.length];
-        Arrays.sort(nums);
-        backtrack4(res, list, nums, used);
-        System.out.println(res);
-        return res;
+        List<Integer> curr = new ArrayList<>();
+        
+        int[] visited = new int[nums.length];
+        
+        helper(res, curr, nums, visited);
+        return new ArrayList<>(set);
+        // return res;
     }
     
-    private void backtrack4(List<List<Integer>> res, List<Integer> list, 
-    int [] nums, boolean [] used){
-        // System.out.println(list);
-        if(list.size() == nums.length){
-            res.add(new ArrayList<>(list));
-        } else{
-            for(int i = 0; i < nums.length; i++){
-                if(used[i] || (i>0 && nums[i] == nums[i-1]) && !used[i - 1]) continue;
-                // set, add
-                used[i] = true; 
-                list.add(nums[i]);
+    void helper(List<List<Integer>> res, List<Integer> curr, int[] nums, int[] visited){
+        if(curr.size() == nums.length){
+        // !res.contains(curr)) {
+            // res.add(new ArrayList<>(curr));
+            set.add(new ArrayList<>(curr));
+        }
+        
+        for(int i = 0; i<nums.length; i++){
+            
+            if(visited[i] == 0){
+                visited[i] = 1;
+                curr.add(nums[i]);
+                
+                helper(res, curr, nums, visited);
 
-                backtrack4(res, list, nums, used);
-
-                // unset, remove
-                used[i] = false; 
-                list.remove(list.size() - 1);
-            }
+                visited[i] = 0;
+                curr.remove(curr.size()-1);
+            }            
         }
     }
 
+    
     // permute with duplicates
     // https://www.youtube.com/watch?v=nYFd7VHKyWQ
     
@@ -340,8 +410,10 @@ public class Backtrack {
      * combinations of size k are reqd; add a check for list.size
      * compare this ques and permute-i
      * 
+     * combinations are similar to subsets, 
+     * add when size = k, in subsets add at start(empty is also reqd)
+     * 
      */ 
-
     // https://leetcode.com/problems/combinations/
     public List<List<Integer>> combine(int n, int k) {
         int[] nums = new int[n];
@@ -361,7 +433,13 @@ public class Backtrack {
         } 
     }
 
+    
 
+    /** 
+     * for sum always add an exit condition
+     * how to reuse? recur from i 
+     * 
+    */
     // can reuse the same element, start with i again in btk()
     // select only higher indexes
     // https://leetcode.com/problems/combination-sum/
@@ -391,12 +469,40 @@ public class Backtrack {
         }
     }
 
+    /**
+     * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
+     * use BACKTRACKING FORMAT 
+     * 
+     * 1 dfs(){ 
+     *  res.add; 
+     *  for(){ 
+     *    add(i) //ADD 
+     *    dfs(i+1)
+     *    remove(list.size()-1) //REMOVE 
+     *   }
+     * }
+     * 
+     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE COUNTED
+     * SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7 
+     * 
+     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
+     * 4 START WITH i = start AND USE i NOT start 
+     * 5 FOR NO DUPLICATES -> !res.contains(list)
+     */
 
-     /** POINTS : 
+    /** POINTS : 
      * 1 FOR REMOVING DUPLICATES, SORT THE ARRAY AND USE CHECK 
      * if(i > start && nums[i] == nums[i-1]) continue;
      * 
      * 2 i = start
+     * same as subsets ii
+     *
+     * there is a diff b/w reuse and duplicate 
+     * reuse is when same el is reused, duplicate is when els are repeated (diff index)
+     * reuse : recur from i 
+     * no dups : sort and nums[i] == nums[i-1] 
+     * sum : exit condn
+     * unique combination : sort
      * 
     */
     // Combination Sum II (can't reuse same element) : 
@@ -405,20 +511,24 @@ public class Backtrack {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> list = new ArrayList<>();
         Arrays.sort(nums);
-        backtrack2(res, list, nums, target, 0);
+        backtrack2(res, list, nums, target, 0, 0);
         return res;
         
     }
     
     private void backtrack2(List<List<Integer>> res, List<Integer> list, 
-    int [] nums, int target, int start){
+    int [] nums, int target, int sum, int start){
         if(target < 0) return;
+        
         if(target == 0) res.add(new ArrayList<>(list));
+
         for(int i = start; i < nums.length; i++){
-            if(i > start && nums[i] == nums[i-1]) continue; // skip duplicates
+            
             list.add(nums[i]);
-            backtrack2(res, list, nums, target - nums[i], i + 1);
+            sum+=nums[i];
+            backtrack2(res, list, nums, target, sum, i + 1);
             list.remove(list.size() - 1); 
+            sum-=nums[i];
         }
     } 
 
@@ -450,7 +560,7 @@ public class Backtrack {
             res.add(new ArrayList<>(curr));
         }
         
-        // <=str.length()
+        // <=str.length() substr property one index ahead
         for(int i = index+1; i<=str.length(); i++){
             if(isPalindrome(str.substring(index, i))){
                 curr.add(str.substring(index, i)); 
@@ -494,48 +604,6 @@ public class Backtrack {
             }
         }
         return countSplit;
-    }
-
-    /////////////// UNIQUE -> USE HASHMAP
-    /**
-     * https://www.geeksforgeeks.org/all-unique-combinations-whose-sum-equals-to-k/
-     * use BACKTRACKING FORMAT 
-     * 
-     * 1 dfs(){ res.add; for(){ add(i) //ADD dfs(i+1)
-     * remove(list.size()-1) //REMOVE } }
-     * 
-     * 2 ARRAYS.SORT(NUMS) HELPS GET RID OF DUPLCATES ELSE (1,7) & (7,1) ARE COUNTED
-     * SEPARATELY, IF ARRAY IS SORTED, 1 WILL ALWAYS BE BEFORE 7 
-     * 
-     * 3 ADDITION AND REMOVAL INSIDE FOR LOOP, 
-     * 4 START WITH i = start AND USE i NOT start 
-     * 5 FOR NO DUPLICATES -> !res.contains(list)
-     */
-
-    int uniqueCombinationsSumK(int[] arr, int k) {
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        // Arrays.sort(arr);
-        int start = 0;
-        int sum = 0;
-        btk(res, list, arr, k, start, sum);
-        System.out.println(res);
-        return res.size();
-    }
-
-    void btk(List<List<Integer>> res, List<Integer> list, int[] arr, int k, int start, int sum) {
-        if (sum > k) return;
-
-        if(k == sum && !res.contains(list)){
-            res.add(new ArrayList<>(list)); 
-            return;
-        }
-        
-        for (int i = start; i < arr.length; i++) {
-            list.add(arr[i]);
-            btk(res, list, arr, k, i + 1, sum + arr[i]);
-            list.remove(list.size() - 1);
-        }
     }
 
 
@@ -608,39 +676,6 @@ public class Backtrack {
             }
         }
         return false;
-    }
-
-
-    // https://leetcode.com/problems/number-of-matching-subsequences
-    public int numMatchingSubseq(String S, String[] words) {
-        HashSet<String> set = new HashSet<>();
-        List<Character> list = new ArrayList<>();
-        int count = 0;
-        char[] ch = S.toCharArray();
-        btk(set, list, ch, 0);
-        // System.out.println(set);
-        for(String s: words){
-            if(set.contains(s))count++;
-        }
-        System.out.println("count is "+ count);
-        return count;
-    }
-    
-    void btk(HashSet<String> set, List<Character> list, char[] ch, int index){
-        set.add(stringConvert(new ArrayList<>(list)));
-        
-        for(int i = index; i<ch.length; i++){
-            list.add(ch[i]);
-            btk(set, list, ch, i+1);
-            list.remove(list.size()-1);
-        }
-    }
-    
-    String stringConvert(List<Character> list){
-        String s = "";
-        for(int i =0; i<list.size(); i++) s+=list.get(i);
-        // System.out.println(s);
-        return s;
     }
 
     
@@ -796,6 +831,7 @@ public class Backtrack {
         return true;
     }
     
+
     /////////////////////// WORD LADDER, SEARCH
     /** 
 	 * POINTS : 
@@ -827,22 +863,22 @@ public class Backtrack {
                 char[] curr = (q.removeFirst()).toCharArray();
                 
                 for(int i =0; i<curr.length; i++){
-                    char holder = curr[i];//2
+                    char holder = curr[i]; // 2
                     
                     for(char c ='a'; c<='z'; c++){
-                        if(c == holder) continue;//3
+                        if(c == holder) continue; // 3
                         curr[i] = c;
                         String after = String.valueOf(curr);
                         if(after.equals(endWord)) return distance+1;
                         if(set.contains(after)) {
                             // System.out.print(after+", ");
-                            q.addLast(after); set.remove(after);//4
+                            q.addLast(after); set.remove(after); // 4
                         }
                     }
-                    curr[i] = holder;//5
+                    curr[i] = holder; // 5
                 }   
             }
-            distance++;//6
+            distance++; // 6
         }
         return 0;
 	}
@@ -878,18 +914,22 @@ public class Backtrack {
     }
     
     boolean dfs(char[][] board, int row, int col, String word, int index){
-        // proceed till index == word.length() 
         if(index == word.length()) return true;
         
         if(isSafeBoard(board, row, col, word.charAt(index))){
             char temp = word.charAt(index);
-            board[row][col] = ' '; // 2
+            // to avoid inf loop
+            board[row][col] = '.'; // 2
+
             boolean found = dfs(board, row+1, col, word, index+1) // 3
             || dfs(board, row-1, col, word, index+1)
             || dfs(board, row, col+1, word, index+1)
             || dfs(board, row, col-1, word, index+1);
+
             if(found) return true; // 4
+
             board[row][col] = temp; // 5
+            return false;
         }
         return false;
     }
@@ -900,7 +940,8 @@ public class Backtrack {
           && board[row][col] == ch) return true;
         return false;
     }
-
+    
+    // dfs, 
     // https://leetcode.com/problems/all-paths-from-source-to-target/
 	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
 
@@ -1150,46 +1191,7 @@ public class Backtrack {
         return true;
     }
 
-    // 6 june
-    // multiple jumps allowed
-    // https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/
-    boolean solveNJumpsRatMaze(int[][] maze) {
-        int n = maze.length;
-        int[][] visited = new int[n][n];
-        
-        System.out.println("in n rat multiple jumps");
-        if (!solveNRatMazeUtil(maze, visited, 0, 0)) return false;
-
-        Utility.printMatrix(visited);
-        System.out.println("sol found");
-        return true;
-    }
-
-    boolean solveNRatMazeUtil(int[][] maze, int[][] visited, int row, int col) {
-        if (isNSafeRatMaze(maze, row, col)) {
-            if(row == maze.length-1 && col == maze[0].length-1) return true;
-
-            // same as graph
-            visited[row][col] = 1;
-
-            for (int i = 1; i <= maze[row][col]; i++) {
-                if (solveNRatMazeUtil(maze, visited, row + i, col)) return true;
-                if (solveNRatMazeUtil(maze, visited, row, col + i)) return true;
-            }
-
-            visited[row][col] = 0;// backtrack
-            return false;
-        }
-        return false;
-    }
-
-    boolean isNSafeRatMaze(int[][] grid, int rowIndex, int colIndex) {
-        if(rowIndex >= 0 && rowIndex < grid.length 
-        && colIndex >= 0 && colIndex < grid[0].length
-        && grid[rowIndex][colIndex] != 0) return true;
-        return false;
-    }
-   
+       
     
     /** 
      * POINTS :
@@ -1258,27 +1260,6 @@ public class Backtrack {
     // https://leetcode.com/problems/knight-probability-in-chessboard/discuss/
     // 113954/Evolve-from-recursive-to-dpbeats-94
 
-    public List<List<Integer>> combinationSum5(int[] candidates, int target) {
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> curr = new ArrayList<>();
-        
-        btk5(res, curr, candidates, target, 0, 0);
-        System.out.println("res "+res);
-        return res;
-    }
-    
-    
-    void btk5(List<List<Integer>> res, List<Integer> curr, int[] arr, int target, int start, int sum){
-        if(sum == target){
-            if(!res.contains(new ArrayList<>(curr))) res.add(new ArrayList<>(curr));
-        }
-        
-        for(int i = start; i<arr.length; i++){
-            curr.add(arr[i]);
-            btk(res, curr, arr, target, i+1, sum+arr[i]);
-            curr.remove(curr.size()-1);
-        }
-    }
 
     // need to do dfs for every node, stuck when node doesn't have entry. 
     // Use for loop as in dfs of graph

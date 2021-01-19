@@ -180,6 +180,138 @@ public class DP {
         return dp[m-1][n-1];
     }
 
+    /////////////////////////// STAIR, UNIQUE PATH
+
+    int countStairs = 0;
+    //jumps of 1,2
+    int stairs(int n){
+        if(n<0) return 0;
+        if(n==0) {
+            countStairs++;
+            return 0;
+        }
+        return stairs(n-1) + stairs(n-2) + stairs(n-3);
+    }
+
+    //steps are only of 1,2 or 3
+    int staircase(int n){
+        int[] dp = new int[n+1];
+        
+        dp[0] = 1; dp[1] = 1; dp[2] = 2;
+        for(int i=3; i<=n;i++){
+            dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
+        }
+
+        return dp[n];
+    }
+
+    /** 
+     * 
+     * can start from either 0 or 1st index, hence recurrence
+     * 1 USED RECURSION AND THEN APLIED MEMOIZATION
+     * f(i) = min(f(i+1), f(i+2))
+     * 
+     * 2 MEMOIZATION
+     * if(dp[index]!=0) return dp[index]
+     * return dp[index] = min
+     * 
+     * 3 NEVER FORGET BASE CONDITON
+     * if(index >= cost.length) return 0;
+     * if(dp[index]!=0) return dp[index];
+     * 
+     * 
+     */
+    // https://leetcode.com/problems/min-cost-climbing-stairs
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        int[] dp = new int[n]; 
+        return Math.min(stairsHelper(cost, 0, dp), stairsHelper(cost, 1, dp)); // 1
+    }
+    
+    int stairsHelper(int[] cost, int index, int[] dp){
+        if(index >= cost.length) return 0; // 2
+        if(dp[index]!=0) return dp[index]; // 3
+        int min = Integer.MAX_VALUE-100;
+        // 4 i=0 same index, causes overflow, i determines jump length
+        for(int i = 1; i<3; i++){         
+            // 5 cost of current
+            min = Math.min(min, cost[index] + stairsHelper(cost, index+i, dp)); 
+        }
+        return dp[index] = min; // 6
+    }
+
+    /** 
+     * reach nth index, starting from 0
+     * initialize dp[0] and dp[1]
+     * the last step's cost is also included if it is used for climbing i.e. reaching to n
+    */
+    // https://leetcode.com/problems/min-cost-climbing-stairs/
+    public int minCostClimbingStairsDP(int[] cost) {
+        int n = cost.length;
+        
+        int[] dp = new int[n+1];
+        
+        dp[0] = cost[0]; dp[1] = cost[1];
+        
+        for(int i =2; i<n; i++){
+            dp[i] = Math.min(dp[i-2]+cost[i], dp[i-1]+cost[i]);
+        }
+        
+        dp[n] = Math.min(dp[n-3]+cost[n-1], dp[n-2]);
+        return dp[n];
+    }
+
+    ////////////// JUMP GAME
+
+    // check partition
+    // https://leetcode.com/problems/jump-game-ii/
+    public int jump(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        return jumpHelper(nums, 0, dp);
+    }
+    
+    int jumpHelper(int[] nums, int index, int[] dp){
+        if(index>=nums.length-1) return 0; // base condn
+        if(dp[index]!=0)return dp[index];
+        
+        int min = Integer.MAX_VALUE-10000;
+        for(int i = 1; i<=nums[index]; i++){ // i value
+            min = Math.min(min, 1 + jumpHelper(nums, index+i, dp)); // cost
+        }
+        return dp[index] = min;
+    }
+
+    /**
+     * https://www.youtube.com/watch?v=cETfFsSTGJI
+     * points
+     * 1 assign infinity to dp index 1 till end 
+     * 2 for i =1 loop j from j=0 till i
+     * 3 if arr[j]+j >=i checking if we can reach index i from index j
+     * if yes and dp[i] > dp[j]+1, we update
+     */
+    int jumpDP(int[] arr) {
+        // int[] result = new int[arr.length];
+        int n = arr.length;
+        int []dp = new int[n];
+        dp[0] = 0;
+        for(int i=1; i < arr.length ; i++){
+            dp[i] = Integer.MAX_VALUE-1;
+        }
+        
+        for(int i=1; i < arr.length; i++){
+            for(int j=0; j < i; j++){
+                // if can cross i, check jumps(dp[j] + 1)
+                if(arr[j] + j >= i && dp[i] > dp[j] + 1){
+                    // result[i] = j;
+                    dp[i] = dp[j] + 1;
+                }
+            }
+        }
+        return dp[n-1];
+    }
+
+
     /////////////////////////// HOUSE ROBBER
     /**
      * 1 add boundary condition check for n= 0 and 1 
@@ -376,137 +508,7 @@ public class DP {
     }
     
 
-    /////////////////////////// STAIR, UNIQUE PATH
-
-    int countStairs = 0;
-    //jumps of 1,2
-    int stairs(int n){
-        if(n<0) return 0;
-        if(n==0) {
-            countStairs++;
-            return 0;
-        }
-        return stairs(n-1) + stairs(n-2) + stairs(n-3);
-    }
-
-    //steps are only of 1,2 or 3
-    int staircase(int n){
-        int[] dp = new int[n+1];
-        
-        dp[0] = 1; dp[1] = 1; dp[2] = 2;
-        for(int i=3; i<=n;i++){
-            dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
-        }
-
-        return dp[n];
-    }
-
-    /** 
-     * 
-     * can start from either 0 or 1st index, hence recurrence
-     * 1 USED RECURSION AND THEN APLIED MEMOIZATION
-     * f(i) = min(f(i+1), f(i+2))
-     * 
-     * 2 MEMOIZATION
-     * if(dp[index]!=0) return dp[index]
-     * return dp[index] = min
-     * 
-     * 3 NEVER FORGET BASE CONDITON
-     * if(index >= cost.length) return 0;
-     * if(dp[index]!=0) return dp[index];
-     * 
-     * 
-     */
-    // https://leetcode.com/problems/min-cost-climbing-stairs
-    public int minCostClimbingStairs(int[] cost) {
-        int n = cost.length;
-        int[] dp = new int[n]; 
-        return Math.min(stairsHelper(cost, 0, dp), stairsHelper(cost, 1, dp)); // 1
-    }
     
-    int stairsHelper(int[] cost, int index, int[] dp){
-        if(index >= cost.length) return 0; // 2
-        if(dp[index]!=0) return dp[index]; // 3
-        int min = Integer.MAX_VALUE-100;
-        // 4 i=0 same index, causes overflow, i determines jump length
-        for(int i = 1; i<3; i++){         
-            // 5 cost of current
-            min = Math.min(min, cost[index] + stairsHelper(cost, index+i, dp)); 
-        }
-        return dp[index] = min; // 6
-    }
-
-    /** 
-     * reach nth index, starting from 0
-     * initialize dp[0] and dp[1]
-     * the last step's cost is also included if it is used for climbing i.e. reaching to n
-    */
-    // https://leetcode.com/problems/min-cost-climbing-stairs/
-    public int minCostClimbingStairsDP(int[] cost) {
-        int n = cost.length;
-        
-        int[] dp = new int[n+1];
-        
-        dp[0] = cost[0]; dp[1] = cost[1];
-        
-        for(int i =2; i<n; i++){
-            dp[i] = Math.min(dp[i-2]+cost[i], dp[i-1]+cost[i]);
-        }
-        
-        dp[n] = Math.min(dp[n-3]+cost[n-1], dp[n-2]);
-        return dp[n];
-    }
-
-    ////////////// JUMP GAME
-
-    // check partition
-    // https://leetcode.com/problems/jump-game-ii/
-    public int jump(int[] nums) {
-        int n = nums.length;
-        int[] dp = new int[n];
-        return jumpHelper(nums, 0, dp);
-    }
-    
-    int jumpHelper(int[] nums, int index, int[] dp){
-        if(index>=nums.length-1) return 0; // base condn
-        if(dp[index]!=0)return dp[index];
-        
-        int min = Integer.MAX_VALUE-10000;
-        for(int i = 1; i<=nums[index]; i++){ // i value
-            min = Math.min(min, 1 + jumpHelper(nums, index+i, dp)); // cost
-        }
-        return dp[index] = min;
-    }
-
-    /**
-     * https://www.youtube.com/watch?v=cETfFsSTGJI
-     * points
-     * 1 assign infinity to dp index 1 till end 
-     * 2 for i =1 loop j from j=0 till i
-     * 3 if arr[j]+j >=i checking if we can reach index i from index j
-     * if yes and dp[i] > dp[j]+1, we update
-     */
-    int jumpDP(int[] arr) {
-        // int[] result = new int[arr.length];
-        int n = arr.length;
-        int []dp = new int[n];
-        dp[0] = 0;
-        for(int i=1; i < arr.length ; i++){
-            dp[i] = Integer.MAX_VALUE-1;
-        }
-        
-        for(int i=1; i < arr.length; i++){
-            for(int j=0; j < i; j++){
-                // if can cross i, check jumps(dp[j] + 1)
-                if(arr[j] + j >= i && dp[i] > dp[j] + 1){
-                    // result[i] = j;
-                    dp[i] = dp[j] + 1;
-                }
-            }
-        }
-        return dp[n-1];
-    }
-
     /////////////////////////// PARTITION
     // LIKE CLIMBING STAIRS
 
@@ -1879,6 +1881,7 @@ public class DP {
         System.out.println("longest length repeated non-overlapping susbstring is "+max);
         return max;
     }
+
     // if similar, refer diagonally upper el
     /** 
      * size m+1, no filling row col
@@ -2283,7 +2286,7 @@ public class DP {
     // https://leetcode.com/problems/maximal-square/
     public int maximalSquare(char[][] matrix) {
         int m = matrix.length;
-        if(m==0) return 0;
+        if(m == 0) return 0;
         
         int n = matrix[0].length;
         int[][] dp = new int[m+1][n+1];//

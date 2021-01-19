@@ -197,38 +197,6 @@ public class StackPractice {
     // https://leetcode.com/problems/next-greater-element-ii/
 
 
-    /** 
-     * POINTS :
-     * 1 RES ARRAY IS OF SIZE n-k+1
-     * 2 DON'T FORGET TO REMOVE THE OUTGOING EL
-     * 3 TWO ITERATIONS ONE till k ELS
-     * AND THEN FROM k TILL n
-     * 4 HERE STORED INDEXES, CAN STORE ELS ALSO
-     * 
-    */
-    // https://leetcode.com/problems/sliding-window-maximum/
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        int left = 0, n = nums.length, index = 0;
-        int[] res = new int[n-k+1];
-        
-        Deque<Integer> q = new LinkedList<>();
-        
-        for(int i =0; i<k; i++){
-            while(q.size()!=0 && q.getLast()<nums[i]) q.removeLast();
-            q.addLast(nums[i]);
-        }
-        
-        res[index++] = q.getFirst();
-        
-        for(int i =k; i<n; i++){
-            // remove outgoing index el
-            if(q.getFirst() == nums[i-k]) q.removeFirst();
-            while(q.size()!=0 && q.getLast()<nums[i]) q.removeLast();
-            q.addLast(nums[i]);
-            res[index++] = q.getFirst();
-        }
-        return res;
-    }
 
     // https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
     // https://www.techiedelight.com/inplace-remove-all-occurrences-ab-c-string/
@@ -853,10 +821,8 @@ public class StackPractice {
         int[] nums = // {7, 2, 4};
         {9,10,9,-7,-4,-8,2,-6};
 
-                // { 1, -1 };
-        // {1,3,-1,-3,5,3,6,7};
-        int k = 5;//1;// 3;//2
-        // stack.maxSlidingWindow(nums, k);
+        // { 1, -1 };
+
 
 
         int[] stackMin = {2,3,1,4,5,2};

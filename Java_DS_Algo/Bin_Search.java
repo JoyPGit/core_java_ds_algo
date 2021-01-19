@@ -570,25 +570,6 @@ public class Bin_Search {
         return result;
     }
 
-    /**  
-     * 2 cases:
-     * 1 if i>first , update both
-     * 2 if i> second and i!= first, update second
-    */
-    // https://www.geeksforgeeks.org/find-second-largest-element-array/
-    int secondLargest(int[] arr){
-        int first = 0; int second = 0;
-        for(int i : arr){
-            if(i > first) {
-                first = i;
-                second = first;
-            }
-            else if(i > second && i!= first) second = i;
-        }
-        if(second == Integer.MIN_VALUE) System.out.println("no 2nd min");
-        return second;
-    }
-
     
     /**
      * POINTS : 
@@ -659,34 +640,95 @@ public class Bin_Search {
     */
     // https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
     public int shipWithinDays(int[] weights, int D) {
-        int sum = 0; int max = 0;
-        for(int i : weights){
-            sum+=i;
+        int n = weights.length;
+        int sum  = 0; int max = 0;
+        for(int i : weights) {
             max = Math.max(max, i);
+            sum+=i;
         }
-        
-        int minW = max; int maxW = sum;
-        
-        while(minW<maxW){
-            int mid = minW + (maxW - minW)/2;
-            if(isSafe(mid, weights, D)){
-                maxW = mid;
-            } else minW = mid+1;
+
+        // capacity starts from max
+        int lo = max; int hi = sum; int res = 0;
+        while(lo<=hi){
+            int mid = lo + (hi-lo)/2;
+            if(isSafe(weights, mid, D)) {
+                res = mid;
+                hi = mid-1;
+            }
+            else lo = mid+1; 
         }
-        return minW;
+        return res;
     }
     
-    boolean isSafe(int capacity, int[] weights, int D){
+    
+    boolean isSafe(int[] weights, int capacity, int maxDays){
         int sum = 0; int days = 1;
-        
-        for(int w : weights){
-            if(sum+w<=capacity) sum+=w;
-            else{
+        for(int i : weights){
+            sum+=i;
+            if(sum>capacity) {
                 days++;
-                sum = w;
+                sum = i;
+                
+                // System.out.println("sum "+sum +" cap "+capacity+" days " +days);
             }
         }
-        return days<=D;
+        if(days>maxDays) return false;
+        return true;
+    }
+
+    
+    /** 
+     * SIMILAR TO ABOVE : WHENEVER QUESTION ASKS FOR CONTIGUOUS PARTITION 
+     * THINK OF BINARY SEARCH
+     * 
+     * idea is if we can find max of all partitions less than mid and 
+     * no of partitions <= m, then we check if an even lesser max is possible.
+     * so hi = mid-1;
+     * 
+     * 1 MIN VALUE = MAX AND MAX VALUE = SUM OF ALL ELS
+     * 2 BIN SEARCH FROM MIN TILL MAX
+     * 3 IF SUM EXCEEDS MID, TAKE A NEW PARTITION
+     * 4 RETURN TRUE ONLY IF NO OF PARTITIONS IS <= m
+     * 
+     * imp : count = 1
+    */
+    // https://leetcode.com/problems/split-array-largest-sum/
+    public int splitArray(int[] nums, int m) {
+        int sum = 0, max = -1;
+        
+        for(int i : nums){
+            sum+=i; max = Math.max(max, i);
+        }
+        
+        int lo = max, hi = sum, res = 0;
+        
+        while(lo<=hi){
+            int mid = lo + (hi-lo)/2;
+            
+            int x = findPartitions(nums, mid, m);
+            // if larger pieces, then lesser partitions, so we need to lessen the size, hence
+            // hi = mid-1;
+            if(x <= m){
+                res = mid;
+                hi = mid-1;
+            }
+            else if(x>m){
+                lo = mid+1;
+            }
+        }
+        return res;
+    }
+    
+    int findPartitions(int[] nums, int mid, int m){
+        int sum = 0, count = 1;  // imp count = 1
+        for(int i :nums){
+            sum+=i;
+            if(sum>mid){
+                count++;
+                sum = i;
+            }
+        }
+        return count;
     }
 
 

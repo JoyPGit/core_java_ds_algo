@@ -620,8 +620,10 @@ class Graph {
 	void detectLoopUtil(int curr, HashSet<Integer> visited, HashSet<Integer> currParents, 
 	HashMap<Integer, List<Integer>> map) {
 		visited.add(curr);
+
 		if(!map.containsKey(curr)) return;
 		List<Integer> list = map.get(curr);
+		
 		currParents.add(curr);
 		for(int i : list){
 			if (currParents.contains(i)) {

@@ -17,7 +17,7 @@ class StringPractice {
      * no of substrings containing all 3 chars,
      * longest repeating
      * longest palindrome
-     * longest happy prefix
+     * longest happy prefix, matching subsequences
      * 
      * max length of concatenated string, phone no combinations
      * 

@@ -1,15 +1,34 @@
 array 
-kadane, moore's voting, candy
+second largest
+kadane, moore's voting, find duplicate, sorted squares, equal left and right subarray sum
+next greater el 2, candy
 wiggle sort, dutch national, max Consecutive ones, sorted squares
-3sum, K-diff Pairs in an Array, Last Substring in Lexicographical Order, 
+3sum, K-diff Pairs in an Array, remove k digits
+Last Substring in Lexicographical Order, 
 Median of Two Sorted Arrays, Find Minimum in Rotated Sorted Array
 
+
 linked list 
-reverse nodes in k group, add nos
+reverse nodes in k group (keep track of kth node, recurse, return q)
+add nos, merge sort, 
+intersection of 2 lists (fast.next && fast.next.next)
+partition list (merge or copy the values)
+
+binary search
+min in rotated sorted (w/o dups), peak (almost similar)
+min in rotated sorted with duplicates has diff template
+floor, ceiling, first and last posn, 
+find min, find min with duplicates
+find peak, find first missing positive
+leaderboard, h-index 
+
 
 backtracking
+subsets 2 (no dups), permutations , diff : (no Arrays.sort, add only when cur)
+permutation of sets with duplicates  
 max length concat, sudoku, n-queen, letter combinations, word ladder, word search, subsets,
 palindrome partitioning
+
 
 recursion
 target sum, pattern, 
@@ -20,12 +39,6 @@ tip calculator
 Sorting
 heap, merge, quick, Longest Word in Dictionary through Deleting
 
-binary search
-floor, ceiling,first and last posn, 
-find min, find min with duplicates
-find peak, search matrix, find first missing positive
-leaderboard, h-index
-
 
 Stack
 trapping rainwater, infix to postfix, next greater el, remove k digits, largest rect area
@@ -35,9 +48,11 @@ heap
 median from data stream
 
 partition
-word break, split-the-given-array-into-k-sub-arrays-such-that-maximum-sum-of-all-sub-arrays-is-minimum
-split-array-largest-sum, partition-array-for-maximum-sum, 
+split-array-largest-sum, 
+partition-array-for-maximum-sum (dp)
 palindromic partition , with dp
+word break, 
+
 
 tree
 morris inorder,recover BST
@@ -93,12 +108,15 @@ trie
 lru
 
 matrix
+search in sorted, kth smallest el in matrix,
+spiral, rotate matrix, maximal sq, walls and gates, 
 Longest increasing path in matrix (dp)
-search in sorted, spiral, walls and gates, rotate matrix, maximal sq, kth smallest el in matrix
+
 
 graph
-dfs, time to inform, course schedule, bipartite, tps, bipartite, n/w delay, cheapest flights (dijkstra), server
-all paths from src to target
+dfs, time to inform, course schedule, bipartite, tps, 
+bipartite, n/w delay, cheapest flights (dijkstra), server
+all paths from src to target (when to add start and when its adj?)
 
 Math
 sieve of eratosthenes, robot, max prod subarray, climb stairs,
@@ -112,24 +130,31 @@ Given n number of rectangles, find the union of all rectangles (only algorithm).
 contiguous subarray prod == k, like kadane,
 largest no from an array
 
+
 Greedy
 max CPU load
-reconstruct itinerary, reorganize string, merge intervals, Maximum Number of Events That Can Be Attended
+reconstruct itinerary, reorganize string, merge intervals, 
+Maximum Number of Events That Can Be Attended
 jump game 2, pairs div by k, can complete circuit
 
 
 Hashmap
 2 sum, prefix sum, 
-subarray sum equals k, no of nice subarrays, max lengh equal no 0s and 1s
+subarray sum equals k, no of nice subarrays(convert to prefix sum), max length equal no 0s and 1s
 smallest subsequence of distinct chars,
 word subsets, path sum 3, 
 special O(1) data structure
 
 
 sliding Window
-subarrays mostly; keep track q size, Shortest Subarray with Sum at Least K
-longest subarray with k els, anagrams in a string
+map.size(), left removal, smallest, longest (update diff), count+=
+
+use left, Shortest Subarray with Sum at Least K
+longest subarray with k els, 
+anagrams in a string (imp size is same, so use window) Arrays.equals
+count distinct in every window (use map size, Microsoft)
 max consecutive 1s 3, length of longest substring
+celebrity, min swaps to group 1s
 
 
 Design

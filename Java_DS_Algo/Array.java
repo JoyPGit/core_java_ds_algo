@@ -66,7 +66,7 @@ class Array {
      * 8 CIRCULAR ARRAY 
      */
 
-    int binarrySearch(int[] arr, int key){
+    int binarySearch(int[] arr, int key){
         int n = arr.length; int res = -1; 
         int lo = 0; int hi = n-1;
         while(lo<=hi){
@@ -98,7 +98,7 @@ class Array {
         
         while(low<high){ // 1
             int mid = low + (high - low)/2;
-            // 2 
+            // 2 for duplicates
             if(nums[mid] < nums[high]) high = mid;
             else if(nums[mid] == nums[high]) high--;
             else low = mid+1;
@@ -218,6 +218,25 @@ class Array {
             
         }
         return res;
+    }
+
+    /**  
+     * 2 cases:
+     * 1 if i>first , update both
+     * 2 if i> second and i!= first, update second
+    */
+    // https://www.geeksforgeeks.org/find-second-largest-element-array/
+    int secondLargest(int[] arr){
+        int first = 0; int second = 0;
+        for(int i : arr){
+            if(i > first) {
+                first = i;
+                second = first;
+            }
+            else if(i > second && i!= first) second = i;
+        }
+        if(second == Integer.MIN_VALUE) System.out.println("no 2nd min");
+        return second;
     }
 
 
@@ -367,6 +386,7 @@ class Array {
         return nums[n-1];
     }
 
+    // above ques optimised
     /**
      *  We want the first element of the middle pair,
      * which should be at an even index if the left part is sorted.
@@ -397,7 +417,7 @@ class Array {
         
         while(lo<hi){
             int mid = lo + (hi-lo)/2;
-            if(mid%2!=0) mid--; // 
+            if(mid%2!=0) mid--; // move mid to even index
             
             // el on left
             if(nums[mid] != nums[mid+1]){ // 
@@ -590,7 +610,7 @@ class Array {
     // [1,1,1,0], -100
     /** 
      * sort, use 2 ptr
-     * compare iwth current diff, if lesser update
+     * compare with current diff, if lesser update
     */
     // https://leetcode.com/problems/3sum-closest/
     public int threeSumClosest(int[] nums, int target) {
@@ -805,7 +825,7 @@ class Array {
         for(int i=1; i<n; i++){
             if(count == 0){
                 count++;
-                res =nums[i];
+                res = nums[i];
             }
             else if(nums[i] == res) count++;
             else if(nums[i] != res) count--;
@@ -967,7 +987,46 @@ class Array {
         return holder;
     }
 
+    // https://leetcode.com/problems/container-with-most-water/
+    public int maxArea(int[] height) {
+        int val = 0, lo = 0, hi = height.length-1;
+        
+        while(lo<hi){
+            val = Math.max(val, Math.min(height[lo], height[hi])*(hi-lo));
+            if(height[lo]<height[hi]) lo++;
+            else hi--;
+        }
+        return val;
+    }
+
+    
     /** 
+     * water stored is diff of min(lmax, rmax) and height;
+     * so in each iteration update lmax and rmax
+     * then select min, this in turn selects left or right index
+     * update index with diff
+     * 
+    */
+    // simulate for 2,0,3
+    public int trap1(int[] height) {
+        int lo = 0, hi = height.length-1;
+        
+        int lmax = 0, rmax = 0, val = 0;
+        while(lo<=hi){
+            lmax = Math.max(lmax, height[lo]); rmax = Math.max(rmax, height[hi]); // 1
+            if(lmax<rmax){ // 2
+                val += lmax - height[lo]; // 3
+                lo++;
+            }
+            else{
+                val+=rmax - height[hi];
+                hi--;
+            }
+        }
+        return val;
+    }
+
+    /** earlier cumbersome method
      * TWO TRAVERSALS NEEDED (LEFT AND RIGHT)
      * 
      * use 2 arrays
