@@ -127,6 +127,75 @@ public class Heap {
         // heapifySinglePath(0);
     }
 
+
+    /** 
+     * 1 use quicksort partition
+     * 2 if x > position, hi = x-1 and vice-versa
+    */
+    // https://leetcode.com/problems/kth-largest-element-in-an-array
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length, lo = 0, hi = n-1;
+        while(lo<=hi){
+            int x = partition(nums, lo, hi);
+            // System.out.println(x);
+            if(x == n-k) return nums[x]; // index
+            else if(x<n-k) lo = x+1;
+            else hi = x-1;
+        }
+        return lo;
+    }
+    
+    int partition(int[] arr, int lo, int hi){
+        int j = lo, pivot = arr[hi];
+        for(int i = lo; i<hi; i++){
+            if(arr[i]<pivot) swap(arr, i, j++);
+        }
+        swap(arr, hi, j);
+        return j;
+    }
+    
+
+    // use 2 heaps, smaller max heap 
+    // heap is by default a min heap
+    // compare diff and pop till k!=0
+    // https://leetcode.com/problems/closest-binary-search-tree-value-ii
+    PriorityQueue<Integer> smaller = new PriorityQueue<>((x,y)->y-x);
+    PriorityQueue<Integer> larger = new PriorityQueue<>();
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        List<Integer> res = new ArrayList<>();
+        
+        dfs(root, target);
+
+        double d = 0.0;
+        
+        while(k--!=0){
+            if(smaller.size()==0){
+                d = larger.remove();
+                res.add((int)d);
+            } else if(larger.size()==0){
+                d = smaller.remove();
+                res.add((int)d);
+            }
+            else if(Math.abs(smaller.peek() - target)<Math.abs(larger.peek()-target)){
+                d = smaller.remove();
+                res.add((int)d);
+            }
+            else {
+                d = larger.remove();
+                res.add((int)d);
+            }
+        }
+        return res;
+    }
+    
+    void dfs(TreeNode root, double target){
+        if(root == null) return;
+        if(root.val<target) smaller.add(root.val);
+        else larger.add(root.val);
+        
+        dfs(root.left, target); dfs(root.right, target);
+    }
+    
     // Clearwater
     // min distinct els after removing m els
     // https://www.geeksforgeeks.org/minimum-number-of-distinct-elements-after-removing-m-items/
@@ -355,6 +424,39 @@ public class Heap {
             pq.add(new Node1(curr.x+1, curr.y, matrix[curr.x+1][curr.y] ));
         }
         return pq.remove().val;
+    }
+
+    /** 
+     * 1 store index and sum; pass args separately
+     * 2 store first row sum and then for each pop add next el of 2nd array
+     * 3 check pq size
+    */
+    // https://leetcode.com/problems/find-k-pairs-with-smallest-sums
+    class Node{
+        int x, y , sum;
+        Node(int x, int y, int s){
+            this.x = x; this.y = y;
+            this.sum = s;
+        }
+    }
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        int m = nums1.length, n = nums2.length;
+        
+        PriorityQueue<Node> pq = new PriorityQueue<>((x,y)->x.sum - y.sum);
+        
+        List<List<Integer>> res = new ArrayList<>();
+        if(m==00 || n==0) return res;
+        for(int i =0; i<m; i++) pq.add(new Node(i, 0, nums1[i]+ nums2[0]));
+        
+        while(k-->0 && pq.size()!=0){
+            Node curr = pq.remove();
+            res.add(Arrays.asList(nums1[curr.x], nums2[curr.y]));
+            // System.out.println(res);
+            if(curr.y == n-1) continue;
+            pq.add(new Node(curr.x, curr.y+1, nums1[curr.x] + nums2[curr.y+1]));
+        }
+        
+        return res;
     }
 
     /** 

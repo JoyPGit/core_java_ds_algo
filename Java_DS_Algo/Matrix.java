@@ -141,6 +141,47 @@ class Matrix {
      * 
     */
 
+    /** 
+     * run 2 nested for loops
+     * 1 use fc, fr first row and first col; check if i==0 || j==0
+     * 2 if 0 is found, then mark row and col headers 0
+     * 3 run another loop and mark 0, if first col or first row is 0
+     * 4 mark first row and first col 0
+    */
+    // https://leetcode.com/problems/set-matrix-zeroes/
+    public void setZeroes(int[][] matrix) {
+        boolean fc = false, fr = false;
+        int m = matrix.length, n = matrix[0].length;
+        
+        for(int i=0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(matrix[i][j] == 0){
+                    if(i == 0) fr = true;
+                    if(j == 0) fc = true;
+                    
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+        
+        
+        for(int i=1; i<m; i++){
+            for(int j = 1; j<n; j++){
+                if(matrix[i][0] == 0 || matrix[0][j] == 0) matrix[i][j] = 0;
+            }
+        }
+        
+        if(fr){
+            for(int i = 0; i<n; i++) matrix[0][i] = 0;
+        }
+        
+        if(fc){
+            for(int i = 0; i<m; i++) matrix[i][0] = 0;
+        }
+    }
+
+
     //////////////////////////////// UNIQUE PATHS
     /**
      * the trick is to convert a recursive relation to a dp relation 
@@ -349,7 +390,7 @@ class Matrix {
         // boundary marking
         for(int i =0; i<grid.length; i++){
             for(int j=0; j<grid[0].length; j++){
-                if(i ==0 || i == grid.length-1 || j == 0 || j == grid[0].length-1){
+                if(i ==0 || i == grid.length-1 || j == 0 || j == grid[0].length-1){ // or
                     dfs(grid, i, j);
                 }
             }
@@ -503,6 +544,28 @@ class Matrix {
 
 
     ////////////////////////////////////////// RETURN VALUE
+
+    // why -2? we are taking into acount the boundary of the upper cell
+    // -2 one for each cell
+    // https://leetcode.com/problems/island-perimeter/
+    public int islandPerimeter(int[][] grid) {
+        int m = grid.length; int n = grid[0].length;
+        int perimeter = 0;
+        
+        for(int i =0; i<m; i++){
+            for(int j=0; j<n; j++){
+                
+                if(grid[i][j] == 1) {
+                    perimeter += 4;
+                    
+                    if(i>0 && grid[i-1][j] == 1) perimeter -= 2;
+                    if(j>0 && grid[i][j-1] == 1) perimeter -= 2;
+                }
+            }
+        }
+        return perimeter;
+    }
+    
 
     /**  
      * POINTS : 
@@ -1403,7 +1466,7 @@ class Matrix {
             return binsearch(arr, row, num, mid + 1, end);
     }
 
-    // TRY YSING BINARY SEARCH
+    // TRY USING BINARY SEARCH
     // duplicates too
     // [[1,1]], 2
     // [[1,1],[2,2]], 3

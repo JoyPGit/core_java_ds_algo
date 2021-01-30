@@ -13,6 +13,30 @@ public class Mathprob {
         return gcd(b, a%b);
     }
 
+    // num%10 and num/=10
+    // https://leetcode.com/problems/self-dividing-numbers
+    public List<Integer> selfDividingNumbers(int left, int right) {
+        List<Integer> res = new ArrayList<>();
+        int num = left;
+        
+        while(num<=right){
+            if(isValid(num)) res.add(num);
+            num++;
+        }
+        return res;
+    }
+    
+    boolean isValid(int num){
+        int x = num, y = 0;
+        while(x!=0){
+            y = x%10;
+            if((y == 0) || (num%y) != 0) return false;
+            // System.out.println("x "+x+" y "+y);
+            x/=10;
+        }
+        return true;
+    }
+
     // https://practice.geeksforgeeks.org/problems/power-of-2-1587115620/1
     // Function to check if given number is power of two
     public static boolean isPowerofTwo(long n){
@@ -99,6 +123,48 @@ public class Mathprob {
         return false;
     }
 
+    /**use map for memoization of fibonacci series
+     * add to heap
+     * greedily subtract the max from k,
+     * if top is greater than k remove
+     * else subtract from k
+     * ALWAYS ADD CHECK FOR HEAP!=0
+     * 
+     * 
+     * had to add 45 as 10^7 was limit(saw in soln)
+     * 
+     * while(true) breaks with return count statement
+     */
+    // https://leetcode.com/problems/find-the-minimum-number-of-
+    // fibonacci-numbers-whose-sum-is-k/
+    public int findMinFibonacciNumbers(int k) {
+        PriorityQueue<Integer> heap = new PriorityQueue<>((x,y)->y-x);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(2, 1); map.put(1, 1);
+
+        // fib(45, map);
+        heap.addAll(map.values());
+        System.out.println(heap);        
+        // https://stackoverflow.com/questions/5695017/priorityqueue-not-sorting-on-add
+
+        int count =0; int curr =k;
+        System.out.println(heap);
+        while(heap.peek()>k) heap.remove();
+        System.out.println(heap);
+        while(true){
+            if(curr - heap.peek()==0){
+                return count+1;
+            }
+            else if(heap.size()!=0 && curr - heap.peek()>0){
+                curr-=heap.remove();
+                count++;
+            }
+            if(curr==0) return count;
+            else if(heap.peek()>curr) heap.remove();
+        }
+    }
+
+    
     // https://leetcode.com/problems/robot-bounded-in-circle/
     public boolean isRobotBounded(String instructions) {
         int x = 0, y = 0;
@@ -150,7 +216,28 @@ public class Mathprob {
         }
         return true;
     }
+
+    // For ex, low = 4, high = 8 is same as low = 5 and high = 7 as the odds are only [5,7].
+    // https://leetcode.com/problems/count-odd-numbers-in-an-interval-range
+    public int countOdds(int low, int high) {
+        if(low%2 == 0) low++;
+        if(high%2 == 0) high--;
+        return (high-low)/2+1;
+    }
     
+
+    // https://leetcode.com/problems/ugly-number
+    public boolean isUgly(int num) {
+        if(num == 0) return false;
+        while(num!=1){
+            if(num%2==0) num/=2;
+            else if(num%3==0) num/=3;
+            else if(num%5==0) num/=5;
+            else return false;
+        }    
+        return true;
+    }
+
     /** 
      * start from i till n
      * maintain count
@@ -164,6 +251,30 @@ public class Mathprob {
             if(count == k) return i;
         }
         return count<k?-1:1;
+    }
+
+    /**
+     * https://www.youtube.com/watch?v=UzVQ9zRVsWg
+     * if i is a factor, then n/i is also a factor.
+     * so start from 1 till sqrt(n),
+     * then start from sqrt(n) till 1, but inthis loop, add n/i
+     */
+    // https://leetcode.com/problems/the-kth-factor-of-n
+    public int kthFactor1(int n, int k) {
+        for(int i =1; i*i<n; i++){
+            if(n%i == 0) {
+                k--;
+                if(k==0) return i;
+            }
+        }
+        
+        for(int i = (int)Math.sqrt(n); i>=1; i--){
+            if(n%i == 0){
+                k--;
+                if(k == 0) return n/i;
+            }
+        }
+        return -1;
     }
 
 
@@ -814,6 +925,32 @@ public class Mathprob {
         return count;
     }
 
+    /** 
+     * 1 use quicksort partition
+     * 2 if x > position, hi = x-1 and vice-versa
+    */
+    // https://leetcode.com/problems/kth-largest-element-in-an-array
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length, lo = 0, hi = n-1;
+        while(lo<=hi){
+            int x = partition(nums, lo, hi);
+            // System.out.println(x);
+            if(x == n-k) return nums[x]; // index
+            else if(x<n-k) lo = x+1;
+            else hi = x-1;
+        }
+        return lo;
+    }
+    
+    int partition(int[] arr, int lo, int hi){
+        int j = lo, pivot = arr[hi];
+        for(int i = lo; i<hi; i++){
+            if(arr[i]<pivot) swap(arr, i, j++);
+        }
+        swap(arr, hi, j);
+        return j;
+    }
+
     // why -2? we are taking into acount the oundary of the upper cell
     // -2 one for each cell
     // https://leetcode.com/problems/island-perimeter/
@@ -903,6 +1040,107 @@ public class Mathprob {
         }
         return res;
     }
+
+    // use hashmap
+    // https://practice.geeksforgeeks.org/problems/find-all-pairs-whose-sum-is-x5808/1
+    public pair[] allPairs( long a[], long b[], long n, long m, long k) {
+        // Your code goes here 
+        int count = 0;
+        List<Long> list = new ArrayList<>();
+        HashMap<Long, Integer> map = new HashMap<>();
+        
+        for(long l : a){
+            map.put(l ,map.getOrDefault(l ,0)+1);
+        }
+        
+        for(long l : b){
+            if(map.containsKey(k-l)){
+                int x = map.get(k-l);
+                for(int i=0; i<x; i++){
+                    list.add(k-l); list.add(l); 
+                }
+            }
+        }
+        
+        int index = 0;
+        pair[] p = new pair[list.size()/2];
+        for(int j =0; j<list.size(); j++){
+            p[index++] = new pair(list.get(j), list.get(++j));    
+        }
+        return p;
+    }
+        
+    // i tried creating an array and storing freqs
+    // then find odd and even sum, why?
+    // because moving from even indexes doesn't cost money
+    // https://leetcode.com/problems/minimum-cost-to-move-chips-to-the-same-position
+    public int minCostToMoveChips(int[] position) {
+        int n = position.length, costOdd = 0, costEven = 0;
+        for(int i: position){
+            if(i%2 == 0) costEven++;
+            else costOdd++;
+        }
+        
+        return Math.min(costEven, costOdd);
+    }
+
+
+    // find h, m and diff. then check if>180
+    // https://leetcode.com/problems/angle-between-hands-of-a-clock
+    public double angleClock(int hour, int minutes) {
+        boolean opp = false;
+        if((hour<6 && minutes>30 ) || (hour>6 && minutes<30)) opp = true;
+        double h = hour*30; 
+        double m = minutes*6;
+        
+        h+= minutes*(0.5); 
+        
+        double diff = Math.abs(h-m);
+        if(diff>180) return 360 -diff;
+        return diff;
+    }
+
+
+    class Candy{
+        int number, priority, maxDays, minDays;
+        Candy(int a, int b, int c){
+            this.number = a;
+            this.priority = b;
+            this.maxDays = c;
+        }
+    }
+    // https://leetcode.com/discuss/interview-question/936510/
+    // fleetx-online-assessment-help-needed-to-identify-the-problem-favorite-candy
+    String[] candy(int[][] arr, int K, int[][] queries){
+        String[] res =  new String[queries.length];
+        Arrays.sort(arr, (x,y)->y[1] - x[1]);
+
+        Candy[] cumulative = new Candy[arr.length];
+        int index = 0, sum = 0; 
+        for(int[] i : arr){
+            cumulative[index++] = new Candy(index+1, i[1], sum+i[0]);
+            sum+=i[0];
+        }
+        for(int i =0; i<cumulative.length; i++){
+            cumulative[i].minDays = cumulative[i].maxDays/K;
+        }
+
+        index = 0;
+        int index1 = 0;
+        for(int[] i : queries){
+            // find index of candy
+            for(Candy[] c : cumulative){
+                if(c.number == i[0]){
+                    if(c.minDays<i[1] && i[1]<c.maxDays) res[index1] = "YES";
+                    else res[index1] = "NO";
+                }
+            }
+            index1++;
+        }
+
+        return res;
+    }
+
     // https://leetcode.com/problems/maximum-swap/
     // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
     // https://leetcode.com/problems/power-of-four
@@ -912,7 +1150,7 @@ public class Mathprob {
         // math.power(99, 9);
         // math.isPerfectSquare(2);
         // math.isPerfectSquare(81);
-        math.numberOfNecklaces(3, 6, 9);
+        // math.numberOfNecklaces(3, 6, 9);
         int[] diff = new int[]{
             87, 78, 16, 94, 36, 87, 93, 50, 22, 63, 28, 91, 60, 64, 27, 41, 27, 73, 37, 12, 69, 
             68, 30, 83, 31, 63, 24, 68, 36, 30, 3, 23, 59, 70, 68, 94, 57, 12, 43, 30, 74, 22, 
@@ -922,8 +1160,16 @@ public class Mathprob {
         // math.findMaxDiff(diff, diff.length);
 
         int[] arr2Swap = new int[]{10, 20, 60, 40, 50, 30} ;
-        math.sortByOneSwap(arr2Swap);
+        // math.sortByOneSwap(arr2Swap);
 
+        long A[] = {1, 2, 4, 5, 7},
+        B[] = {5, 6, 3, 4, 8} ,
+        X = 9; 
+        math.allPairs(A, B, 5, 5, X);
+
+        int[] arr23 = {1,2};
+        int[] arr34 = {3,4};
+        System.out.println(Arrays.equals(arr23, arr34));
     }
 
 }

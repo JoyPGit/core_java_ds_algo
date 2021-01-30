@@ -355,6 +355,60 @@ class Graph {
         }
     }
 	
+	/* similar to tree dia, 
+	 * in tree dia, take max of left + right and return max(left, right)+1;
+	 * 
+	 * here we check for all children, we select the longest two paths
+	 * so update firstmax and secondMax
+	 * 
+	 * no visited, i!=parent
+	 * bidirectional edges, not a binary tree
+	*/
+    // https://leetcode.com/problems/tree-diameter
+    int max = 0;
+    public int treeDiameter(int[][] edges) {
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        
+        for(int[] i : edges){
+            ArrayList<Integer> list = map.getOrDefault(i[0], new ArrayList<Integer>());
+            list.add(i[1]);
+            map.put(i[0], list);
+            
+            ArrayList<Integer> list1 = map.getOrDefault(i[1], new ArrayList<Integer>());
+            list1.add(i[0]);
+            map.put(i[1], list1);
+        }
+        
+        dfs(map, 0, -1);
+        return max;
+    }
+    
+    int dfs(HashMap<Integer, ArrayList<Integer>> map, int node, int parent){
+		int firstMax = 0, secondMax = 0; 
+		
+		// this is useless as in bidirectional every node will have a list
+        // if(!map.containsKey(node)) return 1;
+        // System.out.println(" parent "+parent+" node "+node);
+        List<Integer> list = map.get(node);
+        
+        for(int i : list){
+            if(i == parent) continue;
+            int dist = dfs(map, i, node);
+            if(dist>firstMax){
+                secondMax = firstMax;
+                firstMax = dist;
+            }
+            else if(dist > secondMax){
+                secondMax = dist;
+            }
+            
+            max = Math.max(max, firstMax + secondMax);
+        }
+        return firstMax+1;
+	}
+
+	// https://leetcode.com/problems/sum-of-distances-in-tree/
+	
 	/** 
 	 * FIND TOTAL NO OF COMPONENTS AND THEN CHECK MST PROPERTY
 	 * edges MUST BE n-1
@@ -623,7 +677,7 @@ class Graph {
 
 		if(!map.containsKey(curr)) return;
 		List<Integer> list = map.get(curr);
-		
+
 		currParents.add(curr);
 		for(int i : list){
 			if (currParents.contains(i)) {
@@ -1190,6 +1244,45 @@ class Graph {
         return -1;
     }
 
+	// https://leetcode.com/problems/minimum-knight-moves/submissions/
+    int[] row = {-2,-1,1,2,2,1,-1,-2};
+    int[] col = {1,2,2,1,-1,-2,-2,-1};
+
+    public int minKnightMoves(int X, int Y) {
+        
+        int x = Math.abs(X), y = Math.abs(Y);
+        if (x == 1 && y == 1) return 2;  
+        
+        int count = 0;
+        HashSet<String> set = new HashSet<>();
+        
+        Deque<int[]> q = new LinkedList<>();
+        q.addLast(new int[]{0,0}); set.add("0,0");
+        
+        while(q.size()!=0){
+            int size = q.size();
+            for(int i =0; i<size; i++){
+                int[] curr = q.removeFirst();
+                int r = curr[0];
+                int c = curr[1];
+                
+                // System.out.println("r "+r+" c "+c);
+                if(r == x && c == y) return count;
+                
+                for(int j = 0; j<8; j++){
+                    if((r + row[j]) >= 0 && c + col[j] >= 0){
+                        int r1 = r+row[j], c1 = c + col[j];                         
+                        if(set.contains(r1+","+c1)) continue;
+                        set.add(r1+","+c1);
+                        q.addLast(new int[]{r1, c1});
+                    }
+                }
+            }
+            count++;
+        }
+        return -1;
+	}
+	
 	/** 
 	 * NORMAL BFS
 	 * 1 AS GRAPH IS DISCONNECTED, RUN BFS FOR ALL NODES

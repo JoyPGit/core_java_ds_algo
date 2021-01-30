@@ -3,9 +3,32 @@ package Java_DS_Algo;
 public class ToDo {
 
     /**
+     * call, Object
+     * https://leetcode.com/problems/design-add-and-search-words-data-structure/
+     * skyline
+     * game of life
+     * matrix 0s
+     * j-i; arr[j]>arr[i]
+     * array els equal
+     * snakes and ladders, min knight moves
+     * knight probability
+     * tree dia, sum of dist in tree
+     * max prod of split binary tree; split graph
+     * cherry pickup
+     * morris inorder, recover tree
+     * subarray sums div by k
+     * search rotated sorted , peak
      * max-tip
      * string concat
-     * merge, heap
+     * max events that can be attended
+     * merge, heap, quick, median in unsorted
+     * search in rotated sorted
+     * decode ways
+     * jump, stairs, https://leetcode.com/problems/minimum-number-of-refueling-stops/, frog jump
+     * lcs
+     * lru cache
+     * prod of array except self
+     * 
      * 
      * https://www.geeksforgeeks.org/merge-two-sorted-arrays-o1-extra-space/
      * https://leetcode.com/problems/verify-preorder-sequence-in-binary-search-tree/

@@ -75,6 +75,34 @@ public class Trie {
         return true;
     }
     
+    // use trie and subsets concept(2 for loops); if null, res++
+    // https://leetcode.com/problems/number-of-distinct-substrings-in-a-string
+    class TrieNode{
+        TrieNode[] arr;
+        boolean isEnd;
+        
+        TrieNode(){
+            this.arr = new TrieNode[26];
+        }
+    }
+    TrieNode root1 = new TrieNode(), p = root1;
+    int res = 0;
+    
+    public int countDistinct(String s) {
+        for(int i =0; i<s.length(); i++){
+            p = root1;
+            for(int j =  i; j<s.length(); j++){
+                char c = s.charAt(j);
+                if(p.arr[c-'a'] == null){
+                    p.arr[c-'a'] = new TrieNode();
+                    res++;
+                } 
+                p = p.arr[c-'a'];
+            }  
+        }     
+        return res;
+    }
+
     // https://leetcode.com/problems/stream-of-characters/ 
     // https://leetcode.com/problems/implement-magic-dictionary/
     // https://leetcode.com/problems/replace-words/

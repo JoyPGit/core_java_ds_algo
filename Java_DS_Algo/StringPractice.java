@@ -1575,6 +1575,27 @@ class StringPractice {
     }
 
 
+    // https://leetcode.com/problems/longest-word-in-dictionary/
+    public String longestWord(String[] words) {
+        Arrays.sort(words, (x, y)->{
+            if(x.length() == y.length()) return x.compareTo(y);
+            return x.length() - y.length();   
+        });
+        
+        String res = "";
+        for(String str : words){
+            if(isValid(res, str)) res+=str;
+            else return res;
+        }
+        return res;
+    }
+    
+    boolean isValid(String a, String b){
+        if(b.length() - a.length() != 1) return false;
+        if(!b.startsWith(a)) return false;
+        return true;
+    }
+
     // SPLIT AND THEN USE STARTSWITH
     // https://leetcode.com/problems/check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence/
     public int isPrefixOfWord(String sentence, String searchWord) {

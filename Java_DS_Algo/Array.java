@@ -1216,9 +1216,6 @@ class Array {
                 { 1, 2, 3 };
         // test.pivotIndex(pivot);
 
-        int[] asteroids = { -2, -1, 1, 2 };
-        // test.asteroidCollision(asteroids);
-
         int[] maxIndex = { 34, 8, 10, 3, 2, 80, 30, 33, 1 };
         // test.maxIndex(maxIndex);
 

@@ -161,6 +161,23 @@ public class Backtrack {
      * 
     */
 
+    // all substrings and all contiguous subsets can be found by using 2 for loops
+
+    void printAllSubstrings(String inputString) {
+        StringBuilder subString;
+         
+        for (int i = 0; i < inputString.length(); i++){
+
+            subString = new StringBuilder().append(inputString.charAt(i));
+            System.out.println(subString);
+             
+            for (int j = i+1; j < inputString.length(); j++){
+                subString.append(inputString.charAt(j));
+                System.out.println(subString);
+            }
+        }
+    }
+
     //28 apr
 
     // ["a", "abc", "d", "de", "def"]
@@ -227,6 +244,8 @@ public class Backtrack {
         ch[a] = ch[b];
         ch[b] = temp;
     }
+
+
 
 
     
@@ -1103,23 +1122,29 @@ public class Backtrack {
     // https://leetcode.com/problems/generate-parentheses/
     public List<String> generateParenthesis(int n) {
         List<String> res = new ArrayList<>();
-        gPhelper(res, "", 0, 0, n);
+        helperP(res, "", 0, 0, n);
         return res;
     }
     
-    void gPhelper(List<String> res, String curr, int open, int closed, int target){
-        if(open == target && closed == target){
+    void helperP(List<String> res, String curr, int open, int closed, int n){
+        if(open ==n && closed == n) {
             res.add(curr);
+            return;
         }
-        if(open>target || closed>target) return;
-        if(closed>open) return;
-        curr+="(";
-        gPhelper(res, curr, open+1, closed, target);
-        curr = curr.substring(0, curr.length()-1);
-        curr+=")";
-        gPhelper(res, curr, open, closed+1, target);
-    }
 
+        if(open<n) {
+            curr+='(';
+            helperP(res, curr, open+1, closed, n);
+            curr =curr.substring(0, curr.length()-1);
+        }
+        
+        if(open>closed && closed<n) {
+            curr+=')';
+            helperP(res, curr, open, closed+1, n);
+            curr =curr.substring(0, curr.length()-1);
+        }
+        
+    }
 
     ////
     public List<String> generateParenthesisWithoutBT(int n) {
@@ -1302,6 +1327,47 @@ public class Backtrack {
         map.remove(start);
     }
     
+
+
+    List<Integer> permutation(int n, int k){
+        int[] arr = new int[n];
+        for(int i =0; i<n; i++) arr[i] = i+1;
+
+        
+    }
+
+    List<Integer> res = new ArrayList<>();
+    HashSet<Integer> set1 = new HashSet<>();
+    List<Integer> curr = new ArrayList<>();
+
+    int helper(int n, int k){
+        if(k == 0) return list.get();
+        while(true){
+            int a = 0;
+            for(int i = 1; i<n; i++){
+                a = k;
+                k-= factorial(n-1);
+                if(k == 0) {
+                    for(int j =1; j<n; j++){
+                        if(!set.contains(j))  curr.add(j);
+                    }
+                    Collections.reverse(list);
+                    res.add(i);
+                }
+                if(k<0) break;
+                res.add(i-1);
+                helper(n-1, k-a);
+            }
+        }   
+    }
+    
+    // 123 3 123; 132; 1
+    // 213; 231; (1-2)-1
+    // 312
+
+    // 12345; 84 72 12 
+    // 1,2,3,4,5,6,7  
+
     public static void main(String[] args) {
         Backtrack pcs = new Backtrack();
 

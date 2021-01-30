@@ -1909,6 +1909,48 @@ public class Tree {
             return new BSTNode(Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
         }
     }
+
+    // use 2 heaps, smaller max heap 
+    // heap is by default a min heap
+    // compare diff and pop till k!=0
+    // https://leetcode.com/problems/closest-binary-search-tree-value-ii
+    PriorityQueue<Integer> smaller = new PriorityQueue<>((x,y)->y-x);
+    PriorityQueue<Integer> larger = new PriorityQueue<>();
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        List<Integer> res = new ArrayList<>();
+        
+        dfs(root, target);
+
+        double d = 0.0;
+        
+        while(k--!=0){
+            if(smaller.size()==0){
+                d = larger.remove();
+                res.add((int)d);
+            } else if(larger.size()==0){
+                d = smaller.remove();
+                res.add((int)d);
+            }
+            else if(Math.abs(smaller.peek() - target)<Math.abs(larger.peek()-target)){
+                d = smaller.remove();
+                res.add((int)d);
+            }
+            else {
+                d = larger.remove();
+                res.add((int)d);
+            }
+        }
+        return res;
+    }
+    
+    void dfs(TreeNode root, double target){
+        if(root == null) return;
+        if(root.val<target) smaller.add(root.val);
+        else larger.add(root.val);
+        
+        dfs(root.left, target); dfs(root.right, target);
+    }
+    
     ////////////////////////////////////////////////////////////
     ///////////////IMP
 

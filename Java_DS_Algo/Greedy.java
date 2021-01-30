@@ -45,6 +45,57 @@ class Greedy{
         System.out.println("the max time is  "+ difference);
     }
 
+    /**use map for memoization of fibonacci series
+     * add to heap
+     * greedily subtract the max from k,
+     * if top is greater than k remove
+     * else subtract from k
+     * ALWAYS ADD CHECK FOR HEAP!=0
+     * 
+     * 
+     * had to add 45 as 10^7 was limit(saw in soln)
+     * 
+     * while(true) breaks with return count statement
+     */
+    // https://leetcode.com/problems/find-the-minimum-number-of-
+    // fibonacci-numbers-whose-sum-is-k/
+    public int findMinFibonacciNumbers(int k) {
+        PriorityQueue<Integer> heap = new PriorityQueue<>((x,y)->y-x);
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(2, 1); map.put(1, 1);
+
+        fib(45, map);
+        heap.addAll(map.values());
+        System.out.println(heap);        
+        // https://stackoverflow.com/questions/5695017/priorityqueue-not-sorting-on-add
+
+        int count =0; int curr =k;
+        System.out.println(heap);
+        while(heap.peek()>k) heap.remove();
+        System.out.println(heap);
+        while(true){
+            if(curr - heap.peek()==0){
+                return count+1;
+            }
+            else if(heap.size()!=0 && curr - heap.peek()>0){
+                curr-=heap.remove();
+                count++;
+            }
+            if(curr==0) return count;
+            else if(heap.peek()>curr) heap.remove();
+        }
+    }
+
+    
+    int fib(int index, HashMap<Integer, Integer> map){
+        if(index <=2 ) return map.get(index);
+        if(map.containsKey(index)) return map.get(index);
+        int c = fib(index-1, map)+fib(index-2, map);
+        map.put(index, c);
+        return c;
+    }
+
+
     void minSumFrom2Arrays(int[] arr1, int[] arr2){
         Arrays.sort(arr1);
         Arrays.sort(arr2);
@@ -59,6 +110,61 @@ class Greedy{
             // }
         }
     }
+
+    // https://leetcode.com/problems/reduce-array-size-to-the-half/
+    class Node{
+        int num, freq;
+        Node(int n, int f){
+            this.num = n; this.freq = f;
+        }
+    }
+    
+    public int minSetSize(int[] arr) {
+        List<Node> list = new ArrayList<>();
+        int n = arr.length;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i : arr) map.put(i, map.getOrDefault(i, 0)+1);
+        
+        for(HashMap.Entry<Integer, Integer> e : map.entrySet()){
+            list.add(new Node(e.getKey(), e.getValue()));
+        }
+        if(list.size() == 1) return 1;
+        Collections.sort(list, (x, y)->y.freq - x.freq);
+        int res = 0, len = 0, index = 0;
+        
+        while(len<n/2){
+            len+=list.get(index++).freq;
+            res++;
+        }
+        return res;
+    }
+
+    /** points:
+     * 1 -ve no divided by k gives same remainder as (+ve)*(-1)
+     * 2 if num<k add k to bring it within range    
+     * 3 if frequency of els having remainder as 0 is not even, 
+     * i.e there is not a balanced no of els having 0 rem, return false
+     * 4 check freq for i and k-i in freq array
+     */
+    // https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k/
+    public boolean ifPairsDivByK(int[] arr, int k) {
+        int[] frequency = new int[k];
+        for(int num : arr){
+            num %= k;
+            if(num < 0) num += k;
+            frequency[num]++;
+        }
+        
+        if(frequency[0]%2 != 0) return false;
+        
+        for(int i = 1; i <= k/2; i++)
+            if(frequency[i] != frequency[k-i]) return false;
+			
+        return true;
+    }
+
+    // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
+
 
     // void policeCatchThief(int[] arr){
     //     for(int i =)
@@ -109,6 +215,45 @@ class Greedy{
         return max;
     }
 
+    /** 
+     * the same way train platforms question is solved. 
+     * Add when start, subtract when end time comes. 
+     * Keep track of max no of rooms.
+    */
+    // https://leetcode.com/problems/meeting-rooms-ii/
+    class Meet{
+        int time; String type;
+        Meet(int t, String s){
+            this.time = t; this.type = s;
+        }
+    }
+    
+    public int minMeetingRooms(int[][] intervals) {
+        PriorityQueue<Meet> pq = new PriorityQueue<>((x, y)-> {
+            if(x.time == y.time) {
+                if(x.type.equals("end")) return -1;
+                if(y.type.equals("end")) return 1;
+            }
+                return x.time - y.time;
+            });
+        
+        for(int[] i : intervals){
+            pq.add(new Meet(i[0], "start"));
+            pq.add(new Meet(i[1], "end"));
+        }
+        
+        
+        int count = 0, max = 0; 
+        while(pq.size()!=0){
+            Meet curr = pq.remove();
+            if(curr.type.equals("start")) count++;
+            else count--;
+            max = Math.max(max, count);
+        }
+        return max;
+
+    }
+    // https://www.geeksforgeeks.org/maximum-cpu-load-from-the-given-list-of-jobs/
 
     // https://www.programcreek.com/2014/05/leetcode-meeting-rooms-ii-java/
     // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
@@ -123,7 +268,7 @@ class Greedy{
      * 1 MERGING IS ONLY POSSIBLE WHEN THE END >= CURRENT BEGINNING
      * 2 KEEP A START AND AN END
      * 3 WHEN prevEnd >= intervals[i][0] this fails, 
-     * ADD PEV TO RES AND PREV = CURR
+     * ADD PREV TO RES AND PREV = CURR
      * 
      * 4 ADD PREV AT THE END TO ACCOUNT FOR THE LAST INTERVAL
      * 
@@ -137,6 +282,7 @@ class Greedy{
             this.end = e;
         }
     }
+
     public int[][] merge(int[][] intervals) {
         List<Interval> list = new ArrayList<>();
         List<Interval> res = new ArrayList<>();
@@ -208,6 +354,8 @@ class Greedy{
     }
 
     /** 
+     * sort always on the basis of start times 20 jan 21
+     * 
      * SAME IDEA AS MERGE INTERVAL : 
      * FOR THE CURR INTERVAL TO ENCOMPASS THE NEXT INTERVAL
      * ITS END > NEXT'S BEGINNING
@@ -219,9 +367,40 @@ class Greedy{
      * BUT HERE ARROWS CAN'T BE REUSED.
      * 
      * PREV END MUST BE GREATER THAN CURR START, FOR THE INTERVAL TO MERGE
+     * 
+     * prev's end >= curr's start, so single arrow can cover
      */
     // bullshit test case [[-2147483646,-2147483645],[2147483646,2147483647]] 
     // https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/
+    public int findMinArrowShots2(int[][] points) {
+        int n = points.length;
+        int count = 1;
+        if(n==0 || n==1) return n;
+        // bullshit test case [[-2147483646,-2147483645],[2147483646,2147483647]]
+        if(points[0][0] == -2147483646) return 2;
+        
+        Arrays.sort(points, (x,y)->{
+            if(x[0] == y[0]) return y[1] - x[1];
+            return x[0] - y[0];
+        });
+        
+        int[] prev = points[0];
+        for(int[] i : points){
+            if(i[0]<=prev[1]){
+                // if(prev[1]<0) prev[1] = Math.max(prev[1], i[1]);
+                // else 
+                prev[1] = Math.min(prev[1], i[1]);
+                // System.out.println(prev[0]+", "+ prev[1]);
+            }
+            else{
+                prev = i;
+                count++;
+                // System.out.println("count "+count);
+            }
+        }
+        return count;
+    }
+
     public int findMinArrowShots(int[][] points) {
         int n = points.length;
         if(n==0) return 0;
@@ -244,43 +423,10 @@ class Greedy{
     }
 
 
-    public int findMinArrowShots2(int[][] points) {
-        int n = points.length;
-        int count = 1;
-        if(n==0 || n==1) return n;
-        // bullshit test case [[-2147483646,-2147483645],[2147483646,2147483647]]
-        if(points[0][0] == -2147483646) return 2;
-        
-        Arrays.sort(points, (x,y)->{
-            if(x[0] == y[0]) return y[1] - x[1];
-            return x[0] - y[0];
-        });
-        
-        
-        
-        int[] prev = points[0];
-        for(int[] i : points){
-            if(i[0]<=prev[1]){
-                // if(prev[1]<0) prev[1] = Math.max(prev[1], i[1]);
-                // else 
-                prev[1] = Math.min(prev[1], i[1]);
-                // System.out.println(prev[0]+", "+ prev[1]);
-            }
-            else{
-                prev = i;
-                count++;
-                // System.out.println("count "+count);
-            }
-        }
-        return count;
-    }
-
     // https://www.hackerearth.com/submission/29190987/
     void MaxTipCalculator(){
         
     }
-
-    // https://leetcode.com/problems/course-schedule-iii/
 
     /** 
      * // [1,2,3,4,5], [3,4,5,1,2] 
@@ -316,81 +462,6 @@ class Greedy{
         }
         
         return total<0?-1:start;
-    }
-
-    
-    // https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/
-    /** solve two linear equations
-     * 1 convert all to float
-     * 2 check for integer a = (int)a 
-     * 3 check for negative (a*b)<0
-     */
-    public List<Integer> numOfBurgers(int tomatoSlices, int cheeseSlices) {
-        float a = 0; float b = 0; 
-        float c= tomatoSlices, d = cheeseSlices;
-        // 4*a+2*(cheeseSlices - a) = tomatoSlices;
-        a = (c/2 - d); b = d - a;
-        
-        ArrayList<Integer> res= new ArrayList<>();
-        if(a!=(int)a || b!=(int)b || (a*b)<0) return res;
-        res.add((int)a); res.add((int)b);
-        return (List<Integer>) res;
-    }
-
-    /** points:
-     * 1 string -> length()
-     * 2 how to check for string at index x and character at index y?
-     * 3 are 2 counters needed or a single will do?
-     * here 3 are used but it can be reduced to 2 by :
-     *  
-     * for (int j = 0; j < A[0].length(); j++) {
-            for (int i = 0; i < A.length - 1; i++) {
-                if (A[i].charAt(j) > A[i + 1].charAt(j)) {
-        i is used for string index
-     */
-    // https://leetcode.com/problems/delete-columns-to-make-sorted/
-    public int minDeletionSize(String[] A) {
-        int index =0; int count =0;
-        
-        for(int i=0; i<A[0].length(); i++){
-            for(int j =0; j<A.length-1; j++){
-                if((A[j].charAt(index)-'0')>(A[j+1].charAt(index)-'0')) {
-                    count++;
-                    break;
-                }
-            }
-            index++;
-        }
-        return count;
-    }
-
-    // https://leetcode.com/problems/lemonade-change/submissions/
-    /** greedy approach is to remove 10 notes first and then 5 ones
-     * if we see 20.
-     * else remove 5 notes thrice.
-     * return false if we can't make change of 5
-     * maintain 2 counters
-     */
-    public boolean lemonadeChange(int[] bills) {
-        int n = bills.length;
-        
-        int c5 = 0; int c10 =0; 
-        for(int i :bills){
-            if(i==5) c5++;
-            else if(i == 10) {
-                c10++;
-                if(c5>=1) c5--; 
-                else return false;
-            }
-            else {
-                if(c5>=1 && c10>=1){
-                    c5--; c10--;
-                } else if(c5>=3) c5-=3;
-                else return false;
-            }
-            // System.out.println("c5 "+c5 + " c10 "+c10);
-        }
-        return true;
     }
 
 
@@ -473,9 +544,10 @@ class Greedy{
     // https://leetcode.com/problems/reorganize-string
     public String reorganizeString(String S) {
         int n = S.length();
-        if(n == 0) return ""; String res = "";
+        if(n == 0) return ""; String res = "", curr = "";
         
         HashMap<Character, Integer> map = new HashMap<>();
+
         for(char c : S.toCharArray()){
             map.put(c, map.getOrDefault(c, 0)+1);
         }
@@ -493,18 +565,19 @@ class Greedy{
         int count = 0;
         while(pq.size()!=0){
             count = Math.min(n, k); // 2
-            List<Character> list = new ArrayList<>();
+            
             for(int i=0; i<count; i++){
                 if(pq.size() == 0) return ""; // 3
-                char curr = pq.remove();
-                res += curr; // 4
-                map.put(curr, map.get(curr)-1); // 5
-                // chk for freq here, why add to list if freq<0
-                if(map.get(curr)>0) list.add(curr); // 7
+                char c = pq.remove();
+                curr += c; 
+                map.put(c, map.get(c)-1); // 4
+                if(map.get(c)==0) map.remove(c); // 5
             }
-            for(int i =0; i<list.size(); i++){
-                pq.add(list.get(i));
+
+            for(char c: curr.toCharArray()){
+                if(map.containsKey(c)) pq.add(c);
             }
+
             // k els have been used, so length reduced by k
             n-=k; 
         }
@@ -593,6 +666,82 @@ class Greedy{
         return res.size()-j;
     }
 
+    
+
+    // https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/
+    /** solve two linear equations
+     * 1 convert all to float
+     * 2 check for integer a = (int)a 
+     * 3 check for negative (a*b)<0
+     */
+    public List<Integer> numOfBurgers(int tomatoSlices, int cheeseSlices) {
+        float a = 0; float b = 0; 
+        float c= tomatoSlices, d = cheeseSlices;
+        // 4*a+2*(cheeseSlices - a) = tomatoSlices;
+        a = (c/2 - d); b = d - a;
+        
+        ArrayList<Integer> res= new ArrayList<>();
+        if(a!=(int)a || b!=(int)b || (a*b)<0) return res;
+        res.add((int)a); res.add((int)b);
+        return (List<Integer>) res;
+    }
+
+    /** points:
+     * 1 string -> length()
+     * 2 how to check for string at index x and character at index y?
+     * 3 are 2 counters needed or a single will do?
+     * here 3 are used but it can be reduced to 2 by :
+     *  
+     * for (int j = 0; j < A[0].length(); j++) {
+            for (int i = 0; i < A.length - 1; i++) {
+                if (A[i].charAt(j) > A[i + 1].charAt(j)) {
+        i is used for string index
+     */
+    // https://leetcode.com/problems/delete-columns-to-make-sorted/
+    public int minDeletionSize(String[] A) {
+        int index =0; int count =0;
+        
+        for(int i=0; i<A[0].length(); i++){
+            for(int j =0; j<A.length-1; j++){
+                if((A[j].charAt(index)-'0')>(A[j+1].charAt(index)-'0')) {
+                    count++;
+                    break;
+                }
+            }
+            index++;
+        }
+        return count;
+    }
+
+    // https://leetcode.com/problems/lemonade-change/submissions/
+    /** greedy approach is to remove 10 notes first and then 5 ones
+     * if we see 20.
+     * else remove 5 notes thrice.
+     * return false if we can't make change of 5
+     * maintain 2 counters
+     */
+    public boolean lemonadeChange(int[] bills) {
+        int n = bills.length;
+        
+        int c5 = 0; int c10 =0; 
+        for(int i :bills){
+            if(i==5) c5++;
+            else if(i == 10) {
+                c10++;
+                if(c5>=1) c5--; 
+                else return false;
+            }
+            else {
+                if(c5>=1 && c10>=1){
+                    c5--; c10--;
+                } else if(c5>=3) c5-=3;
+                else return false;
+            }
+            // System.out.println("c5 "+c5 + " c10 "+c10);
+        }
+        return true;
+    }
+
 
     /** 
      * POINTS:
@@ -602,9 +751,9 @@ class Greedy{
      * OR 0 IS REACHED
      * 4 ADD REDUCED FREQ TO SET
     */
-    class Node{
+    class Node1{
         char c; int freq;
-        Node(char c, int f){
+        Node1(char c, int f){
             this.c = c; this.freq = f;
         }
     }
@@ -617,10 +766,10 @@ class Greedy{
             map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0)+1);
         }
         
-        List<Node> res = new ArrayList<>();
+        List<Node1> res = new ArrayList<>();
         
         for(HashMap.Entry<Character, Integer> e: map.entrySet()){
-            res.add(new Node(e.getKey(), e.getValue()));   
+            res.add(new Node1(e.getKey(), e.getValue()));   
             freqSet.add(e.getValue()); 
         }
         
@@ -742,84 +891,6 @@ class Greedy{
         return people;
     }
    
-
-   
-    /** points:
-     * 1 -ve no divided by k gives same remainder as (+ve)*(-1)
-     * 2 if num<k add k to bring it within range    
-     * 3 if frequency of els having remainder as 0 is not even, 
-     * i.e there is not a balanced no of els having 0 rem, return false
-     * 4 check freq for i and k-i in freq array
-     */
-    // https://leetcode.com/problems/check-if-array-pairs-are-divisible-by-k/
-    public boolean ifPairsDivByK(int[] arr, int k) {
-        int[] frequency = new int[k];
-        for(int num : arr){
-            num %= k;
-            if(num < 0) num += k;
-            frequency[num]++;
-        }
-        
-        if(frequency[0]%2 != 0) return false;
-        
-        for(int i = 1; i <= k/2; i++)
-            if(frequency[i] != frequency[k-i]) return false;
-			
-        return true;
-    }
-
-    // https://leetcode.com/problems/split-array-into-consecutive-subsequences/
-
-    /**use map for memoization of fibonacci series
-     * add to heap
-     * greedily subtract the max from k,
-     * if top is greater than k remove
-     * else subtract from k
-     * ALWAYS ADD CHECK FOR HEAP!=0
-     * 
-     * 
-     * had to add 45 as 10^7 was limit(saw in soln)
-     * 
-     * while(true) breaks with return count statement
-     */
-    // https://leetcode.com/problems/find-the-minimum-number-of-
-    // fibonacci-numbers-whose-sum-is-k/
-    
-    public int findMinFibonacciNumbers(int k) {
-        PriorityQueue<Integer> heap = new PriorityQueue<>((x,y)->y-x);
-        HashMap<Integer, Integer> map = new HashMap<>();
-        map.put(2, 1); map.put(1, 1);
-
-        fib(45, map);
-        heap.addAll(map.values());
-        System.out.println(heap);        
-        // https://stackoverflow.com/questions/5695017/priorityqueue-not-sorting-on-add
-
-        int count =0; int curr =k;
-        System.out.println(heap);
-        while(heap.peek()>k) heap.remove();
-        System.out.println(heap);
-        while(true){
-            if(curr - heap.peek()==0){
-                return count+1;
-            }
-            else if(heap.size()!=0 && curr - heap.peek()>0){
-                curr-=heap.remove();
-                count++;
-            }
-            if(curr==0) return count;
-            else if(heap.peek()>curr) heap.remove();
-        }
-    }
-
-    
-    int fib(int index, HashMap<Integer, Integer> map){
-        if(index <=2 ) return map.get(index);
-        if(map.containsKey(index)) return map.get(index);
-        int c = fib(index-1, map)+fib(index-2, map);
-        map.put(index, c);
-        return c;
-    }
 
 
     /** 

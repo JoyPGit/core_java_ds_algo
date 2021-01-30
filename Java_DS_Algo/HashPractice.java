@@ -586,6 +586,24 @@ class HashPractice{
         return result;
     }
 
+    // find max no of walls ending for each distance, exclude last as it's boundary
+    // https://leetcode.com/problems/brick-wall/submissions/
+    public int leastBricks(List<List<Integer>> wall) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int sum = 0, max = 0, len = 0;
+        for(List<Integer> list : wall){
+            for(int i=0; i<list.size(); i++){
+                if( i== list.size()-1) continue;
+                sum+=list.get(i);
+                map.put(sum, map.getOrDefault(sum, 0)+1);
+                max = Math.max(max, map.get(sum));
+            }
+            sum = 0;
+        }
+        // System.out.println(map);
+        return wall.size()-max;
+    }
+
     
     /** 
      * 
@@ -818,7 +836,9 @@ class HashPractice{
 
         return -1;
     }
-    
+    // https://leetcode.com/problems/closest-leaf-in-a-binary-tree/
+
+
     /** 
      * POINTS :
      * 1 USE HASHMAP AND ARRAYLIST
@@ -865,6 +885,10 @@ class HashPractice{
             return list.get((int)Math.random()*top);
         }
     }
+
+    // https://leetcode.com/problems/insert-delete-getrandom-o1/
+
+    // lru cache
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();

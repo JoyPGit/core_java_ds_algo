@@ -132,7 +132,7 @@ public class Partition{
             
             int x = findPartitions(nums, mid, m);
 
-            // if larger no of partitions, smaller pieces, so we need to lessen the size
+            // greater no of partitions implies pieces are smaller, so we need to lessen the size
             if(x>m){
                 lo = mid+1;
             }

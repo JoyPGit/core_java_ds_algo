@@ -87,6 +87,7 @@ public class DP {
         return dp[N];
     }
 
+    
     public int factorial(int n){
         if(n==0 || n==1) return 1;
         return n*factorial(n-1);
@@ -115,6 +116,7 @@ public class DP {
 
 
     //////////////////// UNIQUE PATHS
+
      /**
      * the trick is to convert a recursive relation to a dp relation 
      * dfs(r,c) = dfs(r+1,c)+dfs(r,c+1);
@@ -146,7 +148,7 @@ public class DP {
      * 
     */
     // [[1]]
-    // https://leetcode.com/problems/unique-paths-ii/submissions/
+    // https://leetcode.com/problems/unique-paths-ii
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
         int m = obstacleGrid.length;
         int n = obstacleGrid[0].length;
@@ -180,8 +182,12 @@ public class DP {
         return dp[m-1][n-1];
     }
 
-    /////////////////////////// STAIR, UNIQUE PATH
+    /////////////////////////// STAIRS
+    /** 
+     * 2 types : no of ways, min cost
+    */
 
+    // no of ways
     int countStairs = 0;
     //jumps of 1,2
     int stairs(int n){
@@ -207,8 +213,55 @@ public class DP {
 
     /** 
      * 
+     * basic reln is - f(n) = f(n-1) + f(n-2) + f(n-3)
+     * for 1, 3 and 5 steps f(n-1) + f(n-3) + f(n-5)
+     * 
+     * but for values lesser than 5, the arg will be -ve
+     * so, add only when (n-i)>=0;
+     * the for loop is for n-1 + n-3 + n-5
+     *
+     * without dp
+     *  public int climbStairs(int n) {
+        int[] arr = {1, 2};
+        
+        return helper(n, arr);
+    }
+    
+    int helper(int n, int[] arr){
+        if(n == 0 || n == 1) return 1;
+        int total = 0;
+        for(int i : arr){
+            if((n-i)>=0) total+=helper(n-i, arr);
+        }
+        return total;
+    } 
+     * 
+     * with dp below
+    */
+    // https://www.youtube.com/watch?v=5o-kdjv7FD0
+    // https://leetcode.com/problems/climbing-stairs
+    public int climbStairs(int n) {
+        int[] arr = {1, 2};
+        int[] dp = new int[n+1];
+        dp[0] = 1; dp[1] = 1;
+        return helper(n, dp, arr);
+    }
+    
+    int helper(int n, int[] dp, int[] arr){
+        if(dp[n] != 0) return dp[n];
+        int total = 0;
+        for(int i : arr){
+            if((n-i)>=0) total+=helper(n-i, dp, arr);
+        }
+        return dp[n] = total;
+    }
+
+
+    /// min cost 
+    /** 
+     * 
      * can start from either 0 or 1st index, hence recurrence
-     * 1 USED RECURSION AND THEN APLIED MEMOIZATION
+     * 1 USED RECURSION AND THEN APPLIED MEMOIZATION
      * f(i) = min(f(i+1), f(i+2))
      * 
      * 2 MEMOIZATION
@@ -220,6 +273,7 @@ public class DP {
      * if(dp[index]!=0) return dp[index];
      * 
      * 
+     * basic reln - f(cost, 0) = min(f(cost, 0+1)+cost[0], f(cost, 0+2) + cost[0])
      */
     // https://leetcode.com/problems/min-cost-climbing-stairs
     public int minCostClimbingStairs(int[] cost) {
@@ -281,7 +335,7 @@ public class DP {
         }
         return dp[index] = min;
     }
-
+    
     /**
      * https://www.youtube.com/watch?v=cETfFsSTGJI
      * points
@@ -310,6 +364,9 @@ public class DP {
         }
         return dp[n-1];
     }
+
+    // https://leetcode.com/problems/minimum-number-of-refueling-stops/discuss/149839/
+    // DP-O(N2)-and-Priority-Queue-O(NlogN)
 
 
     /////////////////////////// HOUSE ROBBER
@@ -349,7 +406,8 @@ public class DP {
         
         if(nums.length == 0) return 0;
         if(nums.length == 1) return nums[0];
-        // if(nums.length == 2) return Math.max(nums[0], nums[1]);
+
+        // tricky, res arr must be of size of largest el + 1
         int n = nums[nums.length-1]+1;
         System.out.println(n);
         int[] base = new int[n];
@@ -358,6 +416,7 @@ public class DP {
         for(int i =0; i<nums.length; i++) base[nums[i]] += nums[i];
         
         dp[0] = base[0];
+        // max
         dp[1] = Math.max(dp[0], base[1]);
         
         for(int i = 2; i<n; i++){
@@ -391,6 +450,7 @@ public class DP {
     }
 
     //////////// MAX PROD SUBARRAY
+
     // kadane
     // https://leetcode.com/problems/maximum-subarray/discuss/20193/DP-solution-and-some-thoughts
     // maxSubArray(A, i) = maxSubArray(A, i - 1) > 0 ? maxSubArray(A, i - 1) : 0 + A[i]; 
@@ -507,7 +567,6 @@ public class DP {
         return dp[n];
     }
     
-
     
     /////////////////////////// PARTITION
     // LIKE CLIMBING STAIRS
@@ -617,6 +676,9 @@ public class DP {
      * https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/
      * 
      * * k transactions (stock buy sell)
+     * rows -> transactions, col -> prices
+     * dp[i][j] = dp[i-1][k] + prices[k] - prices[i]
+     * 
      */ 
     // https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv
     public int maxProfit(int k, int[] prices) {
@@ -631,7 +693,8 @@ public class DP {
                 int max = 0;
                 // p from 0 till j-1
                 for(int p = 0; p<j; p++){
-                    max = Math.max(max, prices[j] - prices[p] + dp[i-1][p]);
+                    // 
+                    max = Math.max(max, dp[i-1][p] + prices[j] - prices[p]);
                 }
                 // no transaction case
                 dp[i][j] = Math.max(max, dp[i][j-1]);
@@ -717,6 +780,7 @@ public class DP {
     // https://leetcode.com/problems/burst-balloons/
 
     /** 
+     * both use [i][k] and [k+1[j]
      * POINTS : 
      * 1 USE l<=n
      * 2 SUBSTRING WORKS WITH 2 ARGS, FOR PRINTING SINGLE CHAR, USE i, i+1
@@ -744,7 +808,8 @@ public class DP {
                 }else{
                     // k<j
                     for(int k = i;k<j; k++){
-                        // 5
+                        // 5 for length 2, ii and kk so k can range from i till j
+                        // k+1 = j; so k<j
                         if(dp[i][k] == true && dp[k+1][j] == true) dp[i][j] = true;
                     }
                 }
@@ -798,6 +863,7 @@ public class DP {
 
 
     //////////////////////////// LIS
+    // longest chain, max sum, russian doll
 
     int LIShelper(int[] arr, int index, int prev) {
         if (index == arr.length) {
@@ -1057,6 +1123,7 @@ public class DP {
                 if(jobs[j].end <= jobs[i].start){  // 2
                     // if no overlap
                     dp[i] = Math.max(dp[i], jobs[i].profit + dp[j]); // 3
+                    // we found max j, so break out of for loop
                     break;
                 }
             }
@@ -1263,6 +1330,11 @@ public class DP {
     
 
     /** 
+     * size n+1, amount+1
+     * min no of coins, first row max , dp[0][0] = 0 , ([i-1][j], [i][j-coins[i-1]] +1)
+     * no of ways first col 1
+     * 
+     * ///////////////////////////
      * POINTS :
      * 1 INITIALIZE FIRST ROW TO INTEGER.MAX_VALUE
      * 2 SET dp[0][0] = 0;
@@ -1309,7 +1381,7 @@ public class DP {
 
     // COINS CAN BE REUSED
     // [2,1,5] -> indexes [2][1]
-    //somplae just add up incl and exclude
+    // somplae just add up incl and exclude
     // https://leetcode.com/problems/coin-change-2
     int coinChangeNumberOfWays(int[] coins, int total){
         int n = coins.length; 
@@ -1380,7 +1452,7 @@ public class DP {
     }
     
     void f(int[] nums, int index, int sum){
-        // need to use all els
+        // need to use all els, so index must nums.length
         if(index==nums.length && sum ==0){
             sumCount++; 
             return;
@@ -1475,8 +1547,8 @@ public class DP {
 
     // like coin change no of ways
     // FIRST COL IS ALL TRUE, 
-    // 0 ELS-> 0 SUM TRUE
-    // 0 SUM -> ALL ELS TRUE
+    // 0 ELS-> 0 SUM FALSE (first row)
+    // 0 SUM -> ALL ELS TRUE (first col)
     // https://leetcode.com/problems/partition-equal-subset-sum/
     public boolean canPartition2(int[] set) {
         int sum = 0;
@@ -1718,6 +1790,7 @@ public class DP {
     /** IMPORTANT here the difference between the element shuld be 1,
      * so pass arr[i][j] - 1 as prev, not infinity
     */
+    // https://leetcode.com/problems/longest-increasing-path-in-a-matrix
     int longestPathMatrix(int[][] matrix){
         int n = matrix.length;
         int m = matrix[0].length;
@@ -1832,8 +1905,70 @@ public class DP {
     //     }
     // }
 
+    // as we are only going down and left, so no visited array is required
+    // http://leetcode.com/problems/minimum-path-sum
+    public int minPathSum(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        if(m == 1 && n==1 && grid[0][0]!=-1) return grid[0][0];
+        int[][] dp = new int[m][n];
+        int[][] visited = new int[m][n];
+        
+        return dfs(0, 0, grid, dp, visited);
+    }
     
+    int dfs(int row, int col, int[][] arr, int[][] dp, int[][] visited){
+        if(row>=0 && row<arr.length 
+          && col>=0 && col<arr[0].length
+          // && visited[row][col] == 0)
+        ){
+            if(row == arr.length-1 && col == arr[0].length-1){
+                return arr[row][col];
+            }
+            
+            if(dp[row][col]!=0) return dp[row][col];
+            
+            // visited[row][col] = 1;
+            
+            // int left = dfs(row, col-1, arr, dp, visited);
+            int right = dfs(row, col+1, arr, dp, visited);
+            // int up = dfs(row-1, col, arr, dp, visited);
+            int down = dfs(row+1, col, arr, dp, visited);
+            
+            // visited[row][col] = 0; //
+            
+            return dp[row][col] = Math.min(right, down)
+                // left, Math.min(right, Math.min(down, up))) 
+                + arr[row][col];
+        }
+        else return Integer.MAX_VALUE;
+    }
 
+    // 3d dp for 3 vals, r, c, k(moves)
+    // https://leetcode.com/problems/knight-probability-in-chessboard/
+    int[] x = {-2,-1,1,2,2,1,-1,-2};
+    int[] y = {1,2,2,1,-1,-2,-2,-1};
+    public double knightProbability(int N, int K, int r, int c) {
+        int[][] grid = new int[N][N];
+        double[][][] dp = new double[N][N][K+1];
+        return dfs(r, c, grid, K, dp);
+    }
+    
+    double dfs(int r, int c, int[][] arr, int k, double[][][] dp){
+        // no visited as same indexes can be revisited,
+        // condn is knight should stay on the board
+        if(r>=0 && r<arr.length && c>=0 && c<arr[0].length && k>=0){
+            if(dp[r][c][k]!=0) return dp[r][c][k];
+            
+            if(k==0) return 1;
+            
+            double val = 0;
+            for(int i=0; i<8; i++){
+                val += (0.125)*(dfs(r+x[i], c+y[i], arr, k-1, dp));
+            }
+            return dp[r][c][k] = val;
+        }
+        return 0;
+    }
     // https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/
     // discuss/766002/Java-DP-without-recursion
 
@@ -2304,7 +2439,9 @@ public class DP {
         System.out.println(result);
         return result*result;
     }
+    // https://leetcode.com/problems/count-square-submatrices-with-all-ones/
 
+    
     // MIN CUTS, PALINDROME, ROD CUT
     // DFS MATRIX GOLDMINE
     // RECURSION INCLUDE EXCLUDE MEMO
@@ -2329,7 +2466,6 @@ public class DP {
 
     // https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/
 
-    // https://leetcode.com/problems/count-square-submatrices-with-all-ones/
     // https://leetcode.com/problems/maximum-length-of-repeated-subarray/
 
     // https://www.geeksforgeeks.org/probability-knight-remain-chessboard/

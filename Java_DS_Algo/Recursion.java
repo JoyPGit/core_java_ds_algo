@@ -485,6 +485,7 @@ public class Recursion {
         if(index == str.length()) return 0;
         for(int i = index+1; i<=str.length(); i++){
             String sub = str.substring(index, i);
+            // same as palindrome, just check if set contains
             if(!splitSet.contains(sub)){
                 splitSet.add(sub);
                 countSplit = Math.max(countSplit, 1 + splitHelper(str, i) );
@@ -801,7 +802,8 @@ public class Recursion {
     }
 
 
-
+    // kth permutation apollo
+    // median of unsorted
 
     // https://leetcode.com/problems/generate-parentheses/discuss/
     // 10442/Java-recursion-solution-with-comments-hope-it-helps!

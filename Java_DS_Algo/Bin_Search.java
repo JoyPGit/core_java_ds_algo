@@ -455,6 +455,32 @@ public class Bin_Search {
 
 
     /** 
+     * 1 use quicksort partition
+     * 2 if x > position, hi = x-1 and vice-versa
+    */
+    // https://leetcode.com/problems/kth-largest-element-in-an-array
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length, lo = 0, hi = n-1;
+        while(lo<=hi){
+            int x = partition(nums, lo, hi);
+            // System.out.println(x);
+            if(x == n-k) return nums[x]; // index
+            else if(x<n-k) lo = x+1;
+            else hi = x-1;
+        }
+        return lo;
+    }
+    
+    int partition(int[] arr, int lo, int hi){
+        int j = lo, pivot = arr[hi];
+        for(int i = lo; i<hi; i++){
+            if(arr[i]<pivot) swap(arr, i, j++);
+        }
+        swap(arr, hi, j);
+        return j;
+    }
+    
+    /** 
      * POINTS : 
      * 1 MARK ALL -VE AND >n AS n+1
      * 2 MARK nums[Math.abs(nums[k]) - 1] AS -ve
@@ -676,7 +702,7 @@ public class Bin_Search {
         return true;
     }
 
-    
+
     /** 
      * SIMILAR TO ABOVE : WHENEVER QUESTION ASKS FOR CONTIGUOUS PARTITION 
      * THINK OF BINARY SEARCH

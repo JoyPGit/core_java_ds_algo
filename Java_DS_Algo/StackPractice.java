@@ -434,54 +434,39 @@ public class StackPractice {
         return min;
     }
     
-    // MINOR MODS NEEDED
-    // https://leetcode.com/problems/asteroid-collision/
+    /** 
+     * shrinking technique
+     * 1 compare with incoming, if product <0 check for the top el to be 
+    */
+    // https://leetcode.com/problems/asteroid-collision/submissions/
     public int[] asteroidCollision(int[] asteroids) {
-        int n = asteroids.length;
-        int[] res; boolean same= false; boolean greater = false;
-        Deque<Integer> list = new LinkedList<>();
-        list.add(asteroids[0]);
-        for(int i =1; i<n; i++){
-            int curr = asteroids[i];
-            same = false; greater = false;
-            // if((list.getLast()>0 && curr>0)
-            // || (list.getLast()<0 && curr<0)
-            // || (list.getLast()<0 && curr>0)) list.add((curr));
-            // else{
-                System.out.println("in else");
-
-                while(list.size()!=0 && list.getLast()>0 && curr<0){
-                    int popped = list.removeLast();
-                    // System.out.println("new last "+list.getLast());
-                    System.out.println("popped "+popped);
-                    if(Math.abs(popped)<Math.abs(curr)){
-                        System.out.println("line 89");
-                        // list.add(curr);
-                    }
-                    else if(Math.abs(popped) == Math.abs(curr)){
-                        System.out.println("line 93");
-                        same = true;
-                        break;
-                    }
-                    else if(Math.abs(popped) > Math.abs(curr)){
-                        System.out.println("line 98");
-                        list.add(popped);
-                        greater = true;
-                        break;
-                    }
+        Deque<Integer> q = new LinkedList<>();
+        boolean greater = false;
+        for(int i : asteroids){
+            
+            // if -ve no issues, as it will go left
+            // if you don't want to add, use flag
+            while(q.size()!=0 && q.getLast()>0 &&  q.getLast()*i<0){
+                if(Math.abs(i) == Math.abs(q.getLast())) { //.abs(i)
+                    greater = true;
+                    q.removeLast();
+                    break;
                 }
-                if(!same && !greater)list.add(curr);
-            // }
-            System.out.println("for i "+i+" "+list);    
+                else if(Math.abs(i)>Math.abs(q.getLast())) q.removeLast();
+                else {
+                    greater = true;
+                    break;
+                }
+            }
+            if(!greater) q.addLast(i);
+            greater = false;
         }
-        System.out.println(list);
-        res = new int[list.size()];
-        int i =0;
-        while(list.size()!=0){
-            res[i] = list.removeFirst();
-            i++;
+        
+        // System.out.println(q);
+        int[] res = new int[q.size()]; int index = 0;
+        while(q.size()!=0){
+            res[index++] = q.removeFirst();
         }
-        // Utility.print1DMatrix(res);
         return res;
     }
 

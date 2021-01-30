@@ -6,14 +6,17 @@ wiggle sort, dutch national, max Consecutive ones, sorted squares
 3sum, K-diff Pairs in an Array, remove k digits
 Last Substring in Lexicographical Order, 
 Median of Two Sorted Arrays, Find Minimum in Rotated Sorted Array
+container with most water (val = min(lmax, rmax)*(arr[hi] - arr[lo]))
+rain water
 
-
+________________________________________________________
 linked list 
 reverse nodes in k group (keep track of kth node, recurse, return q)
 add nos, merge sort, 
 intersection of 2 lists (fast.next && fast.next.next)
 partition list (merge or copy the values)
 
+________________________________________________________
 binary search
 min in rotated sorted (w/o dups), peak (almost similar)
 min in rotated sorted with duplicates has diff template
@@ -22,38 +25,72 @@ find min, find min with duplicates
 find peak, find first missing positive
 leaderboard, h-index 
 
+________________________________________________________
+Backtracking
+rat in maze, pattern print
 
-backtracking
-subsets 2 (no dups), permutations , diff : (no Arrays.sort, add only when cur)
+combinations, subsets are same
+permutations , diff : (no Arrays.sort, visited[i]!=0 continue)
 permutation of sets with duplicates  
-max length concat, sudoku, n-queen, letter combinations, word ladder, word search, subsets,
+
+for sum add exit condition
+for reuse recur from i
+for no duplicates , use nums[i] == nums[i-1] continue after Arrays.sort
+
+max length concat, sudoku, n-queen, letter combinations, word ladder, word search,
 palindrome partitioning
 
-
+________________________________________________________
 recursion
-target sum, pattern, 
+target sum, pattern, stairs, jump
 include-exclude pattern -> similar to backtracking w/o remove, 
 return value instead of global var
 tip calculator 
 
-Sorting
-heap, merge, quick, Longest Word in Dictionary through Deleting
-
-
+________________________________________________________
 Stack
 trapping rainwater, infix to postfix, next greater el, remove k digits, largest rect area
 maximal rect, longest valid parentheses, reverse stack using recursion
 
+________________________________________________________
 heap
 median from data stream
 
-partition
+________________________________________________________
+Partition
+
 split-array-largest-sum, 
 partition-array-for-maximum-sum (dp)
 palindromic partition , with dp
 word break, 
+size [n][n], l<=n, substring check(i, j+1)
+(i=0, j= 1; [0][0] till [1][1], [i][k] [k+1][j])
 
+// "ab", ["a","b"]
+public boolean wordBreak(String s, List<String> wordDict) {
+    int n = s.length();
+    boolean[][] dp = new boolean[n][n];
+    
+    for(int l = 1; l<=n; l++){
+        for(int i = 0; i+l-1<n; i++){
+            int j = i+l-1;
+            
+            if(wordDict.contains(s.substring(i, j+1))) dp[i][j] = true;
+            else{
+                // [0][0], check ['a', 'b']
+                for(int k = i; k<j; k++){
+                    if(dp[i][k] == true && dp[k+1][j] == true) {
+                        dp[i][j] = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return dp[0][n-1];
+}
 
+________________________________________________________
 tree
 morris inorder,recover BST
 iterative preorder, postorder
@@ -68,26 +105,56 @@ tree from sorted, tree from preorder and inorder
 n-ary trees
 Given a n-array tree, find all the paths from root to leaf nodes.
 path sum 3, flatten, Given a binary tree, pruning
-find the number of subtrees which has all the nodes is that entire subtree with same node data value.
+find the number of subtrees which have all the nodes such that entire subtree has same node data value.
 Given a BST, print the all nodes which do not have siblings. o/p in preorder fashion.
 
+________________________________________________________
+Greedy
+pairs div by k, can complete circuit
 
-dp
+max CPU load
+meeting rooms (like train platform, use class to map time and start or end type,
+add when start, subtract when end time)
+merge intervals, arrows (sort on start time, prev[1]>=curr[0], update min; else prev = curr, count++;)
+
+reorganize string, n=s.length();
+(heap->pq->res; count = min(s.length(), k), n -= k)  if(q.size == 0) return "";
+is possible divide
+
+Maximum Number of Events That Can Be Attended
+
+min fibonacci
+
+reconstruct itinerary, 
+jump game 2, 
+
+________________________________________________________
+DP
 fibonacci, stairs, jump
-house robber, del and earn, min cost paint
-max prod subarray, min cost tickets, no of decodings(excel col)
-painter's partition, word break, stock buy sell 4, palindromic partitioning
+
+house robber, del and earn, 
+min cost paint
+max prod subarray, min cost tickets, 
+no of decodings(excel col)
+
 LIS, russian doll, 
 JOB SCHEDULING
+
+painter's partition, stock buy sell 4, palindromic partitioning, word break
+
 Longest increasing path in matrix
+
 knapsack, rod cutting, coin change, Knight Probability in Chessboard,
-Subsets - partition, min diff, max size subset
+coin min no (row fill max-100, dp[0][0] = 0) {size [n+1][amount+1]}
+coin no of ways (col fill 1)
+Subsets - partition, min diff, max size subset (like coin no of ways)
 stone game
+
 edit distance
 longest common subseq, Substring
 longest palindromic subseq, Substring
 
-
+________________________________________________________
 String
 first unique char, shortest dist to a char, 
 royal names, longest prefix
@@ -100,24 +167,26 @@ min swaps to make palindrome
 gcd, String Compression, Palindromic Substrings, wildcard matching, 
 version compare, decode string, decode ways,
 word subsets
-word search, word ladder, strobogrammatic, longest Palindromic Substring, Minimum Window Substring
+word search, word ladder, strobogrammatic, longest Palindromic Substring, 
+Minimum Window Substring
 find min diff, largest time
 
-
+________________________________________________________
 trie
 lru
-
+________________________________________________________
 matrix
 search in sorted, kth smallest el in matrix,
 spiral, rotate matrix, maximal sq, walls and gates, 
 Longest increasing path in matrix (dp)
 
-
+________________________________________________________
 graph
 dfs, time to inform, course schedule, bipartite, tps, 
 bipartite, n/w delay, cheapest flights (dijkstra), server
 all paths from src to target (when to add start and when its adj?)
 
+________________________________________________________
 Math
 sieve of eratosthenes, robot, max prod subarray, climb stairs,
 stock buy sell, excel sheet col title, is path crossing, 
@@ -130,22 +199,15 @@ Given n number of rectangles, find the union of all rectangles (only algorithm).
 contiguous subarray prod == k, like kadane,
 largest no from an array
 
-
-Greedy
-max CPU load
-reconstruct itinerary, reorganize string, merge intervals, 
-Maximum Number of Events That Can Be Attended
-jump game 2, pairs div by k, can complete circuit
-
-
-Hashmap
+________________________________________________________
+HashMap
 2 sum, prefix sum, 
 subarray sum equals k, no of nice subarrays(convert to prefix sum), max length equal no 0s and 1s
 smallest subsequence of distinct chars,
 word subsets, path sum 3, 
 special O(1) data structure
 
-
+________________________________________________________
 sliding Window
 map.size(), left removal, smallest, longest (update diff), count+=
 
@@ -156,7 +218,50 @@ count distinct in every window (use map size, Microsoft)
 max consecutive 1s 3, length of longest substring
 celebrity, min swaps to group 1s
 
+________________________________________________________
+Sorting
+heap, merge, quick, Longest Word in Dictionary through Deleting
+    public ListNode sortList(ListNode head) {
+        if(head == null) return null;
+        // for individual els, return el
+        if(head.next == null) return head;
+        
+        ListNode fast = head, slow = head, temp = null;
+        
+        while(fast.next!= null && fast.next.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        
+        temp = slow.next;
+        slow.next = null;
+        
+        ListNode a = sortList(head); ListNode b = sortList(temp);
+        return merge(a, b);
+    }
 
+    ListNode merge(ListNode a, ListNode b){
+        ListNode res = new ListNode(0);
+        ListNode p = res;
+        while(a!=null && b!=null){
+            if(a.val<b.val){
+                res.next = a;
+                a = a.next;
+            }
+            else{
+                res.next = b;
+                b = b.next;
+            }
+            res = res.next; res.next = null;
+        }
+
+        if(a!=null) res.next = a;
+        if(b!=null) res.next = b;
+        
+        return p.next;
+    }
+
+________________________________________________________
 Design
 Design a custom Iterator in Java, which will have same methods like hashNext() and next(), 
 but the user will be able to provide the starting index(m) from which the iteration will start and
