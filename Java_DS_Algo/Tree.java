@@ -268,6 +268,8 @@ public class Tree {
         second.val = temp;
     }
 
+    // https://leetcode.com/problems/binary-search-tree-iterator/ use iterative traversal
+
     //////////////////////////////////////////// PREORDER/////
     // SIMPLE : USE STACK, POP, ADD TO RES, ADD LEFT TO STACK, ADD RIGHT TO STACK
     void preOrder(TreeNode x) {
@@ -985,6 +987,34 @@ public class Tree {
         return Math.max(left,right)+1;
     }
 
+    // https://leetcode.com/problems/diameter-of-n-ary-tree/
+    int maxDiameter = 0;
+    public int diameter(Node root) {
+        helper(root);
+        return maxDiameter;
+    }
+    
+    int helper(Node root){
+        if(root == null) return 0;
+        int first = 0, second = 0;
+        for(Node i : root.children){
+            int d = helper(i);
+            if(d>first){
+                // 
+                second = first;
+                first = d; 
+            }
+            else if(d>second){
+                second = d;
+            }
+            // System.out.println("first "+first+" second "+second+" "+i.val);
+        }
+        maxDiameter = Math.max(maxDiameter, first + second);
+        //
+        return first+1;
+    }
+
+    
     /////////////// SIMILAR TO HEIGHT, LEFT, RIGHT AND THEN ROOT DECISION
     /////////////////////// ANCESTOR TEMPLATE
     // (ALSO HELPS TO AVOID GLOBAL VAR)
@@ -1950,7 +1980,7 @@ public class Tree {
         
         dfs(root.left, target); dfs(root.right, target);
     }
-    
+
     ////////////////////////////////////////////////////////////
     ///////////////IMP
 

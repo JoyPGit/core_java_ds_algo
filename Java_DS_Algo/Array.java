@@ -1164,7 +1164,124 @@ class Array {
         return res;
     }
 
+    // game of life
+    // use a base array to keep track of changes
+    // https://leetcode.com/problems/prison-cells-after-n-days/
+    public int[] prisonAfterNDays(int[] cells, int N) {
+        N = N%14 == 0? 14:N%14;
+        int n = cells.length, index =0;
+        int[] base = new int[n];
+        
+        for(int i : cells){
+            base[index++] = i;
+        }
+        
+        // res[0] = 0; res[n-1] = 0;
+        
+        for(int i =0; i<N; i++){
+            for(int j = 0; j<n; j++){
+                if(j == 0 || j == n-1) continue;
+                else{
+                    if((base[j-1] ==0 && base[j+1] == 0) 
+                       || (base[j-1] == 1 && base[j+1] == 1)) cells[j] = 1;
+                    else cells[j] = 0;
+                }
+            }
+            index = 0;
+            for(int k : cells) {
+                base[index++] = k;
+                // System.out.print(k+",");
+            }
+            // System.out.println();
+            base[0] = 0; base[n-1] = 0;
+            
+        }
+        
+        cells[0] = 0; cells[n-1] = 0;
+        return cells;
+    }
+
+    // Math.abs(1) -> previously alive
+    // https://leetcode.com/problems/game-of-life
+    int[] rows = {-1, 0, 1, 1, 1, 0, -1, -1};
+    int[] cols = {1, 1, 1, 0, -1, -1, -1, 0};
+    int m = 0, n = 0;
     
+    
+    public void gameOfLife(int[][] board) {
+        m = board.length; n = board[0].length;
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                int live = findLive(board, i, j);
+                
+                // check condition
+                if(board[i][j] == 1 && (live<2 || live>3)) board[i][j] = -1;
+                if(board[i][j] == 0 && (live == 3)) board[i][j] = 2;
+            }
+        }
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(board[i][j]>0) board[i][j] =1;
+                else board[i][j] = 0;
+            }
+        }
+    }
+    
+    int findLive(int[][] board, int r, int c){
+        int count = 0;
+        for(int k = 0; k<8; k++){
+            int row = r + rows[k];
+            int col = c + cols[k];
+            if(row>=0 && row<m && col>=0 && col<n 
+               && Math.abs(board[row][col]) == 1) 
+                count++;
+        }
+        return count;
+    }
+    
+    /** 
+     * For an element arr[i], we do not need to consider arr[i] for left index if there is an element 
+     * smaller than arr[i] on left side of arr[i]. Similarly, if there is a greater element on right 
+     * side of arr[j] then we do not need to consider this j for right index. So we construct two 
+     * auxiliary arrays LMin[] and RMax[] such that LMin[i] holds the smallest element on left side 
+     * of arr[i] including arr[i], and RMax[j] holds the greatest element on right side of arr[j] 
+     * including arr[j]. After constructing these two auxiliary arrays, we traverse both of these 
+     * arrays from left to right. While traversing LMin[] and RMa[] if we see that LMin[i] is greater 
+     * than RMax[j], then we must move ahead in LMin[] (or do i++) because all elements on left of LMin[i] 
+     * are greater than or equal to LMin[i]. Otherwise we must move ahead in RMax[j] to look for a 
+     * greater j – i value.
+    */
+    // https://www.geeksforgeeks.org/given-an-array-arr-find-the-maximum-j-i-such-that-arrj-arri/
+    int maxIndexDiff(int arr[], int n) { 
+        
+        // Your code here
+        int[] left = new int[n];
+        int[] right = new int[n];
+        
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        for(int i =0; i<n; i++){
+            min = Math.min(min, arr[i]);
+            left[i] = min;
+        }
+        
+        for(int i =n-1; i>=0; i--){
+            max = Math.max(max, arr[i]);
+            right[i] = max;
+        }
+        
+        int l =0, r = 0, diff = 0;;
+        while(l<n && r<n){
+            if(left[l] <= right[r]){
+                diff = Math.max(diff, r-l);
+                r++;
+            }
+            else l++;
+        }
+        return diff;
+    }
+
     public static void main(String[] args) {
         Array test = new Array();
 

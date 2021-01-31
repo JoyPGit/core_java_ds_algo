@@ -6,7 +6,7 @@ public class Recursion {
     }
     
     /** 
-     * 
+     * linked list reverse, tree serialize and deserialize
      * all patterns, checks, visited, backtracking
      * (target sum, jump 3, all subsets)
      * 
@@ -28,6 +28,28 @@ public class Recursion {
      * ROD CUTTING -> CONINCHANGE
      * N QUEEN -> PAINTER 
     */
+
+
+    // https://leetcode.com/problems/reverse-linked-list/
+    ListNode h = null;
+    public ListNode reverseList(ListNode head) {
+        if(head == null) return null;
+        helper(head);
+        head.next = null;
+        return h;
+    }
+    
+    void helper(ListNode head){
+        if(head == null) return;
+        ListNode a = head, b = head.next;
+        if(b == null) {
+            h = a;
+            return;
+        }
+        helper(b);
+        b.next = a;
+    }
+
 
     void printReverseRecursive(String str){
         int n = str.length()-1;

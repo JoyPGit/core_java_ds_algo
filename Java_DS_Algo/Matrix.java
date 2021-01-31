@@ -142,6 +142,59 @@ class Matrix {
     */
 
     /** 
+     * we can use an extra array to store states and then look at that to update current state
+     * 
+     * 1 here we use -1 and 2 to denote previous states as well as current states.
+     * find live neighbours for each cell; Math.abs(-1) why?
+     * 1-> live; -1> currently live prreviously dead
+     * 
+     * 2 while updating -1 or 2 check conditions
+     * 
+     * -1 previously live, 1 currently live
+    */
+    // Math.abs(1) -> previously alive
+    // https://leetcode.com/problems/game-of-life
+    int[] rows1 = {-1, 0, 1, 1, 1, 0, -1, -1};
+    int[] cols1 = {1, 1, 1, 0, -1, -1, -1, 0};
+    int m = 0, n = 0;
+    
+    
+    public void gameOfLife(int[][] board) {
+        m = board.length; n = board[0].length;
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                int live = findLive(board, i, j);
+                
+                // check condition
+                if(board[i][j] == 1 && (live<2 || live>3)) board[i][j] = -1;
+                // currenlty live, but previously dead. 2 coz we are checking previous states
+                if(board[i][j] == 0 && (live == 3)) board[i][j] = 2;
+            }
+        }
+        
+        // final updated board
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(board[i][j]>0) board[i][j] =1;
+                else board[i][j] = 0;
+            }
+        }
+    }
+    
+    int findLive(int[][] board, int r, int c){
+        int count = 0;
+        for(int k = 0; k<8; k++){
+            int row = r + rows1[k];
+            int col = c + cols1[k];
+            if(row>=0 && row<m && col>=0 && col<n 
+               && Math.abs(board[row][col]) == 1) 
+                count++;
+        }
+        return count;
+    }
+
+    /** 
      * run 2 nested for loops
      * 1 use fc, fr first row and first col; check if i==0 || j==0
      * 2 if 0 is found, then mark row and col headers 0

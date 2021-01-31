@@ -479,7 +479,7 @@ public class Bin_Search {
         swap(arr, hi, j);
         return j;
     }
-    
+
     /** 
      * POINTS : 
      * 1 MARK ALL -VE AND >n AS n+1
@@ -782,6 +782,46 @@ public class Bin_Search {
             else lo = mid+1;
         }
         return n - lo;
+    }
+
+    /** 
+     * steps:
+     * 1 check which array has lesser length
+     * 2 use cut1 and cut2, no of elements to the left of cut1 and cut2 should be half of the total no of els
+     * 3 l1<r2 and l2<r1
+     * 4 if l1>r2 we need to move cut1 to the left and if l2>r1 move to the right.
+     * remember always els to the left will be equal in number to els on the right
+     * 
+     * bin search on arr1, take max of left half and min of right half
+     * 
+    */
+    // https://www.youtube.com/watch?v=yD7wV8SyPrc
+    // https://leetcode.com/problems/median-of-two-sorted-arrays/
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        if(m>n) return findMedianSortedArrays(nums2, nums1);
+
+        int lo = 0, hi = m;
+        
+        while(lo<=hi){
+            int c1 = lo +(hi-lo)/2;
+            int c2 = (m+n)/2 - c1;
+            
+            int l1 = c1 == 0?Integer.MIN_VALUE:nums1[c1-1];
+            int l2 = c2 == 0?Integer.MIN_VALUE:nums2[c2-1];
+            int r1 = c1 == m?Integer.MAX_VALUE:nums1[c1];
+            int r2 = c2 == n?Integer.MAX_VALUE:nums2[c2];
+            
+            // binary search
+            if(l1>r2) hi = c1-1;
+            else if(l2>r1) lo = c1+1;
+            else{
+                if((m+n)%2 == 0) return (Math.max(l1, l2) + (Math.min(r1, r2)))/2.0;
+                else return Math.min(r1, r2);
+            }
+        }
+        return 0;
     }
 
     // https://leetcode.com/problems/russian-doll-envelopes/

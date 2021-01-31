@@ -3,22 +3,24 @@ package Java_DS_Algo;
 public class ToDo {
 
     /**
+     * max-tip
+     * trie, refuelling
      * call, Object
+     * max sum div by p
      * https://leetcode.com/problems/design-add-and-search-words-data-structure/
      * skyline
      * game of life
      * matrix 0s
      * j-i; arr[j]>arr[i]
+     * snakes and ladders
      * array els equal
-     * snakes and ladders, min knight moves
+     * min knight moves
      * knight probability
      * tree dia, sum of dist in tree
      * max prod of split binary tree; split graph
-     * cherry pickup
      * morris inorder, recover tree
      * subarray sums div by k
-     * search rotated sorted , peak
-     * max-tip
+     * search rotated sorted, peak
      * string concat
      * max events that can be attended
      * merge, heap, quick, median in unsorted

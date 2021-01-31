@@ -355,7 +355,8 @@ class Graph {
         }
     }
 	
-	/* similar to tree dia, 
+	/**  
+	 * similar to tree dia, 
 	 * in tree dia, take max of left + right and return max(left, right)+1;
 	 * 
 	 * here we check for all children, we select the longest two paths
@@ -363,9 +364,10 @@ class Graph {
 	 * 
 	 * no visited, i!=parent
 	 * bidirectional edges, not a binary tree
+	 * GRAPH NO SPECIFIC ROOT
 	*/
     // https://leetcode.com/problems/tree-diameter
-    int max = 0;
+    int maxDia = 0;
     public int treeDiameter(int[][] edges) {
         HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
         
@@ -380,7 +382,7 @@ class Graph {
         }
         
         dfs(map, 0, -1);
-        return max;
+        return maxDia;
     }
     
     int dfs(HashMap<Integer, ArrayList<Integer>> map, int node, int parent){
@@ -402,11 +404,37 @@ class Graph {
                 secondMax = dist;
             }
             
-            max = Math.max(max, firstMax + secondMax);
+            maxDia = Math.max(maxDia, firstMax + secondMax);
         }
         return firstMax+1;
 	}
 
+	// https://leetcode.com/problems/diameter-of-n-ary-tree/
+    int max = 0;
+    public int diameter(Node root) {
+        helper(root);
+        return max;
+    }
+    
+    int helper(Node root){
+        if(root == null) return 0;
+        int first = 0, second = 0;
+        for(Node i : root.children){
+            int d = helper(i);
+            if(d>first){
+                // 
+                second = first;
+                first = d; 
+            }
+            else if(d>second){
+                second = d;
+            }
+            // System.out.println("first "+first+" second "+second+" "+i.val);
+        }
+        max= Math.max(max, first + second);
+        //
+        return first+1;
+    }
 	// https://leetcode.com/problems/sum-of-distances-in-tree/
 	
 	/** 

@@ -164,6 +164,31 @@ public class Mathprob {
         }
     }
 
+    // solve mathematically, find an equation
+    // check 3rd solution
+    /** 
+     * Firstly, assume that we are updating the elements of the sorted array after every step of 
+     * calculating the difference diffdiff. We'll see how to find the maximum and minimum element 
+     * without traversing the array. In the first step, the last element is the largest element. 
+     * Therefore, diff=a[n-1]-a[0]diff=a[n−1]−a[0]. We add diff to all the elements except the last one 
+     * i.e. a[n-1]a[n−1]. Now, the updated element at index 0 ,a'[0] will be a[0]+diff=a[n-1]a[0]+diff=a[n−1]. 
+     * Thus, the smallest element a'[0] is now equal to the previous largest element a[n-1]a[n−1]. 
+     * Since, the elements of the array are sorted, the elements upto index i-2 satisfy the 
+     * property a[j]>=a[j-1]a[j]>=a[j−1]. Thus, after updation, the element a'[n-2] will become the 
+     * largest element, which is obvious due to the sorted array property. Also, a[0] is
+     *  still the smallest element.
+     * 
+     * Thus, for the second updation, we consider the difference diff as 
+     * diff=a[n-2]-a[0]diff=a[n−2]−a[0]. After updation, a''[0] will become equal to a'[n-2] similar 
+     * to the first iteration. Further, since a'[0] and a'[n-1] were equal. After the second updation, 
+     * we get a''[0]=a''[n-1]=a'[n-2]a[0]=a[n−2]. 
+     * Thus, now the largest element will be a[n-3]a[n−3]. Thus, we can continue in this fashion, 
+     * and keep on incrementing the number of moves with the difference found at every step.
+    */
+    // https://leetcode.com/problems/minimum-moves-to-equal-array-elements/
+    // public int minMoves(int[] nums) {
+    //     int m;
+    // }
     
     // https://leetcode.com/problems/robot-bounded-in-circle/
     public boolean isRobotBounded(String instructions) {
@@ -277,6 +302,28 @@ public class Mathprob {
         return -1;
     }
 
+    // https://leetcode.com/problems/ugly-number-ii
+    public int nthUglyNumber(int n) {
+
+        HashSet<Long> set = new HashSet<>();
+        PriorityQueue<Long> pq = new PriorityQueue<>();
+        long curr =0;
+        int[] arr = {2, 3, 5};
+        pq.add((long)1);
+        for(int i : arr) pq.add((long)i);
+            
+        while(n-- > 0){
+            curr = pq.remove();
+            // System.out.print(curr+", ");
+            if(curr == 1) continue;
+            for(int i : arr){
+                if(set.contains(curr*i)) continue;
+                pq.add(curr*i);
+                set.add(curr*i);
+            }
+        }
+        return (int)curr;
+    }
 
     // after sorting, the smallest -ve numbers will be at 0 and 1, their product can be +ve, so 
     // those two are multiplied with largest num nums[n-1];
@@ -972,6 +1019,36 @@ public class Mathprob {
         return perimeter;
     }
     
+    /** 
+     * run 2 loops and find max diff for each iteration, if diff >0 swap els
+    */
+    // https://leetcode.com/problems/maximum-swap/
+    public int maximumSwap(int num) {
+        String str = ""+num;
+        
+        int max = 0; int maxIndex = 0;
+        for(int i=0; i<str.length(); i++){
+            for(int j = i+1; j<str.length(); j++){
+                if(str.charAt(j) - str.charAt(i)>=max){
+                    max = str.charAt(j) - str.charAt(i);
+                    maxIndex = j; 
+                }
+            }
+            if(max != 0) {
+                return Integer.parseInt(swap(str, i, maxIndex));
+            }
+        }
+        return num;
+    }
+    
+    String swap(String str, int a, int b){
+        char[] ch = str.toCharArray();
+        char temp = ch[a];
+        ch[a] = ch[b];
+        ch[b] = temp;
+        return new String(ch);
+    }
+
     /** 
      * 1 IF PEEK IS LARGER, REMOVE
      * 2 ADD CURRENT AFTER REMOVAL
