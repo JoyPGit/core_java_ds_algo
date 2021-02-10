@@ -127,6 +127,43 @@ public class Heap {
         // heapifySinglePath(0);
     }
 
+    /** 
+     * for using a priorityQueue (a max heap) with a hashmap
+     * use new PriorityQueue<Integer>((x, y)->y-x) when setting map for 
+     * a key for the first time.
+     * 
+     * don't use when initializing the map
+     * 
+     * 
+    */
+    // https://leetcode.com/problems/high-five/
+    public int[][] highFive(int[][] items) {
+        
+        HashMap<Integer, PriorityQueue<Integer>> map = new HashMap<>();
+        
+        for(int[] i: items){
+            PriorityQueue<Integer> p = map.getOrDefault(i[0], 
+                                                new PriorityQueue<Integer>((x, y)->y-x));
+            p.add(i[1]);
+            map.put(i[0], p);
+        }
+        
+        // System.out.println(map);
+        int[][] res = new int[map.size()][2]; int index = 0;
+        for(HashMap.Entry<Integer, PriorityQueue<Integer>> e : map.entrySet()){
+            res[index][0] = e.getKey();
+            res[index++][1] = avg(map.get(e.getKey()));
+        }
+        
+        Arrays.sort(res, (x, y)->x[0] - y[0]);
+        return res;
+    }
+    
+    int avg(PriorityQueue<Integer> pq){
+        int sum = 0, k = 5;
+        while(k-->0) sum+=pq.remove();
+        return sum/5;
+    }
 
     /** 
      * 1 use quicksort partition
@@ -155,6 +192,36 @@ public class Heap {
     }
     
 
+    // https://leetcode.com/problems/reduce-array-size-to-the-half/submissions/
+    class Node{
+        int num, count;
+        Node(int a, int b){
+            this.num = a;
+            this.count = b;
+        }
+    }
+    
+    public int minSetSize(int[] arr) {
+        int count = arr.length, half = count/2, res = 0;
+        PriorityQueue<Node> pq = new PriorityQueue<>((x, y)->y.count - x.count);
+        
+        HashMap<Integer, Integer> map = new HashMap<>();
+        
+        for(int i : arr){
+            map.put(i, map.getOrDefault(i, 0)+1);    
+        }
+        
+        for(HashMap.Entry<Integer, Integer> e : map.entrySet()){
+            pq.add(new Node(e.getKey(), e.getValue()));
+        }
+        
+        while(count>half){
+            count-=pq.remove().count;
+            res++;
+        }
+        return res;
+    }
+    
     // use 2 heaps, smaller max heap 
     // heap is by default a min heap
     // compare diff and pop till k!=0
@@ -392,6 +459,7 @@ public class Heap {
         System.out.println(res);
         return res;
     }
+
 
     /** 
      * idea is simple, add els of first row

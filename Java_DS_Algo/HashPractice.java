@@ -45,11 +45,9 @@ import java.util.*;
  * Object[] res = map.values().toArray();
  * Arrays.sort(res, Collections.reverseOrder());
 
-    https://www.geeksforgeeks.org/traverse-through-a-hashmap-in-java/
-
-        for (CustomClassForSwap element : tree.queueSwapLeafNew) {
-            System.out.println(element.node.key);
-        }
+    for(HashMap.Entry<Integer, Integer> entry : map.entrySet()){
+        if(entry.getValue() == k) min = Math.min(min, entry.getKey());
+    }
 
    3 https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
    hashmap iterator     

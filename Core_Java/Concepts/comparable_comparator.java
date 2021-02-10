@@ -21,7 +21,7 @@ public class comparable_comparator {
         List<Laptop> list = new ArrayList<>();
         list.add(l1); list.add(l2); list.add(l3);
 
-        // using comparator interface
+        // using comparator interface, compare method
         Collections.sort(list,new Comparator() {
  
             @Override

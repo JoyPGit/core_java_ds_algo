@@ -214,6 +214,7 @@ public class Partition{
 
     ////// SUBSETS
     
+    
     // https://leetcode.com/problems/partition-equal-subset-sum/
     // size, first row
     public boolean canPartition(int[] nums) {
@@ -302,6 +303,39 @@ public class Partition{
         }
         return true;
     }
+
+    // https://leetcode.com/problems/palindrome-partitioning-ii
+    int min = Integer.MAX_VALUE;
+    public int minCut(String s) {
+        if(s.length() == 1) return 0;
+        helper(s);
+        return min;
+    }
+    
+     // like dfs in matrix
+    int helper(String str){
+        if(isPalindrome(str)) return 0;
+                
+        for(int i = 0; i<str.length(); i++){
+            String palin = str.substring(0, i+1);
+            if(isPalindrome(palin)){
+                min = Math.min(min, 1 + helper(str.substring(i+1)) );
+            }
+        }
+        return 0;
+    }
+
+    boolean isPalindrome(String str){
+        int lo = 0; int hi = str.length()-1;
+        while(lo<=hi){
+            if(str.charAt(lo) != str.charAt(hi)) return false;
+            else {    
+                lo++; hi--;
+            }
+        }
+        return true;
+    }
+
 
     /** 
      * https://www.youtube.com/watch?v=lDYIvtBVmgo

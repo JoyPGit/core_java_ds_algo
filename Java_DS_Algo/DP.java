@@ -2029,7 +2029,7 @@ public class DP {
      *  
      * imp : fill first row and check for overlap dp[i][j] > j-i
     */
-    int longestRepeatedNonOverlappingSubstring(String str) {
+    int longestRepeatingNonOverlappingSubstring(String str) {
         int n = str.length();
         int[][] dp = new int[n][n];
         int max = 0;

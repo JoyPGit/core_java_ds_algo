@@ -171,6 +171,51 @@ public class Recursion {
         else helper01(ch, index+1);
     }
 
+    /** 
+     * Points:
+     * 1 basic recursion f(index) -> f(index+1)
+     * 2 add chars to current string and when end is reached add it to list
+     * 3 we use include-exclude technique,
+     * for excluding current char, just increment index
+     * for including : if a digit comes, we have nothing to do
+     * 4 for letter, if lower change to upper c-'a' +'A' and vice versa, 
+     * then add to current string and increment index
+     * 
+    */
+	// https://leetcode.com/problems/letter-case-permutation
+    public List<String> letterCasePermutation(String S) {
+        List<String> res = new ArrayList<>();
+        
+        helper(S, 0, res, "");
+        return res;
+    }
+    
+    void helper(String str, int index, List<String> res, String curr){
+        if(curr.length() == str.length()) {
+            res.add(new String(curr));
+            return;
+        }
+        if(index>=str.length()) return;
+        
+        char c = str.charAt(index);
+        
+        // exclude
+        helper(str, index+1, res, curr+c);
+        
+        // include
+        // for digit, nothing to do
+        
+        if(Character.isLowerCase(c)) {
+            curr+=(char)(c-'a'+'A');
+        }
+        else if(Character.isUpperCase(c)) {
+            curr+=(char)(c-'A'+'a');
+        }
+		
+		helper(str, index+1, res, curr);
+
+    }
+
     /////////////////////////// JUMPS
     // https://java2blog.com/check-if-possible-to-reach-end-given-array-by-jumping/
 
@@ -519,6 +564,19 @@ public class Recursion {
 
     ////////////////////// BACKTRACKING
 
+    public boolean canPartition(int[] nums) {
+        int sum = 0; 
+        for(int i : nums)sum+=i;
+        if(sum%2!=0) return false;
+        return helper(nums, 0, sum/2);
+    }
+    
+    boolean helper(int[] arr, int index, int target){
+        if(target<0 || index == arr.length) return false;
+        if(target == 0) return true;
+        return helper(arr, index+1, target-arr[index]) || helper(arr, index+1, target);
+    }
+    
     // https://leetcode.com/problems/subsets/
     /** 
      * VERY SIMPLE APPROACH USING INCLUSION-EXCLUSION

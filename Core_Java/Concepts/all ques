@@ -1,14 +1,15 @@
 
-Runtime Polymorphism in Java. 
+Runtime Polymorphism in Java.  (method overriding)
 Runtime polymorphism or Dynamic Method Dispatch is a process in which a call to an overridden 
 method is resolved at runtime rather than compile-time.
-
 
 Difference between abstract class and interface
 1 Abstract class can have abstract and non-abstract methods. Interface can have only abstract methods. 
 Since Java 8, it can have default and static methods also.
 
 2 Interface supports multiple inheritance.
+
+3 abstract class has constructors
 
 diff b/w path and class path
 
@@ -114,12 +115,57 @@ abstract class can have a constructor
 constructors are mostly for instantiating non static variables, not object creation
 
 /**
-     * Some research. What is an Integer? And why cannot we use int in an ArrayList?
-     * An Integer is a reference type (a class). An int is a value. And: The
-     * ArrayList requires, in its implementation, a reference type. So int is not
-     * allowed.
-     * 
-     * Quote: The Integer class wraps a value of the primitive type int in an
-     * object. An object of type Integer contains a single field whose type is int
-     * (Java Documentation).
-     */
+    * Some research. What is an Integer? And why cannot we use int in an ArrayList?
+    * An Integer is a reference type (a class). An int is a value. 
+    * And: The ArrayList requires, in its implementation, a reference type. So int is not
+    * allowed.
+    * 
+    * Quote: The Integer class wraps a value of the primitive type int in an
+    * object. An object of type Integer contains a single field whose type is int
+    * (Java Documentation).
+*/
+
+class Singleton 
+{ 
+    // static variable single_instance of type Singleton 
+    private static Singleton single_instance = null; 
+  
+    // variable of type String 
+    public String s; 
+  
+    // private constructor restricted to this class itself 
+    private Singleton() 
+    { 
+        s = "Hello I am a string part of Singleton class"; 
+    } 
+  
+    // static method to create instance of Singleton class 
+    public static Singleton getInstance() 
+    { 
+        if (single_instance == null) 
+            single_instance = new Singleton(); 
+  
+        return single_instance; 
+    } 
+} 
+  
+// Driver Class 
+class Main 
+{ 
+    public static void main(String args[]) 
+    { 
+        // instantiating Singleton class with variable x 
+        Singleton x = Singleton.getInstance(); 
+  
+        // instantiating Singleton class with variable y 
+        Singleton y = Singleton.getInstance(); 
+  
+        // instantiating Singleton class with variable z 
+        Singleton z = Singleton.getInstance(); 
+  
+        // changing variable of instance x 
+        x.s = (x.s).toUpperCase(); 
+  
+        System.out.println("String from x is " + x.s); 
+        System.out.println("String from y is " + y.s); 
+  

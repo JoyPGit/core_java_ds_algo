@@ -663,6 +663,40 @@ class Matrix {
         return false;
     }
 
+    // compare against increasing path
+    // https://leetcode.com/problems/path-with-maximum-gold
+    int max = 0;
+    public int getMaximumGold(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        
+        int[][] visited = new int[m][n];
+        for(int i = 0; i<m; i++) Arrays.fill(visited[i], -1);
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(visited[i][j] == -1 && grid[i][j] != 0)
+                    max = Math.max(max, dfs(grid, i, j, visited));
+            }
+        }
+        return max;
+    }
+    
+    
+    int dfs(int[][] grid, int r, int c, int[][] visited){
+        if(r>=0 && r<grid.length && c>=0 && c<grid[0].length
+          && visited[r][c] == -1 && grid[r][c] != 0){
+            visited[r][c] = 1;
+            
+            int left = dfs(grid, r, c-1, visited);
+            int right = dfs(grid, r, c+1, visited);
+            int up = dfs(grid, r-1, c, visited);
+            int down = dfs(grid, r+1, c, visited);
+            
+            visited[r][c] = -1;
+            return Math.max(left, Math.max(up, Math.max(right, down))) + grid[r][c];
+        }
+        else return 0;
+    }
 
     /////////////////////////////////// WITH DP
     /** 

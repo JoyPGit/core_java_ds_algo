@@ -29,6 +29,7 @@ interface Inf{
 class Con extends Abs implements Inf{
     void showabsVar(){
         System.out.println("concrete implements abs class method");
+        System.out.println(super.absVar2);
     }
 
     // Cannot reduce the visibility of the inherited method from Inf

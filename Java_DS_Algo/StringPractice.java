@@ -942,7 +942,7 @@ class StringPractice {
      * 
      * DP
     */
-    int longestRepeatedNonOverlappingSubstring(String str) {
+    int longestRepeatingNonOverlappingSubstring(String str) {
         int n = str.length();
         int[][] dp = new int[n][n];
         int max = 0;

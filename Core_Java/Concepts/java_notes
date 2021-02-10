@@ -56,7 +56,7 @@ In Run time Polymorphism, the call is not resolved by the compiler.
 Method overriding is the runtime polymorphism having same method with 
 same parameters or signature, but associated in different classes.
 
-operator overloading is not allowe din Java
+operator overloading is not allowed in Java
 
 method overriding vs overloading
 same class vs subclass

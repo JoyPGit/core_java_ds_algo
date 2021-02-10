@@ -175,52 +175,47 @@ public class Bin_Search {
      * 2 THE FIRST USES HIGH = MID-1 AS ONCE WE FIND A MATCHING INDEX, 
      *   WE NEED TO GO LEFT TO FIND IF SMALLER EXISTS
      * 3 THE LAST USED LOW = MID+1
+     * 
+     * nums[mid] == target also moves low and high
      */
     // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     public int[] searchRange(int[] nums, int target) {
-        int n = nums.length; 
-        if(n ==1 && nums[0]!= target) return new int[]{-1, -1};
-        int i = binSearchFirst(nums, target);
-        int j = binSearchLast(nums, target);
-      
-        return new int[]{i,j};
+        int a = findFirst(nums, target);
+        int b = findLast(nums, target);
+        
+        return new int[]{a, b};
     }
     
-    int binSearchFirst(int[] arr, int key){
-        int result = -1;
-        int low = 0; int high = arr.length-1;
-        while(low <= high){
-            int mid = low + (high-low)/2;
-
-            if(arr[mid] == key) {
-                result = mid; 
-                high = mid-1;
-            }
-            if(arr[mid]>key) high = mid-1;
-            if(arr[mid]<key) low = mid+1;
-            
-        }
+    int findFirst(int[] arr, int target){
+        int n = arr.length, lo = 0, hi = n-1, res = -1;
         
-        return result;
+        while(lo<=hi){
+            int mid = lo + (hi - lo)/2;
+            if(arr[mid] == target) {
+                res = mid;
+                hi = mid-1;
+            }
+            else if(arr[mid]<target) lo= mid+1;
+            else hi = mid-1;
+        }
+        return res;
     }
     
-    int binSearchLast(int[] arr, int key){
-        int result = -1;
-        int low = 0; int high = arr.length-1;
-        while(low <= high){
-            int mid = low + (high-low)/2;
-
-            if(arr[mid] == key) {
-                result = mid; 
-                low = mid+1;
-            }
-            if(arr[mid]>key) high = mid-1;
-            if(arr[mid]<key) low =  mid+1;
-            
-        }
+    int findLast(int[] arr, int target){
+        int n = arr.length, lo = 0, hi = n-1, res = -1;
         
-        return result;
+        while(lo<=hi){
+            int mid = lo + (hi - lo)/2;
+            if(arr[mid] == target){
+                res = mid;
+                lo = mid+1;
+            }
+            else if(arr[mid]<target) lo= mid+1;
+            else hi = mid-1;
+        }
+        return res;
     }
+
 
     // min el is always in the unsorted array side, so move towards the unsorted array
     // https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
@@ -427,59 +422,6 @@ public class Bin_Search {
     }
 
 
-    // FIND FIRST 1 IN MATRIX ROW
-    // https://leetcode.com/problems/search-a-2d-matrix-ii/
-    public boolean searchMatrix(int[][] matrix, int target) {
-        int m = matrix.length;
-        if (m == 0)
-            return false;
-        int n = matrix[0].length;
-        if (m == 1 && n == 1 && matrix[0][0] != target)
-            return false;
-
-        int i = 0;
-        int j = n - 1;
-        // System.out.println("i "+i+" j "+j);
-
-        while (i >= 0 && i < m && j >= 0 && j < n) {
-            // System.out.println("i "+i+" j "+j);
-            if (matrix[i][j] == target)
-                return true;
-            else if (matrix[i][j] > target)
-                j--; // use else if
-            else if (matrix[i][j] < target)
-                i++;
-        }
-        return false;
-    }
-
-
-    /** 
-     * 1 use quicksort partition
-     * 2 if x > position, hi = x-1 and vice-versa
-    */
-    // https://leetcode.com/problems/kth-largest-element-in-an-array
-    public int findKthLargest(int[] nums, int k) {
-        int n = nums.length, lo = 0, hi = n-1;
-        while(lo<=hi){
-            int x = partition(nums, lo, hi);
-            // System.out.println(x);
-            if(x == n-k) return nums[x]; // index
-            else if(x<n-k) lo = x+1;
-            else hi = x-1;
-        }
-        return lo;
-    }
-    
-    int partition(int[] arr, int lo, int hi){
-        int j = lo, pivot = arr[hi];
-        for(int i = lo; i<hi; i++){
-            if(arr[i]<pivot) swap(arr, i, j++);
-        }
-        swap(arr, hi, j);
-        return j;
-    }
-
     /** 
      * POINTS : 
      * 1 MARK ALL -VE AND >n AS n+1
@@ -597,6 +539,7 @@ public class Bin_Search {
     }
 
     
+    // FIND FIRST 1 IN MATRIX ROW
     /**
      * POINTS : 
      * 
@@ -639,6 +582,67 @@ public class Bin_Search {
             }
         }
         return result;
+    }
+
+
+    // https://leetcode.com/problems/search-a-2d-matrix-ii/
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        if (m == 0)
+            return false;
+        int n = matrix[0].length;
+        if (m == 1 && n == 1 && matrix[0][0] != target)
+            return false;
+
+        int i = 0;
+        int j = n - 1;
+        // System.out.println("i "+i+" j "+j);
+
+        while (i >= 0 && i < m && j >= 0 && j < n) {
+            // System.out.println("i "+i+" j "+j);
+            if (matrix[i][j] == target)
+                return true;
+            else if (matrix[i][j] > target)
+                j--; // use else if
+            else if (matrix[i][j] < target)
+                i++;
+        }
+        return false;
+    }
+
+    /** 
+     * SEE THE DIFF W.R.T ABOVE, 
+     * 
+     * idea is simple, add els of first row
+     * remove and add next el of curr col;
+     * if x == m-1 continue;
+     * run k-1 times
+    */
+    // https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix
+    class Node1{
+        int x, y, val;
+        Node1(int x, int y, int v){
+            this.x = x; this.y =y; this.val = v;
+        }
+    }
+    public int kthSmallest(int[][] matrix, int k) {
+        int m = matrix.length; int n = matrix[0].length;
+        
+        PriorityQueue<Node1> pq = new PriorityQueue<>((x,y)->x.val - y.val);
+        
+        // add first row
+        for(int i =0; i<m; i++){
+            pq.add(new Node1(0 , i, matrix[0][i]));
+        }
+        
+        for(int i =0; i<k-1; i++){
+            Node1 curr = pq.remove();
+            // System.out.println(curr.val);
+            if(curr.x == m-1) continue;
+            // next el in same col
+            pq.add(new Node1(curr.x+1, curr.y, matrix[curr.x+1][curr.y] ));
+        }
+        return pq.remove().val;
     }
 
     /** 
@@ -784,6 +788,35 @@ public class Bin_Search {
         return n - lo;
     }
 
+
+    /** 
+     * 1 use quicksort partition
+     * 2 if x > position, hi = x-1 and vice-versa
+    */
+    // https://leetcode.com/problems/kth-largest-element-in-an-array
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length, lo = 0, hi = n-1;
+        while(lo<=hi){
+            int x = partition(nums, lo, hi);
+            // System.out.println(x);
+            if(x == n-k) return nums[x]; // index
+            else if(x<n-k) lo = x+1;
+            else hi = x-1;
+        }
+        return lo;
+    }
+    
+    
+    int partition(int[] arr, int lo, int hi){
+        int j = lo, pivot = arr[hi];
+        for(int i = lo; i<hi; i++){
+            if(arr[i]<pivot) swap(arr, i, j++);
+        }
+        swap(arr, hi, j);
+        return j;
+    }
+
+
     /** 
      * steps:
      * 1 check which array has lesser length
@@ -865,3 +898,5 @@ public class Bin_Search {
         // }
     }
 }
+
+

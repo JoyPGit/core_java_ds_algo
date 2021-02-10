@@ -36,7 +36,7 @@ public class Serialize {
      * 
      * 
      * 
-     * What  if superclass is Serializable?  Does that mean child class is automatically Serializable?
+     * What if superclass is Serializable?  Does that mean child class is automatically Serializable?
      * Answer : Yes
      * 
      * Question 9: What if superclass is Serializable but you don’t want subclass to be Serializable?
@@ -55,7 +55,7 @@ public class Serialize {
      * imp : Serializable is a Marker interface no implementation of any method. Externalizable is not.
      * 
     */
-        ObjSave save1 = new ObjSave(3);
+    ObjSave save1 = new ObjSave(3);
 
         try {
             File f = new File("serialize_Obj.class");

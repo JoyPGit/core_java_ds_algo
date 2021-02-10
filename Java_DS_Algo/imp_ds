@@ -125,7 +125,6 @@ Maximum Number of Events That Can Be Attended
 
 min fibonacci
 
-reconstruct itinerary, 
 jump game 2, 
 
 ________________________________________________________
@@ -182,7 +181,8 @@ Longest increasing path in matrix (dp)
 
 ________________________________________________________
 graph
-dfs, time to inform, course schedule, bipartite, tps, 
+dfs, time to inform, reconstruct itinerary
+course schedule, bipartite, tps, 
 bipartite, n/w delay, cheapest flights (dijkstra), server
 all paths from src to target (when to add start and when its adj?)
 

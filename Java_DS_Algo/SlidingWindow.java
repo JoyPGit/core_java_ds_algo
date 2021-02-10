@@ -358,6 +358,24 @@ public class SlidingWindow {
     }
 
 
+    // https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int left = 0, n = s.length(), max = 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        for(int i =0; i<n; i++){
+            map.put(s.charAt(i), map.getOrDefault(s.charAt(i), 0) +1);
+            while(map.size()>k) {
+                map.put(s.charAt(left), map.get(s.charAt(left)) -1);
+                if(map.get(s.charAt(left)) == 0) map.remove(s.charAt(left));
+                left++;
+            }
+            max = Math.max(max, i-left+1);
+            // System.out.println("i "+i+" left "+left);
+        }
+        return max;
+    }
+    
     /** 
      * HOLD THE FREQ OF INTEGER IN MAP, NOT INDEX, 
      * INDEX CAN BE KEPT TRACK OF USING LEFT FLAG
@@ -606,7 +624,7 @@ public class SlidingWindow {
 
     // https://www.geeksforgeeks.org/count-of-subarrays-of-size-k-with-elements-having-even-frequencies
 
-    
+    /////////////////////////////////////////////////////
     // CELEBRITY PROBLEM
 
     // Returns id of celebrity. Else -1

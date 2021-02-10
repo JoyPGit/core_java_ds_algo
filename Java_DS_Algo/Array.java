@@ -963,28 +963,22 @@ class Array {
         */
         int n = nums.length;
         int[] left = new int[n];
-        int[] right = new int[n]; int[] holder = new int[n];
+        int[] right = new int[n];
         
-        int prod = nums[0]; left[0] = nums[0]; left[1] = nums[0];
-        for(int i = 2; i<n; i++){
-            left[i] = prod*nums[i-1]; 
-            prod*=nums[i-1];
+        int prod = 1;
+        for(int i =0; i<n-1; i++){
+            prod*=nums[i];
+            left[i+1] = prod;
         }
-        Utility.print1DMatrix(left);
-
-        prod = nums[n-1]; right[n-1] = nums[n-1]; right[n-2] = nums[n-1];
-        for(int i = n-3; i>=0; i--){
-            right[i] = prod*nums[i+1]; 
-            prod*=nums[i+1];
-        }
-        Utility. print1DMatrix(right);
+        right[n-1] = prod; //
         
-        holder[0] = right[0]; holder[n-1] = left[n-1];
-        for(int i = 1; i<n-1; i++){
-            holder[i] = left[i]*right[i]; 
+        prod = 1;
+        for(int i = n-1; i>0; i--){
+            prod*=nums[i];
+            right[i-1] = prod*left[i-1];
         }
-        Utility.print1DMatrix(holder);
-        return holder;
+        right[0] = prod; //
+        return right;
     }
 
     // https://leetcode.com/problems/container-with-most-water/
@@ -1200,6 +1194,7 @@ class Array {
         cells[0] = 0; cells[n-1] = 0;
         return cells;
     }
+
 
     // Math.abs(1) -> previously alive
     // https://leetcode.com/problems/game-of-life

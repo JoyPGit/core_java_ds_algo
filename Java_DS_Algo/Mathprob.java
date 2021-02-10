@@ -841,6 +841,8 @@ public class Mathprob {
         return Integer.parseInt(s);
     }
     
+    // https://www.geeksforgeeks.org/find-two-rectangles-overlap/
+
     // imp : hi = m * n - 1;
     // mid = (lo + hi) / 2; midVal = matrix[mid/n][mid%n];
     // https://leetcode.com/problems/search-a-2d-matrix/

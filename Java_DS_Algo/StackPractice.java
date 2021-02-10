@@ -86,7 +86,7 @@ public class StackPractice {
         Deque<Character> q = new LinkedList<>();
 
         for(int i =0; i<n; i++){
-            if(Character.isLetter(str.charAt(i))  // 
+            if(Character.isLetterO (str.charAt(i))  // 
             // str.charAt(i) != '+' || str.charAt(i) != '-'
             // || str.charAt(i) != '*' || str.charAt(i) != '/'
             ) res+=str.charAt(i);

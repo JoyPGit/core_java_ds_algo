@@ -540,7 +540,42 @@ class Graph {
         return dp[src];
     }
 	
-	
+	// https://leetcode.com/problems/all-paths-from-source-to-target/
+    public List<List<Integer>> allPathsSourceTarget1(int[][] graph) {
+        // create graph, no dedge wt, so adj list
+        n = graph.length;
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        for(int i=0; i<n; i++){
+            if(graph[i].length==0) continue;
+            List<Integer> curr = map.getOrDefault(i, new ArrayList<>());
+            for(int j =0; j<graph[i].length; j++) curr.add(graph[i][j]);
+            map.put(i, curr);
+        }
+        // System.out.println(map);
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> curr = new ArrayList<>();
+        curr.add(0);
+        
+        // source is zero
+        dfs(res, curr, map, 0);
+        return res;
+    }
+    
+    
+    void dfs(List<List<Integer>> res, List<Integer> curr, HashMap<Integer, List<Integer>> map, int start){
+        if(start == n-1) res.add(new ArrayList<>(curr));
+
+        if(!map.containsKey(start)) return;
+        
+        List<Integer> list = map.get(start);
+        for(int i : list){
+            curr.add(i);
+            dfs(res, curr, map, i);
+            curr.remove(curr.size()-1);
+        }
+    }
+
+
 	// https://leetcode.com/problems/path-with-maximum-probability/
 
 
