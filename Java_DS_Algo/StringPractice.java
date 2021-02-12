@@ -929,6 +929,51 @@ class StringPractice {
         return false;
     }
 
+    // RABIN KARP
+    /** 
+     * Use Sliding Window, match the hash value of substrings
+     * if match is found, sort and compare the arrays
+    */
+    // https://practice.geeksforgeeks.org/problems/count-occurences-of-anagrams5839/1
+    char[] ch2;
+    int search(String pat, String txt) {
+        // code here
+        int sum = 0, base = 0, left = 0, count= 0;
+        ch2 = pat.toCharArray();
+        Arrays.sort(ch2);
+        // for(char c: ch2) System.out.print(c+", ");
+        // System.out.println();
+        for(char c : pat.toCharArray()){
+            base+=Integer.parseInt(""+(c-'a'));
+        }
+        
+        for(int i = 0; i<pat.length(); i++){
+            sum+=Integer.parseInt(""+(txt.charAt(i)-'a'));
+        }
+        
+        if(sum == base && compare(txt.substring(0, pat.length()))) count++;
+        
+        for(int i = pat.length(); i<txt.length(); i++){
+            sum+=Integer.parseInt(""+(txt.charAt(i)-'a'));
+            sum-=Integer.parseInt(""+(txt.charAt(left++)-'a'));
+            if(sum == base && compare(txt.substring(left, i+1))) count++;
+        }
+        return count;
+    }
+    
+    
+    boolean compare(String str1){
+        char[] ch1 = str1.toCharArray();
+        
+        Arrays.sort(ch1);
+        // for(char c: ch1) {
+        //     System.out.print(c+", ");
+        // }
+        
+        if(Arrays.equals(ch1, ch2)) return true;
+        return false;
+    }
+
     /**
      * https://www.youtube.com/watch?v=KRQSOygJvuU
      * netaseta, 
