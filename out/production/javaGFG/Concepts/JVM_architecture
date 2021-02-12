@@ -1,0 +1,126 @@
+
+https://www.youtube.com/watch?v=1xz7OxASXUc
+Why Java is platform independent?
+
+For C -> compiler ->.exe file
+For JS -> interpreter -> line by line, slow
+
+.class file is bytecode
+Java applications are compiled into bytecode which is stored in class files and loaded in a JVM.
+
+JVM converts bytecode to machine code
+
+programs communicate with OS using system calls
+
+JVM communicates with OS, middleman b/w OS and java program
+
+
+in C .exe for Windows can't run on Linux as the system calls are different
+executable code is OS dependent
+JVM needs to be present in each system and it makes system calls and interprets 
+the class file.
+So JVM makes java platform indeependent
+
+
+JDK vs JRE vs JVM
+
+When you download Java from Oracle, JDK is downloaded.
+JRE provides environment to run java code
+JVM runs the java program
+
+JVM interprets the .class file (bytecode),
+
+JVM provides run-time environment where java bytecode can be executed
+
+https://www.youtube.com/watch?v=RYd_hagCiVk
+
+JVM tasks:
+1 loads,
+2 verifies
+3 executes
+4 provides runtime environment
+
+JVM is platform dependent
+
+https://www.youtube.com/watch?v=eaAqwTdUAAo
+
+JVM + Library classes = JRE
+JRE + Dev Tools = JDK
+
+JVM architecture :
+Java is compiled into .class file
+
+Class Loader 
+bootstrap :
+extension : 
+app class loader : loads 
+
+verifier checks
+
+Method area : class data, static variables
+
+Heap area : Object data, 
+
+Stack: each entry is stack frame
+local variable array, operand stack, frame data
+for every thread a separate runtime stack is created
+
+Execution engine:
+Interpreter, JIT Compiler, profiler
+Every time a method is called, inetrpreter works even if the same method is called multiple times,
+sso to fasten up compiler generates ma/c code directly 
+
+JRE contains set of libraries that JVM uses to run java bytecode.
+JRE physically exists and is platform dependent/
+
+JRE
+Integration libraries, including Interface Definition Language (IDL), Java Database Connectivity (JDBC), 
+Java Naming and Directory Interface (JNDI), Remote Method Invocation (RMI), 
+Remote Method Invocation Over Internet Inter-Orb Protocol (RMI-IIOP) and scripting.
+
+Other base libraries, including international support, input/output (I/O), extension mechanism, 
+Beans, Java Management Extensions (JMX), Java Native Interface (JNI), Math, Networking, Override Mechanism, 
+Security, Serialization and Java for XML Processing (XML JAXP).
+
+Lang and util base libraries, including lang and util, management, versioning, zip, instrument, 
+reflection, Collections, Concurrency Utilities, Java Archive (JAR), Logging, Preferences API, 
+Ref Objects and Regular Expressions.
+
+Java Virtual Machine (JVM), including Java HotSpot Client and Server Virtual Machines.
+
+
+Why is Java slow?
+The two main reasons behind the slowness of Java are
+
+Dynamic Linking: Unlike C, linking is done at run-time, every time the program is run in Java.
+Run-time Interpreter: The conversion of byte code into native machine code is done at run-time in 
+Java which furthers slows down the speed.
+
+However, the latest version of Java has addressed the performance bottlenecks to a great extent.
+
+Summary:
+
+Full form of JVM is Java Virtual Machine. JVM in Java is the engine that drives the Java Code. 
+It converts Java bytecode into machines language.
+
+JVM architecture in Java contains classloader, memory area, execution engine etc.
+
+In JVM, Java code is compiled to bytecode. This bytecode gets interpreted on different machines.
+JIT stands for Just-in-time compiler. JIT is the part of the Java Virtual Machine (JVM). 
+It is used to speed up the execution time.
+In comparison to other compiler machines, JVM in Java may be slow in execution.
+
+JIT vs JVM
+
+The main difference between JVM and JIT is their purpose, the main goal of JVM is to 
+provide platform independence while the objective of JIT is to improve performance of JVM, 
+by compiling more code into machine language.
+
+There is a threshold set up, if some code executes more than that threshold 
+then it become eligible for just in time compiled. 
+By the way, Hotspot is not the only JVM that contains Just in time compilers, 
+there are other JVM as well e.g. Oracle's original JRockit one. 
+
+JIT improves the speed of JVM
+
+Read more: https://www.java67.com/2013/02/difference-between-jit-and-jvm-in-java.html#ixzz6hYKZXlih

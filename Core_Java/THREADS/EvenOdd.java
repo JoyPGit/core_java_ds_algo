@@ -1,4 +1,4 @@
-// package Core_Java.Threads;
+package Threads;// package Core_Java.Threads;
 
 // https://www.baeldung.com/java-even-odd-numbers-with-2-threads
 

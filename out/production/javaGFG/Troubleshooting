@@ -1,0 +1,9 @@
+https://stackoverflow.com/questions/18834005/calling-static-method-from-another-java-class
+
+https://stackoverflow.com/questions/7509295/noclassdeffounderror-wrong-name
+
+mac-spatra:javaGFG spatra$ java Java_DS_Algo.Mathprob
+
+java Mathprob.java
+Error: Could not find or load main class Mathprob.java
+Caused by: java.lang.ClassNotFoundException: Mathprob.java

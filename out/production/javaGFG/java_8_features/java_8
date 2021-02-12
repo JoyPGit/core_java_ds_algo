@@ -1,0 +1,8 @@
+functional Interface
+lambda Expressions
+Stream API
+
+instantiating interfaces in java
+marker interface
+Marker interface is used as a tag to inform a message to the Java compiler so that it can 
+add special behaviour to the class implementing it. Java marker interface has no members in it.

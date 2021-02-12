@@ -1,0 +1,20 @@
+
+Threads throw InterruptEXception 
+
+throw vs throws :
+
+void m()throws ArithmeticException{  
+    throw new ArithmeticException("sorry");  
+}
+
+
+https://www.baeldung.com/java-classnotfoundexception-and-noclassdeffounderror
+ClassNotFound vs NoClassDefFound
+
+ClassNotFoundException is a checked exception which occurs when an application tries to load a class 
+through its fully-qualified name and can not find its definition on the classpath.
+
+NoClassDefFoundError is a fatal error. It occurs when JVM can not find the definition of the class 
+while trying to:
+1 Instantiate a class by using the new keyword
+2 Load a class with a method call

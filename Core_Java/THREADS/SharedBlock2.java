@@ -1,3 +1,5 @@
+package Threads;
+
 public class SharedBlock2 {
     /** 
      * here a shared class method is accessed by threads of Runner class

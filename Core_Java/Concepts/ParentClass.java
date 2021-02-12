@@ -51,4 +51,19 @@ class OuterClass{
         this.name = s;
         System.out.println(this.name);
     }
+    void callOuter(){
+        System.out.println("outer called");
+    }
+}
+
+
+class Q extends OuterClass{
+    Q(){
+        super("s");
+    }
+    
+    @Override
+    void callOuter(){
+
+    }
 }

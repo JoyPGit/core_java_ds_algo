@@ -1,4 +1,4 @@
-// package Core_Java.Threads;
+package Threads;// package Core_Java.Threads;
 
 import java.io.*;
 import java.util.*;
