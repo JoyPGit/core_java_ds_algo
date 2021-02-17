@@ -53,4 +53,14 @@ class Fund {
             throw InsufficientFundsException();
         }
     }
+
+    void funcThrow() throws ArrayIndexOutOfBoundsException{
+        try {
+            throw new ArrayIndexOutOfBoundsException();
+        } catch (Exception e) {
+            //TODO: handle exception
+
+        }
+    }
 }
+
