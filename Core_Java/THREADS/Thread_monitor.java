@@ -36,26 +36,17 @@ public class Thread_monitor implements Runnable{
         Thread_monitor tm = new Thread_monitor();
         Thread t1 = new Thread(tm, "test1");
         Thread t2 = new Thread(tm, "test2");
-        // t1.start();
-        // t2.start();
+        t1.start();
+        t2.start();
 
-        // String S= "AB";
-        // int l1 =0, l2 = 0, r1= 0, r2 =0, index = 0;
-
-        // int[] arr = new int[26];
-        // for(int i =0; i<S.length(); i++){
-        //     while((char)(i-'A') != S.charAt(i)) i++;
-        //     i++;
-        // }
-
-        // for(int i =0; i<26; i++) System.out.println(i-'A');
-
+       
         try {
             throw new Exception("LINE 50");
         } catch (IOException e) {
             //TODO: handle exception
         }
         catch(Exception E1){
+            System.exit(0);
             System.exit(1);
             System.out.println("caught ");
         }

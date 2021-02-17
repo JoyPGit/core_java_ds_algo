@@ -1,7 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="193b9ac5-46a8-4aa3-99e1-4384c4f7079e" name="Default Changelist" comment="" />
+    <list default="true" id="193b9ac5-46a8-4aa3-99e1-4384c4f7079e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/CompleteRef.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/CompleteRef_copy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/EvenOdd.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/Future_Executor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/ProdConComplRef.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/Prod_Cons.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/SharedBlock1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/SharedBlock2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/SharedMethod.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/ThreadCreation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/Thread_Sync.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/Three_threads.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core_Java/THREADS/concurrency-and-parallelism-are-different.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Java_DS_Algo/imp_ds" beforeDir="false" afterPath="$PROJECT_DIR$/Java_DS_Algo/imp_ds" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/.idea/Core_Java.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/0_8XM_y_XjTqNwqnHH.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/Garbage_collection" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/Garbage_collection.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/JVM_Architecture.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/JVM_architecture" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/String-Pool.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/String-pool-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/access_specifiers.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/all ques" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/interface_reln.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/java_notes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Concepts/string2.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Exceptions/Errors" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Exceptions/exceptions1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Interview" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/JVM-Architecture.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/JVM-Architecture.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Java-DS-Framework.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Serialization/serialize_Obj.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Threads/concurrency-and-parallelism-are-different.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Threads/thread notes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/Troubleshooting" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/all_ds_ques" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/commit.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/imp_ds" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java-collection-framework-hierarchy.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/Runnable.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/Runnable_lambda.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 1.51.18 PM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 2.00.21 PM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 2.01.36 PM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 2.06.05 PM.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/java_8_features/java_8" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/lambda/Runnable_lambda.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/ptm-int**" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/puzzles" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/resources/list_cycle_start.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/resources/notes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javaGFG/resources/string_perm.png" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,12 +74,17 @@
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="jdk.selected.JAVA_MODULE" value="12" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
@@ -64,5 +128,9 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>

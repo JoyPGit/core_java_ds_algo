@@ -1,7 +1,0 @@
-
-linked list loop starting node :
-
-When fast and slow meet at point p, the length they have run are 'a+2b+c' and 'a+b'.
-Since the fast is 2 times faster than the slow. So a+2b+c == 2(a+b), then we get 'a==c'.
-So when another slow2 pointer run from head to 'q', at the same time, 
-previous slow pointer will run from 'p' to 'q', so they meet at the pointer 'q' together.
