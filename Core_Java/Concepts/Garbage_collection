@@ -5,6 +5,17 @@ https://www.oracle.com/webfolder/technetwork/tutorials/obe/java/gc01/index.html
 https://stackify.com/what-is-java-garbage-collection/
 
 
+finalize() is called by the garbage collector on an object when garbage collection determines 
+that there are no more references to the object. A subclass overrides the finalize method to dispose 
+of system resources or to perform other cleanup.
+
+Can we manually do garbage collection?
+Your best option is to call System.gc() which simply is a hint to the garbage collector that you 
+want it to do a collection. There is no way to force and immediate collection though as the garbage 
+collector is non-deterministic.
+
+
+
 Java garbage collection is the process by which Java programs perform automatic memory management. 
 Java programs compile to bytecode that can be run on a Java Virtual Machine, or JVM for short. 
 When Java programs run on the JVM, objects are created on the heap, which is a portion of memory 

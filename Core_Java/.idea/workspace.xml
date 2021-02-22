@@ -2,67 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a25cbdf-8ab2-4633-8fb8-8a1de50ac99c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/THREADS/Producer_Consumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/CompleteRef.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/CompleteRef_copy.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/EvenOdd.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/Future_Executor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/ProdConComplRef.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/Prod_Cons.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/SharedBlock1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/SharedBlock2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/SharedMethod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/ThreadCreation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/Thread_Sync.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/THREADS/Three_threads.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/imp_ds" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/imp_ds" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Threads/concurrency-and-parallelism-are-different.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Threads/thread notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/.idea/Core_Java.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/0_8XM_y_XjTqNwqnHH.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/Garbage_collection" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/Garbage_collection.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/JVM_Architecture.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/JVM_architecture" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/String-Pool.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/String-pool-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/access_specifiers.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/all ques" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/interface_reln.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/java_notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Concepts/string2.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Exceptions/Errors" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Exceptions/exceptions1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Interview" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/JVM-Architecture.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/JVM-Architecture.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Java-DS-Framework.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Serialization/serialize_Obj.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Threads/concurrency-and-parallelism-are-different.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Threads/thread notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/Troubleshooting" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/all_ds_ques" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/commit.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/imp_ds" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java-collection-framework-hierarchy.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/Runnable.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/Runnable_lambda.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 1.51.18 PM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 2.00.21 PM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 2.01.36 PM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/Screenshot 2020-12-21 at 2.06.05 PM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/java_8_features/java_8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/lambda/Runnable_lambda.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/ptm-int**" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/puzzles" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/resources/list_cycle_start.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/resources/notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/javaGFG/resources/string_perm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/Access.java" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/Access.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/Garbage_collection" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/Garbage_collection" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/all ques" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/all ques" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Concepts/java_notes" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/java_notes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exceptions/Errors" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/Errors" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/java_8_features/java_8" beforeDir="false" afterPath="$PROJECT_DIR$/java_8_features/java_8" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Backtrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Backtrack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/LinkedPractice.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/LinkedPractice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/all_ds_ques" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/all_ds_ques" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +22,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProblemsViewState">
     <option name="selectedIndex" value="1" />

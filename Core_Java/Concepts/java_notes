@@ -12,9 +12,9 @@ if we don't want to work with Object type.
 4) We can represent static data directly there is no need of object instantiation 
 (i.e. it does not mean that you can't create an object still we can create an object if required). 
 5) We can work with primitives and objects in java (java provides facility to represent data in 
-terms of primitives or objects whatever you want). 6) Object contains variables and methods 
-(i.e. we can call variable or methods with the help of dot operator that is not possible 
-in case of primitives). 
+terms of primitives or objects whatever you want). 
+6) Object contains variables and methods (i.e. we can call variable or methods with the 
+help of dot operator that is not possible in case of primitives). 
 
 
 1 Primitive Data Type ex. int, long, bool, float, char, etc as Objects: 
@@ -73,7 +73,7 @@ same parameters or signature, but associated in different classes.
 
 operator overloading is not allowed in Java
 
-method overriding vs overloading
+method overloading vs overriding
 same class vs subclass
 Java Method Overloading
 
@@ -86,6 +86,7 @@ void func() { ... }
 void func(int a) { ... }
 float func(double a) { ... }
 float func(int a, float b) { ... }
+
 
 interface vs abstract class
 5

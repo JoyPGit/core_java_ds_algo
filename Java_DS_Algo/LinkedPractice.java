@@ -521,7 +521,6 @@ class LinkedPractice {
         return head;
     }
 
-    // https://leetcode.com/problems/sort-list
     /** POINTS : 
      * 1 FAST.next!=NULL AND FAST.NEXT.next!=NULL
      * 2 TEMP = SLOW.next
@@ -538,6 +537,7 @@ class LinkedPractice {
      * find mid, merge and if(head.next == null return)
      * 
     */
+    // https://leetcode.com/problems/sort-list
     public ListNode sortList(ListNode head) {
         if (head == null || head.next == null) return head; // 1
 
@@ -546,6 +546,7 @@ class LinkedPractice {
             fast = fast.next.next;
             slow = slow.next;
         }
+        
         ListNode temp = slow.next;
         slow.next = null;
         ListNode a = sortList(head);

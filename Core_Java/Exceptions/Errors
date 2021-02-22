@@ -18,3 +18,28 @@ NoClassDefFoundError is a fatal error. It occurs when JVM can not find the defin
 while trying to:
 1 Instantiate a class by using the new keyword
 2 Load a class with a method call
+
+
+Difference between Exception and Error in Java
+Exceptions and errors both are subclasses of Throwable class. The error indicates a problem 
+that mainly occurs due to the lack of system resources and our application should not catch 
+these types of problems.
+Some of the examples of errors are system crash error and out of memory error.
+
+Exceptions are the problems which can occur at runtime and compile time. It mainly occurs in the 
+code written by the developers.  Exceptions are divided into two categories such as checked exceptions 
+and unchecked exceptions. 
+
+2
+Error belongs to java.lang.error Package 
+java.lang.Exception 
+
+
+Example
+OutOfMemoryError ,IOError 
+NullPointerException , SqlException 
+
+divide by zero error; java.lang.ArithmeticException: / by zero
+
+exception can be caught and system can recover but Error causes the system to shut down.
+finally won't run in case of error

@@ -1179,6 +1179,20 @@ public class Mathprob {
         return diff;
     }
 
+    public double angleClock2(int hour, int minutes) {
+        // angle b/w 12 and hour hand
+        // 1hr h -> 30 deg
+        // 1 min h -> x/60 * 30 deg
+        double h = (hour%12)*30 + ((double)minutes/60)*30;
+        double m = ((double)minutes/60) * 360;
+        
+        // System.out.println("h "+h+", m "+m);
+        
+        if(Math.abs(h-m) > 180) return 360-Math.abs(h-m);
+        return Math.abs(h-m);
+            
+    }
+
 
     class Candy{
         int number, priority, maxDays, minDays;

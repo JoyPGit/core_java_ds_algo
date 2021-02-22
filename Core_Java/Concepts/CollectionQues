@@ -1,0 +1,73 @@
+ArrayList 
+Basic data structure used by Java ArrayList to store objects is an array of Object class, 
+which is defined as follows - transient Object[] elementData;
+
+How does ArrayList grow dynamically
+When we add an element to an ArrayList it first verifies whether it has that much capacity in the array 
+to store new element or not, in case there is not then the new capacity is calculated which is 
+50% more than the old capacity and the array is increased by that much capacity 
+(Actually uses Arrays.copyOf which returns the original array increased to the new length).
+
+transient is a variables modifier used in serialization. At the time of serialization, 
+if we don’t want to save value of a particular variable in a file, then we use transient keyword. 
+When JVM comes across transient keyword, it ignores original value of the variable and save default 
+value of that variable data type.
+
+
+
+
+When to use LinkedList over ArrayList in Java?
+Another benefit of using a LinkedList arise when you add or remove from the head of the list, 
+since those operations are O(1), while they are O(n) for ArrayList.
+
+for fast retrieval, use ArrayList, for fast addition/deletion use LinkedList.
+
+Also, if you have large lists, keep in mind that memory usage is also different. Each element 
+of a LinkedList has more overhead since pointers to the next and previous elements are also stored. 
+ArrayLists don't have this overhead. However, ArrayLists take up as much memory as is allocated 
+for the capacity, regardless of whether elements have actually been added.
+
+Hashtable vs HashMap
+
+When to use LinkedList over ArrayList in Java?
+in ArrayList accessing an element takes linear time and adding an element takes O(n) time [worst case]. 
+In LinkedList adding an element takes O(n) time and accessing also takes O(n) time but 
+LinkedList uses more memory than ArrayList.
+
+
+concurrent hashmap vs hashmap
+
+ConcurrentHashMap has :
+
+1 Multiple partitions which can be locked independently. (16 by default)
+2 Using concurrent Locks operations for thread safety instead of synchronized.
+3 Has thread safe Iterators. synchronizedCollection's iterators are not thread safe.
+4 Does not expose the internal locks. synchronizedCollection does.
+
+ConcurrentHashMap does not lock the Map while you are reading from it. 
+Additionally,ConcurrentHashMap does not lock the entire Mapwhen writing to it. 
+It only locks the part of the Map that is being written to, internally.
+
+
+Hashtable’s offer concurrent access to their entries, with a small caveat, 
+the entire map is locked to perform any sort of operation. While this overhead is ignorable in a web 
+application under normal load, under heavy load it can lead to delayed response times and 
+overtaxing of your server for no good reason.
+
+
+This is where ConcurrentHashMap’s step in. They offer all the features of Hashtable with a 
+performance almost as good as a HashMap. ConcurrentHashMap’s accomplish this by a very simple mechanism. 
+Instead of a map wide lock, the collection maintains a list of 16 locks by default, each of which is 
+used to guard (or lock on) a single bucket of the map. This effectively means that 16 threads can 
+modify the collection at a single time (as long as they’re all working on different buckets). 
+Infact there is no operation performed by this collection that locks the entire map. 
+The concurrency level of the collection, the number of threads that can modify it at the same time 
+without blocking, can be increased. However a higher number means more overhead of maintaining this list of locks.
+
+internal working of HashMap
+
+TreeMap
+A Red-Black tree based NavigableMap implementation. The map is sorted according to the natural 
+ordering of its keys, or by a Comparator provided at map creation time, depending on which constructor is used.
+
+thread safe collections? blockingQueue, ConcurrentHashMap

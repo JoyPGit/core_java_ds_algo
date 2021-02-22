@@ -107,6 +107,8 @@ class Array {
         return nums[low]; // 3
     }
 
+    
+
 
     // some cases which have been avoided
     // j = i+1 so count is 1 for [0], j-i+1 fails

@@ -6,3 +6,76 @@ instantiating interfaces in java
 marker interface
 Marker interface is used as a tag to inform a message to the Java compiler so that it can 
 add special behaviour to the class implementing it. Java marker interface has no members in it.
+
+
+Streams
+Optional
+
+public Optional<T> filter(Predicate<? super T> predicate)	
+If a value is present, and the value matches the given predicate, return an Optional 
+describing the value, otherwise return an empty Optional.
+
+public <U> Optional<U> map(Function<? super T,? extends U> mapper)	If a value is present, 
+apply the provided mapping function to it, and if the result is non-null, return an Optional 
+describing the result. Otherwise return an empty Optional.
+
+There are several ways of creating Optional objects.
+
+To create an empty Optional object, we simply need to use its empty() static method:
+
+String name = null;
+Optional.of(name);
+However, the argument passed to the of() method can't be null. Otherwise, we'll get a NullPointerException
+
+But in case we expect some null values, we can use the ofNullable() method:
+
+String name = "baeldung";
+Optional<String> opt = Optional.ofNullable(name);
+assertTrue(opt.isPresent());
+
+return Optional.ofNullable(modem2)
+       .map(Modem::getPrice)
+       .filter(p -> p >= 10)
+       .filter(p -> p <= 15)
+       .isPresent();
+
+Stream with map
+List<Integer> list = Arrays.asList(3, 6, 9, 12, 15); 
+// Using Stream map(Function mapper) and displaying the corresponding new stream 
+list.stream().map(number -> number * 3).forEach(System.out::println); 
+
+
+Fail-Fast systems abort operation as-fast-as-possible exposing failures immediately 
+and stopping the whole operation.
+Whereas, Fail-Safe systems don't abort an operation in the case of a failure. 
+Such systems try to avoid raising failures as much as possible.
+
+Default iterators for Collections from java.util package such as ArrayList, HashMap, etc. are Fail-Fast.
+
+ArrayList<Integer> numbers = // ...
+
+Iterator<Integer> iterator = numbers.iterator();
+while (iterator.hasNext()) {
+    Integer number = iterator.next();
+    numbers.add(50);
+}
+
+Fail-Safe iterators favor lack of failures over the inconvenience of exception handling.
+
+Those iterators create a clone of the actual Collection and iterate over it. 
+If any modification happens after the iterator is created, the copy still remains untouched. 
+Hence, these Iterators continue looping over the Collection even if it's modified.
+
+ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+
+map.put("First", 10);
+map.put("Second", 20);
+map.put("Third", 30);
+map.put("Fourth", 40);
+
+Iterator<String> iterator = map.keySet().iterator();
+
+while (iterator.hasNext()) {
+    String key = iterator.next();
+    map.put("Fifth", 50);
+}

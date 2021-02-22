@@ -373,10 +373,11 @@ public class Backtrack {
             // if(list.contains(nums[i])) continue; //no duplicates, if present don't add
             if(visited[i] != 0) continue;
             visited[i] = 1;
-            list.add(nums[i]);
 
+            list.add(nums[i]);
             backtrack(res, list, nums, visited);
             list.remove(list.size() - 1);
+
             visited[i] = 0;
         }
     } 
