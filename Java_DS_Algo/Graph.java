@@ -543,7 +543,7 @@ class Graph {
 	// https://leetcode.com/problems/all-paths-from-source-to-target/
     public List<List<Integer>> allPathsSourceTarget1(int[][] graph) {
         // create graph, no dedge wt, so adj list
-        n = graph.length;
+        int n = graph.length;
         HashMap<Integer, List<Integer>> map = new HashMap<>();
         for(int i=0; i<n; i++){
             if(graph[i].length==0) continue;

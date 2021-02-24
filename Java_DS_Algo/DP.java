@@ -31,7 +31,7 @@ public class DP {
      * decode ways
      * train ticket
      * job scheduling
-     * stairs, uniqe paths, house robber
+     * stairs, unique paths, house robber
      * knapsack, subset, coin change(no of ways),
      * wiggle, longest path
      * palindrome subseq, 
@@ -1285,7 +1285,7 @@ public class DP {
         return dp[value.length][limit];
     }
 
-     /** similar to rod cutting, we have inifinite supply of coins and 
+     /** similar to rod cutting, we have infinite supply of coins and 
      * we have to find no of ways we can make change
      * in rod cutting too, we could take any piece as many times as we wanted
      */
@@ -2717,7 +2717,7 @@ public class DP {
         // wordDict.add("ace");
         // dp.wordBreak(s, wordDict);
 
-        dp.longestRepeatedNonOverlappingSubstring("netaseta");
+        dp.longestRepeatingNonOverlappingSubstring("netaseta");
 
         String palin = "abacba";
         // dp.longestPalindromeSubseq(palin);
