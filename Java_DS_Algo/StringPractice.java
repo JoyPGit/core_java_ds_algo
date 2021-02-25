@@ -21,7 +21,9 @@ class StringPractice {
      * 
      * max length of concatenated string, phone no combinations
      * 
-     * QUES : VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
+     * QUES : 
+     * 
+     * shortest to char, VERSION COMPARE, IS SUBSEQUENCE, TIME, SUBFOLDER, KDIGITS,
      * DECODE STRING, NO OF DECODINGS
      * WORD SEARCH, WORD LADDER, REORGANIZE, NUMBER OF DECODINGS,
      * LARGEST TIME

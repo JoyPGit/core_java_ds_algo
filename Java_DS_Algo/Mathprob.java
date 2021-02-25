@@ -841,6 +841,8 @@ public class Mathprob {
         return Integer.parseInt(s);
     }
     
+    // https://www.geeksforgeeks.org/number-flips-make-binary-string-alternate/
+
     // https://www.geeksforgeeks.org/find-two-rectangles-overlap/
 
     // imp : hi = m * n - 1;
@@ -1179,9 +1181,10 @@ public class Mathprob {
         return diff;
     }
 
+    // new; using mod,  if x>180 use 360 - x
     public double angleClock2(int hour, int minutes) {
         // angle b/w 12 and hour hand
-        // 1hr h -> 30 deg
+        // 1 hr h -> 30 deg
         // 1 min h -> x/60 * 30 deg
         double h = (hour%12)*30 + ((double)minutes/60)*30;
         double m = ((double)minutes/60) * 360;

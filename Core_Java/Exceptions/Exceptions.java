@@ -63,4 +63,25 @@ class Fund {
         }
     }
 }
+/** 
+ * 
+ * Checked and unchecked exceptions in java
+ * 
+ * What are checked exceptions?
+ * Checked exceptions are checked at compile-time. It means if a method is throwing a checked exception 
+ * then it should handle the exception using try-catch block or it should declare the exception using 
+ * throws keyword, otherwise the program will give a compilation error.
+ * 
+ * How to resolve the error? There are two ways to avoid this error. 
+ * 
+ * https://beginnersbook.com/2013/04/java-checked-unchecked-exceptions-with-examples/
+ * 
+ * Method 1: Declare the exception using throws keyword.
+ * Method 2: Handle them using try-catch blocks.
+ * 
+ * 
+ * Unchecked Exceptions
+ * NullPointerException, ArrayIndexOutOfBoundsException, ArithmeticException, 
+ * IllegalArgumentException, NumberFormatException
+*/
 

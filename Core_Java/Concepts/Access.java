@@ -97,6 +97,44 @@ public class Access extends FunkyClass{
      *
      * Integer is final class, static class can only be nested
      *
+     * https://stackoverflow.com/questions/1743715/behaviour-of-final-static-method
+     * 
+     * //Snippet 1 - Compiles fine
+        public class A {
+            static void ts() {
+            }
+        }
+
+        class B extends A {
+            static void ts() {
+            }
+        }
+     *   
+     * shadowing
+     * Static methods cannot be overridden but they can be hidden. The ts() method of B is 
+     * not overriding(not subject to polymorphism) the ts() of A but it will hide it. 
+     * If you call ts() in B (NOT A.ts() or B.ts() ... just ts()), the one of B will be called and not A. 
+     * Since this is not subjected to polymorphism, the call ts() in A will never be redirected to 
+     * the one in B.
+     * 
+     * The keyword final will disable the method from being hidden. So they cannot be hidden and an 
+     * attempt to do so will result in a compiler error.
+     * 
+     * static means that a field or method belongs to the class, as opposed to individual instances 
+     * of the class.
+     * final actually means different things when applied to methods versus fields (or local variables):
+     * final variables and fields cannot be reassigned. This is fairly similar to C++'s const.
+     * final methods cannot be overridden, which only applies to methods on instances. When used in this 
+     * sense, final is not similar to C++'s const.
+     * Because you cannot override static methods on classes, the combined modifiers static final are 
+     * usually redundant, which is why IntelliJ advises you to remove one of the modifiers.
+     * 
+     * it makes no sense to have a static final method static methods can't be overridden, 
+     * but can be hidden. Making them final prevents even hiding. 
+     * 
+     * https://stackoverflow.com/questions/3406703/whats-the-meaning-of-system-out-println-in-java
+     * 
+     * //////////////////////////////////////////////////////////////////
      * abtract methods in interface don't need abstract keyword
      *
      * interfaces earlier could only have abstract and public methods
@@ -119,6 +157,7 @@ class Derived extends Access{
 //    }
     Derived(){
 //        Integer.parseInt("");
+        super.statFuncFinal();
     }
 }
 

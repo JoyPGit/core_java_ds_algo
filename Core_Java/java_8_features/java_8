@@ -1,6 +1,19 @@
-functional Interface
+functional Interface, interfaces can have default and static methods
+Why default? So as to provide backwards compatibility, if a new method is added to an interface
+it has to be added to all the classes implementing them. so default helps here
+
 lambda Expressions
-Stream API
+dateTime api
+
+Stream API (map, filter, reduce)
+
+// to find all even numbers' sum in an array
+Integer[] myArray = {1, 5, 8};
+Stream<Integer> myStream = Arrays.stream(myArray);
+Arrays.stream(myArray)
+      .filter(x -> x%2==0)
+      .sum();
+
 
 instantiating interfaces in java
 marker interface
@@ -8,7 +21,6 @@ Marker interface is used as a tag to inform a message to the Java compiler so th
 add special behaviour to the class implementing it. Java marker interface has no members in it.
 
 
-Streams
 Optional
 
 public Optional<T> filter(Predicate<? super T> predicate)	
@@ -38,6 +50,8 @@ return Optional.ofNullable(modem2)
        .filter(p -> p >= 10)
        .filter(p -> p <= 15)
        .isPresent();
+
+https://www.baeldung.com/java-8-streams
 
 Stream with map
 List<Integer> list = Arrays.asList(3, 6, 9, 12, 15); 

@@ -4,16 +4,10 @@
     <list default="true" id="3a25cbdf-8ab2-4633-8fb8-8a1de50ac99c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Concepts/Access.java" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/Access.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Concepts/Garbage_collection" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/Garbage_collection" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Concepts/all ques" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/all ques" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Concepts/java_notes" beforeDir="false" afterPath="$PROJECT_DIR$/Concepts/java_notes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exceptions/Errors" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/Errors" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Exceptions/Exceptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/Exceptions/Exceptions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/java_8_features/java_8" beforeDir="false" afterPath="$PROJECT_DIR$/java_8_features/java_8" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Array.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Backtrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Backtrack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/LinkedPractice.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/LinkedPractice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/Mathprob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/all_ds_ques" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/all_ds_ques" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Java_DS_Algo/StringPractice.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Java_DS_Algo/StringPractice.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
