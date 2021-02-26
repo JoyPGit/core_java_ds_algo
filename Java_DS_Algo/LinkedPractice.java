@@ -976,6 +976,72 @@ class LinkedPractice {
         return reverseList(d.next);
     }
 
+    // lru cache
+    /** 
+     * IMP: HOW TO GET KEY FROM LIST? STORE THE WHOLE OBJECT
+     * POINTS:
+     * 1 GETTING OR PUTTING A PAGE COUNTS AS A REFERENCE. SO MOVE TO FRONT
+     * 2 CHECKS: 
+     * GET : IF MAP CONTAINS
+     * PUT : IF MAP DOESN'T CONTAIN AND IS FULL
+     * 
+     * 3 IF MAP IS FULL, REMOVE FROM END. WHILE REMOVING ENSURE THAT CORRESPONDING KEY
+     * IS ALSO REMOVED FROM MAP. 
+     * 
+     * 4 ELSE REMOVE NODE AND ADD AT FRONT. MAP MAINTAINS ADDRESS, SO NO NEED TO UPDATE.
+     * 
+    */
+    class LRUCache {
+        class Node{
+            int key, value;
+            Node(int k, int v){
+                this.key = k;
+                this.value = v;
+            }
+        }
+        int limit;
+        Deque<Node> DLL;
+        HashMap<Integer, Node> map;
+
+        public LRUCache(int capacity) {
+            this.limit = capacity;
+            this.DLL = new LinkedList<>();
+            this.map = new HashMap<>();    
+        }
+        
+        public int get(int key) {
+            Node curr;
+            if(map.containsKey(key)){
+                curr = map.get(key);
+                DLL.remove(curr);
+                DLL.addFirst(curr);
+                return  curr.value;
+            }
+            return -1;
+        }
+        
+        // if page is present, still a 'put' operation counts as a reference
+        public void put(int key, int value) {
+            Node curr;
+            if(map.containsKey(key)){
+                curr = map.get(key);
+                // move to front
+                this.DLL.addFirst(curr);
+            }
+            else{
+                if(map.size() == limit){
+                    curr = this.DLL.getLast();
+                    map.remove(curr.key);
+                    this.DLL.removeLast();
+                }else{
+                    curr = new Node(key, value);
+                    this.DLL.addFirst(curr);
+                }
+            }
+        }
+    }
+
+
     /** 
      * BASICALLY WE USE A HASHAMP TO MAP THE ADDRESS OF EACH NODE WITH ITS CLONE, 
      * IF NOT NULL.

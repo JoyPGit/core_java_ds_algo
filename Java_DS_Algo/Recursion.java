@@ -170,6 +170,25 @@ public class Recursion {
         // not using else, causes ? to be printed
         else helper01(ch, index+1);
     }
+    
+    // head vs tail recursion
+    // https://leetcode.com/problems/excel-sheet-column-title/
+    String res = "";
+    public String convertToTitle(int n) {
+        helper(n);
+        return res;
+    }
+    
+    void helper(int n){
+        if(n<=0) return;
+        if(n>0 && n<=26) {
+            res+=""+(char)(n-1+'A');
+            return; 
+        }
+        helper((n-1)/26);
+        res+=""+(char)(((n-1)%26)+'A');
+        
+    }
 
     /** 
      * Points:
@@ -407,7 +426,7 @@ public class Recursion {
         minCoinsHelper(arr, sum, index+1, count);
     }
 
-    
+
 
     int knapsack(int[] val, int[] wt, int weightLimit, int index){
         if(weightLimit <0) return Integer.MIN_VALUE;

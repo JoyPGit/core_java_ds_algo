@@ -887,7 +887,7 @@ class HashPractice{
     // https://leetcode.com/problems/make-sum-divisible-by-p/discuss/857706/Java-Solution-using-hashmap
     // https://leetcode.com/problems/insert-delete-getrandom-o1/
 
-    // lru cache
+    
     public static void main(String[] args) {
         HashPractice h = new HashPractice();
         HashMap<Integer, String> map = new HashMap<>();

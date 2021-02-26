@@ -2126,27 +2126,30 @@ public class DP {
         return dp[n1][n2];
     }
 
-    
+    /** 
+     * just simple dp, if chars match dia+1, else 0.
+     * for first row and col either fill separately
+     * or start from i =1 till m nad check chars at i-1 and j-1
+     * 
+     * keep track of max
+    */
     // https://www.youtube.com/watch?v=BysNXJHzCEs&t=4s
-    int longestCommonSubstring(String str1, String str2){
-        int m = str1.length(); int n = str2.length();
-        int[][] dp = new int[m][n];
-
-        int maxLen = 0;
-
-        for(int i =0; i<m; i++){
-            for(int j = 0; j<n; j++){
-                if(i==0 || j==0) dp[i][j] = 0;
-                else if(str1.charAt(i-1) == str2.charAt(j-1)){
-                    dp[i][j] = dp[i][j] + 1;
-                    maxLen = Math.max(maxLen, dp[i][j]);
+    // https://practice.geeksforgeeks.org/problems/longest-common-substring1452/1
+    int longestCommonSubstr(String S1, String S2, int m, int n){
+        // code here
+        int max = 0;
+        int[][] dp = new int[m+1][n+1];
+        
+        for(int i =1; i<=m; i++){
+            for(int j =1; j<=n; j++){
+                if(S1.charAt(i-1) == S2.charAt(j-1)) {
+                    dp[i][j] = dp[i-1][j-1]+1;
+                    max = Math.max(max, dp[i][j]);
                 }
-                else{
-                    dp[i][j] = 0;
-                }
+                
             }
         }
-        return maxLen;
+        return max;
     }
 
      
@@ -2273,6 +2276,12 @@ public class DP {
 
     /////////////////////////////////// PALINDROME
 
+    /** 
+     * THE BEST TECHNIQUE FOR PALINDROME IS TAKE RREVERSE OF THE STRING
+     * AND USE LCS FOR BOTH STRINGS.
+     * SOLVE SUBSTRING USING DP
+     * AND SUBSEQUENCE USING RECURSION AND MEMOIZATION
+    */
     // SAME STRING, SO UPPPER TRIANGULAR
 
      /**

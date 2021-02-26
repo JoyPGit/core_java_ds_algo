@@ -1,3 +1,4 @@
+import java.util.*;
 
 public class Memoization {
     /** 
@@ -70,6 +71,32 @@ public class Memoization {
     }
 
     /** 
+     * trick is to reverse and find lcs of both strings(original and reverse)
+    */
+    // https://www.youtube.com/watch?v=wuOOOATz_IA
+    // https://leetcode.com/problems/longest-palindromic-subsequence/
+    public int longestPalindromeSubseq(String s) {
+        StringBuilder s1 = new StringBuilder(s);
+        String t = new String(s1.reverse());
+        
+        int[][] memo = new int[s.length()][t.length()];
+        for(int[] i: memo) Arrays.fill(i, -1);
+        return lcs(s, t, 0, 0, memo);
+    }
+    
+    
+    int lcs(String s, String t, int sptr, int tptr, int[][] memo){
+        if(tptr == t.length() || sptr == s.length()) return 0;
+        
+        if(memo[sptr][tptr]!=-1) return memo[sptr][tptr];
+        if(s.charAt(sptr) == t.charAt(tptr)) 
+            return memo[sptr][tptr] = 1+lcs(s, t, sptr+1, tptr+1, memo);
+        
+        return memo[sptr][tptr] = 
+            Math.max(lcs(s, t, sptr+1, tptr, memo), lcs(s, t, sptr, tptr+1, memo));
+    }
+
+    /** 
      * find lcs and then m+n - 2*lcs
     */
     // https://leetcode.com/problems/delete-operation-for-two-strings/
@@ -113,9 +140,82 @@ public class Memoization {
         }
     }
 
-    // https://leetcode.com/problems/longest-palindromic-substring/
+    /** 
+     * ab, b
+     * the basic idea is helper(sptr, tptr) will call helper(sptr+1, tptr) if there is no match, 
+     * else helper(sptr+1, tptr+1) will be called.
+     * if match then both indexes will be incremented.
+     * 
+     * trick here : sum = helper(sptr+1, tptr)
+     * if match sum+= helper(sptr+1, tptr+1)
+     * 
+     * if(a[i]==b[j]) return fun(a,b,i+1,j+1) + fun(a,b,i+1,j); 
+     * take ab and ab. dp[0][0] = helper(0,0);
+     * 
+    */
+    // https://leetcode.com/problems/distinct-subsequences
+    int ans = 0;
+    public int numDistinct(String s, String t) {
+        int[][] dp = new int[s.length()][t.length()];
+        for(int[] i : dp) Arrays.fill(i, -1);
+        
+        return helperDistinct(s, t, 0, 0, dp);    
+        // return ans;
+        // return dp[s.length()-1][t.length()-1];
+        // return dp[0][0];
+    }
+    
+    int helperDistinct(String s, String t, int sptr, int tptr, int[][] dp){
+        if(tptr == t.length()) {
+            ans++; 
+            return 1;
+        }
+        
+        if(sptr == s.length()) return 0;
+        
+        if(dp[sptr][tptr] != -1) return dp[sptr][tptr];
+        
+        int sum = helperDistinct(s, t, sptr+1, tptr, dp);
+        
+        if(s.charAt(sptr) == t.charAt(tptr)){
+            sum+=helperDistinct(s, t, sptr+1, tptr+1, dp);
+        }
+        return dp[sptr][tptr] = sum;
+        
+    }
+    
+    /** 
+     * used hashmap, as sum can be -ve and storing using -ve index is impossible.
+     * return 1 only if sum == target and all els have been used
+    */
+    // HASHMAP MEMOIZATION
+    // https://leetcode.com/problems/target-sum/
+    Map<String, Integer> map = new HashMap<>();
+    
+    public int findTargetSumWays(int[] nums, int S) {
 
+        return helper(nums, S, 0, 0);
+        // return ans;
+    }
+    
+    int helper(int[] arr, int target, int sum, int index){
+        if(index == arr.length && sum == target) return 1;
+        if(index >= arr.length) return 0;
+        
+        // use delimiter
+        String key = ""+sum+"=>"+index;
+        if(map.containsKey(key)) return map.get(key);
+        
+        map.put(key,   
+            helper(arr, target, sum+arr[index], index+1)+
+            helper(arr, target, sum-arr[index], index+1)
+        );
+        
+        return map.get(key);
+    }
 
+    
+    // subsets
     public static void main(String[] args) {
         
     }
