@@ -572,13 +572,13 @@ class LinkedPractice {
         return p.next;
     }
 
-    // https://leetcode.com/problems/merge-k-sorted-lists/
     /**
      * 1 add to heap 
      * 2 use the same technique as in adding 2 nos 
      * CREATE A NODE RES WITH VAL 0, 
      * node.next = new ListNode and then return RES.next
      */
+    // https://leetcode.com/problems/merge-k-sorted-lists/
     public ListNode mergeKLists(ListNode[] lists) {
         PriorityQueue<Integer> heap = new PriorityQueue<>();
         int n = lists.length;
@@ -838,6 +838,9 @@ class LinkedPractice {
         public Node prev;
         public Node next;
         public Node child;
+        Node(int v){
+            this.val = v;
+        }
     };
     /*the most imp thing was how to return 12 once we get to 11.
      * so when no child is present, we return the last node.
@@ -1041,6 +1044,101 @@ class LinkedPractice {
         }
     }
 
+    class MyCircularDeque {
+        LinkedList<Node> list;
+        Node head, tail;
+        int size, capacity;
+
+        /** Initialize your data structure here. Set the size of the deque to be k. */
+        public MyCircularDeque(int k) {
+            this.list = new LinkedList<Node>();
+            this.capacity = k;
+            head = null;
+            tail = head;
+        }
+
+        /**
+         * Adds an item at the front of Deque. Return true if the operation is
+         * successful.
+         */
+        public boolean insertFront(int value) {
+            if (capacity == size)
+                return false;
+            if (size == 0) {
+                head = new Node(value);
+                tail = head;
+                size++;
+                return true;
+            }
+            head.prev = new Node(value);
+            head.prev.next = head;
+            head = head.prev;
+            size++;
+            return true;
+        }
+
+        public boolean insertLast(int value) {
+
+            if (size == 0) {
+                head = new Node(value);
+                // tail = head.next;
+                tail = head;
+                size++;
+                return true;
+            }
+            if (capacity == size)
+                return false;
+            // tail is at last node
+            tail.next = new Node(value);
+            tail.next.prev = tail;
+            tail = tail.next;
+            size++;
+            return true;
+        }
+
+        public boolean deleteFront() {
+            if (size == 0)
+                return false;
+
+            head = head.next;
+            size--;
+            return true;
+        }
+
+        public boolean deleteLast() {
+            // System.out.println("size "+size);
+            if (size == 0)
+                return false;
+            tail = tail.prev;
+
+            size--;
+            return true;
+        }
+
+        /** Get the front item from the deque. */
+        public int getFront() {
+            if (size == 0)
+                return -1;
+            return head.val;
+        }
+
+        /** Get the last item from the deque. */
+        public int getRear() {
+            if (size == 0)
+                return -1;
+            return tail.val;
+        }
+
+        /** Checks whether the circular deque is empty or not. */
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        /** Checks whether the circular deque is full or not. */
+        public boolean isFull() {
+            return size == capacity;
+        }
+    }
 
     /** 
      * BASICALLY WE USE A HASHAMP TO MAP THE ADDRESS OF EACH NODE WITH ITS CLONE, 

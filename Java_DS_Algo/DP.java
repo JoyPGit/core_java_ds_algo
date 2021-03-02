@@ -807,7 +807,7 @@ public class DP {
                     dp[i][j] =true;
                 }else{
                     // k<j
-                    for(int k = i;k<j; k++){
+                    for(int k = i; k<j; k++){
                         // 5 for length 2, ii and kk so k can range from i till j
                         // k+1 = j; so k<j
                         if(dp[i][k] == true && dp[k+1][j] == true) dp[i][j] = true;
@@ -1353,7 +1353,7 @@ public class DP {
      * 
     */
     // MIN coins to achieve the amount
-    // https://leetcode.com/problems/coin-change/submissions/
+    // https://leetcode.com/problems/coin-change/
     public int coinChangeDP(int[] coins, int amount) {
         int n = coins.length;
         if(n == 0) return -1;
@@ -1381,7 +1381,7 @@ public class DP {
 
     // COINS CAN BE REUSED
     // [2,1,5] -> indexes [2][1]
-    // somplae just add up incl and exclude
+    // simple just add up incl and exclude
     // https://leetcode.com/problems/coin-change-2
     int coinChangeNumberOfWays(int[] coins, int total){
         int n = coins.length; 
@@ -1461,6 +1461,7 @@ public class DP {
         f(nums, index+1, sum+nums[index]);
         f(nums, index+1, sum-nums[index]);
     }
+
 
     void matrixBlockSum(int[][] arr, int k){
         int R = arr.length; int C = arr[0].length;
@@ -2353,16 +2354,18 @@ public class DP {
     */
     // https://leetcode.com/problems/palindromic-substrings/
     int countPalindromicSubstrings(String s) {
-        int n = s.length();
-        int count = s.length();
+        int n = s.length(), count = 0;
 
         int[][] dp = new int[n][n];
 
         for (int l = 1; l <= n; l++) {
             for (int i = 0; l + i - 1 < n; i++) {
                 int j = l + i - 1;
-                if (l == 1) dp[i][j] = 1;
-                if (l == 2 && s.charAt(i) == s.charAt(j)) {
+                if (l == 1) {
+                    dp[i][j] = 1;
+                    count++;
+                }
+                else if (l == 2 && s.charAt(i) == s.charAt(j)) {
                     dp[i][j] = 1;
                     count++;
                 } 

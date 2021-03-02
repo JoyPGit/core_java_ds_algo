@@ -640,42 +640,46 @@ public class Recursion {
     }
 
     /** 
-     * GENERATE ALL SUBSETS
-     * CHECK FOR DUPLICATE
-     * KEEP TRACK OF MAX
+     * 1 Add the current string and pass as a parameter, no need to add and then remove
+     * using substring
+     * 2 basic flow -> ADD AND PASS AS ARG, DON'T MODIFT THE ORIGINAL STRING
     */
     // ["a", "abc", "d", "de", "def"]
     // https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters
     int max = 0;
     public int maxLength(List<String> arr) {
-        dfs(0, arr, "");
+        helper(arr, "", 0);
         return max;
     }
     
-    void dfs(int index, List<String> list, String str){
-        max = Math.max(max, str.length());
-        if(index == list.size()) {
-            return;
-        }
-        
+    void helper(List<String> list, String str, int index){
+        // check if the new String has duplicates and also check if the 
+        // concat has duplicates
+        // System.out.println("new "+str);
         for(int i = index; i<list.size(); i++){
-            if(hasDuplicate(str+list.get(i))) continue;
-            str+=list.get(i);
-            // System.out.println("before "+str);
-            dfs(i+1,list, str);
-            str = str.substring(0, str.length() - list.get(i).length());
-            // System.out.println("after "+str);
+            // str+=list.get(i);
+            if(hasDuplicate(str, list.get(i))) continue;
+            // max = Math.max(max, str.length());
+            helper(list, str+list.get(i), i+1);
+            // helper(list, str, i+1);
+            // str = str.substring(0, str.length() - list.get(i).length());
         }
     }
     
-    boolean hasDuplicate(String str){
+    
+    boolean hasDuplicate(String s, String t){
         int[] ch = new int[26];
-        for(char c : str.toCharArray()){
+        s+=t;
+        // System.out.println("s "+s);
+        Arrays.fill(ch, 0);
+        for(char c : s.toCharArray()){
             if(ch[c-'a']!=0) return true;
             ch[c-'a']++;
         }
+        max = Math.max(max, s.length());
         return false;
     }
+
 
     // dfs using backtracking
     // need to remove to get paths with same ancestors

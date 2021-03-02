@@ -92,6 +92,7 @@ public class Mathprob {
             // mark multiples
             markPrime(i, n, isPrimeArr);
         }
+        
         for(int i = 2; i<n; i++){ //
             if(isPrimeArr[i]) count++;
         }

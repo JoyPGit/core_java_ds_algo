@@ -220,7 +220,7 @@ public class Backtrack {
      * 3 FOR SUBSEQUENT ITERATION index+1
      * 4 
     */
-    // all permutations
+    // all permutations OF A STRING
     // https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
     // List<List<String>> 
     void allPermutations(String str){
@@ -230,11 +230,11 @@ public class Backtrack {
 
     void permHelper(char[] ch, int index){
         if(index == ch.length) System.out.println(new String(ch));
-        // swap with itself, so is starts from index
+        // swap with itself, so i starts from index
         for(int i = index; i<ch.length; i++){
             swap(ch, index, i);  
             permHelper(ch, index+1);
-            // swapping back to prreserve the original order of string chars
+            // swapping back to preserve the original order of string chars
             swap(ch, index, i);
         }
     }

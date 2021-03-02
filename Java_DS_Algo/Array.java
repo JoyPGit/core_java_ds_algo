@@ -66,6 +66,40 @@ class Array {
      * 8 CIRCULAR ARRAY 
      */
 
+    /** 
+     * POINTS:
+     * 1 IF ARR[I][J] == 1 J--;
+     * 2 IF ARR[I][J] == 0 COMPARE COUNT
+     * 3 check if j == 0 when arr[i][j] == 1, return this row
+    */
+    // https://practice.geeksforgeeks.org/problems/row-with-max-1s0023/1
+    int rowWithMax1s(int arr[][], int n, int m) {
+        // code here
+        // start from 1st row, find max, then go down, if 1 exists, do binary search
+        int r = arr.length, c = arr[0].length;
+        int i = 0, j = c-1;
+        int count = 0; int index = -1;
+        
+        while(i<r && j>=0){
+            // if(j == 0) return i;
+            
+            if(arr[i][j] == 1) {
+                if(j == 0) return i;
+                j--;
+                
+            }
+            else if(arr[i][j] == 0){
+                if(count < c-1-j) {
+                    count = c-1-j;
+                    index = i;
+                }
+                i++;
+            }
+            // System.out.println("i "+i+", j "+j+", count "+count);
+        }
+        return index;
+    }
+
     int binarySearch(int[] arr, int key){
         int n = arr.length; int res = -1; 
         int lo = 0; int hi = n-1;
@@ -98,8 +132,8 @@ class Array {
         
         while(low<high){ // 1
             int mid = low + (high - low)/2;
-            // 2 for duplicates
             if(nums[mid] < nums[high]) high = mid;
+            // fot handling duplicates
             else if(nums[mid] == nums[high]) high--;
             else low = mid+1;
             

@@ -151,6 +151,7 @@ public class Bin_Search {
      * 2 THE INDEX WHERE THE EL WILL BE INSERTED IS THE LAST INDEX OF THE 
      * JUST SMALLER ELEMENT + 1
      * 
+     * IMP
     */
     // https://leetcode.com/problems/search-insert-position
     public int searchInsert(int[] nums, int target) {
@@ -345,7 +346,7 @@ public class Bin_Search {
      * STORING HELPS US AVOID UNNECESSARY CHECKS TO SEE IF THIS IS THE FIRST 
      * BAD BY CHECKING LEFT.
      */
-    // https://leetcode.com/problems/first-bad-version/submissions/
+    // https://leetcode.com/problems/first-bad-version/
     boolean isBadVersion(int x){return true;}//dummy func check ques
     public int firstBadVersion(int n) {
         int result = -1;
@@ -821,11 +822,18 @@ public class Bin_Search {
      * steps:
      * 1 check which array has lesser length
      * 2 use cut1 and cut2, no of elements to the left of cut1 and cut2 should be half of the total no of els
-     * 3 l1<r2 and l2<r1
-     * 4 if l1>r2 we need to move cut1 to the left and if l2>r1 move to the right.
+     * 3 6 vars, lo and hi for bin search, rest for calculation
+     * 4 l1<r2 and l2<r1
+     * 5 if l1>r2 we need to move cut1 to the left and if l2>r1 move to the right.
      * remember always els to the left will be equal in number to els on the right
      * 
      * bin search on arr1, take max of left half and min of right half
+     * 
+     * REMEMBER : C1 IS THE MID ANALOGOUS TO BIN SEARCH
+     * HI = M, C1 = LO +()/2; C2 = (M+N)/2-C1
+     * L1 = C1-1, L2 = C2-1..
+     * MOVE ON FIRST ARRAY, L1>R2? HI = C1 -1
+     * IF ODD MIN(R1, R2); ELSE (MAX() + MIN()) /2
      * 
     */
     // https://www.youtube.com/watch?v=yD7wV8SyPrc

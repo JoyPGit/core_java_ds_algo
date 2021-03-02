@@ -1,33 +1,52 @@
+recursion
+target sum, pattern, stairs, jump
+include-exclude pattern -> similar to backtracking w/o remove, 
+return value instead of global var
+tip calculator 
+max length of concatenated strings
+________________________________________________________
+
+binary search
+
+min in rotated sorted (w/o dups), peak (almost similar)
+search insert position
+min in rotated sorted with duplicates has diff template
+floor, ceiling, first and last posn, 
+find min, find min with duplicates
+find peak, find first missing positive
+leaderboard, h-index 
+________________________________________________________
+
+
 array 
+
 second largest
-kadane, moore's voting, find duplicate, sorted squares, equal left and right subarray sum
-next greater el 2, candy
-wiggle sort, dutch national, max Consecutive ones, sorted squares
-3sum, K-diff Pairs in an Array, remove k digits
+kadane, moore's voting, summary ranges
+find duplicate, remove duplicates, sorted squares, 
+equal left and right subarray sum, remove k digits, next greater el 2, candy
+wiggle sort, dutch national, max Consecutive ones,
+3 sum, K-diff Pairs in an Array, 
 Last Substring in Lexicographical Order, 
 Median of Two Sorted Arrays, Find Minimum in Rotated Sorted Array
-container with most water (val = min(lmax, rmax)*(arr[hi] - arr[lo]))
-rain water
+game of life, max index diff
+
+container with most water (val = min(lmax, rmax)*(arr[hi] - arr[lo])),
+trapping rainwater
 
 ________________________________________________________
+
 linked list 
+
 reverse nodes in k group (keep track of kth node, recurse, return q)
 add nos, merge sort, 
 intersection of 2 lists (fast.next && fast.next.next)
 partition list (merge or copy the values)
 
 ________________________________________________________
-binary search
-min in rotated sorted (w/o dups), peak (almost similar)
-min in rotated sorted with duplicates has diff template
-floor, ceiling, first and last posn, 
-find min, find min with duplicates
-find peak, find first missing positive
-leaderboard, h-index 
 
-________________________________________________________
 Backtracking
-rat in maze, pattern print
+
+get max gold, rat in maze, pattern print
 
 combinations, subsets are same
 permutations , diff : (no Arrays.sort, visited[i]!=0 continue)
@@ -41,19 +60,16 @@ max length concat, sudoku, n-queen, letter combinations, word ladder, word searc
 palindrome partitioning
 
 ________________________________________________________
-recursion
-target sum, pattern, stairs, jump
-include-exclude pattern -> similar to backtracking w/o remove, 
-return value instead of global var
-tip calculator 
 
-________________________________________________________
 Stack
-trapping rainwater, infix to postfix, next greater el, remove k digits, largest rect area
+
+infix to postfix, next greater el, remove k digits, largest rect area
 maximal rect, longest valid parentheses, reverse stack using recursion
 
 ________________________________________________________
+
 heap
+
 median from data stream
 
 ________________________________________________________
@@ -91,7 +107,9 @@ public boolean wordBreak(String s, List<String> wordDict) {
 }
 
 ________________________________________________________
+
 tree
+
 morris inorder,recover BST
 iterative preorder, postorder
 boundary, bottom view, 
@@ -109,7 +127,9 @@ find the number of subtrees which have all the nodes such that entire subtree ha
 Given a BST, print the all nodes which do not have siblings. o/p in preorder fashion.
 
 ________________________________________________________
+
 Greedy
+
 pairs div by k, can complete circuit
 
 max CPU load
@@ -128,7 +148,9 @@ min fibonacci
 jump game 2, 
 
 ________________________________________________________
+
 DP
+
 fibonacci, stairs, jump
 
 house robber, del and earn, 
@@ -139,8 +161,10 @@ no of decodings(excel col)
 LIS, russian doll, 
 JOB SCHEDULING
 
-painter's partition, stock buy sell 4, palindromic partitioning, word break
+stock buy sell 4, word break
+painter's partition,  palindromic partitioning
 burst balloons
+
 Longest increasing path in matrix
 
 knapsack, rod cutting, coin change, Knight Probability in Chessboard,
@@ -154,7 +178,9 @@ longest common subseq, Substring
 longest palindromic subseq, Substring
 
 ________________________________________________________
+
 String
+
 first unique char, shortest dist to a char, 
 royal names, longest prefix
 maximum-length-of-a-concatenated-string-with-unique-characters
@@ -171,25 +197,34 @@ Minimum Window Substring
 find min diff, largest time
 
 ________________________________________________________
+
 trie
-lru
+
+lru, lfu, circular deque
 ________________________________________________________
+
 matrix
+
 search in sorted, kth smallest el in matrix,
 spiral, rotate matrix, maximal sq, walls and gates, 
 Longest increasing path in matrix (dp)
 
 ________________________________________________________
+
 graph
+
 dfs, time to inform, reconstruct itinerary
 course schedule, bipartite, tps, 
 bipartite, n/w delay, cheapest flights (dijkstra), server
 all paths from src to target (when to add start and when its adj?)
 
 ________________________________________________________
+
 Math
+
+excel sheet col title,angle b/w clock hands
 sieve of eratosthenes, robot, max prod subarray, climb stairs,
-stock buy sell, excel sheet col title, is path crossing, 
+stock buy sell,  is path crossing, 
 largest no, next permutation, remove k digits
 Fraction Addition and Subtraction, Check If Array Pairs Are Divisible by k,
 Consecutive Numbers Sum, 
@@ -200,7 +235,9 @@ contiguous subarray prod == k, like kadane,
 largest no from an array
 
 ________________________________________________________
+
 HashMap
+
 2 sum, prefix sum, 
 subarray sum equals k, no of nice subarrays(convert to prefix sum), max length equal no 0s and 1s
 smallest subsequence of distinct chars,
@@ -208,7 +245,9 @@ word subsets, path sum 3,
 special O(1) data structure
 
 ________________________________________________________
+
 sliding Window
+
 map.size(), left removal, smallest, longest (update diff), count+=
 
 use left, Shortest Subarray with Sum at Least K
@@ -219,7 +258,9 @@ max consecutive 1s 3, length of longest substring
 celebrity, min swaps to group 1s
 
 ________________________________________________________
+
 Sorting
+
 heap, merge, quick, Longest Word in Dictionary through Deleting
     public ListNode sortList(ListNode head) {
         if(head == null) return null;
@@ -262,11 +303,15 @@ heap, merge, quick, Longest Word in Dictionary through Deleting
     }
 
 ________________________________________________________
+
 Design
+
+lru cache
+circular deque
 Design a custom Iterator in Java, which will have same methods like hashNext() and next(), 
 but the user will be able to provide the starting index(m) from which the iteration will start and
 then once it reaches the end, it will start from beginning index (0th index) and print till 
 (m-1)th index. After that asked to write whole code for the class.
 
 
-https://www.geeksforgeeks.org/mentor-graphics-siemens-interview-experience-for-experience-3-yrs-sr-mts/?ref=rp
+https://www.geeksforgeeks.org/mentor-graphics-siemens-interview-experience-for-experience-3-yrs-sr-mts/

@@ -375,6 +375,39 @@ class Graph {
         }
     }
 	
+	// DFS, BACKTRACKING
+    // https://leetcode.com/problems/path-with-maximum-gold
+    public int getMaximumGold(int[][] grid) {
+        int m = grid.length, n = grid[0].length, max = 0;
+        
+        int[][] visited = new int[m][n];
+        
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(grid[i][j] != 0) max = Math.max(max, dfs(grid, i, j, visited));
+            }
+        }
+        return max;
+    }
+    
+    
+    int dfs(int[][] grid, int r, int c, int[][] visited){
+        if(r>=0 && r<grid.length && c>=0 && c<grid[0].length
+          && visited[r][c] == 0 && grid[r][c] != 0){
+            visited[r][c] = 1;
+            
+            int left = dfs(grid, r, c-1, visited);
+            int right = dfs(grid, r, c+1, visited);
+            int up = dfs(grid, r-1, c, visited);
+            int down = dfs(grid, r+1, c, visited);
+            
+            visited[r][c] = 0;
+            return Math.max(left, Math.max(up, Math.max(right, down))) + grid[r][c];
+        }
+        else return 0;
+    }
+	
+
 	/**  
 	 * similar to tree dia, 
 	 * in tree dia, take max of left + right and return max(left, right)+1;

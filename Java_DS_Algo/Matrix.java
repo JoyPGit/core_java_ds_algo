@@ -663,41 +663,6 @@ class Matrix {
         return false;
     }
 
-    // compare against increasing path
-    // https://leetcode.com/problems/path-with-maximum-gold
-    int max = 0;
-    public int getMaximumGold(int[][] grid) {
-        int m = grid.length, n = grid[0].length;
-        
-        int[][] visited = new int[m][n];
-        for(int i = 0; i<m; i++) Arrays.fill(visited[i], -1);
-        
-        for(int i =0; i<m; i++){
-            for(int j = 0; j<n; j++){
-                if(visited[i][j] == -1 && grid[i][j] != 0)
-                    max = Math.max(max, dfs(grid, i, j, visited));
-            }
-        }
-        return max;
-    }
-    
-    
-    int dfs(int[][] grid, int r, int c, int[][] visited){
-        if(r>=0 && r<grid.length && c>=0 && c<grid[0].length
-          && visited[r][c] == -1 && grid[r][c] != 0){
-            visited[r][c] = 1;
-            
-            int left = dfs(grid, r, c-1, visited);
-            int right = dfs(grid, r, c+1, visited);
-            int up = dfs(grid, r-1, c, visited);
-            int down = dfs(grid, r+1, c, visited);
-            
-            visited[r][c] = -1;
-            return Math.max(left, Math.max(up, Math.max(right, down))) + grid[r][c];
-        }
-        else return 0;
-    }
-
     /////////////////////////////////// WITH DP
     /** 
      * POINTS :
@@ -1559,41 +1524,14 @@ class Matrix {
     // [[1,1],[2,2]], 3
     // https://leetcode.com/problems/search-a-2d-matrix/
     public boolean searchMatrix(int[][] matrix, int target) {
-        int m = matrix.length;
-        if(m==0) return false;
-                
-        int n = matrix[0].length;
-        if(m==1 && n==0) return false;
-        if(m==1 && n==1) return matrix[0][0] == target;
-        
-        if(m==1) {
-            int i = 0; 
-            while(i<n){
-                if(matrix[0][i] == target) return true;
-                i++;
-            } 
-            return false;
+        int m = matrix.length, n = matrix[0].length;
+        int i = 0, j = n-1;
+        while(i<m && j>=0){
+            if(matrix[i][j] == target) return true;
+            else if(matrix[i][j]>target) j--;
+            else i++;
         }
-        if(n==1) {
-            int i = 0; 
-            while(i<m){
-                if(matrix[i][0] == target) return true;
-                i++;
-            } 
-            return false;
-        }
-        int i = m-1;  int j = n-1;
-        boolean res = false;
-        while(i>=0 && matrix[i][j]>=target){
-            i--;
-        }
-        if(i<m-1)i++;
-        while(j>=0 && matrix[i][j]>= target){
-            if(matrix[i][j] == target) res= true;
-            j--;
-            if(j<0) return res;
-        }
-        return res;
+        return false;
     }
 
     /** 

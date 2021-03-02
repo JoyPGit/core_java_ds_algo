@@ -4,6 +4,7 @@ public class Memoization {
     /** 
      * recursion with memo :
      * 
+     * knapsack
      * min edit distance
      * longest common substring
      * https://leetcode.com/problems/longest-common-subsequence/
@@ -14,6 +15,54 @@ public class Memoization {
      * 
      * 
      */
+
+    // https://leetcode.com/problems/min-cost-climbing-stairs
+    public int minCostClimbingStairs(int[] cost) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int n = cost.length;
+        return Math.min( helperStair(cost, 0, map), helperStair(cost, 1, map));
+    }
+                        
+    int helperStair(int[] cost, int index, HashMap<Integer, Integer> map){
+        if(index == cost.length) {
+            map.put(index, 0);
+            return 0;
+        }
+        if(index > cost.length) {
+            map.put(index, Integer.MAX_VALUE);
+            return Integer.MAX_VALUE;
+        }
+        
+        if(map.containsKey(index)) return map.get(index);
+        int val = cost[index] + Math.min(helperStair(cost, index+1, map), helperStair(cost, index+2, map));
+        map.put(index, val);
+        return val;
+    }
+
+    /** 
+     * start from 0; include-exclude principle
+     * include val[n] + helper(W-wt[n], n+1)
+     * exclude helper(W, n+1)
+     * 
+    */
+    // https://practice.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1#
+    static int knapSack(int W, int wt[], int val[], int n) 
+    { 
+         // your code here 
+         int[][] memo = new int[1001][n+1];
+         return helper(W, wt, val, 0, memo);
+    } 
+    
+    static int helper(int W, int[] wt, int [] val, int n, int[][] memo){
+        if(n == wt.length || W == 0) return 0;
+        if(wt[n]>W) return memo[W][n] = helper(W, wt, val, n+1, memo);
+        
+        if(memo[W][n] != 0) return memo[W][n];
+        
+        return memo[W][n] = 
+            Math.max(val[n] + helper(W-wt[n], wt, val, n+1, memo), 
+                helper(W, wt, val, n+1, memo));
+    }
 
     /**
      * trick is when m reaches end, then return word2.length() - n. why? "ho" and "".
@@ -214,6 +263,18 @@ public class Memoization {
         return map.get(key);
     }
 
+    // https://leetcode.com/problems/reaching-points
+    HashMap<String, Boolean> map1 = new HashMap<>();
+    public boolean reachingPoints(int sx, int sy, int tx, int ty) {
+        
+        if(sx>tx || sy>ty) return false;
+        if(sx == tx && sy == ty ) return true;     
+        String key = sx+"->"+sy;
+        if(map.containsKey(key)) return map1.get(key);
+        boolean val = reachingPoints(sx+sy, sy, tx, ty) || reachingPoints(sx, sx+sy, tx, ty);
+        map1.put(key, val);
+        return val;
+    }
     
     // subsets
     public static void main(String[] args) {

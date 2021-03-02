@@ -585,7 +585,7 @@ class HashPractice{
     }
 
     // find max no of walls ending for each distance, exclude last as it's boundary
-    // https://leetcode.com/problems/brick-wall/submissions/
+    // https://leetcode.com/problems/brick-wall/
     public int leastBricks(List<List<Integer>> wall) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int sum = 0, max = 0, len = 0;
