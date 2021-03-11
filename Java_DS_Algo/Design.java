@@ -179,4 +179,7 @@ public class Design {
     // https://leetcode.com/problems/replace-words/
     // https://leetcode.com/problems/design-add-and-search-words-data-structure/
 
+    // design garbage collector
+    // design rdbms
+
 }

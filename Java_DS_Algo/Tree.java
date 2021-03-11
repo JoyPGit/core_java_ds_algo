@@ -281,8 +281,7 @@ public class Tree {
     }
 
     // ITERATIVE
-    // add right and then left, pop and add to res
-    // ADD THE RIGHT AND THEN THE LEFT TO STACK
+    // pop and add to res, ADD THE RIGHT AND THEN THE LEFT TO STACK
     // https://leetcode.com/problems/binary-tree-preorder-traversal
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<>();
@@ -1503,29 +1502,32 @@ public class Tree {
 
     // CAN BE SOLVED USING HASHMAP ALSO
 
+    /** 
+     * trick : sum - root.left.val
+     * dfs(root.left, sum)
+    */
     // https://leetcode.com/problems/path-sum-iii/
     int count = 0;
-    
     public int pathSum3(TreeNode root, int sum) {
-        outerDfs(root, sum, 0);
+        dfs(root, sum);
         return count;
     }
     
-    void outerDfs(TreeNode root, int sum, int curr){
+    void dfs(TreeNode root, int sum){
         if(root == null) return;
-        outerDfs(root.left, sum, curr);
-        outerDfs(root.right, sum, curr);
-        innerDfs(root, sum, root.val);
+        dfs(root.left, sum);
+        dfs(root.right, sum);
+        innerDfs(root, sum - root.val);
     }
     
-    void innerDfs(TreeNode root, int sum, int curr){
-        if(curr == sum) count++;
+    void innerDfs(TreeNode root, int sum){
+        if(sum == 0) count++;
+        // System.out.println(root.val+", "+sum);
         
-        if(root.left != null)innerDfs(root.left, sum, curr+root.left.val);
-        if(root.right != null)innerDfs(root.right, sum, curr+root.right.val);
+        if(root == null) return;
+        if(root.left!=null) innerDfs(root.left, sum - root.left.val);
+        if(root.right!=null) innerDfs(root.right, sum - root.right.val);
     }
-
-
 
     ////////////////////////////// LEAF NODES
     // SAME AS INSERT TEMPLATE .left = f()

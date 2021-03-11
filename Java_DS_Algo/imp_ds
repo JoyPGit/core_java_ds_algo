@@ -1,3 +1,9 @@
+must daily :
+search in rotated sorted
+median of sorted, reorder list, row with max 1s, stock span, word break
+rain water, split array largest sum, 
+
+________________________________________________________
 recursion
 target sum, pattern, stairs, jump
 include-exclude pattern -> similar to backtracking w/o remove, 
@@ -110,7 +116,15 @@ ________________________________________________________
 
 tree
 
-morris inorder,recover BST
+inorder
+void dfs(TreeNode root, List<Integer> list){
+         if(root == null) return;
+        
+        dfs(root.left, list);
+        list.add(root.val);
+        dfs(root.right, list);
+    }
+morris inorder, recover BST
 iterative preorder, postorder
 boundary, bottom view, 
 nodes at dist k

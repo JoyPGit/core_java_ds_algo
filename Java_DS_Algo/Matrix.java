@@ -1050,7 +1050,7 @@ class Matrix {
 	 * 
 	 * we add alls 2s, so all 2s will update neighbouring 1s at 
 	 * the same time. so there won't be a case where a 1 farther
-	 * is updated first.
+	 * is updated first. Just mark the index as 2, so as no to reprocess it.
      * 
      * imp : mark visited index and use size
 	 * 
@@ -1064,41 +1064,46 @@ class Matrix {
         }
     }
     public int orangesRotting(int[][] grid) {
+        int oneCount = 0, time = 0, m = grid.length, n = grid[0].length;
+        
+        int[] rows = {0, 1, -1, 0};
+        int[] cols = {-1, 0, 0, 1};
+        
         Deque<Node> q = new LinkedList<>();
-        int m = grid.length; int n = grid[0].length;
-        int counter = -1;
-        
-        int[] rows = new int[]{0, -1, 1, 0};
-        int[] cols = new int[]{-1, 0, 0, 1};
-        
         for(int i =0; i<m; i++){
             for(int j = 0; j<n; j++){
-                if(grid[i][j] == 2) q.addLast(new Node(i, j));
+                if(grid[i][j] == 1) oneCount++;
+                else if(grid[i][j] == 2) q.addLast(new Node(i, j));
             }
         }
         
+        boolean onePresent = false;
         while(q.size()!=0){
-            // use size
             int size = q.size();
-            for(int i =0; i<size; i++){
+            
+            for(int j =0; j<size; j++){
                 Node curr = q.removeFirst();
-                int row = curr.row; int col = curr.col;
-                for(int k =0; k<rows.length; k++){
-                    if(isSafe(grid, row+rows[k], col + cols[k])) {
-                        // mark
-                        grid[row+rows[k]][col + cols[k]] = 2;
-                        q.addLast(new Node(row+rows[k], col+cols[k]));
+                // grid[curr.row][curr.col] = 2;
+                for(int i = 0; i<4; i++){
+                    int x = curr.row + rows[i], y = curr.col + cols[i];
+
+                    if(x>=0 && x<m && y>=0 && y<n && grid[x][y] == 1){
+                        onePresent = true;
+                        // System.out.println("x "+x+", y "+y);
+                        oneCount--;
+                        grid[x][y] = 2;
+                        q.addLast(new Node(x, y));
                     }
                 }
             }
-            counter++;
-        }
-        for(int i =0; i<m; i++){
-            for(int j = 0; j<n; j++){
-                if(grid[i][j] == 1) return -1;
+            if(onePresent) {
+                // System.out.println(time);
+                time++;
             }
+            
+            onePresent = false;
         }
-        return counter<0?0:counter;
+        return oneCount==0?time:-1;
     }
     
     boolean isSafe(int[][] grid, int row, int col){

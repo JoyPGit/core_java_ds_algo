@@ -263,11 +263,43 @@ class Greedy{
     // https://leetcode.com/discuss/interview-question/613816/Google-or-Onsite-or-Meeting-Rooms-3
 
 
+    /** 
+     * compare with prevEnd and while filling array use 2*i
+    */
+    // https://leetcode.com/problems/merge-intervals
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (x, y)-> x[0] - y[0]);
+
+        int n = intervals.length, prevStart = intervals[0][0], prevEnd = intervals[0][1];
+        
+        List<Integer> list = new ArrayList<>();
+        
+        for(int i =1; i<n; i++){
+            if(intervals[i][0]<=prevEnd) {
+                prevEnd = Math.max(intervals[i][1], prevEnd);
+            }
+            else{
+                list.add(prevStart); list.add(prevEnd);        
+                prevStart = intervals[i][0];
+                prevEnd = intervals[i][1];
+            }
+        }
+        list.add(prevStart); list.add(prevEnd);
+        
+        // for(int i : list) System.out.println(i);
+        
+        int[][] arr = new int[list.size()/2][2];
+        for(int i =0; i<list.size()/2; i++){
+            arr[i][0] = list.get(2*i);
+            arr[i][1] = list.get(2*i+1);
+            // i++;
+        }
+        return arr;
+    }
     /**
      * Similar compare prev end and next start
      * https://leetcode.com/problems/merge-intervals/discuss/21222/A-simple-Java-solution
     */
-
     /**
      * 1 MERGING IS ONLY POSSIBLE WHEN THE END >= CURRENT BEGINNING
      * 2 KEEP A START AND AN END
@@ -287,7 +319,7 @@ class Greedy{
         }
     }
 
-    public int[][] merge(int[][] intervals) {
+    public int[][] merge2(int[][] intervals) {
         List<Interval> list = new ArrayList<>();
         List<Interval> res = new ArrayList<>();
         

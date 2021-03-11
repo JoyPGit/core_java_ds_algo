@@ -3,42 +3,48 @@ import java.util.*;
 
 class LRUCache {
     class Page{
-        int key, value, index;
-        LocalDateTime last_used;
+        int key, val;
+        Page(int k, int v){
+            this.key = k;
+            this.val = v;
+        }
     }
+    
+    int size, limit;
+    LinkedList<Page> list;
     HashMap<Integer, Page> map;
-    ArrayList<Page> list;
-    int size;
-
-    //try by storing index
+    
     public LRUCache(int capacity) {
+        this.limit = capacity;
+        this.list = new LinkedList<>();
         this.map = new HashMap<>();
-        this.list = new ArrayList<>();
-        this.size = capacity;
     }
-
+    
+    // get counts as a ref, move to front; map entry need not change
     public int get(int key) {
-        if(map.containsKey(key)) {
-            list.add(map.get(key), 0);
-            list.remove(map.get(key).index);
-            map.put(key, list.get(0));
-            return list.get(0).value;
+        System.out.print("size "+size+", "+key+", ");
+        System.out.println(map);
+        if(map.containsKey(key)){
+            this.list.remove(map.get(key));
+            this.list.addFirst(map.get(key));
+            return map.get(key).val;
         }
-        else return -1;
+        return -1;
     }
-
-    // how to update entry in map
+    
     public void put(int key, int value) {
-        if(!map.containsKey(key)){
-            if(map.size() == this.size){
-                map.remove()
-                list.remove(list.size()-1);
-                list.addLast(value);
-                map.put(key, list.size()-1);
-            }
-            list.addLast(value);
-            map.put(key, list.size()-1);
+        System.out.println("size "+size);
+        if(size == limit){
+            Page curr = list.remove(list.size()-1);
+            map.remove(curr.key);
+            size--;
+            // return;
         }
+        Page p = new Page(key, value);
+        list.addFirst(p);
+        map.put(key, p);
+        size++;
+        System.out.println("put , "+map);
     }
 }
 

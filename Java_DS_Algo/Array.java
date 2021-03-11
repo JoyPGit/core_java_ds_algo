@@ -84,7 +84,7 @@ class Array {
             // if(j == 0) return i;
             
             if(arr[i][j] == 1) {
-                if(j == 0) return i;
+                if(j == 0) return i; // 1
                 j--;
                 
             }
@@ -106,7 +106,7 @@ class Array {
         while(lo<=hi){
             int mid = lo+ (hi-lo)/2;
             if(arr[mid] == key) res = mid;
-            else if(arr[mid]>key) hi= mid-1;
+            else if(arr[mid]>key) hi = mid-1;
             else lo = mid+1;
         }
         return res;
@@ -258,8 +258,8 @@ class Array {
 
     /**  
      * 2 cases:
-     * 1 if i>first , update both
-     * 2 if i> second and i!= first, update second
+     * 1 if i > first, update both
+     * 2 if i > second and i!= first, update second
     */
     // https://www.geeksforgeeks.org/find-second-largest-element-array/
     int secondLargest(int[] arr){
@@ -484,21 +484,17 @@ class Array {
      * discuss/11769/5-lines-Java-solution
     */
 
-    // * J WILL HOLD THE INDEX OF LAST NON REPEATING EL
+    // nums[index++] = nums[i]; use j to move i
     // https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     public int removeDuplicates(int[] nums) {
-        int n = nums.length;
-        if (n == 0) return 0;
-        int j=0;
-        for (int i=0; i<n; i++){
-            if (nums[i]!=nums[j]){
-                j++; 
-                nums[j]=nums[i];
-            }
+        int n = nums.length, index = 0;
+        for(int i =0; i<n; i++){
+            int j = i+1;
+            while(j<n && nums[j] == nums[i])j++;
+            nums[index++] = nums[i];
+            i = j-1;
         }
-        System.out.println("j is at "+j);
-        Utility.print1DMatrix(nums);
-        return ++j;
+        return index;
     }
 
     // recursive, return when index == n
@@ -849,7 +845,7 @@ class Array {
         return n+1;
     }
 
-    // BOYER-MOORE ALGO, MAJORITY EL
+    // BOYER-MOORE VOTING ALGO, MAJORITY EL
     // https://leetcode.com/problems/majority-element-ii/
     // discuss/63520/Boyer-Moore-Majority-Vote-algorithm-and-my-elaboration
 

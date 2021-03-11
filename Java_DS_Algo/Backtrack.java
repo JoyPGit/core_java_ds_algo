@@ -162,7 +162,6 @@ public class Backtrack {
     */
 
     // all substrings and all contiguous subsets can be found by using 2 for loops
-
     void printAllSubstrings(String inputString) {
         StringBuilder subString;
          
@@ -178,7 +177,7 @@ public class Backtrack {
         }
     }
 
-    //28 apr
+    // 28 apr
 
     // ["a", "abc", "d", "de", "def"]
     // https://leetcode.com/problems/maximum-length-of-a-concatenated-string-with-unique-characters
@@ -338,8 +337,8 @@ public class Backtrack {
     } 
 
     
-    // Given a collection of distinct integers, return all possible permutations
-    /** 
+    /**
+     * Given a collection of distinct integers, return all possible permutations 
      * what's the diff w.r.t combinations and subsets?
      * 1 Arrays.sort(nums) is not used
      * 
@@ -354,7 +353,7 @@ public class Backtrack {
      * 
      * 5 IN SUBSETS, NO VISITED SET IS MAINTAINED
      * 
-     * no sort, start from 0, add when size == length, use visited setl visited[i] == 0 continue
+     * no sort, start from 0, add when size == length, use visited set; visited[i] == 0 continue
      * in perm no duplicate indexes are allowed, so for unique perms, use a global hashset
      */
     // https://leetcode.com/problems/permutations/

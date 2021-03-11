@@ -406,7 +406,7 @@ class Graph {
         }
         else return 0;
     }
-	
+
 
 	/**  
 	 * similar to tree dia, 
@@ -1268,55 +1268,55 @@ class Graph {
     // [[2,2],[1,1],[0,0],[2,0]]
     // https://leetcode.com/problems/rotting-oranges
 	// ONLY USING A COUNTER, NO VISTED ARRAY AND CUSTOM CLASS
+	class OrangeNode{
+        int row, col;
+        OrangeNode(int r, int c){
+            this.row = r; this.col = c;
+        }
+    }
 	public int orangesRotting1(int[][] grid) {
-		Deque<Orange1> q = new LinkedList<>();
-        int m = grid.length;
-        int n = grid[0].length;
-                    
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j] == 2) q.add(new Orange1(i, j));
-			}
-		}
+		int oneCount = 0, time = 0, m = grid.length, n = grid[0].length;
         
-        int time = -1; // 1
-
-		int[] rows = { -1, 0, 0, 1 };
-		int[] cols = { 0, -1, 1, 0 };
+        int[] rows = {0, 1, -1, 0};
+        int[] cols = {-1, 0, 0, 1};
         
-		while (q.size() != 0) {
+        Deque<OrangeNode> q = new LinkedList<>();
+        for(int i =0; i<m; i++){
+            for(int j = 0; j<n; j++){
+                if(grid[i][j] == 1) oneCount++;
+                else if(grid[i][j] == 2) q.addLast(new OrangeNode(i, j));
+            }
+        }
+        
+        boolean onePresent = false;
+        while(q.size()!=0){
             int size = q.size();
-            for(int i =0; i < size; i++){
-                Orange1 curr = q.removeFirst();
-                // System.out.println(curr.x+" "+curr.y);
-                for (int k = 0; k < rows.length; k++) {
-                    int newX = curr.x + rows[k];
-                    int newY = curr.y + cols[k];
-                    if (isSafeOrange1(grid, newX, newY)) {
-                        grid[newX][newY] = 2;
-                        q.addLast(new Orange1(newX, newY));
+            
+            for(int j =0; j<size; j++){
+                OrangeNode curr = q.removeFirst();
+                // grid[curr.row][curr.col] = 2;
+                for(int i = 0; i<4; i++){
+                    int x = curr.row + rows[i], y = curr.col + cols[i];
+
+                    if(x>=0 && x<m && y>=0 && y<n && grid[x][y] == 1){
+                        onePresent = true;
+                        // System.out.println("x "+x+", y "+y);
+                        oneCount--;
+                        grid[x][y] = 2;
+                        q.addLast(new OrangeNode(x, y));
                     }
                 }
             }
-            time++;
-            // System.out.println("time "+time);
-		}
-
-		for (int i = 0; i < m; i++) {
-			for (int j = 0; j < n; j++) {
-				if (grid[i][j] == 1) return -1;
-			}
-		}
-		return time<0?0:time;
+            if(onePresent) {
+                // System.out.println(time);
+                time++;
+            }
+            
+            onePresent = false;
+        }
+        return oneCount==0?time:-1;
 	}
 
-	boolean isSafeOrange1(int[][] grid, int row, int col) {
-		if (row >= 0 && row < grid.length 
-		&& col >= 0 && col < grid[0].length 
-		// only unvisited
-		&& grid[row][col] == 1 ) return true;
-		return false;
-	}
 
 	// always keep track of q size in BFS
 	// https://leetcode.com/problems/shortest-path-in-binary-matrix

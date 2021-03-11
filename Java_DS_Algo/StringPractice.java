@@ -2387,9 +2387,11 @@ class StringPractice {
 
         char[] curr = new char[26];
 
+        // first window
         for (int i = 0; i < n; i++) curr[s.charAt(i) - 'a']++;
         if (Arrays.equals(base, curr)) res.add(0);
 
+        // subsequent windows
         for (int i = n; i < s.length(); i++) {
             int prev = i - n;
             curr[s.charAt(prev) - 'a']--;
