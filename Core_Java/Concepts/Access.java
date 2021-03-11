@@ -16,8 +16,8 @@ public class Access extends FunkyClass{
         return 1;
     }
 
-    @java.lang.Override
-    void methFunk2() {
+    @Override
+    public void methFunk2() {
         System.out.println("abstarct method overridden");
     }
 
@@ -143,7 +143,7 @@ public class Access extends FunkyClass{
      * 
      * System.out.println()
      * 
-     * System is an immutable class(final, privtae consructor);
+     * System is an immutable class(final, private consructor);
      * out is reference of PrintStream class -> FilterOutputStream -> OutputStream
     */
 }

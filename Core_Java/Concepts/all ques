@@ -18,16 +18,20 @@ stack vs heap memory
 
 Difference between method overloading and method overriding in java
 
-No.	Method Overloading	Method Overriding
+Method Overloading vs Method Overriding
 1)	Method overloading is used to increase the readability of the program.	
-Method overriding is used to provide the specific implementation of the method that is already provided 
-by its super class.
+Method overriding is used to provide the specific implementation of the method that is already
+provided by its super class.
 
-2)	Method overloading is performed within class.	Method overriding occurs in two classes 
+2)	Method overloading is performed within class.	Method overriding occurs in two classes
 that have IS-A (inheritance) relationship.
-3)	In case of method overloading, parameter must be different.	In case of method overriding, parameter must be same.
-4)	Method overloading is the example of compile time polymorphism.	Method overriding is the example of run time polymorphism.
-5)	In java, method overloading can't be performed by changing return type of the method only. Return type can be same or different in method overloading. But you must have to change the parameter.	Return type must be same or covariant in method overriding.
+3)	In case of method overloading, parameter must be different.	In case of method overriding,
+parameter must be same.
+4)	Method overloading is the example of compile time polymorphism.	Method overriding is the
+example of run time polymorphism.
+5)	In java, method overloading can't be performed by changing return type of the method only.
+Return type can be same or different in method overloading. But you must have to change the parameter.
+Return type must be same or covariant in method overriding.
 
 https://www.baeldung.com/java-type-erasure
 Type erasure can be explained as the process of enforcing type constraints only at compile time 
@@ -72,7 +76,8 @@ public static void printArray(Object[] array) {
     }
 }
 
-https://www.java67.com/2013/07/15-advanced-core-java-interview-questions-answers-senior-experienced-5-6-years-programmers-developers.html
+https://www.java67.com/2013/07/15-advanced-core-java-interview-questions-answers-senior-
+experienced-5-6-years-programmers-developers.html
 
 
 https://java2blog.com/core-java-interview-questions-and-answers/

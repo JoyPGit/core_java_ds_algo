@@ -65,7 +65,7 @@ or use a single synchronized method and make threads access it?
 * for printing even odd, also used 2
 
 but for synchronized to work a critical resource is required, either
-the synchronized block beomes the critical resource or a common 
+the synchronized block becomes the critical resource or a common
 no primitive data structure is chosen.
 
 
