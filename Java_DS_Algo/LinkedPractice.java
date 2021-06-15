@@ -221,11 +221,10 @@ class LinkedPractice {
     // https://leetcode.com/problems/reverse-linked-list/
     ListNode newHead = null;
     public ListNode reverseListRecursive(ListNode head) {
-        if(head == null) return head;
-        ListNode a = head, b = head.next;
-        if(a == null || b == null) return a;
-        ListNode p = reverseList(b);
-        b.next = a; a.next = null;
+        if(head == null || head.next == null) return head;
+        ListNode p = reverseListRecursive(head.next);
+        head.next.next = head;
+        head.next = null;
         return p;
     }
     

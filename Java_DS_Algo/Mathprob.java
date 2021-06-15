@@ -650,6 +650,7 @@ public class Mathprob {
         }
         return true;
     }
+    
 
     // https://leetcode.com/problems/number-of-burgers-with-no-waste-of-ingredients/
     public List<Integer> numOfBurgers(int tomatoSlices, int cheeseSlices) {

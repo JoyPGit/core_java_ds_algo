@@ -277,22 +277,20 @@ class Graph {
 	
 	// https://leetcode.com/problems/keys-and-rooms/
     // start from 0 and check if all are visited
-    HashSet<Integer> set = new HashSet<>();
-    
-    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-        int n = rooms.size();
-        set.add(0);
-        dfs(rooms.get(0), rooms);
-        // System.out.println(set);
-        
-        return set.size() == n? true: false;
+	public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        HashSet<Integer> visited = new HashSet<>();
+        dfs(rooms, visited, 0);
+        return visited.size() == rooms.size();
     }
     
-    void dfs(List<Integer> list, List<List<Integer>> rooms){
-        for(int i : list){
-            if(set.contains(i)) continue;
-            set.add(i);
-            dfs(rooms.get(i), rooms);
+    void dfs(List<List<Integer>> rooms, HashSet<Integer> set, int index){
+        if(set.contains(index)) return;
+        
+        List<Integer> curr = rooms.get(index);
+        set.add(index);
+        
+        for(int i : curr){
+            dfs(rooms, set, i);
         }
     }
 	

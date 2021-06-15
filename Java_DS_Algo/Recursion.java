@@ -33,25 +33,13 @@ public class Recursion {
     // https://leetcode.com/problems/invert-binary-tree/
 
     // https://leetcode.com/problems/reverse-linked-list/
-    ListNode h = null;
-    public ListNode reverseList(ListNode head) {
-        if(head == null) return null;
-        helper(head);
+    public ListNode reverseListRecursive(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode p = reverseListRecursive(head.next);
+        head.next.next = head;
         head.next = null;
-        return h;
+        return p;
     }
-    
-    void helper(ListNode head){
-        if(head == null) return;
-        ListNode a = head, b = head.next;
-        if(b == null) {
-            h = a;
-            return;
-        }
-        helper(b);
-        b.next = a;
-    }
-
 
     void printReverseRecursive(String str){
         int n = str.length()-1;

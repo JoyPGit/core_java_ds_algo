@@ -584,6 +584,8 @@ class HashPractice{
         return result;
     }
 
+    
+
     // find max no of walls ending for each distance, exclude last as it's boundary
     // https://leetcode.com/problems/brick-wall/
     public int leastBricks(List<List<Integer>> wall) {

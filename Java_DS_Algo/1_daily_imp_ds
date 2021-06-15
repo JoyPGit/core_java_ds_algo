@@ -5,7 +5,7 @@ rain water, split array largest sum,
 
 ________________________________________________________
 recursion
-target sum, pattern, stairs, jump
+target sum, pattern, stairs, jump, time to inform using dfs
 include-exclude pattern -> similar to backtracking w/o remove, 
 return value instead of global var
 tip calculator 
@@ -127,7 +127,7 @@ void dfs(TreeNode root, List<Integer> list){
 morris inorder, recover BST
 iterative preorder, postorder
 boundary, bottom view, 
-nodes at dist k
+nodes at dist k, count good nodes
 height, LCA
 is symmetric, is same
 valid BST, largest sum subtree BST, tree pruning

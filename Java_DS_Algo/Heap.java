@@ -263,6 +263,63 @@ public class Heap {
         dfs(root.left, target); dfs(root.right, target);
     }
 
+
+    // https://leetcode.com/problems/rank-teams-by-votes/
+    public String rankTeams(String[] votes) {
+        int m = 26, n = votes[0].length();
+        int[][] arr = new int[m][n];
+        HashSet<Character> set = new HashSet<>();
+        
+        for(String str : votes){
+            for(int i = 0; i<str.length(); i++){
+                arr[str.charAt(i)-'A'][i]++;
+            }
+        }
+        for(char c : votes[0].toCharArray()) set.add(c);
+
+        class Team{
+            char c; List<Integer> points;
+            Team(char ch, List<Integer> p){
+                this.c = ch;
+                this.points = p;
+            }
+        }
+        
+        PriorityQueue<Team> pq = new PriorityQueue<>((x, y)->{
+            int index = 0;
+            if(x.points.get(index) == y.points.get(index)) {
+                while(index<n){
+                    if(x.points.get(index) == y.points.get(index)) index++;
+                    else return y.points.get(index) - x.points.get(index); 
+                }
+                return x.c-y.c;
+            }
+            return y.points.get(index) - x.points.get(index);
+        });
+        
+        String res = "";
+        for(int i =0; i<m; i++){
+            List<Integer> list = new ArrayList<>();
+            char ch = (char) (i+'A');
+            if(!set.contains(ch)) continue;
+            for(int j = 0; j<n; j++){
+                list.add(arr[i][j]);
+            }
+            
+            pq.add(new Team(ch, list));
+        }
+        
+        while(pq.size()!=0){
+            // System.out.println(pq.peek().c+", "+pq.peek().points);
+            res+=""+pq.remove().c;
+        }
+        
+        return res.substring(0, n);
+    }
+
+
+
+
     // Clearwater
     // min distinct els after removing m els
     // https://www.geeksforgeeks.org/minimum-number-of-distinct-elements-after-removing-m-items/

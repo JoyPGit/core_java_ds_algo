@@ -814,6 +814,25 @@ class StringPractice {
         return gcd(b, a%b);
     }
 
+    // m/len is the quotient, adding the substring m/len times till it matches str1
+    public String gcdOfStrings2(String str1, String str2) {
+        int m = str1.length(), n = str2.length();
+        int len = gcd2(m, n);
+        int i = 0, j = 0; 
+        String str = str1.substring(0, len), a = "", b = "";
+        
+        while(i++<m/len) a+=str;
+        while(j++<n/len) b+=str;
+        if(!a.equals(str1) || !b.equals(str2)) return "";
+        return str;
+    }
+    
+    int gcd2(int m, int n){
+        if(n == 0) return 0;
+        if(m%n == 0) return n;
+        return gcd(n, m%n);
+    }
+
     /** 
      * POINTS:
      * 1 SWAP EACH CHAR WITH ALL ITS SUCCEEDING INDEXES
@@ -1696,20 +1715,18 @@ class StringPractice {
      * ("fl").startsWith("flight") -> true
      * 
      * now prev = "fl"
+
+     to reduce string length by 1 res = res.substring(0, res.length()-1)
      * 
      */
     public String longestCommonPrefixStartsWith(String[] strs) {
-        if(strs == null || strs.length == 0)    return "";
-        String prev = strs[0];
-        int i = 1;
-        while(i < strs.length){
-            while(strs[i].startsWith(prev) == false){
-                prev = prev.substring(0,prev.length()-1);
-                System.out.println(prev);
+        String res = strs[0];
+        for(int i = 1; i<strs.length; i++){
+            while(! (strs[i]).startsWith (res)){
+                res = res.substring(0, res.length()-1);
             }
-            i++;
         }
-        return prev;
+        return res;
     }
 
       /** 
