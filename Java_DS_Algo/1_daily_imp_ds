@@ -20,7 +20,8 @@ min in rotated sorted with duplicates has diff template
 floor, ceiling, first and last posn, 
 find min, find min with duplicates
 find peak, find first missing positive
-leaderboard, h-index 
+leaderboard, h-index
+shortest distance to target color 
 ________________________________________________________
 
 
@@ -118,12 +119,13 @@ tree
 
 inorder
 void dfs(TreeNode root, List<Integer> list){
-         if(root == null) return;
-        
-        dfs(root.left, list);
-        list.add(root.val);
-        dfs(root.right, list);
-    }
+    if(root == null) return;
+    
+    dfs(root.left, list);
+    list.add(root.val);
+    dfs(root.right, list);
+}
+
 morris inorder, recover BST
 iterative preorder, postorder
 boundary, bottom view, 

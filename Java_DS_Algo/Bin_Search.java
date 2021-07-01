@@ -478,6 +478,59 @@ public class Bin_Search {
         return -1;
     }
 
+    /** 
+     * the indexes are added in a sorted amnner, no need to sort list
+     * do bin search and keep track of min difference
+    */
+    // https://leetcode.com/problems/shortest-distance-to-target-color/
+    public List<Integer> shortestDistanceColor(int[] colors, int[][] queries) {
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+        int n = colors.length;
+        
+        for(int i=0; i<n; i++){
+            List<Integer> curr = map.getOrDefault(colors[i], new ArrayList<>());
+            curr.add(i);
+            map.put(colors[i], curr);
+        }
+        
+        List<Integer> res = new ArrayList<>();
+        
+        for(int[] i : queries){
+            if(!map.containsKey(i[1])) {
+                res.add(-1);
+                continue;
+            }
+            List<Integer> list = map.get(i[1]);
+            // Collections.sort(list);
+            //if(list.contains(i[0])) res.add(0);
+            if(i[0]<list.get(0)) res.add(list.get(0) - i[0]);
+            else if(i[0]>list.get(list.size()-1)) res.add(i[0] - list.get(list.size()-1));
+            else{
+                // bin search to find min diff
+                res.add(binSearch(i[0], list));
+            }
+        }
+        return res;
+    }
+    
+    int binSearch(int key, List<Integer> list){
+        int min = Integer.MAX_VALUE, lo = 0, hi = list.size()-1;
+        while(lo<=hi){
+            int mid = lo +(hi - lo)/2;
+            if(key == list.get(mid)) return 0;
+            // else if(Math.abs(key - list.get(mid)) > min) break;
+            else if(key<list.get(mid)){
+                min = Math.min(min, Math.abs(key - list.get(mid)));
+                hi = mid-1;
+            }
+            else{
+                min = Math.min(min, Math.abs(key - list.get(mid)));
+                lo = mid+1;
+            }
+        }
+        return min;
+    }
+
     /**
      * https://www.hackerrank.com/challenges/climbing-the-leaderboard/problem
      * 
