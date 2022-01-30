@@ -1625,6 +1625,50 @@ class Graph {
         return max;
     }
 
+	/** 
+	 * BFS works fine
+	 * add time in array and keep track of max in array
+	*/
+	// https://leetcode.com/problems/time-needed-to-inform-all-employees/
+    // bfs, create graph
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        HashMap<Integer, List<Integer>> g = new HashMap<>();
+        
+        for(int i =0; i<n; i++){
+            if(manager[i] == -1) continue;
+            List<Integer> list = g.getOrDefault(manager[i], new ArrayList<>());
+            list.add(i);
+            g.put(manager[i], list);
+            
+        }
+        // System.out.println(g);
+        
+        Deque<Integer> q = new LinkedList<>();
+        q.addLast(headID);
+        
+        while(q.size()!=0){
+            int size = q.size();
+            for(int i =0; i<size; i++){
+                int head = q.removeFirst();
+                // System.out.println(head+", "+informTime[head]);
+                
+                if(!g.containsKey(head)) continue;
+                List<Integer> list = g.get(head);
+                
+				// for all subordinates, add boss' inform time
+                for(int j : list) {
+                    informTime[j] += informTime[head];
+                    q.addLast(j);
+                }
+            }
+        }
+        
+        int max = informTime[headID];
+        for(int i : informTime) max = Math.max(i, max);
+        
+        return max;
+    }
+
 	// https://leetcode.com/problems/possible-bipartition/
 	
 	// https://www.techiedelight.com/print-k-colorable-configurations-graph-vertex-coloring-graph

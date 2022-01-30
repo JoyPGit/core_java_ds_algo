@@ -19,7 +19,7 @@ public class lambda {
         Drawable d1 =new Drawable(){  
             public void draw(){System.out.println("Drawing "+width);}  
         };  
-        d.draw();  
+        d1.draw();  
 
         // with lambda
         Drawable d2 = ()->{System.out.println("Drawing with lambda "+width);};
