@@ -1,3 +1,5 @@
+to run java in vs code javac class name.java
+java class name (w/o .java)
 must daily :
 search in rotated sorted
 median of sorted, reorder list, row with max 1s, stock span, word break
@@ -9,7 +11,9 @@ target sum, pattern, stairs, jump, time to inform using dfs
 include-exclude pattern -> similar to backtracking w/o remove, 
 return value instead of global var
 tip calculator 
-max length of concatenated strings
+convert-binary-search-tree-to-sorted-doubly-linked-list,
+house-robber-iii
+find itinerary
 ________________________________________________________
 
 binary search
@@ -21,7 +25,8 @@ floor, ceiling, first and last posn,
 find min, find min with duplicates
 find peak, find first missing positive
 leaderboard, h-index
-shortest distance to target color 
+shortest distance to target color,
+longest-increasing-subsequence
 ________________________________________________________
 
 
@@ -141,7 +146,7 @@ Given a n-array tree, find all the paths from root to leaf nodes.
 path sum 3, flatten, Given a binary tree, pruning
 find the number of subtrees which have all the nodes such that entire subtree has same node data value.
 Given a BST, print the all nodes which do not have siblings. o/p in preorder fashion.
-
+serialize deserialize
 ________________________________________________________
 
 Greedy
@@ -331,3 +336,9 @@ then once it reaches the end, it will start from beginning index (0th index) and
 
 
 https://www.geeksforgeeks.org/mentor-graphics-siemens-interview-experience-for-experience-3-yrs-sr-mts/
+
+
+-------------------------------------------------------------
+https://stackoverflow.com/questions/17984975/convert-int-to-char-in-java
+
+char to int and vice versa

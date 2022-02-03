@@ -427,6 +427,38 @@ public class DP {
     }
 
     /** 
+     * DP on Trees
+     * level order traversal fails for [2,1,3,null,4]
+     * 
+     * use recursion
+     * 
+     * root.val + l + r, dfs(root.left) + dfs(root.right); 
+     * l = dfs(root.left.left) + dfs(root.left.right)
+     * r = dfs(root.right.left) + dfs(root.right.right) 
+     * 
+     * https://leetcode.com/problems/house-robber-iii/solution/
+     */
+    HashMap<TreeNode, Integer> map = new HashMap<>();
+    public int rob(TreeNode root) {
+        return dfs(root);
+    }
+    
+    int dfs(TreeNode root){
+        if(root == null) return 0;
+        if(map.containsKey(root)) return map.get(root); // memoization
+
+        int l = 0, r = 0;
+        if(root.left!=null) l = dfs(root.left.left) + dfs(root.left.right);
+        if(root.right!=null) r = dfs(root.right.left) + dfs(root.right.right);
+        
+        // select max of 3 rows
+        int value = Math.max(root.val + l + r, dfs(root.left) + dfs(root.right));
+        map.put(root, value);
+        return value;
+    }
+
+
+    /** 
      * house-paint
      * 
      * start from row 1 till n-1, select the other two houses for each house
@@ -2136,6 +2168,7 @@ public class DP {
     */
     // https://www.youtube.com/watch?v=BysNXJHzCEs&t=4s
     // https://practice.geeksforgeeks.org/problems/longest-common-substring1452/1
+    // https://leetcode.com/problems/maximum-length-of-repeated-subarray/
     int longestCommonSubstr(String S1, String S2, int m, int n){
         // code here
         int max = 0;
@@ -2157,13 +2190,11 @@ public class DP {
     /** 
      * DIFF : SUBSTRING VS SUBSEQUENCE,
      * 
-     * match : substr dp[i][j]+1, maxLen; subseq dp[i][j]+1
-     * else : dp[][] = 0, Math.max()
+     * match : substr, subseq same : dp[i][j]+1
+     * else : subseq Math.max(dp[i-1][j], dp[i][j-1])
      * 
-     *           substr       subseq
-     * longest.  udia+1, 0   udia+1, max
-     * palin.    1,0         ldia+2, max 
-     *           match, no    match, no
+     *
+     * for palindrome jsut reverse the second arg (be it string or array)
      * 
      */
      

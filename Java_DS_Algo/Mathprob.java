@@ -1239,6 +1239,23 @@ public class Mathprob {
         return res;
     }
 
+    // https://leetcode.com/problems/can-place-flowers
+    // [0,0,1,0,1]
+    public boolean canPlaceFlowers(int[] flowerbed, int n) {
+        int m = flowerbed.length;
+        if(n == 0) return true;
+        
+        for(int i = 0; i<m; i++){
+            if(flowerbed[i] == 1) continue;
+            if(i-1>=0 && flowerbed[i-1] == 1) continue;
+            if(i+1<m && flowerbed[i+1] == 1) continue;
+            flowerbed[i] = 1;
+            n--;
+            if(n == 0) return true;
+        }
+        return false;
+    }
+
     // https://leetcode.com/problems/maximum-swap/
     // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
     // https://leetcode.com/problems/power-of-four

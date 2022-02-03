@@ -1285,48 +1285,40 @@ public class Backtrack {
     // https://leetcode.com/problems/knight-probability-in-chessboard/discuss/
     // 113954/Evolve-from-recursive-to-dpbeats-94
 
-
-    // need to do dfs for every node, stuck when node doesn't have entry. 
-    // Use for loop as in dfs of graph
-    // https://leetcode.com/problems/reconstruct-itinerary/
+    /**
+     1 add at the beginning of res
+     2 recur till no outgoing edges are left, add root at last
+     3 use priorityQueue and remove vertices, no need to maintain list of visited nodes
+     */
+    // https://leetcode.com/problems/reconstruct-itinerary
+    List<String> res = new ArrayList<>();
+    
     public List<String> findItinerary(List<List<String>> tickets) {
-        HashMap<String, List<String>> map = new HashMap<>();
-        int count = tickets.size()+1;
-        List<String> res = new ArrayList<>();
-        // map creation
-        for(int i =0; i<tickets.size(); i++){
-            
-            List<String> curr = 
-                map.getOrDefault((tickets.get(i)).get(0), new ArrayList<String>());
-            curr.add((tickets.get(i)).get(1));
-            map.put((tickets.get(i)).get(0), curr);
+        HashMap<String, PriorityQueue<String>> map = new HashMap<>();
+        int count = tickets.size();
+        
+        for(List<String> ticket : tickets){
+            PriorityQueue<String> list = map.getOrDefault(ticket.get(0), 
+                                                 new PriorityQueue<>((x, y) -> x.compareTo(y)));
+            list.add(ticket.get(1));
+            map.put(ticket.get(0), list);
         }
         
-        // map sortiing lexicographically
-        for(HashMap.Entry<String, List<String>> entry : map.entrySet()){
-            List<String> curr = entry.getValue();
-            Collections.sort(curr);
-            map.put(entry.getKey(), curr);
-        }
-        // HashSet<String> visited
-        // can remove the vivited airports from the list
-        String start = "JFK"; res.add(start);
-        dfs(start, map, res);
-        
+        // System.out.println(map);
+        String start = "JFK";
+        dfs(start, map);
         return res;
     }
     
-    void dfs(String start, HashMap<String, List<String>> map, List<String> res){
-        if(!map.containsKey(start)) return;
-        List<String> currList = map.get(start);
-        while(currList.size()!=0){
-            start = currList.remove(0);
-            res.add(start);
-            dfs(start, map, res);
+    void dfs(String start, HashMap<String, PriorityQueue<String>> map){
+        if(map.containsKey(start) && map.get(start).size() != 0){
+            PriorityQueue<String> q = map.get(start);
+            while(q.size()!=0){
+                dfs(q.remove(), map);
+            }
         }
-        map.remove(start);
+        res.add(0, start);
     }
-    
 
 
     List<Integer> permutation(int n, int k){

@@ -404,7 +404,7 @@ public class Partition{
         boolean[][] dp = new boolean[n][n];
         
         for(int l=1; l<=n; l++){//2
-            for(int i =0; l+i-1<n; i++){
+            for(int i =0; i+l-1<n; i++){
                 int j = i+l-1;
                 if(wordDict.contains(s.substring(i,j+1))) {//4
                     dp[i][j] =true;

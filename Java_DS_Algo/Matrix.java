@@ -1064,46 +1064,49 @@ class Matrix {
         }
     }
     public int orangesRotting(int[][] grid) {
-        int oneCount = 0, time = 0, m = grid.length, n = grid[0].length;
+        int m = grid.length, n = grid[0].length, time = 0;
         
-        int[] rows = {0, 1, -1, 0};
-        int[] cols = {-1, 0, 0, 1};
+        int[] rows = {-1, 0, 1, 0}, cols = {0, 1, 0, -1};
         
+        int ones = 0;
         Deque<Node> q = new LinkedList<>();
+        
         for(int i =0; i<m; i++){
             for(int j = 0; j<n; j++){
-                if(grid[i][j] == 1) oneCount++;
-                else if(grid[i][j] == 2) q.addLast(new Node(i, j));
+                if(grid[i][j] == 2){
+                    q.addLast(new Node(i, j));
+                }
+                else if(grid[i][j] == 1) ones++;
             }
         }
         
-        boolean onePresent = false;
+        if(ones == 0) return 0;
+        if(q.size() == 0) return -1;
+        
         while(q.size()!=0){
             int size = q.size();
-            
-            for(int j =0; j<size; j++){
-                Node curr = q.removeFirst();
-                // grid[curr.row][curr.col] = 2;
-                for(int i = 0; i<4; i++){
-                    int x = curr.row + rows[i], y = curr.col + cols[i];
 
-                    if(x>=0 && x<m && y>=0 && y<n && grid[x][y] == 1){
-                        onePresent = true;
-                        // System.out.println("x "+x+", y "+y);
-                        oneCount--;
-                        grid[x][y] = 2;
-                        q.addLast(new Node(x, y));
+            for(int i =0; i<size; i++){
+                Node curr = q.removeFirst();
+                for(int j = 0; j<4; j++){
+                    int row = curr.r + rows[j];
+                    int col = curr.c + cols[j];
+                    if(row>=0 && row<m && col>=0 && col<n
+                      && grid[row][col] == 1){
+                        q.addLast(new Node(row, col));
+                        grid[row][col] = 2;
+                        ones--;
                     }
                 }
             }
-            if(onePresent) {
-                // System.out.println(time);
-                time++;
-            }
             
-            onePresent = false;
+            time++;
+            // System.out.println(size+", "+time);
         }
-        return oneCount==0?time:-1;
+        
+        if(ones!=0) return -1;
+
+        return time == 0?-1:time-1;
     }
     
     boolean isSafe(int[][] grid, int row, int col){

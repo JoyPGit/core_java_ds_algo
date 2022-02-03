@@ -660,6 +660,40 @@ public class Heap {
         return new int[]{start, end};
     }
 
+    // https://leetcode.com/problems/find-smallest-common-element-in-all-rows/
+    public int smallestCommonElement(int[][] mat) {
+        class Node{
+            int[] arr;
+            int val;
+            int index;
+            Node(int[] arr, int val, int index){
+                this.arr = arr;
+                this.val = val;
+                this.index = index;
+            }
+        }
+        
+        PriorityQueue<Node> pq = new PriorityQueue<>((x, y)-> x.val - y.val);
+        
+        int n = mat.length, limit = mat[0].length;
+        HashMap<Integer, Integer> map = new HashMap<>(); 
+        
+        // if count reaches n return val
+        
+        for(int[] i : mat){
+            pq.add(new Node(i, i[0], 0));
+        }
+        
+        while(pq.size()!=0){
+            Node curr = pq.remove();
+            map.put(curr.val, map.getOrDefault(curr.val, 0)+1);
+            if(map.get(curr.val) == n) return curr.val;
+            if(curr.index+1 < limit) 
+                pq.add(new Node(curr.arr, curr.arr[curr.index+1], curr.index+1));
+        }
+        return -1;
+    }
+
     /** 
      * MAX HEAP OF SMALLER ELs HOLDS THE MEDIAN IF ODD NO OF ELs
      * POINTS :

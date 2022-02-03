@@ -124,6 +124,7 @@ public class Tree {
      * PATH BETWEEN ANY TWO NODES SERIALIZE DESERIALIZE 8 PREORDER WITH TAIL
      * RECURSION IS-SAME, IS-VALID-BST
      * 
+     * inorder successor
      * 
      */
 
@@ -1078,6 +1079,57 @@ public class Tree {
         // return false;
     }
 
+     /** 
+     * 1 PASS THE ROOT, MAX AND MIN
+     * 2 CALC MAX AND MIN AT EVERY NODE
+    */
+    // https://leetcode.com/problems/maximum-difference-between-node-and-ancestor
+    int diff = 0;
+    public int maxAncestorDiff(TreeNode root) {
+        if(root == null) return 0;
+        dfs(root, root.val, root.val);
+        return diff;
+    }
+    
+    void dfs(TreeNode root, int max, int min){
+        diff = Math.max(diff, Math.abs(max - min));
+        if(root == null) return;
+        
+        // System.out.println("root "+root.val+"; "+diff);
+        dfs(root.left, Math.max(max, root.val), Math.min(min, root.val));
+        dfs(root.right, Math.max(max, root.val), Math.min(min, root.val));
+    }
+
+    /***
+     * if left height == right height, current node is LCA
+     * else pass the node from the left or right side whichever has greater height
+     * hence Pair is returned
+     */
+    // https://leetcode.com/problems/lowest-common-ancestor-of-deepest-leaves/
+    class Pair{
+        TreeNode node; int depth;
+        Pair(TreeNode n, int d){
+            this.node = n;
+            this.depth = d;
+        }
+    }
+    
+    public TreeNode lcaDeepestLeaves(TreeNode root) {
+        return dfs(root, 0).node;
+    }
+    
+    
+    Pair dfs(TreeNode root, int depth){
+        if(root == null) return new Pair(root, depth);
+        Pair left = dfs(root.left, depth+1);
+        Pair right = dfs(root.right, depth+1);
+        
+        if(left.depth == right.depth) return new Pair(root, left.depth);
+        else if(left.depth > right.depth) return new Pair(left.node, left.depth);
+        else return new Pair(right.node, right.depth);
+            
+    }
+
 
     // https://www.geeksforgeeks.org/find-mirror-given-node-binary-tree/
     void findMirrorNode(TreeNode node1, TreeNode node2, int data) {
@@ -1142,6 +1194,37 @@ public class Tree {
      * 
      * 
      * */
+    
+    /**
+     * preorder works, but not for finding largest subtree
+     * for left subtree, root.val is max and for 
+     * right subtree, root.val is the min
+     */
+    // 5-> left(2) -> check what should be the ranges for left and right subtrees
+    // left (2, min); right (5, 2)
+    boolean isValid = true;
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return isValid;
+        dfs(root.left, root.val, Long.MIN_VALUE);
+        dfs(root.right, Long.MAX_VALUE, root.val);
+        
+        return isValid;
+    }
+    
+    void dfs(TreeNode root, long max, long min){
+        if(root == null) return;
+        if(root.val<=min || root.val>=max) {
+            isValid = false;
+            // System.out.println(root.val);
+            return;
+        }
+        
+        // root.val is max for left subtree and min for right subtree
+        dfs(root.left, root.val, min);
+        dfs(root.right, max, root.val);
+    }
+
+
     // https://leetcode.com/problems/validate-binary-search-tree/
     public boolean isValidBST(TreeNode root) {
         if(root == null) return true;
@@ -1157,26 +1240,39 @@ public class Tree {
     } 
 
 
-    /** 
-     * 1 PASS THE ROOT, MAX AND MIN
-     * 2 CALC MAX AND MIN AT EVERY NODE
-    */
-    // https://leetcode.com/problems/maximum-difference-between-node-and-ancestor
-    int diff = 0;
-    public int maxAncestorDiff(TreeNode root) {
-        if(root == null) return 0;
-        dfs(root, root.val, root.val);
-        return diff;
+    /**
+     * preorder
+     * pass root.val as amx for left subtree
+     * and root.val as min for right
+     *
+     * always use Math.min(root.val, max), Math.max(root.val, min) 
+     */
+    boolean isValid = true;
+    public boolean isValidBST2(TreeNode root) {
+        if(root.left!=null && root.left.val > root.val) return false;
+        if(root.right!=null && root.right.val < root.val) return false;
+        
+        dfs(root.left, root.val, Long.MIN_VALUE);
+        dfs(root.right, Long.MAX_VALUE, root.val);
+        return isValid;
     }
     
-    void dfs(TreeNode root, int max, int min){
-        diff = Math.max(diff, Math.abs(max - min));
+    
+    void dfs(TreeNode root, long max, long min){
         if(root == null) return;
         
-        // System.out.println("root "+root.val+"; "+diff);
-        dfs(root.left, Math.max(max, root.val), Math.min(min, root.val));
-        dfs(root.right, Math.max(max, root.val), Math.min(min, root.val));
+        if(min<root.val && root.val < max){
+            dfs(root.left, Math.min(root.val, max), min);
+            dfs(root.right, max, Math.max(root.val, min));    
+        }
+        else{
+            isValid = false;
+            return;
+        }
     }
+
+
+   
 
     // https://leetcode.com/discuss/general-discussion/454844/binary-tree-isomorphism-problem    
 
@@ -1634,6 +1730,98 @@ public class Tree {
         return root;
     }
 
+    // approach 2
+    class Node{
+        TreeNode node; 
+        boolean hasOne;
+        
+        Node(TreeNode n, boolean o){
+            this.node = n;
+            this.hasOne = o;
+        }
+    }
+    
+    public TreeNode pruneTree(TreeNode root) {
+        return check(root).node;
+    }
+    
+    Node check(TreeNode root){
+        if(root == null) return new Node(null, false);
+        Node left = check(root.left);
+        Node right = check(root.right);
+        // System.out.println(root.val+", "+left.hasOne+", "+right.hasOne);
+        root.left = left.node;
+        root.right = right.node;
+        if(root.val == 1) return new Node(root, true);
+        else if(left.hasOne == false && right.hasOne == false) return new Node(null, false);
+        // else if(left.hasOne || right.hasOne) 
+        return new Node(root, true);
+        // return null;
+    }
+
+    /***
+     need to return min and max, keep track of min and max in each subtree
+     don't worry about left and right side parent
+     parent will take max from left side and min from right side
+     
+    */
+    // https://leetcode.com/problems/convert-binary-search-tree-to-sorted-doubly-linked-list
+    int globalMin = Integer.MAX_VALUE, globalMax = Integer.MIN_VALUE;
+    Node first = null, last = null;
+    public Node treeToDoublyList(Node root) {
+        if(root == null) return null;
+        dfs(root);
+        first.left = last;
+        last.right = first;
+        return first;
+    }
+    
+    
+    Pair dfs(Node root){
+        if(root == null) return null;
+        Pair l = null, r = null;
+        if(root.left!=null) {
+            l = dfs(root.left);
+            // System.out.println(root.val+", "+l.max.val+", "+l.min.val);
+            root.left = l.max;
+            root.left.right = root;
+        }
+        if(root.right!=null) {
+            r = dfs(root.right);
+            // System.out.println(root.val+", "+r.max.val+", "+r.min.val);
+            root.right = r.min;
+            root.right.left = root;
+        }
+        
+        Node minNode = null, maxNode =null;
+        
+        if(l == null) minNode = root;
+        else minNode = l.min;
+        
+        if(r == null) maxNode = root;
+        else maxNode = r.max;
+        
+        if(root.val < globalMin){
+            globalMin = root.val;
+            first = root;
+        }
+        
+        if(root.val > globalMax){
+            globalMax = root.val;
+            last = root;
+        }
+        // System.out.println(root.val+", "+maxNode.val+","+minNode.val);
+        return new Pair(maxNode, minNode);
+    }
+
+    class Pair{
+        Node min, max;
+        Pair(Node a, Node b){
+            this.max = a;
+            this.min = b;
+        }
+    }   
+
     /** 
      * WE REPLACE THE KEY TO BE DELETED WITH PREDECESSOR'S VAL AND THEN 
      * RECURSIVELY DELETE THE PREDECESSOR
@@ -1682,6 +1870,47 @@ public class Tree {
     TreeNode predecessor(TreeNode root){
         while (root.right!=null) root = root.right;//4
         return root;
+    }
+
+    /**
+     * preorder tarversal, if root is to be deleted, null needs to be returned
+     * add the left and right children nodes to root list and start dfs for 
+     * left and right subtrees
+     *
+     */
+    // post, del logic, if set contains add to new Roots, return null;
+    // for each of newRoots, traverse and add to res
+    // https://leetcode.com/problems/delete-nodes-and-return-forest/
+    public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+        HashSet<Integer> set = new HashSet<>();
+        List<TreeNode> res = new ArrayList<>();
+
+        for(int i : to_delete) set.add(i);
+        // add root always, if it is not to be deleted
+        if(!set.contains(root.val)) res.add(root);
+        
+        dfs(root, res, set);
+        return res;
+    }
+    
+    TreeNode dfs(TreeNode root, List<TreeNode> res, HashSet<Integer> set){
+        if(root == null) return null;
+        root.left = dfs(root.left, res, set);
+        root.right = dfs(root.right, res, set);
+        
+        if(set.contains(root.val)) {
+            if(root.left!=null) res.add(root.left);
+            if(root.right!=null) res.add(root.right);
+            return null;
+        }
+        return root;
+    }
+    
+    private void fillPath(TreeNode root, List<TreeNode> list){
+        if(root == null) return;
+        list.add(root);
+        fillPath(root.left, list);
+        fillPath(root.right, list);
     }
 
 
@@ -1775,6 +2004,40 @@ public class Tree {
         dfsBST(root.right, list);    
     }
 
+    /**
+     * 1 use bst search
+     * 2 check right child
+     * 3 check parent' value 
+    */
+    // https://leetcode.com/problems/inorder-successor-in-bst/
+    TreeNode node = null;
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if(root.val == p.val) {
+            if(root.right == null) return null;
+        }
+        dfs(root, root, p);    
+        return node;
+    }
+    
+    void dfs(TreeNode child, TreeNode parent, TreeNode p){
+        if(child == null) return;
+        if(child.val == p.val){
+            if(child.right == null) {
+                if(parent.val>child.val) node = parent;
+                return;
+            }
+            else{
+                TreeNode q = child.right;
+                if(child.left == null) node = q;
+                else{
+                    while(q.left!=null) q = q.left;
+                    node = q;
+                }
+            }
+        }
+        else if(child.val<p.val) dfs(child.right, parent, p);
+        else dfs(child.left, child, p);
+    }
 
     // long maxGlobal = Long.MAX_VALUE; long minGlobal = Long.MIN_VALUE;
     /** 

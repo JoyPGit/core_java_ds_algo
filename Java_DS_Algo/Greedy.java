@@ -832,6 +832,54 @@ class Greedy{
 
     // https://leetcode.com/discuss/interview-question/558379/
 
+    /***
+     * like merge intervals, store starting and last indexes of each char, sort by start
+     * and then merge. If new interval, store range of previous interval.
+     * 
+     * trick : for singly occurring chars, store start twice. 
+     */
+    //https://leetcode.com/problems/partition-labels/
+    public List<Integer> partitionLabels(String s) {
+        HashMap<Character, List<Integer>> map = new HashMap<>();
+        
+        for(int i =0; i<s.length(); i++){
+            List<Integer> list = map.getOrDefault(s.charAt(i), new ArrayList<>());
+            if(list.size() == 0) list.add(i);  // 
+            if(list.size() == 2) list.remove(list.size()-1);
+            list.add(i); 
+            
+            map.put(s.charAt(i), list);
+        }
+        
+        List<List<Integer>> list = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
+        
+        for(HashMap.Entry<Character, List<Integer>> e : map.entrySet()){
+            list.add(e.getValue());
+        }
+        Collections.sort(list, (x, y)->{
+            if(x.get(0) == y.get(0)) return y.get(1) - x.get(1);
+            return x.get(0) - y.get(0);
+        });
+        
+        // System.out.println(list);
+        for(int i =0; i<list.size(); i++){
+            int start = list.get(i).get(0), end = list.get(i).get(1);    
+            int j = i+1; 
+            while(j<list.size() && list.get(j).get(0) < end){
+                // if(list.get(j).size() == 1) {
+                //     list.get(j).add(list.get(j).get(0));
+                //     break;
+                // }
+                end = Math.max(list.get(j).get(1), end);
+                j++;
+            }
+            res.add(end - start+1);
+            i=j-1;
+        }
+        return res;
+    }
+
     // https://leetcode.com/problems/partition-labels/
     public List<Integer> partitionLabels(String S) {
         //trick is to use hashmap and hint: contiguous so shrink

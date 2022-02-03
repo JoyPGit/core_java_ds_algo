@@ -11,6 +11,8 @@ public class Bin_Search {
      * leaderboard
      * high = mid -1;
      * only in 2nd template high = mid
+     * longest-increasing-subsequence
+     *
      */
     Bin_Search(){}
 
@@ -178,6 +180,8 @@ public class Bin_Search {
      * 3 THE LAST USED LOW = MID+1
      * 
      * nums[mid] == target also moves low and high
+
+     * same as normal bin search, keep track of res (accepting bin search)
      */
     // https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
     public int[] searchRange(int[] nums, int target) {
@@ -224,6 +228,7 @@ public class Bin_Search {
     // (Find-Minimum-in-Rotated-Sorted-Array-I-and-II).
     
    
+    
     /** 
      * 5 STEP BINARY
      * POINTS :
@@ -296,6 +301,7 @@ public class Bin_Search {
         }
         return nums[lo];
     }
+
 
     /** 3RD TEMPLATE
      * POINTS : 
@@ -917,6 +923,55 @@ public class Bin_Search {
         }
         return 0;
     }
+
+    /**
+     * koko eating bananas https://leetcode.com/problems/koko-eating-bananas/submissions/
+     * the min speed can be sum/h, as sum/h * h = sum
+     * the max speed can be the max el in the pile, as only one pile can be eaten in an hour
+     * 
+     * if speed is such that hours needed are less, we need to dec the speed,
+     * so hi = mid-1
+     *
+     * hours <- inverse -> speed 
+     */
+    public int minEatingSpeed(int[] piles, int h) {
+        int n = piles.length, lo = 0, hi = 0, max = 0, sum = 0, res = 0;
+        
+        for(int i : piles){
+            max = Math.max(max, i);
+            sum+=i;
+        }
+        
+        lo =1; //sum/h; 
+        hi = max;
+        
+        while(lo<=hi){
+            int mid = lo + (hi-lo)/2;
+            
+            int val = findCount(piles, mid);
+            // System.out.println(val+", "+lo+", "+mid+", "+hi);
+            if(val<=h){
+                res = mid; // res = val
+                hi = mid-1;
+            }
+            else lo = mid+1;
+        }
+        return res;
+    }
+    
+    int findCount(int[] piles, int mid){
+        int count = 0;
+        // Math.ceil
+        for(int i : piles){
+            if(i%mid == 0) count+=i/mid;
+            else{
+                count+=i/mid+1;
+            }
+        }
+        
+        return count;
+    }
+
 
     // https://leetcode.com/problems/russian-doll-envelopes/
 
