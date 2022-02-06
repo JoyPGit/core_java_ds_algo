@@ -1,0 +1,118 @@
+A generic type parameter is when a type can be used as a parameter in a class, method or interface declaration. Generics in Java was introduced to  :
+
+1 Replace all type parameters in generic types with their bounds or Object if the type parameters are unbounded. The produced bytecode, therefore, contains only ordinary classes, interfaces, and methods.
+(The compiler replaces the unbound type E with an actual type of Object)
+
+2 Insert type casts if necessary to preserve type safety.
+3 Generate bridge methods to preserve polymorphism in extended generic types.
+
+4 provide compile-time type-safety and removing the risk of ClassCastException at runtime which was a quite frequent error in Java code
+
+For example, HashSet of String will only contain String object and if you try to put Integer or any other object, the compiler will throw ClassCastException.
+
+The Same thing is done by Java compiler, when it sees code written using Generics it completely erases that code and convert it into raw type i.e. code without Generics. All type related information is removed during erasing. So your ArrayList<Gold> becomes plain old ArrayList  prior to JDK 1.5, formal type parameters e.g. <K, V> or <E> gets replaced by either Object or Super Class of the Type.
+
+In short Generics in Java is syntactic sugar and doesn’t store any type related information at runtime. All type related information is erased by Type Erasure. The reasoning behind major implementation choice is simple – preserving backward compatibility with older versions of Java. When a generic code is compiled into bytecode, it will be as if the generic type never existed.
+
+
+Set<Object> setOfAnyType = new HashSet<Object>();
+setOfAnyType.add("abc"); //legal
+setOfAnyType.add(new Float(3.0f)); //legal - <Object> can accept any type
+
+Set<? extends Number> will store either Number or subtype of Number like Integer, Float. 
+This is an example of bounded wildcards in Generics.
+
+Set<? extends Number> setOfAllSubTypeOfNumber = new HashSet<Integer>(); //legal - Integer extends Number
+setOfAllSubTypeOfNumber = new HashSet<Float>(); //legal - because Float extends Number
+
+If you are writing Generics method then you need to declare type parameters in method signature between method modifiers and return type as shown in below Java Generics example :
+
+public static <T, D> D identical(T source){
+    return (D) source; // cast
+}
+
+Arrays don't support Generics in Java so you can not create Arrays like T[]
+
+Casting code may generate a warning about "unsafe cast" which can be suppressed by using annotation @SuppressWarnings("unchecked") with a proper comment that why it will not compromise type safety.
+
+
+    private T[] contents;
+    private int index = 0;
+    public Holder(int size){
+        //contents = new T[size];          //compiler error - generic array creation
+        contents = (T[]) new Object[size]; // workaround - casting Object[] to generic Type
+    }
+
+2. No Casting
+With Generics you don’t need to cast object, Generics will automatically do that for you. For example here is the code for adding and retrieving an element in List with and without Generics in Java:
+
+List  items = new ArrayList();
+items.add("chocolates");
+String item = (String) items.get(0)
+
+List<String> items = new ArrayList();
+items.add("biscuits");
+String item = items.get(0) //no cast required
+
+One limitation of Generics in Java is that it can not be applied to primitive type, for example, you can not create pass primitives in angle bracket that will result in compilation error, for Example, ArrayList<int> will result in compilation erro
+
+
+For method-level type erasure, the method's type parameter is not stored but rather converted to its parent type Object if it's unbound or it's first bound class when it's bound.
+
+public static <E extends Comparable<E>> void printArray(E[] array) {
+    for (E element : array) {
+        System.out.printf("%s ", element);
+    }
+}
+We'll have the type parameter E erased and replaced with Comparable:
+
+public static void printArray(Comparable[] array) {
+    for (Comparable element : array) {
+        System.out.printf("%s ", element);
+    }
+}
+
+Ques :
+
+1 What is the difference between List<? extends T>  and  List <? super T>?
+List<? extends T> will accept any List with Type extending T while 
+List<? super T> will accept any List with type superclass of T.
+Both of the List declarations are example of bounded wildcards.
+
+2 Can you pass List<String> to a method which accepts List<Object>
+It will result in compilation error. It does make sense if you go one step further because List<Object> can store any any thing including String, Integer etc but List<String> can only store Strings.
+String is a subclass of Object but List<String> is not a subclass of List<Object>
+
+List<Object> objectList;
+List<String> stringList;
+     
+objectList = stringList; // compilation error
+
+3 Difference between List<Object> and raw type List in Java?
+Main difference between raw type and parametrized type List<Object> is that, compiler will not check type-safety of raw type at compile time but it will do that for parametrized type and by using Object as Type it informs compiler that it can hold any Type of Object e.g. String or Integer. 
+
+4 Difference between List<?> and List<Object> in Java?
+List<?> is List of unknown type while List<Object> is essentially List of any Type. You can assign List<String>, List<Integer> to List<?> but you can not assign List<String> to List<Object>.
+
+5 What Is Type Inference?
+Type inference is when the compiler can look at the type of a method argument to infer a generic type. 
+
+6 <?> vs <Object>
+So the difference is List<?> will take any List with whatever declaration, but List<Object> will only take something that was declared as List<Object>, nothing else.
+
+
+In a nutshell : 
+
+IntegerStack integerStack = new IntegerStack(5);
+Stack stack = integerStack;
+stack.push("Hello");
+Integer data = integerStack.pop();
+
+After type erasure, we have:
+
+IntegerStack integerStack = new IntegerStack(5);
+Stack stack = (IntegerStack) integerStack;
+stack.push("Hello");
+Integer data = (String) integerStack.pop();
+
+now we dont't have to bother and let generics throw ClassCastException.

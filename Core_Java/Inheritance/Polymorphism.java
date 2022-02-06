@@ -68,3 +68,28 @@ class SuperClass {
 		System.out.println("In m1 SuperClass");
 	}
 }
+
+public class A { 
+ void m1() {
+       System.out.println("m1 in class A");	 
+ }
+}
+public class B extends A {
+ void m1() {
+       System.out.println("m1 in class B");	 
+ }
+}
+public class Test {
+public static void main(String[] args) 
+{
+    B b = new B();
+     b.m1(); 
+ 
+    A a = new A();
+     a.m1();
+ 
+    A a2 = new B();
+     a2.m1();
+  }
+}
+Ans: The result is m1 in class B, m1 in class A, m1 in class B.
