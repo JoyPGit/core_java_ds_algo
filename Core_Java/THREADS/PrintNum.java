@@ -52,7 +52,7 @@ class Worker implements Runnable{
  * 1 if two diff methods have synchronized keyword, both will run sequentially. why?
  * because the lock is on the object
  * 
- * 2 using this as monitor vs object obj= new object as monitor?
+ * 2 using this as monitor vs object obj = new object as monitor?
  * obj.wait vs wait
  * 
  * 3 basic structure:

@@ -1,1 +1,13 @@
 https://www.geeksforgeeks.org/reflection-in-java/
+
+Reflection is an API which is used to examine or modify the behavior of methods, classes, interfaces at runtime.
+
+1 The required classes for reflection are provided under java.lang.reflect package.
+2 Reflection gives us information about the class to which an object belongs and also the methods of that class which can be executed by using the object.
+3 Through reflection we can invoke methods at runtime irrespective of the access specifier used with them.
+
+1 Class The getClass() method is used to get the name of the class to which an object belongs.
+2 Constructors The getConstructors() method is used to get the public constructors of the class to which an object belongs.
+3 Methods The getMethods() method is used to get the public methods of the class to which an objects belongs.
+
+So 

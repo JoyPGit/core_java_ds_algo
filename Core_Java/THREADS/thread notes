@@ -83,3 +83,98 @@ It must be in a method (or constructor, or initialization block).
 
 executor framework
 join
+
+
+In a thread-based multitasking environment, the thread is the smallest unit of dispatchable code. This means that a single program can perform two or more tasks simultaneously.
+Java uses threads to enable the entire environment to be asynchronous. This helps reduce inefficiency by preventing the waste of CPU cycles.
+
+Single-threaded systems use an approach called an event loop with polling. In this model, a single thread of control runs in an infinite loop, polling a single event queue to decide what to do next. Once this polling mechanism returns with, say, a signal that a network file is ready to be read, then the event loop dispatches control to the appropriate event handler
+
+synchronized
+A Java synchronized block marks a method or a block of code as synchronized. A synchronized block in Java can only be executed a single thread at a time.
+
+The synchronized keyword can be used to mark four different types of blocks:
+
+1 Instance methods
+2 Static methods
+3 Code blocks inside instance methods
+4 Code blocks inside static methods
+
+Only one thread per instance can execute inside a synchronized instance method.
+One thread per instance.
+
+This is true across all synchronized instance methods for the same object (instance). Thus, in the following example, only one thread can execute inside either of of the two synchronized methods. One thread in total per instance:
+
+public class MyCounter {
+
+  private int count = 0;
+
+  public synchronized void add(int value){
+      this.count += value;
+  }
+  public synchronized void subtract(int value){
+      this.count -= value;
+  }
+
+}
+
+Synchronized Blocks in Static Methods
+Synchronized blocks can also be used inside of static methods. Here are the same two examples from the previous section as static methods. These methods are synchronized on the class object of the class the methods belong to:
+
+  public class MyClass {
+
+    public static synchronized void log1(String msg1, String msg2){
+       log.writeln(msg1);
+       log.writeln(msg2);
+    }
+
+  
+    public static void log2(String msg1, String msg2){
+       synchronized(MyClass.class){
+          log.writeln(msg1);
+          log.writeln(msg2);  
+       }
+    }
+  }
+Only one thread can execute inside any of these two methods at the same time.
+
+Had the second synchronized block been synchronized on a different object than MyClass.class, then one thread could execute inside each method at the same time.
+
+----------------------------
+
+Synchronized Block Reentrance
+Once a thread has entered a synchronized block the thread is said to "hold the lock" on the monitoring object the synchronized block is synchronized on. If the thread calls another method which calls back to the first method with the synchronized block inside, the thread holding the lock can reenter the synchronized block. It is not blocked just because a thread (itself) is holding the lock. Only if a differen thread is holding the lock. Look at this example:
+
+public class MyClass {
+    
+  List<String> elements = new ArrayList<String>();
+    
+  public void count() {
+    if(elements.size() == 0) {
+        return 0;
+    }
+    synchronized(this) {
+       elements.remove();
+       return 1 + count();  
+    }
+  }
+    
+}
+Forget for a moment that the above way of counting the elements of a list makes no sense at all. Just focus on how inside the synchronized block inside the count() method calls the count() method recursively. Thus, the thread calling count() may eventually enter the same synchronized block multiple times. This is allowed. This is possible.
+
+---------------------------
+
+In case a class contains more than one static synchronized method, only one thread can execute inside any of these methods at the same time. Look at this static synchronized method example:
+
+public static MyStaticCounter{
+
+  private static int count = 0;
+
+  public static synchronized void add(int value){
+    count += value;
+  }
+
+  public static synchronized void subtract(int value){
+    count -= value;
+  }
+}

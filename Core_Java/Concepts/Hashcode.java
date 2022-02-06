@@ -5,9 +5,45 @@ import java.util.*;
  * https://www.youtube.com/watch?v=ghswNpRv2t0
  * w/o implementing equals, .equals or == returns false for same vals as it checks address.
  *  
+ * The Object class defines both the equals() and hashCode() methods – which means that these two
+ * methods are implicitly defined in every Java class.
+
+ equals() Contract
+    Java SE defines a contract that our implementation of the equals() method must fulfill. Most of the criteria are common sense. The equals() method must be:
+
+    reflexive: an object must equal itself
+    symmetric: x.equals(y) must return the same result as y.equals(x)
+    transitive: if x.equals(y) and y.equals(z) then also x.equals(z)
+    consistent: the value of equals() should change only if a property that is contained in equals() changes (no randomness allowed)
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Voucher))
+            return false;
+        Voucher other = (Voucher) o;
+        boolean valueEquals = (this.value == null && other.value == null)
+          || (this.value != null && this.value.equals(other.value));
+        boolean storeEquals = (this.store == null && other.store == null)
+          || (this.store != null && this.store.equals(other.store));
+        return valueEquals && storeEquals;
+    }
+
+    1 o == this, check address
+    2 check instance
+    3 cast and then check all the class variables
+ * 
+ * objects that are equal to each other must return the same hashCode, so 
+ * if we override equals(), we must also override hashCode().
+ * 
  * hashcode helps in identifying objects in heap where other objs also reside
  * entry into hasmap of the object checks hashcode and if hashcode values are same, 
  * then equals is called.
+ * 
+ * == compares addresses,
+
+ * One common way is to let our IDE generate the equals() and hashCode() methods.
  * 
 */
 

@@ -138,12 +138,12 @@ nodes at dist k, count good nodes
 height, LCA
 is symmetric, is same
 valid BST, largest sum subtree BST, tree pruning
-all paths, path sum 3
+max path sum, all paths, path sum 3, flatten
+
 leaf nodes, remove half nodes
 tree from sorted, tree from preorder and inorder
 n-ary trees
 Given a n-array tree, find all the paths from root to leaf nodes.
-path sum 3, flatten, Given a binary tree, pruning
 find the number of subtrees which have all the nodes such that entire subtree has same node data value.
 Given a BST, print the all nodes which do not have siblings. o/p in preorder fashion.
 serialize deserialize

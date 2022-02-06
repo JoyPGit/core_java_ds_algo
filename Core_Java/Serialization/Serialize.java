@@ -54,6 +54,16 @@ public class Serialize {
      * 
      * imp : Serializable is a Marker interface no implementation of any method. Externalizable is not.
      * 
+     * 
+     * Spring boot will do the following step when receives a http request.
+     * 
+     * 1.Read json http requestbody First
+     * 2.Then deserialized it to @RequestBody object.
+     * 
+     * // Json Data Mapper
+     * ObjectMapper mapper = new ObjectMapper();
+     * mapper.writeValueAsString(request)
+     * 
     */
     ObjSave save1 = new ObjSave(3);
 
