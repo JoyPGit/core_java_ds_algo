@@ -1,4 +1,4 @@
-public class Ap {
+// public class Ap {
     // design swiggy
     /** 
      * // timeline
@@ -97,4 +97,8 @@ Class payment{
 	amount
 }
     */
-}
+// }
+
+1 design notification system using kafka
+2 bin search in roatted array
+3 group anagrams

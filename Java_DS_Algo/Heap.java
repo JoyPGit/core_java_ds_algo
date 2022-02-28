@@ -341,9 +341,14 @@ public class Heap {
             pq.add(new Key(entry.getKey(), entry.getValue()));
         }
 
-        for(int i =0; i<m; i++){
-            Key curr = pq.remove();
-            if(curr.freq>1) pq.add(new Key(curr.id, curr.freq-1));
+        // if m == 0 we have removed reqd elements
+        // else we have removed some extra elements, which belong to the same id, hence size+1
+        // including current id
+        while(pq.size()!=0) {
+            Node curr = pq.remove();
+            m-=curr.freq;
+            if(m<0) return pq.size()+1;
+            else if(m == 0) return pq.size();
         }
         return pq.size();
     }

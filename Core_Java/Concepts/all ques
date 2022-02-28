@@ -1,5 +1,7 @@
 Java is platform independent, but JVM is platform dependent.
 
+Java can be considered both a compiled and an interpreted language because its source code is first compiled into a binary byte-code. This byte-code runs on the Java Virtual Machine (JVM), which is usually a software-based interpreter.
+
 Runtime Polymorphism in Java.  (method overriding)
 Runtime polymorphism or Dynamic Method Dispatch is a process in which a call to an overridden 
 method is resolved at runtime rather than compile-time.

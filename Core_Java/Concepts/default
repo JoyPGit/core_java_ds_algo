@@ -1,0 +1,14 @@
+What Is a Default Method and When Do We Use It?
+A default method is a method with an implementation, which can be found in an interface.
+
+We can use a default method to add a new functionality to an interface, while maintaining backward compatibility with classes that are already implementing the interface:
+
+public interface Vehicle {
+    public void move();
+    default void hoot() {
+        System.out.println("peep!");
+    }
+}
+Usually when we add a new abstract method to an interface, all implementing classes will break until they implement the new abstract method. In Java 8, this problem was solved by using the default method.
+
+For example, the Collection interface does not have a forEach method declaration. Thus adding such a method would simply break the whole collections API.

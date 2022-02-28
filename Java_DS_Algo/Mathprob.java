@@ -1256,6 +1256,38 @@ public class Mathprob {
         return false;
     }
 
+    /**
+        'c'-48 to convert to integer
+        while and j+=3 to speed up
+     */
+    // https://www.geeksforgeeks.org/count-of-different-numbers-divisible-by-3-that-can-be-obtained-by-changing-at-most-one-digit/
+    int findCount(String str){
+        int count = 0, sum = 0, n = str.length();
+
+        for(char c : str.toCharArray()){
+            sum+=c-48;
+        }
+
+        if(sum%3 == 0) count++;
+        for(int i = 0; i<n; i++){
+            int currChar = str.charAt(i) - 48;
+            int excSum = sum - currChar;
+            System.out.println("i "+i+", " +excSum);
+
+            for(int j =0; j<=9; j++){
+//                if(j == currChar) continue;
+                while((j+excSum)%3 == 0 && j<=9){
+                    if(j!=currChar) {
+                        count++;
+                        System.out.println(j);
+                    }
+                    j+=3;
+                }
+//                break;
+            }
+        }
+        return count;
+
     // https://leetcode.com/problems/maximum-swap/
     // https://leetcode.com/problems/h-index/discuss/70810/A-Clean-O(N)-Solution-in-Java
     // https://leetcode.com/problems/power-of-four

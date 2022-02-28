@@ -336,3 +336,10 @@ static in interface?
 
 
 https://java2blog.com/oops-interview-questions-answers-java/
+
+
+In Java, will the code in the finally block be called and run after a return statement is executed?
+The answer to this question is a simple yes – the code in a finally block will take precedence over the return statement. Take a look at the code below to confirm this fact:
+
+What if there is a return statement in the finally block as well?
+If you have a return statement in both the finally block and the try block, then you could be in for a surprise. Anything that is returned in the finally block will actually override any exception or returned value that is inside the try/catch block. 

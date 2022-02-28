@@ -1239,6 +1239,21 @@ public class Tree {
         return left && right;
     } 
 
+    // https://leetcode.com/problems/minimum-distance-between-bst-nodes
+    int minDiff = Integer.MAX_VALUE; TreeNode prev = null;
+    public int minDiffInBST(TreeNode root) {
+        if(root == null) return 0;
+        dfs(root);
+        return minDiff;
+    }
+    
+    void dfs(TreeNode root){
+        if(root == null) return;
+        dfs(root.left);
+        if(prev != null) minDiff = Math.min(minDiff, Math.abs(root.val - prev.val));
+        prev = root;
+        dfs(root.right);
+    }
 
     /**
      * preorder

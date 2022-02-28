@@ -1,0 +1,70 @@
+package com.kafka.udemy.kafkabeginner.MultiThreading;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class AccountWithSync2 {
+
+
+    public static void main(String[] args) {
+        Account account = new Account();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        for (int i = 0; i < 100; i++) {
+            executorService.execute(new AddPennyTask(account));
+        }
+
+        executorService.shutdown();
+        while(!executorService.isTerminated()) {}
+
+        System.out.println("final balance : "+account.getBalance());
+    }
+}
+
+class Account{
+    int balance;
+    Lock lock = new ReentrantLock();
+    Account(){
+        this.balance = 0;
+    }
+
+    int getBalance(){
+        return this.balance;
+    }
+
+    void makeDeposit(int amt){
+        lock.lock();
+
+        int newbalance = balance + amt;
+        try {
+            Thread.sleep(10);
+            this.balance = newbalance;
+        }
+        catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+}
+
+/**
+ * need to make synchronized the method inside run; used locks here
+ * account is the shared instance, hence critical resource
+ * */
+class AddPennyTask implements Runnable{
+    Account account;
+    AddPennyTask(Account account){
+        this.account = account;
+    }
+
+    @Override
+    public void run(){
+        account.makeDeposit(1);
+    }
+
+}

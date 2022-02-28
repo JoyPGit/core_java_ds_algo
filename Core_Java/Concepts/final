@@ -1,0 +1,1 @@
+Can We Override a Final Method? No, the Methods that are declared as final cannot be Overridden or hidden. For this very reason, a method must be declared as final only when we're sure that it is complete.

@@ -1,0 +1,72 @@
+package com.kafka.udemy.kafkabeginner;
+
+import java.util.*;
+
+public class ComparableComparator {
+
+    public static void main(String[] args) {
+        Node n1 = new Node(4, "Swagat");
+        Node n2 = new Node(3, "Suneel");
+        List<Node> list = new ArrayList<>();
+        list.add(n1); list.add(n2);
+        Collections.sort(list);
+
+        for(Node n : list){
+            System.out.print(n.name+", ");
+        }
+
+        list.add(new Node(1, "Harish"));
+        list.add(new Node(2, "Nimish"));
+
+        System.out.println("line 23");
+        Collections.sort(list, new NodeComparator());
+        for(Node n : list){
+            System.out.println(n.name);
+        }
+
+        System.out.println("line 27");
+        Collections.sort(list, (x, y)-> x.val - y.val);
+        for(Node n : list){
+            System.out.println(n.name);
+        }
+    }
+}
+
+
+class Node implements Comparable<Node>{
+    int val; String name;
+    Node(int v, String n){
+        this.val = v;
+        this.name = n;
+    }
+
+    @Override
+    public int compareTo(Node node) {
+        if(this.val < node.val) return -1;
+        else if(this.val > node.val) return 1;
+        else return 0;
+    }
+}
+
+class NodeComparator implements Comparator<Node> {
+
+    @Override
+    public int compare(Node o1, Node o2) {
+        if(o1.val > o2.val) return 1;
+        else if(o1.val < o2.val) return -1;
+        return 0;
+    }
+}
+
+
+/**
+Comparable is meant for objects with natural ordering which means the object itself must know how it is to be ordered. For example Roll Numbers of students. Whereas, 
+Comparator interface sorting is done through a separate class.
+
+Logically, Comparable interface compares “this” reference with the object specified and Comparator in Java compares two different class objects provided.
+
+Comparable uses Collections.sort() whereas Comparator uses Collections.sort(list, ()->{});
+A lambda, a class which implements Comparator(a SAM func interface)
+
+A basic differentiating feature is that using comparable we can use only one comparison. Whereas, we can write more than one custom comparators as you want for a given type, all using different interpretations of what sorting means. Like in the comparable example we could just sort by only one attribute, i.e., year but in the comparator, we were able to use different attributes like rating, name, and year as well.
+*/

@@ -112,7 +112,24 @@ class Array {
         return res;
     }
    
-
+    // https://leetcode.com/problems/k-diff-pairs-in-an-array/submissions/
+    public int findPairs(int[] nums, int k) {
+        HashSet<Integer> set = new HashSet<>();
+        int n = nums.length, count = 0;
+        Arrays.sort(nums); // 1
+        
+        for(int i =0; i<n; i++){
+            if(set.contains(nums[i]-k)) count++;
+            set.add(nums[i]);
+            int j = i+1;
+            while(j<n && nums[j] == nums[i]) j++; // remove dups
+            j--; // overshoot
+            if(i!=j && k == 0) count++;// 0 diff
+            i = j;
+        }
+        return count;
+    }
+    
     // 2nd SECOND TEMPLATE OF BS, 
     /** 
      * 3 STEP BINARY

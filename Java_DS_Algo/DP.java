@@ -27,6 +27,11 @@ public class DP {
      * palin.    1,0         ldia+2, max 
      *           match, no    match, no
      * 
+     * longest common substr update if match; return max
+     * longest common subsequence +1 if match else max of up and left; return dp[m][n];
+     * 
+     *
+     *
      * max prod subarray
      * decode ways
      * train ticket

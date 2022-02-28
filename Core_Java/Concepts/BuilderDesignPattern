@@ -1,0 +1,58 @@
+// https://projectlombok.org/features/Builder
+
+package com.kafka.udemy.kafkabeginner;
+
+public class BuilderDesignPattern {
+
+    String name; int age; String address; String color;
+    private BuilderDesignPattern(BuilderHelper builderHelper){
+        this.name = builderHelper.name;
+        this.address = builderHelper.address;
+        this.age = builderHelper.age;
+    }
+
+    static BuilderHelper builder(){
+        return new BuilderHelper(); // static
+    }
+
+    static class BuilderHelper{
+        String name, address; int age;
+
+        BuilderHelper(){}
+
+        BuilderHelper name(String name){
+            this.name = name;
+            return this;
+        }
+
+        BuilderHelper address(String address){
+            this.address = address;
+            return this;
+        }
+
+        BuilderHelper age(int age){
+            this.age = age;
+            return this;
+        }
+
+        BuilderDesignPattern build(){
+            return new BuilderDesignPattern(this);
+        }
+
+    }
+    /**
+     * 1 static class BuilderHelper
+     * 2 static method builder()
+     * 3 builder calls constructor to initialize the class vars of helper class
+     * 4 this refers to static class
+     * 5 build finally calls constructor of main class
+     * 6 constructor oif main class takes helper class instance as argument
+     *
+     * builder -> helper constructor -> methods -> build -> main constructor
+     * */
+    // new in static is for initializing vars
+    public static void main(String[] args) {
+        BuilderDesignPattern d4 = BuilderDesignPattern.builder().name("K").age(88).address("123").build();
+        System.out.println(d4.name);
+    }
+}

@@ -1,19 +1,33 @@
 to run java in vs code javac class name.java
-java class name (w/o .java)
+run : java 'class name' (w/o .java)
+
+int i = 'c' -48;
+
+
 must daily :
 search in rotated sorted
 median of sorted, reorder list, row with max 1s, stock span, word break
 rain water, split array largest sum, 
+reorder list, palindrome partitioning
+convert-binary-search-tree-to-sorted-doubly-linked-list
 
 ________________________________________________________
+tricky:
+tree to DLL, min diff in BST, string compression, next permutation
+Pairs of Songs With Total Durations Divisible by 60, Check If Array Pairs Are Divisible by k,
+excel sheet col title
+________________________________________________________
 recursion
+
+flatten-a-multilevel-doubly-linked-list
 target sum, pattern, stairs, jump, time to inform using dfs
 include-exclude pattern -> similar to backtracking w/o remove, 
 return value instead of global var
-tip calculator 
+tip calculator, reverse stack recursive 
 convert-binary-search-tree-to-sorted-doubly-linked-list,
 house-robber-iii
 find itinerary
+palindrome partitioning
 ________________________________________________________
 
 binary search
@@ -243,7 +257,7 @@ ________________________________________________________
 
 Math
 
-excel sheet col title,angle b/w clock hands
+excel sheet col title, angle b/w clock hands
 sieve of eratosthenes, robot, max prod subarray, climb stairs,
 stock buy sell,  is path crossing, 
 largest no, next permutation, remove k digits

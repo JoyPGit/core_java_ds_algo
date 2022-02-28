@@ -1,0 +1,9 @@
+reorder list, min length subarray sum
+kakfa partition? can a consumer map to multiple partitions? 
+how to scale? add consumers in a group or more consumer groups?
+HashMap internal working?
+cron job for distributed systems? library spring quartz
+future executor service? how to collate output of 100 parallel jobs? invokeAll
+
+
+sys design

@@ -1,0 +1,52 @@
+exactly a single copy of that field is created and shared among all instances of that class.
+
+It doesn't matter how many times we initialize a class. There will always be only one copy of static field belonging to it. The value of this static field will be shared across all objects of either the same or any different class.
+
+From the memory perspective, static variables are stored in the heap memory.
+
+
+Finally, we can access static fields using an object reference (such as ford.numberOfCars++). But we should avoid this because it becomes difficult to figure out if it’s an instance variable or a class variable. Instead, we should always refer to static variables using class name (Car.numberOfCars++).
+
+static methods are widely used in utility and helper classes.
+
+Since method overriding is part of Runtime Polymorphism, static methods can't be overridden.
+
+Abstract methods can't be static.
+
+If static variables require additional, multi-statement logic during initialization, we can use a static block.
+
+public class StaticBlockDemo {
+    public static List<String> ranks = new LinkedList<>();
+
+    static {
+        ranks.add("Lieutenant");
+        ranks.add("Captain");
+        ranks.add("Major");
+    }
+}
+
+
+A class can have multiple static blocks.
+static fields and static blocks are resolved and run in the same order as they are present in the class.
+
+The nested class architecture is divided into two:
+
+Nested classes that we declare static are called static nested classes.
+Nested classes that are non-static are called inner classes.
+The main difference between these two is that the inner classes have access to all members of the enclosing class (including private), whereas the static nested classes only have access to static members of the outer class.
+
+static nested classes do not have access to any instance members of the enclosing outer class. It can only access them through an object's reference.
+static nested classes can access all static members of the enclosing class, including private ones.
+Java programming specification doesn't allow us to declare the top-level class as static. Only classes within the classes (nested classes) can be made as static.
+
+
+WHY NO STATIC OUTER CLASS
+There are no outer static classes in Java. Because all outer classes are already visible like the static modifier would do. But of you mean, that you don't want to need an instance of the class you can simply make all Methods and variables in the class static.
+
+
+Differences between Static and Non-static Nested Classes
+
+The following are major differences between static nested classes and inner classes. 
+
+    A static nested class may be instantiated without instantiating its outer class.
+    Inner classes can access both static and non-static members of the outer class. A static class can access only the static members of the outer class.

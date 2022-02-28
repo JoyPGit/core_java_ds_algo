@@ -1,0 +1,13 @@
+design YT
+spring boot application use generics
+
+public class HttpUtil {
+
+    @Autowired
+    @Qualifier("customRestTemplate")
+    private RestTemplate restTemplate;
+
+    public <T, D> D makeRequest(T data, String url, Class<D> classType) { // put, post
+        return (D) restTemplate.exchange(url, HttpMethod.POST, (HttpEntity<T>) data, classType);
+    }
+}
