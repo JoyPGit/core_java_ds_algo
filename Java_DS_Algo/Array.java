@@ -1326,6 +1326,26 @@ class Array {
         return diff;
     }
 
+    // https://leetcode.com/problems/zigzag-conversion/description/
+    public String convert(String s, int numRows) {
+        int len = s.length(), n = numRows;
+        StringBuilder[] arr = new StringBuilder[n];
+        for(int i =0; i<n; i++) arr[i] = new StringBuilder();
+
+        int i = 0;
+        // no col needed, append top -> bottom, then bottom->top
+        while(i<len){
+            // i<len in for loop
+            for(int r = 0; r<n && i<len; r++)
+                arr[r].append(s.charAt(i++));
+            for(int r = n-2; r>0 && i<len; r--)
+                arr[r].append(s.charAt(i++));
+        }
+
+        for(int k =1; k<n; k++) arr[0].append(arr[k]);
+        return arr[0].toString();
+    }
+    
     public static void main(String[] args) {
         Array test = new Array();
 
