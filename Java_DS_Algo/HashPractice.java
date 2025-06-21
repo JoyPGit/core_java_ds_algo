@@ -886,6 +886,43 @@ class HashPractice{
         }
     }
 
+//       https://leetcode.com/problems/minimum-number-of-operations-to-make-elements-in-array-distinct/
+       public int minimumOperations(int[] nums) {
+           HashMap<Integer, Integer> countMap = new HashMap<>(), map = new HashMap<>();
+           int total = 0;
+           for(int i : nums) {
+               countMap.put(i, countMap.getOrDefault(i, 0)+1);
+               int count = countMap.get(i);
+               if(countMap.get(i)>1) {
+                   map.put(i, count);
+               }
+           }
+
+           for(HashMap.Entry<Integer, Integer> e : map.entrySet()){
+               if(e.getValue() > 1) total+=e.getValue();
+           }
+
+           // System.out.println(map);
+
+           int left = 0, res = 0;
+           // remove from map, if count == 0, total and map remain in sync
+           while(total > map.size()) {
+               for(int i = 0; i<3; i++){
+                   if(map.containsKey(nums[left])) {
+                       map.put(nums[left], map.get(nums[left])-1);
+                       if(map.get(nums[left]) == 0) map.remove(nums[left]);
+                       total--;
+                   }
+                   left++;
+                   if(total <= map.size()) break;
+               }
+               res++;
+
+           }
+           // System.out.println("left "+left);
+           return res;
+       }
+
     // https://leetcode.com/problems/make-sum-divisible-by-p/discuss/857706/Java-Solution-using-hashmap
     // https://leetcode.com/problems/insert-delete-getrandom-o1/
 
